@@ -104,11 +104,20 @@ def test_list_recordings_stub(runner: CliRunner) -> None:
 # ── validate ────────────────────────────────────────────────────────────
 
 
+def _extract_json(output: str) -> dict:
+    """Extract JSON from CLI output that may contain structlog lines."""
+    # Find the first '{' and parse from there
+    idx = output.find("{")
+    if idx == -1:
+        return {}
+    return json.loads(output[idx:])
+
+
 def test_validate_prints_config(runner: CliRunner) -> None:
     result = runner.invoke(main, ["validate"])
     assert result.exit_code == 0
     if _CONFIG_AVAILABLE:
-        data = json.loads(result.output)
+        data = _extract_json(result.output)
         assert "planner" in data or "runtime" in data
     else:
         assert "Configuration module not available" in result.output
@@ -118,7 +127,7 @@ def test_validate_with_config_option(runner: CliRunner) -> None:
     result = runner.invoke(main, ["--config", "config/model.yaml", "validate"])
     assert result.exit_code == 0
     if _CONFIG_AVAILABLE:
-        data = json.loads(result.output)
+        data = _extract_json(result.output)
         assert isinstance(data, dict)
     else:
         assert "Configuration module not available" in result.output
