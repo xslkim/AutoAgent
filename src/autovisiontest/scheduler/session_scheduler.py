@@ -213,6 +213,25 @@ class SessionScheduler:
             )
             return None
 
+    def invalidate_recording(self, fingerprint: str) -> bool:
+        """Delete a recording by fingerprint.
+
+        This can be called externally (e.g., via API) or internally
+        when a regression session detects UI drift.
+
+        Args:
+            fingerprint: The recording fingerprint to delete.
+
+        Returns:
+            True if the recording was deleted, False if not found.
+        """
+        result = self._store.delete(fingerprint)
+        if result:
+            logger.info(
+                "recording_invalidated", extra={"fingerprint": fingerprint}
+            )
+        return result
+
     def shutdown(self) -> None:
         """Shut down the executor and clean up resources."""
         self._executor.shutdown(wait=True)
@@ -229,6 +248,9 @@ class SessionScheduler:
         fingerprint: str | None,
     ) -> None:
         """Execute a session in the background thread.
+
+        If a regression session finishes with ``recording_invalid=True``,
+        automatically launches a compensatory exploratory session.
 
         Args:
             session_id: Session identifier.
@@ -284,6 +306,26 @@ class SessionScheduler:
                         "consolidation_failed",
                         extra={"session_id": session_id},
                     )
+
+            # Regression invalidation → fallback to exploration
+            if (
+                mode == "regression"
+                and session.recording_invalid
+                and fingerprint
+            ):
+                logger.info(
+                    "regression_invalid_fallback",
+                    extra={
+                        "session_id": session_id,
+                        "fingerprint": fingerprint,
+                    },
+                )
+                self._invalidate_and_reexplore(
+                    fingerprint=fingerprint,
+                    goal=goal,
+                    app_path=app_path,
+                    app_args=app_args,
+                )
 
             logger.info(
                 "session_completed",
@@ -341,3 +383,54 @@ class SessionScheduler:
         session_dir.mkdir(parents=True, exist_ok=True)
         ctx_path = session_dir / "context.json"
         ctx_path.write_text(session.model_dump_json(indent=2), encoding="utf-8")
+
+    def _invalidate_and_reexplore(
+        self,
+        fingerprint: str,
+        goal: str,
+        app_path: str,
+        app_args: list[str] | None,
+    ) -> None:
+        """Delete invalid recording and run a compensatory exploratory session.
+
+        If the exploratory session succeeds, it will automatically be
+        consolidated into a new recording (replacing the old one).
+
+        Args:
+            fingerprint: The invalid recording's fingerprint.
+            goal: Test goal.
+            app_path: Application path.
+            app_args: Application arguments.
+        """
+        # Delete the invalid recording
+        self.invalidate_recording(fingerprint)
+
+        # Run exploratory session
+        logger.info(
+            "fallback_exploration_starting",
+            extra={"goal": goal, "app_path": app_path},
+        )
+
+        try:
+            session = self._run_exploratory(goal, app_path, app_args)
+
+            if session.termination_reason == TerminationReason.PASS:
+                # Consolidate the new successful exploration
+                new_case = consolidate(session, self._store)
+                if new_case:
+                    logger.info(
+                        "fallback_exploration_consolidated",
+                        extra={
+                            "new_fingerprint": new_case.metadata.fingerprint,
+                            "old_fingerprint": fingerprint,
+                        },
+                    )
+                else:
+                    logger.warning("fallback_exploration_consolidation_skipped")
+            else:
+                logger.warning(
+                    "fallback_exploration_failed",
+                    extra={"reason": session.termination_reason.value if session.termination_reason else None},
+                )
+        except Exception:
+            logger.exception("fallback_exploration_error")
