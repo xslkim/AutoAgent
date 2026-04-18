@@ -835,7 +835,7 @@ git log --oneline main | grep -E '^[a-f0-9]+ T [A-J]\.[0-9]+:' | wc -l
 
 | 项 | 值 |
 |---|---|
-| 仓库 URL | `https://github.com/xslkim/AuteTest.git` |
+| 仓库 URL | `https://github.com/xslkim/AutoAgent.git` |
 | 可见性 | public |
 | 默认分支 | `main`（已开 branch protection） |
 | 人类维护者 | `xslkim`（仓库所有者） |
@@ -849,10 +849,10 @@ git log --oneline main | grep -E '^[a-f0-9]+ T [A-J]\.[0-9]+:' | wc -l
 两个 Agent 使用**各自独立的本地 working copy**，避免共用一份 checkout 时身份切换出错。
 
 ```
-E:\
-├── AuteTest\            ← 人类维护目录(只改 docs,不领任务)
-├── AuteTest-dev\        ← Dev Agent 工作目录
-└── AuteTest-test\       ← Test Agent 工作目录
+D:\
+├── AutoAgent\            ← 人类维护目录(只改 docs,不领任务)
+├── AutoAgent-dev\        ← Dev Agent 工作目录
+└── AutoAgent-test\       ← Test Agent 工作目录
 ```
 
 初始化命令（人类执行一次）：
@@ -862,15 +862,16 @@ E:\
 cd /e/
 
 # Dev 工作副本
-git clone https://github.com/xslkim/AuteTest.git AuteTest-dev
-cd AuteTest-dev
+git clone https://github.com/xslkim/AutoAgent.git AutoAgent-dev
+cd AutoAgent-dev
 git config user.name "<DEV_BOT_USER>"
 git config user.email "<dev_bot_email>"
 cd ..
 
 # Test 工作副本
-git clone https://github.com/xslkim/AuteTest.git AuteTest-test
-cd AuteTest-test
+git clone https://github.com/xslkim/AutoAgent.git AutoAgent-test
+
+cd AutoAgent-test
 git config user.name "<TEST_BOT_USER>"
 git config user.email "<test_bot_email>"
 cd ..
@@ -916,7 +917,7 @@ source /c/Users/xsl/.autovt/dev.env
 export GH_TOKEN  # 确保 gh CLI 使用这个 token
 
 # 2. 进入 Dev 工作目录
-cd /e/AuteTest-dev
+cd /e/AutoAgent-dev
 
 # 3. 同步最新 main
 git checkout main
@@ -940,7 +941,7 @@ Claude Code 启动后，人类在第一条消息中给出标准 Dev 启动 promp
 source /c/Users/xsl/.autovt/test.env
 export GH_TOKEN
 
-cd /e/AuteTest-test
+cd /e/AutoAgent-test
 git checkout main
 git pull
 
@@ -973,7 +974,7 @@ git push -u origin task/tb3-mouse-primitives
 
 # 创建 PR,正文使用 handoff 文件内容
 gh pr create \
-  --repo xslkim/AuteTest \
+  --repo xslkim/AutoAgent \
   --base main \
   --head task/tb3-mouse-primitives \
   --title "T B.3: 鼠标控制原语" \
@@ -1027,7 +1028,7 @@ gh pr review <PR_NUMBER> --request-changes \
 
 **查 PR 编号**：
 ```bash
-gh pr list --repo xslkim/AuteTest --state open --head task/tb3-mouse-primitives --json number -q '.[].number'
+gh pr list --repo xslkim/AutoAgent --state open --head task/tb3-mouse-primitives --json number -q '.[].number'
 ```
 
 ### 16.6 Branch Protection 与 Agent 的协同
@@ -1054,7 +1055,7 @@ gh pr list --repo xslkim/AuteTest --state open --head task/tb3-mouse-primitives 
 ```bash
 # 任一 bot 发起升级时
 gh issue create \
-  --repo xslkim/AuteTest \
+  --repo xslkim/AutoAgent \
   --title "Escalation: T B.3 iteration 3 deadlock" \
   --body-file .agent/escalations/T-B.3-20260418T130000Z.md \
   --label "escalation,needs-human" \
@@ -1130,7 +1131,7 @@ Agent 必须严守：
 - [ ] 两个 bot 账号已创建并接受仓库 collaborator 邀请
 - [ ] 两个 PAT 已生成（Classic, scope: `repo`），各自保存到 `.autovt/*.env`
 - [ ] main 分支保护已开启（§16.6）
-- [ ] 两份 checkout 目录已 clone（`AuteTest-dev`, `AuteTest-test`）
+- [ ] 两份 checkout 目录已 clone（`AutoAgent-dev`, `AutoAgent-test`）
 - [ ] 每份 checkout 的 `.git/config` 已设置对应 bot 的 user.name/user.email
 - [ ] 仓库 Labels 已创建：`escalation`、`needs-human`
 - [ ] `.gitignore` 已包含 §16.8 条目

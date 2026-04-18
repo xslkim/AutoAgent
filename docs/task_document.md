@@ -532,6 +532,7 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 - `src/autovisiontest/perception/ocr.py`（新建）
 - `src/autovisiontest/perception/types.py`（新建，共享数据类）
 - `tests/unit/perception/test_ocr.py`（新建）
+- `tests/fixtures/ocr/`（新建，测试用 fixture 图片，见下方 fixture 准备）
 
 **交付物**：
 - `perception/types.py`：
@@ -556,6 +557,7 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 - `tests/fixtures/ocr/hello_world.png`（白底黑字 "hello world"）
 - `tests/fixtures/ocr/chinese.png`（含"你好世界"）
 - `tests/fixtures/ocr/empty.png`（纯白）
+- fixture 图片由本任务负责生成：使用 Pillow `Image.new("RGB", (400, 100), "white")` + `ImageDraw.text()` 生成，提交到 Git
 
 **验收**：
 - [ ] `pytest tests/unit/perception/test_ocr.py` 全通过
@@ -594,6 +596,7 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 **范围**：
 - `src/autovisiontest/perception/error_dialog.py`（新建）
 - `tests/unit/perception/test_error_dialog.py`（新建）
+- `tests/fixtures/dialogs/`（新建，测试用 fixture 图片）
 
 **交付物**：
 - `perception/error_dialog.py`：
@@ -608,8 +611,9 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 - `test_keyword_without_button_not_dialog`：文档里仅出现"错误"字样但无按钮，不误判
 
 **fixture 准备**：
-- `tests/fixtures/dialogs/error_dialog.png`
-- `tests/fixtures/dialogs/normal_document_with_error_word.png`
+- `tests/fixtures/dialogs/error_dialog.png`（模拟 Windows 错误弹窗截图，含"错误"标题 + "确定"按钮）
+- `tests/fixtures/dialogs/normal_document_with_error_word.png`（普通文档，仅含"错误"字样但无按钮）
+- fixture 图片由本任务负责生成：Pillow 绘制模拟弹窗（灰色背景 + 标题栏 + 按钮文字），提交到 Git
 
 **验收**：
 - [ ] `pytest tests/unit/perception/test_error_dialog.py` 全通过
@@ -1195,7 +1199,7 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 
 ## T F.9 回归模式执行器
 
-**依赖**：T F.7, T G.3（可先桩）
+**依赖**：T F.7, T G.3（可先桩，桩接口见下方说明）
 
 **范围**：
 - `src/autovisiontest/engine/regression.py`（新建）
@@ -1206,6 +1210,25 @@ vLLM 作为**独立进程运行**，不作为 Python 依赖直接装入主环境
 - 加载 recording → 用"脚本 Planner"驱动（按 steps 顺序吐）→ StepLoop 复用
 - 每步做 SSIM 预期校验，连续 2 步 < 0.5 → 标记 `recording_invalid=True` 并返回
 - `def run(recording_path: Path) -> SessionContext`
+
+**T G.3 桩接口**（T G.3 完成前使用桩实现）：
+```python
+class StubRecordingStore:
+    """桩实现，仅用于 T F.9 单元测试。T G.3 完成后替换为真实 RecordingStore。"""
+    def __init__(self, recordings: dict[str, dict] | None = None):
+        self._recordings = recordings or {}
+
+    def load(self, fingerprint: str) -> dict | None:
+        return self._recordings.get(fingerprint)
+
+    def find_for_goal(self, app_path: str, goal: str) -> dict | None:
+        # 简化实现：遍历查找 goal 匹配
+        for rec in self._recordings.values():
+            if rec.get("goal") == goal:
+                return rec
+        return None
+```
+`RegressionRunner` 通过构造参数注入 `store`（类型为 `RecordingStore` Protocol），测试时传 `StubRecordingStore`，G.3 完成后无缝切换。
 
 **测试项**：
 - `test_run_regression_pass`
