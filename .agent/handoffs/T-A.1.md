@@ -2,7 +2,7 @@
 task_id: T A.1
 title: 项目初始化
 branch: task/ta1-project-init
-pr: TBD
+pr: 1
 status: ready_for_review
 iteration: 1
 dev_agent: xslkim-dev

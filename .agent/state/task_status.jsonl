@@ -1,2 +1,4 @@
 {"event": "project_init", "at": "2026-04-18T12:00:00Z"}
 {"task_id": "T A.1", "status": "in_progress", "at": "2026-04-18T13:56:00Z", "agent": "dev"}
+{"task_id": "T A.1", "status": "review", "at": "2026-04-18T14:08:00Z", "pr": 1, "iteration": 1}
+
