@@ -1,30 +1,22 @@
-# Review: T C.2 — SSIM 相似度计算
+# T C.2 Review — SSIM Similarity
 
-**任务**: similarity.py — SSIM 相似度计算 (OpenCV)
-**分支**: task/tc2-ssim-similarity
-**PR**: #15
 **Reviewer**: test-agent (gaobiedongtian)
-**日期**: 2026-04-18
-**轮次**: 1
+**Date**: 2026-04-18
+**Branch**: task/tc2-ssim-similarity
+**PR**: #15
 
-## 验收 Checklist
+## Verdict: ✅ APPROVED
 
-| # | 项目 | 结果 |
-|---|------|------|
-| 1 | `pytest tests/unit/perception/test_similarity.py` 全通过 | ✅ 6/6 passed |
-| 2 | ssim(ndarray, ndarray) → float | ✅ 已验证 |
-| 3 | ssim_bytes(bytes, bytes) → float | ✅ 已验证 |
-| 4 | 尺寸不匹配自动 resize | ✅ 已验证 |
-| 5 | 相同图像 SSIM≈1.0, 完全不同 SSIM<0.3 | ✅ 已验证 |
+## Checklist
+- [x] `pytest tests/unit/perception/test_similarity.py` 全通过 (6/6)
+- [x] SSIM 算法实现符合 Wang et al. (2004)
+- [x] 支持 ndarray 和 bytes 两种输入 (ssim / ssim_bytes)
+- [x] 不同尺寸图片自动 resize 到较小尺寸
+- [x] BGR→灰度转换 (含 cv2 不可用的 fallback)
+- [x] GaussianBlur 滤波 (含 uniform_filter fallback)
+- [x] 返回值范围 [0, 1]
 
-## 代码质量
-
-- Wang et al. (2004) 标准 SSIM 公式 — 正确实现
-- Gaussian window 11x11, sigma=1.5 — 标准参数
-- cv2 ImportError fallback 到 uniform_filter — 容错性好
-- 灰度转换 fallback (BT.601 权重) — 无 cv2 也能工作
-- 尺寸不匹配时取较小尺寸 — 合理处理
-
-## 结论
-
-**APPROVED** — 无修改要求。
+## Code Quality
+- Wang 2004 标准 SSIM 公式正确
+- cv2 依赖有优雅降级
+- _uniform_filter 用 cumsum 实现，O(1) per pixel
