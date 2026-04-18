@@ -1,32 +1,25 @@
-# Review: T C.1 — OCR 引擎
+# T C.1 Review — OCR Engine
 
-**任务**: types.py + ocr.py — 感知层数据类型 + PaddleOCR 引擎封装
-**分支**: task/tc1-ocr-engine
-**PR**: #14
 **Reviewer**: test-agent (gaobiedongtian)
-**日期**: 2026-04-18
-**轮次**: 1
+**Date**: 2026-04-18
+**Branch**: task/tc1-ocr-engine
+**PR**: #14
 
-## 验收 Checklist
+## Verdict: ✅ APPROVED
 
-| # | 项目 | 结果 |
-|---|------|------|
-| 1 | `pytest tests/unit/perception/test_ocr.py` 全通过 | ✅ 8/8 passed |
-| 2 | BoundingBox/OCRItem/OCRResult 数据类 | ✅ frozen dataclass |
-| 3 | OCREngine 单例 + 懒加载 | ✅ get_instance + _ensure_initialized |
-| 4 | recognize 接受 bytes + ndarray | ✅ 已验证 |
-| 5 | find_text 模糊搜索 (Levenshtein) | ✅ 已验证 |
-| 6 | PaddleOCR 失败 → OCRError | ✅ 已验证 |
+## Checklist
+- [x] `pytest tests/unit/perception/test_ocr.py` 全通过 (8/8)
+- [x] BoundingBox/OCRItem/OCRResult 数据类完整 (frozen dataclass)
+- [x] OCREngine 单例模式 + 线程安全
+- [x] PaddleOCR 懒加载 (_ensure_initialized)
+- [x] 支持 ndarray 和 bytes 两种输入
+- [x] 4 点多边形转 AABB (x_min/y_min/w/h)
+- [x] 空结果处理 (result[0] 为 None)
+- [x] 异常统一包装为 OCRError
+- [x] find_text 支持精确+模糊匹配 (Levenshtein)
+- [x] center() 辅助函数
 
-## 代码质量
-
-- OCREngine 线程安全单例 (threading.Lock) — 正确
-- 懒加载 PaddleOCR — 避免导入时加载重量模型
-- bytes → cv2.imdecode 转换 — 正确处理
-- 4-point polygon → axis-aligned bbox 转换 — 实用
-- find_text 支持 fuzzy + Levenshtein — 用于容错匹配
-- 测试 mock 覆盖全面：单例、ndarray/bytes 输入、空结果、异常
-
-## 结论
-
-**APPROVED** — 无修改要求。
+## Code Quality
+- singleton + reset_instance 设计方便测试
+- Levenshtein 算法实现简洁高效
+- 4 点→AABB 转换正确
