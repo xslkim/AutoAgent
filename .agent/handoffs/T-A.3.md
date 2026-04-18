@@ -3,7 +3,7 @@ task_id: T A.3
 title: 日志系统
 agent: dev
 status: ready_for_test
-pr: TBD
+pr: 4
 iteration: 1
 ---
 

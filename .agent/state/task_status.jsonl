@@ -4,4 +4,5 @@
 {"task_id": "T A.2", "status": "in_progress", "at": "2026-04-18T14:10:00Z", "agent": "dev"}
 {"task_id": "T A.2", "status": "review", "at": "2026-04-18T14:37:00Z", "pr": 3, "iteration": 1}
 {"task_id": "T A.3", "status": "in_progress", "at": "2026-04-18T14:38:00Z", "agent": "dev"}
+{"task_id": "T A.3", "status": "review", "at": "2026-04-18T14:44:00Z", "pr": 4, "iteration": 1}
 
