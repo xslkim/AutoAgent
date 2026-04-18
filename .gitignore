@@ -11,13 +11,13 @@
 # python
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 *.egg-info/
 .venv/
-dist/
-build/
+venv/
 
 # runtime data
 data/
@@ -25,3 +25,9 @@ data/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
