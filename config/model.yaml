@@ -1,0 +1,22 @@
+# AutoVisionTest Configuration
+# See docs/product_document.md §8.4 for full reference
+
+planner:
+  backend: "vllm_local"           # claude_api | openai_api | dashscope_api | vllm_local
+  model: "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
+  # api_key_env: "ANTHROPIC_API_KEY"  # uncomment for cloud backends
+  max_tokens: 1024
+  temperature: 0.3
+  # endpoint: "http://localhost:8000/v1"  # uncomment for vllm_local
+
+actor:
+  backend: "showui_local"         # showui_local | osatlas_local | vllm_local
+  model: "showlab/ShowUI-2B"
+  endpoint: "http://localhost:8001/v1"
+  confidence_threshold: 0.5
+
+runtime:
+  max_steps: 30
+  max_session_duration_s: 600
+  step_wait_ms: 500
+  data_dir: "./data"
