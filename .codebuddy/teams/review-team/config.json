@@ -1,0 +1,23 @@
+{
+  "name": "review-team",
+  "leadAgentId": "c1ab0b33667a4677be891d61443a23f0",
+  "workspacePath": "d:/code/AutoTest",
+  "createdAt": "2026-04-17T10:35:09.714Z",
+  "options": {
+    "workspacePath": "d:/code/AutoTest",
+    "isAutoTeam": false
+  },
+  "members": [
+    {
+      "memberId": "team-lead@review-team",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    },
+    {
+      "memberId": "test-pm@review-team",
+      "name": "test-pm",
+      "role": "测试项目经理-方案质疑"
+    }
+  ],
+  "isAutoTeam": false
+}
