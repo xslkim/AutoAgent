@@ -3,7 +3,7 @@ task_id: T A.2
 title: 配置系统
 agent: dev
 status: ready_for_test
-pr: TBD
+pr: 3
 iteration: 1
 ---
 
