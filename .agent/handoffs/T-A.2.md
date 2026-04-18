@@ -1,49 +1,72 @@
 ---
 task_id: T A.2
 title: 配置系统
-agent: dev
-status: ready_for_test
+branch: task/ta2-config-system
 pr: 3
-iteration: 1
+status: ready_for_review
+iteration: 2
+dev_agent: dev-agent (xslkim)
+created_at: "2026-04-18T13:30:00Z"
+updated_at: "2026-04-18T16:32:00Z"
 ---
 
-# T A.2: 配置系统
+## 交付物清单
 
-## 交付物
+- [x] `src/autovisiontest/config/__init__.py` — 新建,导出核心类和 load_config
+- [x] `src/autovisiontest/config/schema.py` — 新建,4 个 Pydantic 模型
+- [x] `src/autovisiontest/config/loader.py` — 新建,配置加载器 + 优先级链 + 环境变量覆盖
+- [x] `config/model.yaml` — 新建,示例配置(对齐产品文档 §8.4)
+- [x] `tests/unit/config/test_loader.py` — 新建,17 个测试用例
+- [x] `src/autovisiontest/cli.py` — **修改**,添加 `--config` 全局选项 + `validate` 子命令
 
-| 文件 | 说明 |
-|------|------|
-| `src/autovisiontest/config/__init__.py` | 模块入口，导出核心类和 `load_config` |
-| `src/autovisiontest/config/schema.py` | Pydantic 模型：`PlannerConfig`, `ActorConfig`, `RuntimeConfig`, `AppConfig` |
-| `src/autovisiontest/config/loader.py` | 配置加载器：YAML + 环境变量覆盖 + 优先级链 |
-| `config/model.yaml` | 示例配置文件，对齐产品文档 §8.4 |
-| `tests/unit/config/test_loader.py` | 17 项单元测试 |
+## Iteration 2 变更
 
-## 实现细节
+### R1 修复：添加 validate CLI 子命令
 
-### Schema (schema.py)
-- `PlannerConfig`：`backend` (Literal 4 选 1), `model`, `api_key_env`, `max_tokens`, `temperature`, `endpoint` — 含 validator
-- `ActorConfig`：`backend` (Literal 3 选 1), `model`, `endpoint`, `confidence_threshold` — 含 validator
-- `RuntimeConfig`：`max_steps=30`, `max_session_duration_s=600`, `step_wait_ms=500`, `data_dir=Path("./data")`
-- `AppConfig`：组合以上三个子模型
+Test Agent review iter-1 要求：
+> `autovisiontest --config config/model.yaml validate` 能打印解析后的配置
 
-### Loader (loader.py)
-- `load_config(path=None) -> AppConfig`：优先级链：显式路径 > `AUTOVT_CONFIG` > `./config/model.yaml` > 包内默认 > 内置默认
-- 环境变量覆盖：`AUTOVT_DATA_DIR`, `AUTOVT_PLANNER_BACKEND`, `AUTOVT_ACTOR_BACKEND`
-- 云端 backend + `api_key_env` 指向未设置的环境变量时：打印 warning，不抛异常（延迟到调用时检查）
-- 无效 backend 通过 Pydantic `Literal` 类型拒绝，抛 `ValidationError`
+**修复内容** (`src/autovisiontest/cli.py`)：
 
-### 测试覆盖
-- `TestLoadDefaultConfig`：最小/空/完整 YAML 加载
-- `TestEnvVarOverride`：3 个环境变量覆盖 + `AUTOVT_CONFIG` 路径
-- `TestInvalidBackendRejected`：非法 backend/temperature/confidence
-- `TestMissingApiKeyWarning`：缺 API key 的 warning 行为
-- `TestFileNotFound`：显式/环境变量路径不存在时抛 `FileNotFoundError`
+1. 添加 `--config` 全局选项到 `@click.group()` 装饰器（类型 `click.Path(exists=False)`，默认 None）
+2. 添加 `@click.pass_context` 到 `main` 函数签名，将 `config_path` 存入 `ctx.obj`
+3. 新增 `validate` 命令函数：
+   - 从 `ctx.obj` 取 `config_path`
+   - 调用 `load_config(path=Path(config_path) if config_path else None)`
+   - 用 `click.echo(config.model_dump_json(indent=2))` 输出 JSON
+
+## 自测结果
+
+```
+$ pytest tests/unit/config/ -v
+============ 17 passed in 0.21s ============
+
+$ pytest tests/unit/ -v
+============ 20 passed in 0.30s ============
+
+$ python -m autovisiontest.cli --config config/model.yaml validate
+{
+  "planner": {
+    "backend": "vllm_local",
+    ...
+  },
+  ...
+}
+```
 
 ## 验收 Checklist
 
 - [x] `pytest tests/unit/config/` 全通过 (17/17)
-- [x] 配置加载优先级链正确
-- [x] 环境变量覆盖生效
-- [x] 无效 backend 被 Pydantic 拒绝
-- [x] 云端 backend 缺 API key 时发出 warning 而非异常
+- [x] `autovisiontest --config config/model.yaml validate` 能打印解析后的配置 ✅ (iter-2 已修复)
+
+## 范围检查
+
+改动文件列表:
+- src/autovisiontest/config/__init__.py   (新建, iter-1)
+- src/autovisiontest/config/schema.py     (新建, iter-1)
+- src/autovisiontest/config/loader.py     (新建, iter-1)
+- config/model.yaml                       (新建, iter-1)
+- tests/unit/config/test_loader.py        (新建, iter-1)
+- src/autovisiontest/cli.py               (**修改**, iter-2: 添加 --config + validate)
+
+所有改动在任务范围内。
