@@ -1,0 +1,27 @@
+# secrets
+*.env
+.env
+.autovt/
+
+# agent runtime state (non-tracked parts)
+.agent/locks/
+.agent/state/current_task.json
+.agent/state/current/
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+dist/
+build/
+
+# runtime data
+data/
+
+# IDE
+.vscode/
+.idea/
