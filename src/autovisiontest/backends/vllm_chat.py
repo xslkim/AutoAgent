@@ -15,6 +15,10 @@ logger = logging.getLogger(__name__)
 _DEFAULT_ENDPOINT = "http://localhost:8000/v1"
 _DEFAULT_TIMEOUT = 60.0
 
+# Screenshot compression settings (D9: short edge 1080px, JPEG Q85)
+_SHORT_EDGE_TARGET = 512
+_JPEG_QUALITY = 85
+
 
 class VLLMChatBackend:
     """Chat backend using a local vLLM server with OpenAI-compatible API."""
@@ -66,11 +70,12 @@ class VLLMChatBackend:
                 content_parts.append({"type": "text", "text": msg.content})
 
                 for img_bytes in (msg.images or []) + (images or []):
-                    b64 = base64.b64encode(img_bytes).decode("utf-8")
+                    compressed = self._compress_image(img_bytes)
+                    b64 = base64.b64encode(compressed).decode("utf-8")
                     content_parts.append({
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{b64}",
+                            "url": f"data:image/jpeg;base64,{b64}",
                         },
                     })
 
@@ -122,3 +127,28 @@ class VLLMChatBackend:
                 f"vLLM error: {exc}",
                 retryable=True,
             ) from exc
+
+    @staticmethod
+    def _compress_image(image: bytes) -> bytes:
+        """Compress screenshot: resize short edge to 1080px, encode as JPEG Q85."""
+        import cv2
+        import numpy as np
+
+        arr = np.frombuffer(image, dtype=np.uint8)
+        img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+        if img is None:
+            return image
+
+        h, w = img.shape[:2]
+        short_edge = min(w, h)
+        if short_edge > _SHORT_EDGE_TARGET:
+            scale = _SHORT_EDGE_TARGET / short_edge
+            new_w = int(w * scale)
+            new_h = int(h * scale)
+            img = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+            logger.debug("Compressed screenshot: %dx%d -> %dx%d", w, h, new_w, new_h)
+
+        ok, buf = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, _JPEG_QUALITY])
+        if not ok:
+            return image
+        return buf.tobytes()
