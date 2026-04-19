@@ -7,7 +7,7 @@ planner:
   # api_key_env: "ANTHROPIC_API_KEY"  # uncomment for cloud backends
   max_tokens: 1024
   temperature: 0.3
-  # endpoint: "http://localhost:8000/v1"  # uncomment for vllm_local
+  endpoint: "http://localhost:8000/v1"  # vLLM planner service (WSL2)
 
 actor:
   backend: "showui_local"         # showui_local | osatlas_local | vllm_local

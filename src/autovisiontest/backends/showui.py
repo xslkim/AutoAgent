@@ -17,6 +17,12 @@ logger = logging.getLogger(__name__)
 _DEFAULT_ENDPOINT = "http://localhost:8001/v1"
 _DEFAULT_TIMEOUT = 30.0
 
+# Screenshot compression settings
+# ShowUI-2B visual tokens scale with resolution; for 4K screens,
+# we need aggressive downscaling to stay within context limits.
+_SHORT_EDGE_TARGET = 768
+_JPEG_QUALITY = 85
+
 # ShowUI prompt template
 _SHOWUI_PROMPT_TEMPLATE = (
     "You are a GUI agent. You are given a task and a screenshot. "
@@ -56,7 +62,10 @@ class ShowUIGroundingBackend:
         Raises:
             GroundingBackendError: On API errors.
         """
-        b64 = base64.b64encode(image).decode("utf-8")
+        # Compress screenshot to fit model context (D9)
+        compressed, orig_w, orig_h = self._compress_image(image)
+
+        b64 = base64.b64encode(compressed).decode("utf-8")
 
         prompt = _SHOWUI_PROMPT_TEMPLATE.format(query=query)
 
@@ -69,7 +78,7 @@ class ShowUIGroundingBackend:
                         {"type": "text", "text": prompt},
                         {
                             "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{b64}"},
+                            "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
                         },
                     ],
                 },
@@ -91,9 +100,8 @@ class ShowUIGroundingBackend:
             # Parse coordinates from response
             rel_x, rel_y, confidence = self._parse_coordinates(content)
 
-            # Get image dimensions for absolute conversion
-            # We'll decode the image to get its size
-            img_w, img_h = self._get_image_dimensions(image)
+            # Get ORIGINAL image dimensions for absolute coordinate conversion
+            img_w, img_h = orig_w, orig_h
 
             abs_x = int(rel_x * img_w)
             abs_y = int(rel_y * img_h)
@@ -137,7 +145,11 @@ class ShowUIGroundingBackend:
             # Look for JSON object
             json_match = re.search(r"\{[^}]+\}", content)
             if json_match:
-                coords = json.loads(json_match.group())
+                raw_json = json_match.group()
+                # Models may return single-quoted "JSON" — normalize to double quotes
+                if "'" in raw_json:
+                    raw_json = raw_json.replace("'", '"')
+                coords = json.loads(raw_json)
                 rel_x = float(coords.get("x", coords.get("X", 0.5)))
                 rel_y = float(coords.get("y", coords.get("Y", 0.5)))
                 # Clamp to [0, 1]
@@ -160,6 +172,36 @@ class ShowUIGroundingBackend:
         raise GroundingBackendError(
             f"Failed to parse coordinates from ShowUI response: {content[:200]}"
         )
+
+    def _compress_image(self, image: bytes) -> tuple[bytes, int, int]:
+        """Compress screenshot: resize short edge to 1080px, encode as JPEG Q85.
+
+        Returns:
+            (compressed_jpeg_bytes, original_width, original_height)
+        """
+        import cv2
+        import numpy as np
+
+        arr = np.frombuffer(image, dtype=np.uint8)
+        img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+        if img is None:
+            return image, 1920, 1080
+
+        orig_h, orig_w = img.shape[:2]
+
+        # Resize if short edge > target
+        short_edge = min(orig_w, orig_h)
+        if short_edge > _SHORT_EDGE_TARGET:
+            scale = _SHORT_EDGE_TARGET / short_edge
+            new_w = int(orig_w * scale)
+            new_h = int(orig_h * scale)
+            img = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+            logger.debug("Compressed screenshot: %dx%d -> %dx%d", orig_w, orig_h, new_w, new_h)
+
+        ok, buf = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, _JPEG_QUALITY])
+        if not ok:
+            return image, orig_w, orig_h
+        return buf.tobytes(), orig_w, orig_h
 
     def _get_image_dimensions(self, image: bytes) -> tuple[int, int]:
         """Get image width and height from PNG/JPEG bytes."""
