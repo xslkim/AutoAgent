@@ -75,6 +75,8 @@ class TestCase(BaseModel):
     configuration, steps, expectations, and metadata.
     """
 
+    __test__ = False  # Prevent pytest from trying to collect this class
+
     goal: str
     app_config: AppConfig
     steps: list[Step] = Field(default_factory=list)
