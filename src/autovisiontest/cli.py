@@ -1,9 +1,11 @@
 """CLI entry point for AutoVisionTest.
 
-Defines all sub-commands (stub implementations for now) and global options.
+Defines all sub-commands and global options.
 """
 
 from __future__ import annotations
+
+import sys
 
 import click
 
@@ -38,7 +40,7 @@ def main(ctx: click.Context, config_path: str | None, log_level: str) -> None:
 
         setup_logging(level=log_level.upper())
     except ImportError:
-        pass  # logging_setup not available yet (e.g. before T A.3 is merged)
+        pass  # logging_setup not available yet
 
 
 # ── run ─────────────────────────────────────────────────────────────────
@@ -64,7 +66,12 @@ def run(
         raise click.UsageError("Either --goal or --case must be provided.")
     if goal is not None and case_path is not None:
         raise click.UsageError("--goal and --case are mutually exclusive.")
-    click.echo("Not implemented: run")
+
+    from autovisiontest.interfaces.cli_commands import cmd_run
+
+    config_path = ctx.obj.get("config_path")
+    exit_code = cmd_run(goal, app_path, app_args, timeout, case_path, config_path)
+    sys.exit(exit_code)
 
 
 # ── status ──────────────────────────────────────────────────────────────
@@ -75,7 +82,11 @@ def run(
 @click.pass_context
 def status(ctx: click.Context, session_id: str) -> None:
     """Show the status of a test session."""
-    click.echo(f"Not implemented: status {session_id}")
+    from autovisiontest.interfaces.cli_commands import cmd_status
+
+    config_path = ctx.obj.get("config_path")
+    exit_code = cmd_status(session_id, config_path)
+    sys.exit(exit_code)
 
 
 # ── report ──────────────────────────────────────────────────────────────
@@ -87,7 +98,11 @@ def status(ctx: click.Context, session_id: str) -> None:
 @click.pass_context
 def report(ctx: click.Context, session_id: str, fmt: str) -> None:
     """Generate a test report for a session."""
-    click.echo(f"Not implemented: report {session_id} --format {fmt}")
+    from autovisiontest.interfaces.cli_commands import cmd_report
+
+    config_path = ctx.obj.get("config_path")
+    exit_code = cmd_report(session_id, fmt, config_path)
+    sys.exit(exit_code)
 
 
 # ── list-recordings ────────────────────────────────────────────────────
@@ -97,7 +112,11 @@ def report(ctx: click.Context, session_id: str, fmt: str) -> None:
 @click.pass_context
 def list_recordings(ctx: click.Context) -> None:
     """List all recorded test cases."""
-    click.echo("Not implemented: list-recordings")
+    from autovisiontest.interfaces.cli_commands import cmd_list_recordings
+
+    config_path = ctx.obj.get("config_path")
+    exit_code = cmd_list_recordings(config_path)
+    sys.exit(exit_code)
 
 
 # ── validate ────────────────────────────────────────────────────────────
@@ -116,6 +135,49 @@ def validate(ctx: click.Context) -> None:
         click.echo(config.model_dump_json(indent=2))
     except ImportError:
         click.echo("Configuration module not available yet.")
+    except Exception as exc:
+        click.echo(f"Error loading config: {exc}", err=True)
+        sys.exit(3)
+
+
+# ── serve ───────────────────────────────────────────────────────────────
+
+
+@main.command()
+@click.option("--port", type=int, default=8080, help="HTTP server port.")
+@click.option("--host", type=str, default="0.0.0.0", help="HTTP server host.")
+@click.pass_context
+def serve(ctx: click.Context, port: int, host: str) -> None:
+    """Start the HTTP API server."""
+    try:
+        import uvicorn
+
+        from autovisiontest.interfaces.http_server import create_app
+
+        config_path = ctx.obj.get("config_path")
+        app = create_app(config_path=config_path)
+        uvicorn.run(app, host=host, port=port)
+    except ImportError:
+        click.echo("Error: fastapi/uvicorn not installed.", err=True)
+        sys.exit(3)
+
+
+# ── mcp ─────────────────────────────────────────────────────────────────
+
+
+@main.command()
+@click.option("--http", "http_addr", type=str, default=None, help="HTTP mode (e.g. :8090). Default: stdio.")
+@click.pass_context
+def mcp(ctx: click.Context, http_addr: str | None) -> None:
+    """Start the MCP server (stdio or HTTP mode)."""
+    try:
+        from autovisiontest.interfaces.mcp_server import run_mcp_server
+
+        config_path = ctx.obj.get("config_path")
+        run_mcp_server(config_path=config_path, http_addr=http_addr)
+    except ImportError:
+        click.echo("Error: mcp package not installed.", err=True)
+        sys.exit(3)
 
 
 if __name__ == "__main__":
