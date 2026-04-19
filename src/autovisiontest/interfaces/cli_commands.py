@@ -29,39 +29,41 @@ EXIT_INTERNAL_ERROR = 3
 
 
 def _create_scheduler(config_path: str | None, data_dir: Path | None = None):
-    """Create a SessionScheduler from config.
+    """Create a :class:`SessionScheduler` from config.
 
-    This is a convenience function that wires up backends and scheduler.
-    Returns None if required modules are not available.
+    Builds the single UI-TARS agent backend from ``config.agent`` and
+    wires it into the scheduler.  Returns ``None`` on any failure
+    (with an error printed).
     """
-    try:
-        from autovisiontest.backends.factory import create_chat_backend, create_grounding_backend
-    except ImportError:
-        click.echo("Error: Backend modules not available.", err=True)
-        return None
-
     config = _load_config(config_path)
     if config is None:
+        return None
+
+    if config.agent is None:
+        click.echo(
+            "Error: config is missing an `agent:` section — the UI-TARS "
+            "migration removed the legacy planner/actor pair.",
+            err=True,
+        )
         return None
 
     actual_data_dir = data_dir or Path(config.runtime.data_dir)
     actual_data_dir.mkdir(parents=True, exist_ok=True)
 
     try:
-        chat_backend = create_chat_backend(config.planner)
-        grounding_backend = create_grounding_backend(config.actor)
+        from autovisiontest.backends.factory import create_agent_backend
+
+        agent_backend = create_agent_backend(config.agent)
     except Exception as exc:
-        click.echo(f"Error creating backends: {exc}", err=True)
+        click.echo(f"Error creating agent backend: {exc}", err=True)
         return None
 
     from autovisiontest.scheduler.session_scheduler import SessionScheduler
 
     return SessionScheduler(
-        chat_backend=chat_backend,
-        grounding_backend=grounding_backend,
+        agent_backend=agent_backend,
         data_dir=actual_data_dir,
         max_steps=config.runtime.max_steps,
-        confidence_threshold=config.actor.confidence_threshold,
     )
 
 
@@ -90,8 +92,14 @@ def cmd_run(
     timeout: int | None,
     case_path: str | None,
     config_path: str | None,
+    launch: bool = True,
 ) -> int:
     """Execute the ``run`` command.
+
+    Args:
+        launch: When True the runner kills/launches/closes the app.  When
+            False (attach mode) none of that happens — ``app_path`` becomes
+            optional and the Planner drives the UI from the current desktop.
 
     Returns exit code.
     """
@@ -100,7 +108,6 @@ def cmd_run(
         return EXIT_INTERNAL_ERROR
 
     if case_path is not None:
-        # Run from a recorded test case
         click.echo(f"Running from case file: {case_path}")
         try:
             from autovisiontest.cases.schema import TestCase
@@ -117,16 +124,19 @@ def cmd_run(
     else:
         app_args_list = app_args.split() if app_args else None
 
-    if not goal or not app_path:
-        click.echo("Error: --goal and --app are required.", err=True)
+    if not goal:
+        click.echo("Error: --goal is required.", err=True)
+        return EXIT_INTERNAL_ERROR
+    if launch and not app_path:
+        click.echo("Error: --app is required unless --no-launch is set.", err=True)
         return EXIT_INTERNAL_ERROR
 
-    # Start session
     session_id = scheduler.start_session(
         goal=goal,
         app_path=app_path,
         app_args=app_args_list,
         timeout_ms=timeout,
+        launch=launch,
     )
     click.echo(f"Session started: {session_id}")
 

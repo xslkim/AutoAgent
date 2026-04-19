@@ -52,6 +52,13 @@ def main(ctx: click.Context, config_path: str | None, log_level: str) -> None:
 @click.option("--app-args", type=str, default=None, help="Arguments to pass to the application.")
 @click.option("--timeout", type=int, default=None, help="Maximum session duration in milliseconds.")
 @click.option("--case", "case_path", type=click.Path(exists=False), default=None, help="Path to a recorded test case.")
+@click.option(
+    "--no-launch",
+    "no_launch",
+    is_flag=True,
+    default=False,
+    help="Attach mode: do NOT kill/launch/close any process. The Planner drives the UI from the current desktop state.",
+)
 @click.pass_context
 def run(
     ctx: click.Context,
@@ -60,6 +67,7 @@ def run(
     app_args: str | None,
     timeout: int | None,
     case_path: str | None,
+    no_launch: bool,
 ) -> None:
     """Launch a test session (exploratory or regression)."""
     if goal is None and case_path is None:
@@ -70,7 +78,10 @@ def run(
     from autovisiontest.interfaces.cli_commands import cmd_run
 
     config_path = ctx.obj.get("config_path")
-    exit_code = cmd_run(goal, app_path, app_args, timeout, case_path, config_path)
+    exit_code = cmd_run(
+        goal, app_path, app_args, timeout, case_path, config_path,
+        launch=not no_launch,
+    )
     sys.exit(exit_code)
 
 

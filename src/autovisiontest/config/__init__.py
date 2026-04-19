@@ -1,17 +1,11 @@
 """Configuration module for AutoVisionTest."""
 
-from autovisiontest.config.schema import (
-    ActorConfig,
-    AppConfig,
-    PlannerConfig,
-    RuntimeConfig,
-)
 from autovisiontest.config.loader import load_config
+from autovisiontest.config.schema import AgentConfig, AppConfig, RuntimeConfig
 
 __all__ = [
-    "ActorConfig",
+    "AgentConfig",
     "AppConfig",
-    "PlannerConfig",
     "RuntimeConfig",
     "load_config",
 ]

@@ -43,23 +43,19 @@ def session_store(tmp_data_dir: Path) -> SessionStore:
 
 
 @pytest.fixture
-def mock_chat_backend() -> MagicMock:
-    """Create a mock ChatBackend."""
+def mock_agent_backend() -> MagicMock:
+    """Create a mock UI-TARS agent backend."""
     backend = MagicMock()
-    backend.chat.return_value = MagicMock(
-        content='{"reflection": "done", "done": true}',
-        raw={},
-        usage=None,
-    )
-    return backend
-
-
-@pytest.fixture
-def mock_grounding_backend() -> MagicMock:
-    """Create a mock GroundingBackend."""
-    backend = MagicMock()
-    backend.ground.return_value = MagicMock(
-        x=100, y=100, confidence=0.9, raw={}
+    backend.decide.return_value = MagicMock(
+        action_type="finished",
+        action_params={},
+        point_xy=None,
+        end_point_xy=None,
+        thought="done",
+        finished=True,
+        finished_content="",
+        parse_error=None,
+        raw_response="Thought: done\nAction: finished()",
     )
     return backend
 
@@ -67,16 +63,13 @@ def mock_grounding_backend() -> MagicMock:
 @pytest.fixture
 def scheduler(
     tmp_data_dir: Path,
-    mock_chat_backend: MagicMock,
-    mock_grounding_backend: MagicMock,
+    mock_agent_backend: MagicMock,
 ) -> SessionScheduler:
-    """Create a SessionScheduler with mock backends."""
+    """Create a SessionScheduler with a mock UI-TARS agent backend."""
     return SessionScheduler(
-        chat_backend=mock_chat_backend,
-        grounding_backend=mock_grounding_backend,
+        agent_backend=mock_agent_backend,
         data_dir=tmp_data_dir,
         max_steps=30,
-        confidence_threshold=0.6,
     )
 
 

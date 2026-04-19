@@ -8,6 +8,9 @@
 .agent/state/current_task.json
 .agent/state/current/
 
+# codebuddy multi-agent runtime artifacts (inboxes, team configs)
+.codebuddy/
+
 # python
 __pycache__/
 *.pyc

@@ -44,7 +44,7 @@ class Terminator:
 
     def __init__(
         self,
-        app_handle: AppHandle,
+        app_handle: AppHandle | None,
         max_steps: int = 30,
         change_detector: ChangeDetector | None = None,
         no_progress_window: int = _DEFAULT_NO_PROGRESS_WINDOW,
@@ -73,8 +73,8 @@ class Terminator:
         if ocr is None:
             ocr = snapshot.ocr
 
-        # T1: Application crash
-        if not is_alive(self._app_handle):
+        # T1: Application crash.  Skipped in attach mode (app_handle is None).
+        if self._app_handle is not None and not is_alive(self._app_handle):
             logger.warning("T1: Application crash detected (PID %d)", self._app_handle.pid)
             return TerminationReason.CRASH
 
@@ -104,23 +104,36 @@ class Terminator:
     def _check_no_progress(self, steps: Sequence[StepRecord]) -> bool:
         """Check if the last N actions are identical (no progress).
 
-        Two actions are considered identical if they have the same type
-        and the same params.
+        Two actions are considered identical when they share the *same*
+        ``action.type``, ``action.params`` **and** ``actor_target_desc``.
+        The target description is critical: without it, three
+        ``click({})`` actions against three different buttons (which all
+        have empty ``params``) would be falsely flagged as a loop.
+
+        For backward compatibility, a step with an empty ``actor_target_desc``
+        compares only by action type + params (matches the pre-UI-TARS
+        behaviour).
         """
         if len(steps) < self._no_progress_window:
             return False
 
-        recent = steps[-self._no_progress_window :]
+        recent = steps[-self._no_progress_window:]
         first = recent[0]
         if first.action is None:
             return False
 
+        def _key(step: StepRecord) -> tuple[str, str, str]:
+            assert step.action is not None
+            # Use repr of sorted param items so nested lists / dicts remain
+            # comparable even though some values may not be sortable.
+            params_repr = repr(sorted(step.action.params.items(), key=lambda kv: kv[0]))
+            return (step.action.type, params_repr, step.actor_target_desc or "")
+
+        first_key = _key(first)
         for step in recent[1:]:
             if step.action is None:
                 return False
-            if step.action.type != first.action.type:
-                return False
-            if step.action.params != first.action.params:
+            if _key(step) != first_key:
                 return False
 
         return True
