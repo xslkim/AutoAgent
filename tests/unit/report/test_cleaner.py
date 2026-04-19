@@ -60,15 +60,16 @@ class TestEvidenceCleaner:
             keep_failed_days=-1,
         )
 
-        # Create 5 sessions (all recent, but only 3 should be kept by count)
+        # Create 5 sessions with distinct ages to ensure deterministic ordering.
+        # session-4 is newest (age=0), session-0 is oldest (age=4 days).
         for i in range(5):
-            _create_session(tmp_data_dir, f"session-{i}")
+            _create_session(tmp_data_dir, f"session-{i}", age_days=4 - i)
 
         stats = cleaner.cleanup()
 
         assert stats.scanned == 5
         assert stats.deleted == 2  # 5 - 3 keep_recent
-        # Verify newest 3 remain
+        # Verify newest 3 remain (session-2, session-3, session-4)
         assert (tmp_data_dir / "evidence" / "session-4").exists()
         assert (tmp_data_dir / "evidence" / "session-3").exists()
         assert (tmp_data_dir / "evidence" / "session-2").exists()
