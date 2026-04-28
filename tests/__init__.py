@@ -1,1 +1,0 @@
-# AutoVisionTest test suite
