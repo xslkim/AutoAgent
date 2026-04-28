@@ -16,7 +16,7 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
-from autovisiontest.backends.protocol import ChatBackend, GroundingBackend
+from autovisiontest.backends.uitars import UITarsBackend
 from autovisiontest.cases.consolidator import consolidate
 from autovisiontest.cases.store import RecordingStore
 from autovisiontest.engine.exploratory import ExploratoryRunner
@@ -32,29 +32,24 @@ logger = logging.getLogger(__name__)
 
 
 class SessionScheduler:
-    """Routes test sessions between exploratory and regression modes.
+    """Routes test sessions through the exploratory (UI-TARS) runner.
 
-    Args:
-        chat_backend: Chat backend for Planner and SecondCheck.
-        grounding_backend: Grounding backend for Actor.
-        data_dir: Root data directory for recordings and sessions.
-        max_steps: Maximum steps per session.
-        confidence_threshold: Minimum grounding confidence.
+    Regression mode is gated behind :class:`RegressionRunner`, which
+    currently raises pending a port to the :class:`Agent` protocol.
     """
 
     def __init__(
         self,
-        chat_backend: ChatBackend,
-        grounding_backend: GroundingBackend,
         data_dir: Path,
+        *,
+        agent_backend: UITarsBackend,
         max_steps: int = 30,
-        confidence_threshold: float = 0.6,
     ) -> None:
-        self._chat_backend = chat_backend
-        self._grounding_backend = grounding_backend
+        if agent_backend is None:
+            raise ValueError("SessionScheduler requires an agent_backend (UI-TARS)")
+        self._agent_backend = agent_backend
         self._data_dir = Path(data_dir)
         self._max_steps = max_steps
-        self._confidence_threshold = confidence_threshold
 
         self._store = RecordingStore(data_dir=self._data_dir)
         self._session_store = SessionStore(data_dir=self._data_dir)
@@ -70,9 +65,10 @@ class SessionScheduler:
     def start_session(
         self,
         goal: str,
-        app_path: str,
+        app_path: str | None,
         app_args: list[str] | None = None,
         timeout_ms: int | None = None,
+        launch: bool = True,
     ) -> str:
         """Start a test session.
 
@@ -81,26 +77,35 @@ class SessionScheduler:
 
         Args:
             goal: Natural language goal for the test.
-            app_path: Path to the application executable.
+            app_path: Path to the application executable.  Optional when
+                ``launch`` is False (attach mode).
             app_args: Optional command-line arguments for the application.
             timeout_ms: Optional timeout in milliseconds (reserved for future use).
+            launch: When True (default) the runner kills and launches the app.
+                When False, attach mode — the Planner drives the UI from the
+                current desktop state and the runner neither starts nor stops
+                any process.
 
         Returns:
             session_id for tracking the session.
         """
         session_id = uuid.uuid4().hex[:12]
 
-        # Check for existing recording → regression
-        existing_case = self._store.find_for_goal(app_path, goal)
-        mode = "regression" if existing_case else "exploratory"
-
-        fingerprint = existing_case.metadata.fingerprint if existing_case else None
+        # Regression mode requires a recording keyed on app_path + goal.
+        # In attach mode we skip this lookup (no meaningful app_path).
+        if launch and app_path:
+            existing_case = self._store.find_for_goal(app_path, goal)
+            mode = "regression" if existing_case else "exploratory"
+            fingerprint = existing_case.metadata.fingerprint if existing_case else None
+        else:
+            mode = "exploratory"
+            fingerprint = None
 
         # Create session record
         record = SessionRecord(
             session_id=session_id,
             goal=goal,
-            app_path=app_path,
+            app_path=app_path or "",
             app_args=app_args or [],
             mode=mode,
             status=SessionStatus.RUNNING,
@@ -110,7 +115,7 @@ class SessionScheduler:
 
         logger.info(
             "session_starting",
-            extra={"session_id": session_id, "mode": mode},
+            extra={"session_id": session_id, "mode": mode, "launch": launch},
         )
 
         # Submit to background thread
@@ -122,6 +127,7 @@ class SessionScheduler:
             app_args=app_args,
             mode=mode,
             fingerprint=fingerprint,
+            launch=launch,
         )
         self._futures[session_id] = future
 
@@ -242,10 +248,11 @@ class SessionScheduler:
         self,
         session_id: str,
         goal: str,
-        app_path: str,
+        app_path: str | None,
         app_args: list[str] | None,
         mode: str,
         fingerprint: str | None,
+        launch: bool = True,
     ) -> None:
         """Execute a session in the background thread.
 
@@ -259,12 +266,15 @@ class SessionScheduler:
             app_args: Application arguments.
             mode: "exploratory" or "regression".
             fingerprint: Recording fingerprint (for regression).
+            launch: Whether to launch/close the app (see ``start_session``).
         """
         try:
             if mode == "regression" and fingerprint:
                 session = self._run_regression(fingerprint)
             else:
-                session = self._run_exploratory(goal, app_path, app_args)
+                session = self._run_exploratory(
+                    goal, app_path, app_args, launch=launch, session_id=session_id
+                )
 
             # Check if stop was requested during execution
             if session_id in self._stop_requested:
@@ -290,9 +300,11 @@ class SessionScheduler:
                     record.status = SessionStatus.FAILED
                 self._session_store.save(record)
 
-            # Post-exploration consolidation
+            # Post-exploration consolidation — only in launch mode, since
+            # recordings are keyed on app_path + goal.
             if (
                 mode == "exploratory"
+                and launch
                 and session.termination_reason == TerminationReason.PASS
             ):
                 try:
@@ -354,27 +366,28 @@ class SessionScheduler:
     def _run_exploratory(
         self,
         goal: str,
-        app_path: str,
+        app_path: str | None,
         app_args: list[str] | None,
+        launch: bool = True,
+        session_id: str | None = None,
     ) -> SessionContext:
-        """Run an exploratory session."""
+        """Run an exploratory session via UI-TARS."""
         runner = ExploratoryRunner(
-            chat_backend=self._chat_backend,
-            grounding_backend=self._grounding_backend,
+            agent_backend=self._agent_backend,
             max_steps=self._max_steps,
-            confidence_threshold=self._confidence_threshold,
+            data_dir=self._data_dir,
         )
-        return runner.run(goal=goal, app_path=app_path, app_args=app_args)
+        return runner.run(
+            goal=goal,
+            app_path=app_path,
+            app_args=app_args,
+            launch=launch,
+            session_id=session_id,
+        )
 
     def _run_regression(self, fingerprint: str) -> SessionContext:
-        """Run a regression session."""
-        runner = RegressionRunner(
-            chat_backend=self._chat_backend,
-            grounding_backend=self._grounding_backend,
-            store=self._store,
-            max_steps=self._max_steps,
-            confidence_threshold=self._confidence_threshold,
-        )
+        """Regression mode — currently raises pending Agent port."""
+        runner = RegressionRunner(store=self._store, max_steps=self._max_steps)
         return runner.run(recording_path=fingerprint)
 
     def _save_context(self, session_id: str, session: SessionContext) -> None:

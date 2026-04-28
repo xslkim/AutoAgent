@@ -45,56 +45,23 @@ def _resolve_config_path(explicit_path: Optional[Path] = None) -> Optional[Path]
 
 
 def _apply_env_overrides(config: AppConfig) -> AppConfig:
-    """Apply environment variable overrides to the loaded config.
-
-    Since Pydantic model_copy(update=...) replaces nested models with dicts,
-    we must reconstruct each nested model individually.
-    """
-    # Build updated sub-models
-    planner_updates: dict = {}
-    planner_backend = os.environ.get("AUTOVT_PLANNER_BACKEND")
-    if planner_backend:
-        planner_updates["backend"] = planner_backend
-
-    actor_updates: dict = {}
-    actor_backend = os.environ.get("AUTOVT_ACTOR_BACKEND")
-    if actor_backend:
-        actor_updates["backend"] = actor_backend
-
+    """Apply environment variable overrides to the loaded config."""
     runtime_updates: dict = {}
     data_dir = os.environ.get("AUTOVT_DATA_DIR")
     if data_dir:
         runtime_updates["data_dir"] = Path(data_dir)
 
-    if not (planner_updates or actor_updates or runtime_updates):
+    agent_updates: dict = {}
+    agent_endpoint = os.environ.get("AUTOVT_AGENT_ENDPOINT")
+    if agent_endpoint:
+        agent_updates["endpoint"] = agent_endpoint
+
+    if not (runtime_updates or agent_updates):
         return config
 
-    new_planner = config.planner.model_copy(update=planner_updates) if planner_updates else config.planner
-    new_actor = config.actor.model_copy(update=actor_updates) if actor_updates else config.actor
     new_runtime = config.runtime.model_copy(update=runtime_updates) if runtime_updates else config.runtime
-
-    return config.model_copy(update={
-        "planner": new_planner,
-        "actor": new_actor,
-        "runtime": new_runtime,
-    })
-
-
-def _check_api_key_warnings(config: AppConfig) -> list[str]:
-    """Check for missing API keys and return warning messages."""
-    warnings: list[str] = []
-
-    cloud_backends = {"claude_api", "openai_api", "dashscope_api"}
-    if config.planner.backend in cloud_backends and config.planner.api_key_env:
-        key_value = os.environ.get(config.planner.api_key_env)
-        if not key_value:
-            warnings.append(
-                f"Planner backend is '{config.planner.backend}' but environment variable "
-                f"'{config.planner.api_key_env}' (api_key_env) is not set. "
-                f"API calls will fail until this is configured."
-            )
-
-    return warnings
+    new_agent = config.agent.model_copy(update=agent_updates) if agent_updates else config.agent
+    return config.model_copy(update={"runtime": new_runtime, "agent": new_agent})
 
 
 def load_config(path: Optional[Path] = None) -> AppConfig:
@@ -102,15 +69,14 @@ def load_config(path: Optional[Path] = None) -> AppConfig:
 
     Priority chain:
         1. Explicit path argument
-        2. AUTOVT_CONFIG environment variable
-        3. ./config/model.yaml
+        2. ``AUTOVT_CONFIG`` environment variable
+        3. ``./config/model.yaml``
         4. Package-relative default
         5. Built-in defaults (no file)
 
     Environment variable overrides:
-        - AUTOVT_DATA_DIR: Override runtime.data_dir
-        - AUTOVT_PLANNER_BACKEND: Override planner.backend
-        - AUTOVT_ACTOR_BACKEND: Override actor.backend
+        - ``AUTOVT_DATA_DIR``     — override ``runtime.data_dir``
+        - ``AUTOVT_AGENT_ENDPOINT`` — override ``agent.endpoint``
     """
     config_path = _resolve_config_path(path)
 
@@ -122,15 +88,14 @@ def load_config(path: Optional[Path] = None) -> AppConfig:
         logger.info("No config file found, using built-in defaults")
         raw = {}
 
+    # Legacy ``planner`` / ``actor`` sections are silently dropped by
+    # ``AppConfig.model_config = {"extra": "ignore"}`` — no need to pop
+    # them explicitly.  This lets old model.yaml files keep loading
+    # cleanly until operators migrate them.
+
     try:
         config = AppConfig(**raw)
     except ValidationError as exc:
         raise ValueError(f"Invalid configuration: {exc}") from exc
 
-    config = _apply_env_overrides(config)
-
-    warnings = _check_api_key_warnings(config)
-    for w in warnings:
-        logger.warning(w)
-
-    return config
+    return _apply_env_overrides(config)

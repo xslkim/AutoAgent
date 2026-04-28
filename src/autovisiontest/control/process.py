@@ -76,22 +76,40 @@ def launch_app(path: str, args: list[str] | None = None) -> AppHandle:
 
 
 def is_alive(handle: AppHandle) -> bool:
-    """Check if the application process is still running."""
-    # First check via popen.poll()
-    if handle.popen.poll() is not None:
-        return False
-    # Additional check: tasklist for the PID
+    """Check if the application process is still running.
+
+    Handles stub-launcher apps (e.g. modern Windows notepad.exe): the
+    original subprocess may exit quickly while spawning the real process
+    with a different PID.  When the direct PID is gone, we fall back to
+    checking whether *any* process with the same executable name is still
+    running.
+    """
+    # Fast path: direct subprocess still alive
+    if handle.popen.poll() is None:
+        try:
+            result = subprocess.run(
+                ["tasklist", "/FI", f"PID eq {handle.pid}", "/NH"],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if str(handle.pid) in result.stdout:
+                return True
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return True  # Assume alive when check fails
+
+    # Direct PID gone (stub exited or process truly died).
+    # Check by exe name to handle stub-launcher patterns.
     try:
         result = subprocess.run(
-            ["tasklist", "/FI", f"PID eq {handle.pid}", "/NH"],
+            ["tasklist", "/FI", f"IMAGENAME eq {handle.exe_name}", "/NH"],
             capture_output=True,
             text=True,
             timeout=5,
         )
-        return str(handle.pid) in result.stdout
+        return handle.exe_name.lower() in result.stdout.lower()
     except (subprocess.TimeoutExpired, FileNotFoundError):
-        # Fallback to popen poll only
-        return handle.popen.poll() is None
+        return False
 
 
 def close_app(handle: AppHandle, timeout_s: float = 5.0) -> None:

@@ -68,22 +68,52 @@ class ActionExecutor:
                 mouse.drag((x, y), to_xy, duration_ms=duration_ms)
 
             case "scroll":
-                dy = params.get("dy", 1)
+                # UI-TARS emits direction='up'|'down'|'left'|'right' instead
+                # of a raw dy — translate if present.  Positive dy scrolls up.
+                if "direction" in params and "dy" not in params:
+                    direction = str(params.get("direction", "down")).lower()
+                    clicks = int(params.get("clicks", 3))
+                    if direction == "up":
+                        dy = clicks
+                    elif direction == "down":
+                        dy = -clicks
+                    else:
+                        # Horizontal scroll is not supported by pyautogui
+                        # cross-platform; log and no-op rather than crash.
+                        dy = 0
+                else:
+                    dy = int(params.get("dy", 1))
                 mouse.scroll(x, y, dy=dy)
 
             case "type":
-                text = params.get("text", "")
+                # Accept both 'text' (legacy) and 'content' (UI-TARS native).
+                text = params.get("text", params.get("content", ""))
                 interval_ms = params.get("interval_ms", 20)
                 keyboard.type_text(text, interval_ms=interval_ms)
 
             case "key_combo":
-                keys = params.get("keys", [])
+                # Accept both keys=[...] (legacy) and key='ctrl s' (UI-TARS).
+                keys = params.get("keys")
+                if keys is None:
+                    raw = params.get("key", "")
+                    keys = [k.strip().lower() for k in str(raw).split() if k.strip()]
+                if not keys:
+                    raise ActionExecutionError(
+                        "key_combo requires 'keys' list or 'key' string",
+                        context={"params": params},
+                    )
                 keyboard.key_combo(*keys)
 
             case "wait":
                 import time as _time
                 duration_s = params.get("duration_s", 1.0)
                 _time.sleep(duration_s)
+
+            case "finished":
+                # Terminal sentinel from UI-TARS — nothing to execute.  The
+                # step loop should have already caught this via
+                # ``decision.finished`` before dispatching.
+                return
 
             case _:
                 raise ActionExecutionError(
