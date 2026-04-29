@@ -86,6 +86,8 @@ class SessionContext(BaseModel):
     mode: str = "exploratory"  # "exploratory" | "regression"
     app_path: str = ""
     app_args: list[str] = Field(default_factory=list)
+    app_pid: int = 0
+    trigger: str = "cli"  # "cli" | "http" | "mcp"
     steps: list[StepRecord] = Field(default_factory=list)
     assertions: list[Assertion] = Field(default_factory=list)
     assertion_results: list[AssertionResult] = Field(default_factory=list)

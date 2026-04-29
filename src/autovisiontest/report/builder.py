@@ -67,7 +67,10 @@ class ReportBuilder:
         report_session = self._build_session(session)
 
         # Build app info
-        report_app = ReportApp(path=session.app_path)
+        report_app = ReportApp(
+            path=session.app_path,
+            pid=session.app_pid,
+        )
 
         # Build result
         report_result = self._build_result(session)
@@ -159,6 +162,7 @@ class ReportBuilder:
 
         return ReportSession(
             id=session.session_id,
+            trigger=session.trigger,
             mode=session.mode,
             start_time=start_time,
             end_time=end_time,
@@ -199,6 +203,18 @@ class ReportBuilder:
             return "Session terminated due to unsafe action detection."
         elif session.termination_reason == TerminationReason.MAX_STEPS:
             return f"Maximum step limit ({session.step_count}) reached."
+        elif session.termination_reason == TerminationReason.ERROR_DIALOG:
+            return "Error dialog detected during execution."
+        elif session.termination_reason == TerminationReason.STUCK:
+            return "Screen appeared stuck (no visual changes)."
+        elif session.termination_reason == TerminationReason.NO_PROGRESS:
+            return "Repeated identical actions with no progress."
+        elif session.termination_reason == TerminationReason.TARGET_NOT_FOUND:
+            return "Agent could not locate the target element."
+        elif session.termination_reason == TerminationReason.ASSERTION_FAILED:
+            return "One or more assertions failed."
+        elif session.termination_reason == TerminationReason.USER:
+            return "Session stopped by user."
         else:
             reason = (
                 session.termination_reason.value

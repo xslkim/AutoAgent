@@ -80,4 +80,5 @@ class TestCase(BaseModel):
     goal: str
     app_config: AppConfig
     steps: list[Step] = Field(default_factory=list)
+    assertions: list[dict[str, Any]] = Field(default_factory=list)
     metadata: CaseMetadata = Field(default_factory=CaseMetadata)

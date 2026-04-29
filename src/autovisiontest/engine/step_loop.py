@@ -22,6 +22,7 @@ legacy pipeline is available via :class:`LegacyPlannerActorAgent`.
 from __future__ import annotations
 
 import logging
+import threading
 import time
 from typing import Protocol
 
@@ -49,7 +50,9 @@ class EvidenceWriter(Protocol):
         before_screenshot: bytes,
         after_screenshot: bytes | None,
         ocr_text: str,
-    ) -> None: ...
+    ) -> dict[str, str]:
+        """Write evidence and return relative paths keyed by 'before' and 'after'."""
+        ...
 
 
 class NullEvidenceWriter:
@@ -62,8 +65,8 @@ class NullEvidenceWriter:
         before_screenshot: bytes,  # noqa: ARG002
         after_screenshot: bytes | None,  # noqa: ARG002
         ocr_text: str,  # noqa: ARG002
-    ) -> None:
-        return
+    ) -> dict[str, str]:
+        return {}
 
 
 class StepLoop:
@@ -78,6 +81,7 @@ class StepLoop:
         perception: Perception,
         evidence_writer: EvidenceWriter | None = None,
         step_wait_ms: int = _DEFAULT_STEP_WAIT_MS,
+        stop_requested: threading.Event | None = None,
     ) -> None:
         self._agent = agent
         self._terminator = terminator
@@ -86,6 +90,7 @@ class StepLoop:
         self._perception = perception
         self._evidence_writer = evidence_writer or NullEvidenceWriter()
         self._step_wait_ms = step_wait_ms
+        self._stop_event = stop_requested
 
     # ------------------------------------------------------------------
     # Main loop
@@ -96,6 +101,11 @@ class StepLoop:
             session.start_time = time.time()
 
         while True:
+            # T8: Cooperative stop check
+            if self._stop_event is not None and self._stop_event.is_set():
+                session.termination_reason = TerminationReason.USER
+                return TerminationReason.USER
+
             # 1. Snapshot.
             try:
                 snapshot = self._perception.capture_snapshot()
@@ -184,7 +194,7 @@ class StepLoop:
                 after_screenshot = None
 
             ocr_text = ", ".join(item.text for item in snapshot.ocr.items[:20])
-            self._evidence_writer.write_step_evidence(
+            evidence_paths = self._evidence_writer.write_step_evidence(
                 session_id=session.session_id,
                 step_idx=session.step_count,
                 before_screenshot=before_screenshot,
@@ -193,7 +203,11 @@ class StepLoop:
             )
 
             # 10. Record step.
-            self._append_step(session, decision, coords=decision.coords)
+            self._append_step(
+                session, decision, coords=decision.coords,
+                before_path=evidence_paths.get("before", ""),
+                after_path=evidence_paths.get("after", ""),
+            )
 
     # ------------------------------------------------------------------
     # Helpers
@@ -204,6 +218,8 @@ class StepLoop:
         session: SessionContext,
         decision: AgentDecision,
         coords: tuple[int, int] | None,
+        before_path: str = "",
+        after_path: str = "",
     ) -> None:
         """Materialise a :class:`StepRecord` from an :class:`AgentDecision`."""
         step = StepRecord(
@@ -212,8 +228,8 @@ class StepLoop:
             actor_target_desc=decision.target_desc,
             action=decision.action,
             grounding_confidence=decision.grounding_confidence,
-            before_screenshot_path="",
-            after_screenshot_path="",
+            before_screenshot_path=before_path,
+            after_screenshot_path=after_path,
             reflection=decision.thought,
         )
         session.steps.append(step)

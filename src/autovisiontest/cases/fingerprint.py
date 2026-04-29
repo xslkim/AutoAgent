@@ -36,6 +36,18 @@ _ENGLISH_STOP_WORDS: frozenset[str] = frozenset({
     "i", "me", "my", "we", "us", "our", "you", "your",
 })
 
+# Common Chinese stop words / particles to remove during normalization
+_CHINESE_STOP_WORDS: frozenset[str] = frozenset({
+    "的", "了", "在", "是", "我", "有", "和", "就", "不", "人", "都",
+    "一", "一个", "上", "也", "很", "到", "说", "要", "去", "你", "会",
+    "着", "没有", "看", "好", "自己", "这", "他", "她", "它", "们",
+    "那", "里", "把", "让", "被", "从", "得", "能", "吗", "吧", "呢",
+    "啊", "哦", "嗯", "呀", "哈", "哪", "什么", "怎么", "为什么",
+    "如果", "因为", "所以", "但是", "而且", "或者", "虽然", "不过",
+    "已经", "可以", "应该", "需要", "然后", "之后", "之前", "一下",
+    "一些", "一点", "这个", "那个", "这些", "那些", "每个", "所有",
+})
+
 # Chinese punctuation and common particles to remove
 _CN_PUNCTUATION = "，。！？、；：""''【】（）《》…—·"
 
@@ -69,7 +81,9 @@ def normalize_goal(goal: str) -> str:
     for word in text.split():
         # For Chinese characters, split each character as a token
         if re.match(r"^[\u4e00-\u9fff]+$", word):
-            tokens.extend(word)
+            for ch in word:
+                if ch not in _CHINESE_STOP_WORDS:
+                    tokens.append(ch)
         else:
             # English word — skip stop words
             if word not in _ENGLISH_STOP_WORDS:

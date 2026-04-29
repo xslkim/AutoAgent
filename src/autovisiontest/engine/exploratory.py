@@ -14,6 +14,7 @@ everything to termination.
 from __future__ import annotations
 
 import logging
+import threading
 import time
 from pathlib import Path
 from typing import Optional
@@ -22,7 +23,8 @@ from autovisiontest.backends.uitars import UITarsBackend
 from autovisiontest.control.executor import ActionExecutor
 from autovisiontest.control.process import AppHandle, close_app, kill_processes_by_exe, launch_app
 from autovisiontest.engine.agent import UITarsAgent
-from autovisiontest.engine.models import SessionContext, TerminationReason
+from autovisiontest.engine.assertions import run_assertions
+from autovisiontest.engine.models import Assertion, SessionContext, TerminationReason
 from autovisiontest.engine.step_loop import StepLoop
 from autovisiontest.engine.terminator import Terminator
 from autovisiontest.perception.facade import Perception
@@ -53,16 +55,21 @@ class _StepLoopEvidenceAdapter:
         before_screenshot: bytes,
         after_screenshot: bytes | None,
         ocr_text: str,
-    ) -> None:
+    ) -> dict[str, str]:
         try:
-            self._disk.write_step(
+            paths = self._disk.write_step(
                 idx=step_idx,
                 before=before_screenshot,
                 after=after_screenshot or before_screenshot,
                 ocr={"text": ocr_text} if ocr_text else None,
             )
+            return {
+                "before": str(paths["before"]),
+                "after": str(paths["after"]),
+            }
         except Exception:  # pragma: no cover — evidence must never break a run
             logger.exception("evidence_write_failed", extra={"step_idx": step_idx})
+            return {}
 
 
 class _StubChatBackend:
@@ -92,10 +99,12 @@ class ExploratoryRunner:
         agent_backend: UITarsBackend,
         max_steps: int = 30,
         data_dir: Path | None = None,
+        stop_event: "threading.Event | None" = None,
     ) -> None:
         self._agent_backend = agent_backend
         self._max_steps = max_steps
         self._data_dir = Path(data_dir) if data_dir is not None else None
+        self._stop_event = stop_event
 
     def run(
         self,
@@ -104,6 +113,7 @@ class ExploratoryRunner:
         app_args: list[str] | None = None,
         launch: bool = True,
         session_id: str | None = None,
+        assertions: list[Assertion] | None = None,
     ) -> SessionContext:
         session = SessionContext(
             goal=goal,
@@ -115,7 +125,11 @@ class ExploratoryRunner:
         if session_id is not None:
             session.session_id = session_id
 
+        # T-1.4: implicitly prepend no_error_dialog assertion
+        _ensure_implicit_assertions(session, assertions)
+
         handle: AppHandle | None = None
+        disk_writer: DiskEvidenceWriter | None = None
         try:
             if launch:
                 if not app_path:
@@ -124,6 +138,19 @@ class ExploratoryRunner:
                 kill_processes_by_exe(exe_name)
                 handle = launch_app(app_path, app_args)
                 logger.info("app_launched", extra={"app_path": app_path, "pid": handle.pid})
+                session.app_pid = handle.pid
+                # Wait for main window to appear using PID-based lookup,
+                # which is reliable regardless of the window title.
+                try:
+                    from autovisiontest.control.window import find_window_by_pid
+                    import time as _time
+                    _deadline = _time.monotonic() + 10.0
+                    while _time.monotonic() < _deadline:
+                        if find_window_by_pid(handle.pid) is not None:
+                            break
+                        _time.sleep(0.2)
+                except Exception:
+                    logger.debug("ready_check_skipped", extra={"app_path": app_path})
             else:
                 logger.info("attach_mode", extra={"goal": goal})
 
@@ -149,10 +176,16 @@ class ExploratoryRunner:
                 executor=executor,
                 perception=perception,
                 evidence_writer=evidence_writer,
+                stop_requested=self._stop_event,
             )
 
             reason = loop.run(session)
             logger.info("session_ended", extra={"reason": reason.value})
+
+            # T-1.5 / T-1.3: assertion gate — finished only counts if
+            # all assertions pass.  Run assertions on any terminal state
+            # so the report is always populated.
+            self._run_assertions(session, perception, disk_writer)
 
         except Exception:
             logger.exception("exploratory_run_failed")
@@ -171,3 +204,61 @@ class ExploratoryRunner:
                         pass
 
         return session
+
+    def _run_assertions(
+        self,
+        session: SessionContext,
+        perception: Perception,
+        disk_writer: DiskEvidenceWriter | None,
+    ) -> None:
+        """Run all assertions against the current session state.
+
+        If the session was PASS but assertions fail, demote to
+        ASSERTION_FAILED.  Assertion results are always written to
+        ``session.assertion_results`` regardless of outcome.
+        """
+        if not session.assertions:
+            return
+
+        try:
+            snapshot = perception.capture_snapshot()
+        except Exception:
+            logger.exception("assertion_snapshot_failed")
+            return
+
+        ctx: dict = {
+            "ocr": snapshot.ocr,
+            "screenshot_png": snapshot.screenshot_png,
+            "chat_backend": _StubChatBackend(),
+        }
+
+        results = run_assertions(session.assertions, ctx)
+        session.assertion_results = results
+
+        all_passed = all(r.passed for r in results)
+        if not all_passed and session.termination_reason == TerminationReason.PASS:
+            logger.warning("assertion_failed_demoting_pass")
+            session.termination_reason = TerminationReason.ASSERTION_FAILED
+        elif not all_passed and session.termination_reason not in (
+            TerminationReason.CRASH,
+            TerminationReason.UNSAFE,
+            TerminationReason.USER,
+        ):
+            session.termination_reason = TerminationReason.ASSERTION_FAILED
+
+
+def _ensure_implicit_assertions(
+    session: SessionContext,
+    explicit: list[Assertion] | None = None,
+) -> None:
+    """Add implicit assertions and merge user-supplied ones.
+
+    Always prepends a ``no_error_dialog`` assertion (unless the caller
+    already supplied one).
+    """
+    if explicit:
+        session.assertions = list(explicit)
+
+    has_no_error = any(a.type == "no_error_dialog" for a in session.assertions)
+    if not has_no_error:
+        session.assertions.insert(0, Assertion(type="no_error_dialog"))

@@ -94,6 +94,9 @@ def consolidate(
             app_args=session.app_args,
         ),
         steps=case_steps,
+        assertions=[
+            {"type": a.type, "params": a.params} for a in session.assertions
+        ],
         metadata=CaseMetadata(
             fingerprint=fingerprint,
             source_session_id=session.session_id,

@@ -184,31 +184,46 @@ class EvidenceCleaner:
     def _is_failed_session(self, session_dir: Path) -> bool:
         """Check if a session directory represents a failed/aborted session.
 
-        Looks for a ``status.json`` file and checks the status field.
+        Looks for a ``status.json`` file in the ``sessions/`` sibling
+        directory first, then falls back to checking ``report.json`` or
+        ``status.json`` within the evidence directory itself.
         """
-        status_file = session_dir / "status.json"
-        if not status_file.exists():
-            # No status file — check for report.json with FAIL status
-            report_file = session_dir / "report.json"
-            if report_file.exists():
-                try:
-                    import json
-                    data = json.loads(report_file.read_text(encoding="utf-8"))
-                    result = data.get("result", {})
-                    status = result.get("status", "")
-                    return status in ("FAIL", "ABORT")
-                except Exception:
-                    pass
-            # No status info — treat as normal
-            return False
+        # First: check the sessions/{id}/status.json (canonical location)
+        session_id = session_dir.name
+        sessions_status = session_dir.parent.parent / "sessions" / session_id / "status.json"
+        if sessions_status.exists():
+            try:
+                import json
+                data = json.loads(sessions_status.read_text(encoding="utf-8"))
+                status = data.get("status", "")
+                return status in ("FAILED", "ABORTED", "STOPPED")
+            except Exception:
+                pass
 
-        try:
-            import json
-            data = json.loads(status_file.read_text(encoding="utf-8"))
-            status = data.get("status", "")
-            return status in ("FAILED", "ABORTED")
-        except Exception:
-            return False
+        # Fallback: check evidence/{id}/status.json (legacy)
+        status_file = session_dir / "status.json"
+        if status_file.exists():
+            try:
+                import json
+                data = json.loads(status_file.read_text(encoding="utf-8"))
+                status = data.get("status", "")
+                return status in ("FAILED", "ABORTED", "STOPPED")
+            except Exception:
+                pass
+
+        # Last resort: check report.json in evidence dir
+        report_file = session_dir / "report.json"
+        if report_file.exists():
+            try:
+                import json
+                data = json.loads(report_file.read_text(encoding="utf-8"))
+                result = data.get("result", {})
+                status = result.get("status", "")
+                return status in ("FAIL", "ABORT")
+            except Exception:
+                pass
+
+        return False
 
     def _dir_size(self, path: Path) -> int:
         """Calculate total size of a directory in bytes."""

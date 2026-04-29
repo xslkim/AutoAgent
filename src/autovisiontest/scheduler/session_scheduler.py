@@ -22,6 +22,8 @@ from autovisiontest.cases.store import RecordingStore
 from autovisiontest.engine.exploratory import ExploratoryRunner
 from autovisiontest.engine.models import SessionContext, TerminationReason
 from autovisiontest.engine.regression import RegressionRunner
+from autovisiontest.report.builder import ReportBuilder
+from autovisiontest.report.evidence import EvidenceWriter as DiskEvidenceWriter
 from autovisiontest.scheduler.session_store import (
     SessionRecord,
     SessionStatus,
@@ -44,12 +46,14 @@ class SessionScheduler:
         *,
         agent_backend: UITarsBackend,
         max_steps: int = 30,
+        trigger: str = "cli",
     ) -> None:
         if agent_backend is None:
             raise ValueError("SessionScheduler requires an agent_backend (UI-TARS)")
         self._agent_backend = agent_backend
         self._data_dir = Path(data_dir)
         self._max_steps = max_steps
+        self._trigger = trigger
 
         self._store = RecordingStore(data_dir=self._data_dir)
         self._session_store = SessionStore(data_dir=self._data_dir)
@@ -59,6 +63,8 @@ class SessionScheduler:
         self._futures: dict[str, Future[None]] = {}
         # Track sessions that should be stopped
         self._stop_requested: set[str] = set()
+        # Per-session stop events for cooperative interruption
+        self._stop_events: dict[str, Any] = {}  # session_id -> threading.Event
 
     # -- Public API ----------------------------------------------------------
 
@@ -189,6 +195,10 @@ class SessionScheduler:
             return False
 
         self._stop_requested.add(session_id)
+        # Signal the cooperative stop event
+        stop_evt = self._stop_events.get(session_id)
+        if stop_evt is not None:
+            stop_evt.set()
         logger.info("session_stop_requested", extra={"session_id": session_id})
         return True
 
@@ -269,11 +279,17 @@ class SessionScheduler:
             launch: Whether to launch/close the app (see ``start_session``).
         """
         try:
+            # Create cooperative stop event for this session
+            import threading
+            stop_event = threading.Event()
+            self._stop_events[session_id] = stop_event
+
             if mode == "regression" and fingerprint:
-                session = self._run_regression(fingerprint)
+                session = self._run_regression(fingerprint, session_id=session_id)
             else:
                 session = self._run_exploratory(
-                    goal, app_path, app_args, launch=launch, session_id=session_id
+                    goal, app_path, app_args, launch=launch,
+                    session_id=session_id, stop_event=stop_event,
                 )
 
             # Check if stop was requested during execution
@@ -284,6 +300,9 @@ class SessionScheduler:
             # Save session context
             self._save_context(session_id, session)
 
+            # T-1.2: Build and persist the report.
+            report_path = self._write_report(session_id, session)
+
             # Update session record
             record = self._session_store.load(session_id)
             if record is not None:
@@ -292,6 +311,8 @@ class SessionScheduler:
                     if session.termination_reason
                     else None
                 )
+                if report_path:
+                    record.report_path = str(report_path)
                 if session.termination_reason == TerminationReason.PASS:
                     record.status = SessionStatus.COMPLETED
                 elif session.termination_reason == TerminationReason.USER:
@@ -362,6 +383,9 @@ class SessionScheduler:
                 record.status = SessionStatus.FAILED
                 record.termination_reason = "INTERNAL_ERROR"
                 self._session_store.save(record)
+        finally:
+            # Always clean up the stop event to prevent memory leaks
+            self._stop_events.pop(session_id, None)
 
     def _run_exploratory(
         self,
@@ -370,12 +394,14 @@ class SessionScheduler:
         app_args: list[str] | None,
         launch: bool = True,
         session_id: str | None = None,
+        stop_event: Any = None,
     ) -> SessionContext:
         """Run an exploratory session via UI-TARS."""
         runner = ExploratoryRunner(
             agent_backend=self._agent_backend,
             max_steps=self._max_steps,
             data_dir=self._data_dir,
+            stop_event=stop_event,
         )
         return runner.run(
             goal=goal,
@@ -385,10 +411,14 @@ class SessionScheduler:
             session_id=session_id,
         )
 
-    def _run_regression(self, fingerprint: str) -> SessionContext:
-        """Regression mode — currently raises pending Agent port."""
-        runner = RegressionRunner(store=self._store, max_steps=self._max_steps)
-        return runner.run(recording_path=fingerprint)
+    def _run_regression(self, fingerprint: str, session_id: str | None = None) -> SessionContext:
+        """Regression mode — replay recorded steps."""
+        runner = RegressionRunner(
+            store=self._store,
+            max_steps=self._max_steps,
+            data_dir=self._data_dir,
+        )
+        return runner.run(recording_path=fingerprint, session_id=session_id)
 
     def _save_context(self, session_id: str, session: SessionContext) -> None:
         """Save the SessionContext to disk."""
@@ -396,6 +426,29 @@ class SessionScheduler:
         session_dir.mkdir(parents=True, exist_ok=True)
         ctx_path = session_dir / "context.json"
         ctx_path.write_text(session.model_dump_json(indent=2), encoding="utf-8")
+
+    def _write_report(self, session_id: str, session: SessionContext) -> Path | None:
+        """Build and persist the report, returning the path or None."""
+        try:
+            evidence_dir = self._data_dir / "evidence" / session_id
+            builder = ReportBuilder()
+            report = builder.build(
+                session=session,
+                evidence_dir=evidence_dir if evidence_dir.exists() else None,
+                include_base64=True,
+            )
+            # Inject trigger into report
+            report.session.trigger = self._trigger
+            disk_writer = DiskEvidenceWriter(session_id=session_id, data_dir=self._data_dir)
+            report_path = disk_writer.write_report(report)
+            logger.info(
+                "report_written",
+                extra={"session_id": session_id, "path": str(report_path)},
+            )
+            return report_path
+        except Exception:
+            logger.exception("report_write_failed", extra={"session_id": session_id})
+            return None
 
     def _invalidate_and_reexplore(
         self,

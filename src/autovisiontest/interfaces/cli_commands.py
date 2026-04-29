@@ -28,7 +28,7 @@ EXIT_INTERNAL_ERROR = 3
 # ── Scheduler factory ──────────────────────────────────────────────────
 
 
-def _create_scheduler(config_path: str | None, data_dir: Path | None = None):
+def _create_scheduler(config_path: str | None, data_dir: Path | None = None, trigger: str = "cli"):
     """Create a :class:`SessionScheduler` from config.
 
     Builds the single UI-TARS agent backend from ``config.agent`` and
@@ -64,6 +64,7 @@ def _create_scheduler(config_path: str | None, data_dir: Path | None = None):
         agent_backend=agent_backend,
         data_dir=actual_data_dir,
         max_steps=config.runtime.max_steps,
+        trigger=trigger,
     )
 
 
@@ -116,8 +117,8 @@ def cmd_run(
                 Path(case_path).read_text(encoding="utf-8")
             )
             goal = case.goal
-            app_path = case.app_config.path
-            app_args_list = case.app_config.args
+            app_path = case.app_config.app_path
+            app_args_list = case.app_config.app_args
         except Exception as exc:
             click.echo(f"Error loading case file: {exc}", err=True)
             return EXIT_INTERNAL_ERROR
