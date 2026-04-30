@@ -21,7 +21,14 @@ from typing import Optional
 
 from autovisiontest.backends.uitars import UITarsBackend
 from autovisiontest.control.executor import ActionExecutor
-from autovisiontest.control.process import AppHandle, close_app, kill_processes_by_exe, launch_app
+from autovisiontest.control.process import (
+    AppHandle,
+    close_app,
+    kill_related_processes,
+    kill_stale_instances_for_app,
+    launch_app,
+    pick_calculator_monitor_pid,
+)
 from autovisiontest.engine.agent import UITarsAgent
 from autovisiontest.engine.assertions import run_assertions
 from autovisiontest.engine.models import Assertion, SessionContext, TerminationReason
@@ -134,21 +141,29 @@ class ExploratoryRunner:
             if launch:
                 if not app_path:
                     raise ValueError("app_path is required when launch=True")
-                exe_name = app_path.rsplit("\\", 1)[-1] if "\\" in app_path else app_path.rsplit("/", 1)[-1]
-                kill_processes_by_exe(exe_name)
+                kill_stale_instances_for_app(app_path)
                 handle = launch_app(app_path, app_args)
                 logger.info("app_launched", extra={"app_path": app_path, "pid": handle.pid})
                 session.app_pid = handle.pid
                 # Wait for main window to appear using PID-based lookup,
                 # which is reliable regardless of the window title.
                 try:
-                    from autovisiontest.control.window import find_window_by_pid
-                    import time as _time
-                    _deadline = _time.monotonic() + 10.0
-                    while _time.monotonic() < _deadline:
-                        if find_window_by_pid(handle.pid) is not None:
-                            break
-                        _time.sleep(0.2)
+                    from autovisiontest.control.window import wait_for_app_main_window
+
+                    wait_for_app_main_window(app_path, handle.pid, timeout_s=20.0)
+                    if handle.exe_name.lower() == "calc.exe":
+                        mp = pick_calculator_monitor_pid()
+                        if mp is not None:
+                            handle.monitor_pid = mp
+                            logger.info(
+                                "calc_monitor_pid_attached",
+                                extra={"monitor_pid": mp},
+                            )
+                        else:
+                            logger.warning(
+                                "calc_monitor_pid_unresolved",
+                                extra={"hint": "is_alive uses window/PowerShell fallbacks"},
+                            )
                 except Exception:
                     logger.debug("ready_check_skipped", extra={"app_path": app_path})
             else:
@@ -199,7 +214,7 @@ class ExploratoryRunner:
                 except Exception:
                     logger.exception("app_close_failed")
                     try:
-                        kill_processes_by_exe(handle.exe_name)
+                        kill_related_processes(handle)
                     except Exception:
                         pass
 

@@ -14,6 +14,7 @@ from typing import Any
 
 import click
 
+from autovisiontest.engine.models import Assertion
 from autovisiontest.scheduler.session_store import SessionStatus
 
 
@@ -108,17 +109,20 @@ def cmd_run(
     if scheduler is None:
         return EXIT_INTERNAL_ERROR
 
+    session_assertions: list[Assertion] | None = None
     if case_path is not None:
         click.echo(f"Running from case file: {case_path}")
         try:
-            from autovisiontest.cases.schema import TestCase
+            from autovisiontest.cases.loader import load_case_file
 
-            case = TestCase.model_validate_json(
-                Path(case_path).read_text(encoding="utf-8")
-            )
+            case = load_case_file(case_path)
             goal = case.goal
             app_path = case.app_config.app_path
             app_args_list = case.app_config.app_args
+            if case.assertions:
+                session_assertions = [
+                    Assertion.model_validate(spec) for spec in case.assertions
+                ]
         except Exception as exc:
             click.echo(f"Error loading case file: {exc}", err=True)
             return EXIT_INTERNAL_ERROR
@@ -138,6 +142,7 @@ def cmd_run(
         app_args=app_args_list,
         timeout_ms=timeout,
         launch=launch,
+        assertions=session_assertions,
     )
     click.echo(f"Session started: {session_id}")
 

@@ -20,7 +20,7 @@ from autovisiontest.backends.uitars import UITarsBackend
 from autovisiontest.cases.consolidator import consolidate
 from autovisiontest.cases.store import RecordingStore
 from autovisiontest.engine.exploratory import ExploratoryRunner
-from autovisiontest.engine.models import SessionContext, TerminationReason
+from autovisiontest.engine.models import Assertion, SessionContext, TerminationReason
 from autovisiontest.engine.regression import RegressionRunner
 from autovisiontest.report.builder import ReportBuilder
 from autovisiontest.report.evidence import EvidenceWriter as DiskEvidenceWriter
@@ -75,6 +75,7 @@ class SessionScheduler:
         app_args: list[str] | None = None,
         timeout_ms: int | None = None,
         launch: bool = True,
+        assertions: list[Assertion] | None = None,
     ) -> str:
         """Start a test session.
 
@@ -134,6 +135,7 @@ class SessionScheduler:
             mode=mode,
             fingerprint=fingerprint,
             launch=launch,
+            assertions=assertions,
         )
         self._futures[session_id] = future
 
@@ -263,6 +265,7 @@ class SessionScheduler:
         mode: str,
         fingerprint: str | None,
         launch: bool = True,
+        assertions: list[Assertion] | None = None,
     ) -> None:
         """Execute a session in the background thread.
 
@@ -288,8 +291,13 @@ class SessionScheduler:
                 session = self._run_regression(fingerprint, session_id=session_id)
             else:
                 session = self._run_exploratory(
-                    goal, app_path, app_args, launch=launch,
-                    session_id=session_id, stop_event=stop_event,
+                    goal,
+                    app_path,
+                    app_args,
+                    launch=launch,
+                    session_id=session_id,
+                    stop_event=stop_event,
+                    assertions=assertions,
                 )
 
             # Check if stop was requested during execution
@@ -395,6 +403,7 @@ class SessionScheduler:
         launch: bool = True,
         session_id: str | None = None,
         stop_event: Any = None,
+        assertions: list[Assertion] | None = None,
     ) -> SessionContext:
         """Run an exploratory session via UI-TARS."""
         runner = ExploratoryRunner(
@@ -409,6 +418,7 @@ class SessionScheduler:
             app_args=app_args,
             launch=launch,
             session_id=session_id,
+            assertions=assertions,
         )
 
     def _run_regression(self, fingerprint: str, session_id: str | None = None) -> SessionContext:

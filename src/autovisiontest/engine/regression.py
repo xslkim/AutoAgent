@@ -18,7 +18,14 @@ from typing import Any
 
 from autovisiontest.control.actions import Action
 from autovisiontest.control.executor import ActionExecutor
-from autovisiontest.control.process import AppHandle, close_app, kill_processes_by_exe, launch_app
+from autovisiontest.control.window import wait_for_app_main_window
+from autovisiontest.control.process import (
+    AppHandle,
+    close_app,
+    kill_related_processes,
+    kill_stale_instances_for_app,
+    launch_app,
+)
 from autovisiontest.engine.assertions import run_assertions
 from autovisiontest.engine.models import (
     Assertion,
@@ -111,13 +118,12 @@ class RegressionRunner:
         try:
             # Launch the application
             app_path = case.app_config.app_path
-            exe_name = app_path.rsplit("\\", 1)[-1] if "\\" in app_path else app_path.rsplit("/", 1)[-1]
-            kill_processes_by_exe(exe_name)
+            kill_stale_instances_for_app(app_path)
             handle = launch_app(app_path, case.app_config.app_args)
             logger.info("regression_app_launched", extra={"app_path": app_path})
 
-            # Wait for app to be ready
-            time.sleep(2.0)
+            wait_for_app_main_window(app_path, handle.pid, timeout_s=15.0)
+            time.sleep(0.5)
 
             # Replay each step
             for case_step in case.steps:
@@ -172,7 +178,7 @@ class RegressionRunner:
                     close_app(handle)
                 except Exception:
                     try:
-                        kill_processes_by_exe(handle.exe_name)
+                        kill_related_processes(handle)
                     except Exception:
                         pass
 

@@ -39,7 +39,13 @@ class AgentConfig(BaseModel):
     history_images: int = Field(
         default=3,
         ge=0,
-        description="How many of the most recent past screenshots to re-send back to the model.",
+        le=4,
+        description=(
+            "How many of the most recent past screenshots to re-send back to the model. "
+            "Each request also attaches the current screenshot; vLLM deployments typically "
+            "use --limit-mm-per-prompt '{\"image\": 5}', so history_images must stay ≤ 4 "
+            "unless you raise that server-side limit."
+        ),
     )
     timeout_s: float = Field(default=60.0, gt=0.0)
 

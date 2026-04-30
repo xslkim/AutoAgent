@@ -71,6 +71,68 @@ def find_window_by_title(pattern: str) -> WindowInfo | None:
     return None
 
 
+def find_calculator_window() -> WindowInfo | None:
+    """Best-effort match for the Windows Calculator window (desktop or UWP).
+
+    UWP builds may use ``ApplicationFrameHost.exe``; matching by title avoids
+    relying on ``Calculator.exe`` appearing in ``tasklist``.
+    """
+    enable_dpi_awareness()
+    try:
+        for w in gw.getAllWindows():
+            title = (w.title or "").strip()
+            if len(title) < 2:
+                continue
+            tl = title.lower()
+            match = False
+            if "计算器" in title:
+                match = True
+            elif "calculator" in tl and "edge" not in tl and "chrome" not in tl:
+                match = True
+            if not match:
+                continue
+            try:
+                return WindowInfo(
+                    title=title,
+                    pid=w.processId,
+                    handle=w.getHandle(),
+                    rect=(w.left, w.top, w.right, w.bottom),
+                )
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return None
+
+
+def wait_for_app_main_window(
+    app_path: str,
+    launcher_pid: int,
+    timeout_s: float = 20.0,
+    poll_interval_s: float = 0.2,
+) -> None:
+    """Block until a plausible main window exists for *app_path*.
+
+    ``calc.exe`` on Windows 10/11 exits immediately after spawning the real
+    UI; we detect it via :func:`find_calculator_window` as well as title
+    substring heuristics.
+    """
+    exe = app_path.rsplit("\\", 1)[-1] if "\\" in app_path else app_path.rsplit("/", 1)[-1]
+    exe_l = exe.lower()
+    deadline = time.monotonic() + timeout_s
+
+    while time.monotonic() < deadline:
+        if find_window_by_pid(launcher_pid) is not None:
+            return
+        if exe_l == "calc.exe":
+            if find_calculator_window() is not None:
+                return
+            for pattern in ("计算器", "Calculator"):
+                if find_window_by_title(pattern) is not None:
+                    return
+        time.sleep(poll_interval_s)
+
+
 def find_window_by_pid(pid: int) -> WindowInfo | None:
     """Find a window by its process ID."""
     enable_dpi_awareness()
