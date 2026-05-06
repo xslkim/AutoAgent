@@ -1,0 +1,22 @@
+{
+  "goal": "记事本已由测试框架启动并置于前台。请完成以下步骤：\n1. 在记事本编辑区输入文字 "Hello, AutoVisionTest!"\n2. 按 Ctrl+Shift+S 或通过菜单「文件 → 另存为」，将文件保存到路径 C:\\TestSandbox\\hello.txt（如目录不存在请先新建）\n3. 确认保存成功后，调用 finished(content='已保存 hello.txt') 结束任务。\n注意：必须确认文件已实际保存才能结束。",
+  "app_config": {
+    "app_path": "C:\\Windows\\System32\\notepad.exe",
+    "app_args": []
+  },
+  "steps": [],
+  "assertions": [
+    {
+      "type": "file_exists",
+      "params": {
+        "path": "C:\\TestSandbox\\hello.txt"
+      }
+    }
+  ],
+  "metadata": {
+    "fingerprint": "",
+    "source_session_id": "",
+    "step_count": 0,
+    "version": 1
+  }
+}

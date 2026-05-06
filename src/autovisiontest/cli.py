@@ -65,6 +65,13 @@ def main(ctx: click.Context, config_path: str | None, log_level: str) -> None:
     default=False,
     help="Attach mode: do NOT kill/launch/close any process. The Planner drives the UI from the current desktop state.",
 )
+@click.option(
+    "--debug-trace",
+    "debug_trace",
+    is_flag=True,
+    default=False,
+    help="Record every step's prompt, screenshots, and model response into a self-contained HTML debug report.",
+)
 @click.pass_context
 def run(
     ctx: click.Context,
@@ -74,6 +81,7 @@ def run(
     timeout: int | None,
     case_path: str | None,
     no_launch: bool,
+    debug_trace: bool,
 ) -> None:
     """Launch a test session (exploratory or regression)."""
     if goal is None and case_path is None:
@@ -87,6 +95,7 @@ def run(
     exit_code = cmd_run(
         goal, app_path, app_args, timeout, case_path, config_path,
         launch=not no_launch,
+        debug_trace=debug_trace,
     )
     sys.exit(exit_code)
 

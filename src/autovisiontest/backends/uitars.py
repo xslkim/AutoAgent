@@ -616,6 +616,10 @@ class UITarsBackend:
         self._language = language
         self._history_images = history_images
         self._timeout_s = timeout_s
+        # Set this to a callable to enable debug tracing.
+        # Signature: (*, prompt_text, history_count, raw_response,
+        #             orig_w, orig_h, sent_w, sent_h, sent_jpeg) -> None
+        self.trace_hook: "Callable | None" = None
 
     # ------------------------------------------------------------------
     # Main entry point
@@ -716,4 +720,20 @@ class UITarsBackend:
         )
         if decision.parse_error:
             logger.warning("uitars_parse_error: %s | raw=%s", decision.parse_error, content[:300])
+
+        if self.trace_hook is not None:
+            try:
+                self.trace_hook(
+                    prompt_text=build_instruction_text(goal, self._language),
+                    history_count=len(history or []),
+                    raw_response=content,
+                    orig_w=orig_w,
+                    orig_h=orig_h,
+                    sent_w=sent_w,
+                    sent_h=sent_h,
+                    sent_jpeg=sent_bytes,
+                )
+            except Exception:
+                logger.debug("trace_hook_error", exc_info=True)
+
         return decision

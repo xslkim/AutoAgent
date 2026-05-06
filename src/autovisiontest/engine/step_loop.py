@@ -82,6 +82,7 @@ class StepLoop:
         evidence_writer: EvidenceWriter | None = None,
         step_wait_ms: int = _DEFAULT_STEP_WAIT_MS,
         stop_requested: threading.Event | None = None,
+        debug_tracer: "object | None" = None,
     ) -> None:
         self._agent = agent
         self._terminator = terminator
@@ -91,6 +92,7 @@ class StepLoop:
         self._evidence_writer = evidence_writer or NullEvidenceWriter()
         self._step_wait_ms = step_wait_ms
         self._stop_event = stop_requested
+        self._debug_tracer = debug_tracer
 
     # ------------------------------------------------------------------
     # Main loop
@@ -208,6 +210,17 @@ class StepLoop:
                 before_path=evidence_paths.get("before", ""),
                 after_path=evidence_paths.get("after", ""),
             )
+
+            if self._debug_tracer is not None:
+                try:
+                    self._debug_tracer.record_step(
+                        step_idx=session.step_count - 1,
+                        before_png=before_screenshot,
+                        after_png=after_screenshot,
+                        decision=decision,
+                    )
+                except Exception:
+                    logger.debug("debug_tracer_record_step_failed", exc_info=True)
 
     # ------------------------------------------------------------------
     # Helpers
