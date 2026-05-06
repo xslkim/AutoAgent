@@ -107,11 +107,13 @@ class ExploratoryRunner:
         max_steps: int = 30,
         data_dir: Path | None = None,
         stop_event: "threading.Event | None" = None,
+        debug_tracer: "object | None" = None,
     ) -> None:
         self._agent_backend = agent_backend
         self._max_steps = max_steps
         self._data_dir = Path(data_dir) if data_dir is not None else None
         self._stop_event = stop_event
+        self._debug_tracer = debug_tracer
 
     def run(
         self,
@@ -192,6 +194,7 @@ class ExploratoryRunner:
                 perception=perception,
                 evidence_writer=evidence_writer,
                 stop_requested=self._stop_event,
+                debug_tracer=self._debug_tracer,
             )
 
             reason = loop.run(session)

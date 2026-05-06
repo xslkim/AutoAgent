@@ -47,6 +47,7 @@ class SessionScheduler:
         agent_backend: UITarsBackend,
         max_steps: int = 30,
         trigger: str = "cli",
+        debug_tracer: "object | None" = None,
     ) -> None:
         if agent_backend is None:
             raise ValueError("SessionScheduler requires an agent_backend (UI-TARS)")
@@ -54,6 +55,7 @@ class SessionScheduler:
         self._data_dir = Path(data_dir)
         self._max_steps = max_steps
         self._trigger = trigger
+        self._debug_tracer = debug_tracer
 
         self._store = RecordingStore(data_dir=self._data_dir)
         self._session_store = SessionStore(data_dir=self._data_dir)
@@ -411,6 +413,7 @@ class SessionScheduler:
             max_steps=self._max_steps,
             data_dir=self._data_dir,
             stop_event=stop_event,
+            debug_tracer=self._debug_tracer,
         )
         return runner.run(
             goal=goal,

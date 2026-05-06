@@ -29,7 +29,12 @@ EXIT_INTERNAL_ERROR = 3
 # ── Scheduler factory ──────────────────────────────────────────────────
 
 
-def _create_scheduler(config_path: str | None, data_dir: Path | None = None, trigger: str = "cli"):
+def _create_scheduler(
+    config_path: str | None,
+    data_dir: Path | None = None,
+    trigger: str = "cli",
+    debug_tracer: "object | None" = None,
+):
     """Create a :class:`SessionScheduler` from config.
 
     Builds the single UI-TARS agent backend from ``config.agent`` and
@@ -59,6 +64,9 @@ def _create_scheduler(config_path: str | None, data_dir: Path | None = None, tri
         click.echo(f"Error creating agent backend: {exc}", err=True)
         return None
 
+    if debug_tracer is not None and hasattr(agent_backend, "trace_hook"):
+        agent_backend.trace_hook = debug_tracer.on_backend_call
+
     from autovisiontest.scheduler.session_scheduler import SessionScheduler
 
     return SessionScheduler(
@@ -66,6 +74,7 @@ def _create_scheduler(config_path: str | None, data_dir: Path | None = None, tri
         data_dir=actual_data_dir,
         max_steps=config.runtime.max_steps,
         trigger=trigger,
+        debug_tracer=debug_tracer,
     )
 
 
@@ -95,6 +104,7 @@ def cmd_run(
     case_path: str | None,
     config_path: str | None,
     launch: bool = True,
+    debug_trace: bool = False,
 ) -> int:
     """Execute the ``run`` command.
 
@@ -105,7 +115,16 @@ def cmd_run(
 
     Returns exit code.
     """
-    scheduler = _create_scheduler(config_path)
+    debug_tracer = None
+    if debug_trace:
+        try:
+            from autovisiontest.debug.tracer import DebugTracer
+            debug_tracer = DebugTracer()
+            debug_tracer.started_at = time.strftime("%Y-%m-%dT%H:%M:%S")
+        except ImportError as exc:
+            click.echo(f"Warning: debug module unavailable ({exc}), continuing without trace.", err=True)
+
+    scheduler = _create_scheduler(config_path, debug_tracer=debug_tracer)
     if scheduler is None:
         return EXIT_INTERNAL_ERROR
 
@@ -170,6 +189,22 @@ def cmd_run(
     report = scheduler.get_report(session_id)
     if report:
         click.echo(f"Report available for session {session_id}")
+
+    # Save debug trace HTML if requested
+    if debug_tracer is not None and debug_tracer.steps:
+        try:
+            config = _load_config(config_path)
+            data_dir = Path(config.runtime.data_dir) if config else Path("./data")
+            trace_path = data_dir / "debug_trace" / session_id / "debug_trace.html"
+            debug_tracer.finished_at = time.strftime("%Y-%m-%dT%H:%M:%S")
+            debug_tracer.final_status = final_status.value if final_status else "UNKNOWN"
+            debug_tracer.session_id = session_id
+            debug_tracer.session_goal = goal or ""
+            debug_tracer.app_path = app_path or ""
+            debug_tracer.save_html(trace_path)
+            click.echo(f"Debug trace saved: {trace_path}")
+        except Exception as exc:
+            click.echo(f"Warning: failed to save debug trace: {exc}", err=True)
 
     scheduler.shutdown()
 

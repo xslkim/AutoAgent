@@ -8,7 +8,7 @@
 agent:
   backend: "uitars_local"                  # only uitars_local is supported
   model: "ui-tars-1.5-7b"                  # --served-model-name in vLLM
-  endpoint: "http://10.11.0.85:28801/v1"   # UI-TARS vLLM（局域网）
+  endpoint: "http://10.11.0.123:28801/v1"  # UI-TARS vLLM（局域网）
   max_tokens: 512
   temperature: 0.0                         # deterministic; UI-TARS is trained for greedy decoding
   language: "Chinese"                      # thought language — must match training distribution
