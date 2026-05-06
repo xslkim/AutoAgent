@@ -14,6 +14,7 @@ from typing import Any
 
 import click
 
+from autovisiontest.engine.models import Assertion
 from autovisiontest.scheduler.session_store import SessionStatus
 
 
@@ -28,7 +29,7 @@ EXIT_INTERNAL_ERROR = 3
 # ── Scheduler factory ──────────────────────────────────────────────────
 
 
-def _create_scheduler(config_path: str | None, data_dir: Path | None = None):
+def _create_scheduler(config_path: str | None, data_dir: Path | None = None, trigger: str = "cli"):
     """Create a :class:`SessionScheduler` from config.
 
     Builds the single UI-TARS agent backend from ``config.agent`` and
@@ -64,6 +65,7 @@ def _create_scheduler(config_path: str | None, data_dir: Path | None = None):
         agent_backend=agent_backend,
         data_dir=actual_data_dir,
         max_steps=config.runtime.max_steps,
+        trigger=trigger,
     )
 
 
@@ -107,17 +109,20 @@ def cmd_run(
     if scheduler is None:
         return EXIT_INTERNAL_ERROR
 
+    session_assertions: list[Assertion] | None = None
     if case_path is not None:
         click.echo(f"Running from case file: {case_path}")
         try:
-            from autovisiontest.cases.schema import TestCase
+            from autovisiontest.cases.loader import load_case_file
 
-            case = TestCase.model_validate_json(
-                Path(case_path).read_text(encoding="utf-8")
-            )
+            case = load_case_file(case_path)
             goal = case.goal
-            app_path = case.app_config.path
-            app_args_list = case.app_config.args
+            app_path = case.app_config.app_path
+            app_args_list = case.app_config.app_args
+            if case.assertions:
+                session_assertions = [
+                    Assertion.model_validate(spec) for spec in case.assertions
+                ]
         except Exception as exc:
             click.echo(f"Error loading case file: {exc}", err=True)
             return EXIT_INTERNAL_ERROR
@@ -137,6 +142,7 @@ def cmd_run(
         app_args=app_args_list,
         timeout_ms=timeout,
         launch=launch,
+        assertions=session_assertions,
     )
     click.echo(f"Session started: {session_id}")
 

@@ -51,7 +51,13 @@ def main(ctx: click.Context, config_path: str | None, log_level: str) -> None:
 @click.option("--app", "app_path", type=str, default=None, help="Path to the application executable.")
 @click.option("--app-args", type=str, default=None, help="Arguments to pass to the application.")
 @click.option("--timeout", type=int, default=None, help="Maximum session duration in milliseconds.")
-@click.option("--case", "case_path", type=click.Path(exists=False), default=None, help="Path to a recorded test case.")
+@click.option(
+    "--case",
+    "case_path",
+    type=click.Path(exists=False),
+    default=None,
+    help="Path to a test case (.json or .py — see autovisiontest.cases.loader).",
+)
 @click.option(
     "--no-launch",
     "no_launch",

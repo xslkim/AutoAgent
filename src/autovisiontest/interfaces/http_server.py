@@ -18,6 +18,8 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
+from autovisiontest.scheduler.session_store import SessionStatus
+
 logger = logging.getLogger(__name__)
 
 
@@ -49,6 +51,8 @@ class SessionStatusResponse(BaseModel):
     termination_reason: str | None = None
     created_at: str
     updated_at: str
+    progress: float = 0.0
+    current_step: str = ""
 
 
 class StopSessionResponse(BaseModel):
@@ -70,6 +74,36 @@ class DeleteRecordingResponse(BaseModel):
     """Response for deleting a recording."""
 
     deleted: bool
+
+
+def _compute_progress(record, scheduler) -> float:
+    """Compute progress percentage from session record."""
+    if record.status in (SessionStatus.COMPLETED, SessionStatus.FAILED, SessionStatus.STOPPED):
+        return 1.0
+    if record.status == SessionStatus.PENDING:
+        return 0.0
+    # RUNNING — try to read step count from context
+    try:
+        ctx = scheduler.get_session_context(record.session_id)
+        if ctx and hasattr(scheduler, "_max_steps"):
+            return min(ctx.step_count / scheduler._max_steps, 0.99)
+    except Exception:
+        pass
+    return 0.0
+
+
+def _get_current_step(record, scheduler) -> str:
+    """Get a description of the current step."""
+    if record.status in (SessionStatus.COMPLETED, SessionStatus.FAILED, SessionStatus.STOPPED):
+        return ""
+    try:
+        ctx = scheduler.get_session_context(record.session_id)
+        if ctx and ctx.steps:
+            last = ctx.steps[-1]
+            return last.planner_intent[:200] if last.planner_intent else ""
+    except Exception:
+        pass
+    return ""
 
 
 # ── App factory ─────────────────────────────────────────────────────────
@@ -136,6 +170,8 @@ def create_app(config_path: str | None = None) -> FastAPI:
             termination_reason=record.termination_reason,
             created_at=record.created_at,
             updated_at=record.updated_at,
+            progress=_compute_progress(record, _scheduler),
+            current_step=_get_current_step(record, _scheduler),
         )
 
     @app.get("/v1/sessions/{session_id}/report")
@@ -196,7 +232,7 @@ def _init_scheduler(config_path: str | None):
     try:
         from autovisiontest.interfaces.cli_commands import _create_scheduler
 
-        return _create_scheduler(config_path)
+        return _create_scheduler(config_path, trigger="http")
     except Exception:
         logger.exception("scheduler_init_failed")
         return None

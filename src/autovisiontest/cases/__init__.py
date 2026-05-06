@@ -6,4 +6,6 @@ Models correspond to the product document §4.3:
 - Step: A single recorded step
 - Expect: Expected state after a step
 - CaseMetadata: Metadata about the test case (fingerprints, timestamps, etc.)
+
+Use :func:`autovisiontest.cases.loader.load_case_file` for ``--case`` (``.json`` / ``.py``).
 """

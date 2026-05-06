@@ -62,13 +62,13 @@ class SecondCheck:
         """
         overrides = session_ctx.get("safety_overrides", 0)
 
-        # If override limit exceeded, auto-unsafe without asking VLM
+        # If override limit exceeded, auto-unsafe without asking VLM;
+        # do NOT increment the counter — the limit is already reached.
         if overrides >= self._max_overrides:
             logger.warning(
                 "safety_override_limit_exceeded",
                 extra={"overrides": overrides, "limit": self._max_overrides},
             )
-            session_ctx["safety_overrides"] = overrides + 1
             return "unsafe"
 
         # Build prompt for VLM
@@ -82,8 +82,9 @@ class SecondCheck:
             # On any error, default to unsafe
             verdict = "unsafe"
 
-        # Record override if VLM says safe
-        session_ctx["safety_overrides"] = overrides + 1
+        # Record override only if VLM says safe
+        if verdict == "safe":
+            session_ctx["safety_overrides"] = overrides + 1
 
         logger.info(
             "second_check_result",

@@ -30,17 +30,19 @@ def assert_ocr_contains(ocr: OCRResult, text: str) -> AssertionResult:
 
 
 def assert_no_error_dialog(ocr: OCRResult) -> AssertionResult:
-    """Check that no error dialog keywords appear in the OCR result."""
-    from autovisiontest.perception.error_dialog import ERROR_KEYWORDS
-    for item in ocr.items:
-        text_lower = item.text.lower()
-        for keyword in ERROR_KEYWORDS:
-            if keyword.lower() in text_lower:
-                return AssertionResult(
-                    type="no_error_dialog",
-                    passed=False,
-                    detail=f"Error keyword '{keyword}' found in '{item.text}'",
-                )
+    """Check that no error dialog keywords appear in the OCR result.
+
+    Reuses ``detect_error_dialog`` for consistent detection logic
+    (upper-half screen + nearby button pattern).
+    """
+    from autovisiontest.perception.error_dialog import detect_error_dialog
+    hit, keyword = detect_error_dialog(ocr)
+    if hit:
+        return AssertionResult(
+            type="no_error_dialog",
+            passed=False,
+            detail=f"Error dialog detected (keyword='{keyword}')",
+        )
     return AssertionResult(type="no_error_dialog", passed=True, detail="No error dialog detected")
 
 

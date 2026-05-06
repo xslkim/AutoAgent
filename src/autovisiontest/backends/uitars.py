@@ -267,7 +267,10 @@ def build_messages(
             # No visible frame for this step — dropping the whole pair
             # keeps the causal "image → action" structure intact.
             continue
-        img_b64 = base64.b64encode(step.screenshot_png).decode("utf-8")
+        # Same resize + JPEG path as the current screenshot — raw PNG history
+        # frames are far larger in vision tokens and blow past max_model_len fast.
+        hist_jpeg, _, _, _, _ = _resize_for_uitars(step.screenshot_png)
+        img_b64 = base64.b64encode(hist_jpeg).decode("utf-8")
         messages.append(
             {
                 "role": "user",
@@ -556,6 +559,14 @@ def parse_action_response(
     return decision
 
 
+def _is_context_length_error(response_body: str) -> bool:
+    """True when vLLM rejects the prompt because total tokens exceed ``max_model_len``."""
+    b = response_body.lower()
+    return "maximum context length" in b or (
+        "exceeds model" in b and "context" in b
+    )
+
+
 def parse_uitars_response(
     raw: str,
     orig_w: int,
@@ -625,37 +636,67 @@ class UITarsBackend:
         sent_bytes, orig_w, orig_h, sent_w, sent_h = _resize_for_uitars(image_png)
         b64 = base64.b64encode(sent_bytes).decode("utf-8")
 
-        messages = build_messages(
-            goal=goal,
-            current_image_b64=b64,
-            history=history,
-            language=self._language,
-            history_images=self._history_images,
-        )
-
-        payload = {
-            "model": self._model,
-            "messages": messages,
-            "max_tokens": self._max_tokens,
-            "temperature": self._temperature,
-            "stop": _STOP_SEQUENCES,
-        }
-
         url = f"{self._endpoint}/chat/completions"
-        try:
-            response = httpx.post(url, json=payload, timeout=self._timeout_s)
-            response.raise_for_status()
-            data = response.json()
-        except httpx.HTTPError as exc:
-            raise ChatBackendError(
-                f"UI-TARS HTTP error: {exc}",
-                retryable=True,
-            ) from exc
-        except ValueError as exc:
-            raise ChatBackendError(
-                f"UI-TARS response not valid JSON: {exc}",
-                retryable=False,
-            ) from exc
+        data: dict[str, Any] | None = None
+
+        for hi in range(self._history_images, -1, -1):
+            messages = build_messages(
+                goal=goal,
+                current_image_b64=b64,
+                history=history,
+                language=self._language,
+                history_images=hi,
+            )
+            payload = {
+                "model": self._model,
+                "messages": messages,
+                "max_tokens": self._max_tokens,
+                "temperature": self._temperature,
+                "stop": _STOP_SEQUENCES,
+            }
+            try:
+                response = httpx.post(url, json=payload, timeout=self._timeout_s)
+                response.raise_for_status()
+                data = response.json()
+                if hi < self._history_images:
+                    logger.warning(
+                        "uitars_decide_used_reduced_history_images requested=%s used=%s",
+                        self._history_images,
+                        hi,
+                    )
+                break
+            except httpx.HTTPStatusError as exc:
+                body = (exc.response.text or "").strip()
+                if (
+                    exc.response.status_code == 400
+                    and _is_context_length_error(body)
+                    and hi > 0
+                ):
+                    logger.warning(
+                        "uitars_context_overflow_retry lowering history_images from %s to %s",
+                        hi,
+                        hi - 1,
+                    )
+                    continue
+                if len(body) > 2000:
+                    body = body[:2000] + "…"
+                detail = f" | server_response={body}" if body else ""
+                raise ChatBackendError(
+                    f"UI-TARS HTTP error: {exc}{detail}",
+                    retryable=exc.response.status_code >= 500,
+                ) from exc
+            except httpx.HTTPError as exc:
+                raise ChatBackendError(
+                    f"UI-TARS HTTP error: {exc}",
+                    retryable=True,
+                ) from exc
+            except ValueError as exc:
+                raise ChatBackendError(
+                    f"UI-TARS response not valid JSON: {exc}",
+                    retryable=False,
+                ) from exc
+
+        assert data is not None
 
         choices = data.get("choices") or []
         if not choices:
