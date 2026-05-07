@@ -11,7 +11,7 @@ so sessions execute serially.
 from __future__ import annotations
 
 import logging
-import uuid
+import time
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
@@ -98,7 +98,13 @@ class SessionScheduler:
         Returns:
             session_id for tracking the session.
         """
-        session_id = uuid.uuid4().hex[:12]
+        session_id = time.strftime("%Y%m%d_%H%M%S")
+        # Collision check: append _2, _3, etc. if directory exists
+        base_id = session_id
+        counter = 2
+        while (self._data_dir / session_id).exists():
+            session_id = f"{base_id}_{counter}"
+            counter += 1
 
         # Regression mode requires a recording keyed on app_path + goal.
         # In attach mode we skip this lookup (no meaningful app_path).
@@ -218,7 +224,7 @@ class SessionScheduler:
         Returns:
             SessionContext if available, None otherwise.
         """
-        session_dir = self._session_store._sessions_dir / session_id
+        session_dir = self._data_dir / session_id
         ctx_path = session_dir / "context.json"
         if not ctx_path.exists():
             return None
@@ -435,7 +441,7 @@ class SessionScheduler:
 
     def _save_context(self, session_id: str, session: SessionContext) -> None:
         """Save the SessionContext to disk."""
-        session_dir = self._session_store._sessions_dir / session_id
+        session_dir = self._data_dir / session_id
         session_dir.mkdir(parents=True, exist_ok=True)
         ctx_path = session_dir / "context.json"
         ctx_path.write_text(session.model_dump_json(indent=2), encoding="utf-8")
@@ -443,7 +449,7 @@ class SessionScheduler:
     def _write_report(self, session_id: str, session: SessionContext) -> Path | None:
         """Build and persist the report, returning the path or None."""
         try:
-            evidence_dir = self._data_dir / "evidence" / session_id
+            evidence_dir = self._data_dir / session_id
             builder = ReportBuilder()
             report = builder.build(
                 session=session,

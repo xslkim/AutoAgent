@@ -6,12 +6,22 @@ import logging
 import time
 from dataclasses import dataclass
 
+import ctypes
+
 import pygetwindow as gw
 
 from autovisiontest.control.dpi import enable_dpi_awareness
 from autovisiontest.exceptions import AppLaunchError
 
+
 logger = logging.getLogger(__name__)
+
+
+def _get_window_pid(hwnd: int) -> int:
+    """Get the PID for a window handle via Windows API (no pywin32 needed)."""
+    pid = ctypes.c_ulong(0)
+    ctypes.windll.user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+    return pid.value
 
 
 @dataclass
@@ -34,8 +44,8 @@ def list_windows() -> list[WindowInfo]:
                 try:
                     windows.append(WindowInfo(
                         title=w.title,
-                        pid=w.processId,
-                        handle=w.getHandle(),
+                        pid=_get_window_pid(w._hWnd),
+                        handle=w._hWnd,
                         rect=(w.left, w.top, w.right, w.bottom),
                     ))
                 except Exception:
@@ -54,8 +64,8 @@ def find_window_by_title(pattern: str) -> WindowInfo | None:
             w = wins[0]
             return WindowInfo(
                 title=w.title,
-                pid=w.processId,
-                handle=w.getHandle(),
+                pid=_get_window_pid(w._hWnd),
+                handle=w._hWnd,
                 rect=(w.left, w.top, w.right, w.bottom),
             )
     except Exception:
@@ -64,8 +74,8 @@ def find_window_by_title(pattern: str) -> WindowInfo | None:
             if pattern.lower() in w.title.lower():
                 return WindowInfo(
                     title=w.title,
-                    pid=w.processId,
-                    handle=w.getHandle(),
+                    pid=_get_window_pid(w._hWnd),
+                    handle=w._hWnd,
                     rect=(w.left, w.top, w.right, w.bottom),
                 )
     return None
@@ -94,8 +104,8 @@ def find_calculator_window() -> WindowInfo | None:
             try:
                 return WindowInfo(
                     title=title,
-                    pid=w.processId,
-                    handle=w.getHandle(),
+                    pid=_get_window_pid(w._hWnd),
+                    handle=w._hWnd,
                     rect=(w.left, w.top, w.right, w.bottom),
                 )
             except Exception:
@@ -132,17 +142,22 @@ def wait_for_app_main_window(
                     return
         time.sleep(poll_interval_s)
 
+    raise AppLaunchError(
+        f"App window did not appear within {timeout_s}s: {exe}",
+        context={"app_path": app_path, "pid": launcher_pid, "timeout_s": timeout_s},
+    )
+
 
 def find_window_by_pid(pid: int) -> WindowInfo | None:
     """Find a window by its process ID."""
     enable_dpi_awareness()
     for w in gw.getAllWindows():
         try:
-            if w.processId == pid:
+            if _get_window_pid(w._hWnd) == pid:
                 return WindowInfo(
                     title=w.title,
-                    pid=w.processId,
-                    handle=w.getHandle(),
+                    pid=_get_window_pid(w._hWnd),
+                    handle=w._hWnd,
                     rect=(w.left, w.top, w.right, w.bottom),
                 )
         except Exception:

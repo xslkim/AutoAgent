@@ -3,7 +3,7 @@
 Cleanup rules (per §11.4):
 - Default: keep last 50 sessions OR last 7 days (whichever comes first)
 - FAILED/ABORTED sessions: keep for 30 days regardless
-- ``recordings/`` directory: **never** deleted
+- ``recording.json`` files: **never** deleted
 - Runs periodically in a background thread (default: every 1 hour)
 """
 
@@ -32,10 +32,10 @@ class CleanupStats:
 
 
 class EvidenceCleaner:
-    """Clean up old evidence directories based on retention policy.
+    """Clean up old session directories based on retention policy.
 
     Args:
-        data_dir: Root data directory containing ``evidence/`` and ``recordings/``.
+        data_dir: Root data directory containing per-session directories.
         keep_recent_sessions: Maximum number of recent sessions to keep.
         keep_days: Maximum age in days for normal sessions.
         keep_failed_days: Maximum age in days for failed/aborted sessions.
@@ -49,8 +49,6 @@ class EvidenceCleaner:
         keep_failed_days: int = 30,
     ) -> None:
         self._data_dir = Path(data_dir)
-        self._evidence_dir = data_dir / "evidence"
-        self._recordings_dir = data_dir / "recordings"
         self._keep_recent = keep_recent_sessions
         self._keep_days = keep_days
         self._keep_failed_days = keep_failed_days
@@ -59,25 +57,27 @@ class EvidenceCleaner:
     def cleanup(self) -> CleanupStats:
         """Run a single cleanup pass.
 
-        Scans all session directories under ``evidence/`` and removes
-        those that exceed retention limits.  The ``recordings/`` directory
-        is **never** touched.
+        Scans all session directories under ``data_dir/`` and removes
+        those that exceed retention limits.  ``recording.json`` files
+        are **never** deleted (only their parent directory is removed).
 
         Returns:
             CleanupStats with counts of scanned/deleted/kept items.
         """
         stats = CleanupStats()
 
-        if not self._evidence_dir.exists():
+        if not self._data_dir.exists():
             return stats
 
-        # Collect all session directories with their metadata
+        # Collect all session directories (must contain status.json)
         sessions: list[dict] = []
-        for session_dir in sorted(self._evidence_dir.iterdir()):
+        for session_dir in sorted(self._data_dir.iterdir()):
             if not session_dir.is_dir():
                 continue
+            # Only consider directories that have a status.json
+            if not (session_dir / "status.json").exists():
+                continue
 
-            # Check if this looks like a failed session
             is_failed = self._is_failed_session(session_dir)
             mtime = session_dir.stat().st_mtime
 
@@ -184,23 +184,8 @@ class EvidenceCleaner:
     def _is_failed_session(self, session_dir: Path) -> bool:
         """Check if a session directory represents a failed/aborted session.
 
-        Looks for a ``status.json`` file in the ``sessions/`` sibling
-        directory first, then falls back to checking ``report.json`` or
-        ``status.json`` within the evidence directory itself.
+        Looks for a ``status.json`` file within the session directory.
         """
-        # First: check the sessions/{id}/status.json (canonical location)
-        session_id = session_dir.name
-        sessions_status = session_dir.parent.parent / "sessions" / session_id / "status.json"
-        if sessions_status.exists():
-            try:
-                import json
-                data = json.loads(sessions_status.read_text(encoding="utf-8"))
-                status = data.get("status", "")
-                return status in ("FAILED", "ABORTED", "STOPPED")
-            except Exception:
-                pass
-
-        # Fallback: check evidence/{id}/status.json (legacy)
         status_file = session_dir / "status.json"
         if status_file.exists():
             try:
@@ -211,7 +196,7 @@ class EvidenceCleaner:
             except Exception:
                 pass
 
-        # Last resort: check report.json in evidence dir
+        # Fallback: check report.json
         report_file = session_dir / "report.json"
         if report_file.exists():
             try:

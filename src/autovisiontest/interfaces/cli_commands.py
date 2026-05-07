@@ -195,7 +195,7 @@ def cmd_run(
         try:
             config = _load_config(config_path)
             data_dir = Path(config.runtime.data_dir) if config else Path("./data")
-            trace_path = data_dir / "debug_trace" / session_id / "debug_trace.html"
+            trace_path = data_dir / session_id / "debug_trace.html"
             debug_tracer.finished_at = time.strftime("%Y-%m-%dT%H:%M:%S")
             debug_tracer.final_status = final_status.value if final_status else "UNKNOWN"
             debug_tracer.session_id = session_id
@@ -283,7 +283,7 @@ def cmd_report(session_id: str, fmt: str, config_path: str | None) -> int:
         return EXIT_PASS
 
     # Try to build report from session context
-    ctx_path = data_dir / "sessions" / session_id / "context.json"
+    ctx_path = data_dir / session_id / "context.json"
     if ctx_path.exists():
         try:
             from autovisiontest.engine.models import SessionContext
@@ -291,7 +291,7 @@ def cmd_report(session_id: str, fmt: str, config_path: str | None) -> int:
 
             ctx_data = json.loads(ctx_path.read_text(encoding="utf-8"))
             session_ctx = SessionContext.model_validate(ctx_data)
-            evidence_dir = data_dir / "evidence" / session_id
+            evidence_dir = data_dir / session_id
 
             builder = ReportBuilder()
             report = builder.build(

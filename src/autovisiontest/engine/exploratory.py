@@ -147,13 +147,15 @@ class ExploratoryRunner:
                 handle = launch_app(app_path, app_args)
                 logger.info("app_launched", extra={"app_path": app_path, "pid": handle.pid})
                 session.app_pid = handle.pid
-                # Wait for main window to appear using PID-based lookup,
-                # which is reliable regardless of the window title.
-                try:
-                    from autovisiontest.control.window import wait_for_app_main_window
+                # Wait for main window to appear; raises AppLaunchError on timeout.
+                from autovisiontest.control.window import wait_for_app_main_window
 
-                    wait_for_app_main_window(app_path, handle.pid, timeout_s=20.0)
-                    if handle.exe_name.lower() == "calc.exe":
+                wait_for_app_main_window(app_path, handle.pid, timeout_s=20.0)
+                logger.info("app_window_ready", extra={"app_path": app_path, "pid": handle.pid})
+                time.sleep(1.0)  # extra buffer for app initialization after window appears
+
+                if handle.exe_name.lower() == "calc.exe":
+                    try:
                         mp = pick_calculator_monitor_pid()
                         if mp is not None:
                             handle.monitor_pid = mp
@@ -166,8 +168,8 @@ class ExploratoryRunner:
                                 "calc_monitor_pid_unresolved",
                                 extra={"hint": "is_alive uses window/PowerShell fallbacks"},
                             )
-                except Exception:
-                    logger.debug("ready_check_skipped", extra={"app_path": app_path})
+                    except Exception:
+                        logger.debug("calc_monitor_pid_skipped", extra={"app_path": app_path})
             else:
                 logger.info("attach_mode", extra={"goal": goal})
 
@@ -179,12 +181,17 @@ class ExploratoryRunner:
             executor = ActionExecutor()
 
             evidence_writer: Optional[_StepLoopEvidenceAdapter] = None
+            on_step_complete = None
             if self._data_dir is not None:
                 disk_writer = DiskEvidenceWriter(
                     session_id=session.session_id,
                     data_dir=self._data_dir,
                 )
                 evidence_writer = _StepLoopEvidenceAdapter(disk_writer)
+                _ctx_path = disk_writer.evidence_dir / "context.json"
+
+                def on_step_complete(ctx: SessionContext, _p: Path = _ctx_path) -> None:
+                    _p.write_text(ctx.model_dump_json(indent=2), encoding="utf-8")
 
             loop = StepLoop(
                 agent=agent,
@@ -195,6 +202,7 @@ class ExploratoryRunner:
                 evidence_writer=evidence_writer,
                 stop_requested=self._stop_event,
                 debug_tracer=self._debug_tracer,
+                on_step_complete=on_step_complete,
             )
 
             reason = loop.run(session)

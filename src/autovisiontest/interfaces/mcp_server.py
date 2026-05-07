@@ -242,7 +242,7 @@ def get_evidence_screenshot(session_id: str, step_idx: str) -> str:
         return ""
 
     data_dir = Path(scheduler._data_dir)
-    img_path = data_dir / "evidence" / session_id / f"step_{step_idx}_after.png"
+    img_path = data_dir / session_id / f"step_{step_idx}_after.png"
     if not img_path.exists():
         return ""
 

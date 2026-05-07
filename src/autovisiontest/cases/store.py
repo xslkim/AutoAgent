@@ -1,7 +1,7 @@
 """Recording store — persistent storage for test case recordings.
 
-Recordings are stored as JSON files under ``{data_dir}/recordings/``,
-one file per fingerprint.
+Recordings are stored as ``recording.json`` files under
+``{data_dir}/{session_id}/``, one file per session.
 """
 
 from __future__ import annotations
@@ -21,19 +21,18 @@ class RecordingStore:
 
     Args:
         data_dir: Root data directory. Recordings are stored under
-            ``{data_dir}/recordings/``.
+            ``{data_dir}/{session_id}/recording.json``.
     """
 
     def __init__(self, data_dir: Path) -> None:
         self._data_dir = data_dir
-        self._recordings_dir = data_dir / "recordings"
-        self._recordings_dir.mkdir(parents=True, exist_ok=True)
 
-    def save(self, case: TestCase) -> Path:
+    def save(self, case: TestCase, session_id: str) -> Path:
         """Save a test case recording to disk.
 
         Args:
             case: The TestCase to save.
+            session_id: The session identifier (timestamp-based directory).
 
         Returns:
             Path to the saved JSON file.
@@ -47,7 +46,9 @@ class RecordingStore:
             case.metadata.fingerprint = fp
 
         fp = case.metadata.fingerprint
-        path = self._recordings_dir / f"{fp}.json"
+        session_dir = self._data_dir / session_id
+        session_dir.mkdir(parents=True, exist_ok=True)
+        path = session_dir / "recording.json"
         path.write_text(case.model_dump_json(indent=2), encoding="utf-8")
         logger.info("recording_saved", extra={"fingerprint": fp, "path": str(path)})
         return path
@@ -55,21 +56,24 @@ class RecordingStore:
     def load(self, fingerprint: str) -> TestCase | None:
         """Load a test case recording by fingerprint.
 
+        Scans all session directories for a ``recording.json`` whose
+        ``metadata.fingerprint`` matches.
+
         Args:
             fingerprint: The fingerprint string.
 
         Returns:
             TestCase if found, None otherwise.
         """
-        path = self._recordings_dir / f"{fingerprint}.json"
-        if not path.exists():
-            return None
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-            return TestCase.model_validate(data)
-        except Exception:
-            logger.exception("recording_load_failed", extra={"fingerprint": fingerprint})
-            return None
+        for rec_path in sorted(self._data_dir.glob("*/recording.json")):
+            try:
+                data = json.loads(rec_path.read_text(encoding="utf-8"))
+                meta = data.get("metadata", {})
+                if meta.get("fingerprint") == fingerprint:
+                    return TestCase.model_validate(data)
+            except Exception:
+                logger.warning("recording_skip_invalid", extra={"path": str(rec_path)})
+        return None
 
     def list_all(self) -> list[TestCase]:
         """List all stored recordings.
@@ -78,7 +82,7 @@ class RecordingStore:
             List of all TestCase objects in the store.
         """
         cases: list[TestCase] = []
-        for path in sorted(self._recordings_dir.glob("*.json")):
+        for path in sorted(self._data_dir.glob("*/recording.json")):
             try:
                 data = json.loads(path.read_text(encoding="utf-8"))
                 cases.append(TestCase.model_validate(data))
@@ -95,11 +99,16 @@ class RecordingStore:
         Returns:
             True if the recording was deleted, False if not found.
         """
-        path = self._recordings_dir / f"{fingerprint}.json"
-        if path.exists():
-            path.unlink()
-            logger.info("recording_deleted", extra={"fingerprint": fingerprint})
-            return True
+        for rec_path in sorted(self._data_dir.glob("*/recording.json")):
+            try:
+                data = json.loads(rec_path.read_text(encoding="utf-8"))
+                meta = data.get("metadata", {})
+                if meta.get("fingerprint") == fingerprint:
+                    rec_path.unlink()
+                    logger.info("recording_deleted", extra={"fingerprint": fingerprint})
+                    return True
+            except Exception:
+                logger.warning("recording_skip_invalid", extra={"path": str(rec_path)})
         return False
 
     def find_for_goal(self, app_path: str, goal: str) -> TestCase | None:

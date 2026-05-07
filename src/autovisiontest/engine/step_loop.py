@@ -24,7 +24,7 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from typing import Protocol
+from typing import Callable, Protocol
 
 from autovisiontest.control.actions import NEED_TARGET
 from autovisiontest.control.executor import ActionExecutor
@@ -83,6 +83,7 @@ class StepLoop:
         step_wait_ms: int = _DEFAULT_STEP_WAIT_MS,
         stop_requested: threading.Event | None = None,
         debug_tracer: "object | None" = None,
+        on_step_complete: Callable[["SessionContext"], None] | None = None,
     ) -> None:
         self._agent = agent
         self._terminator = terminator
@@ -93,6 +94,7 @@ class StepLoop:
         self._step_wait_ms = step_wait_ms
         self._stop_event = stop_requested
         self._debug_tracer = debug_tracer
+        self._on_step_complete = on_step_complete
 
     # ------------------------------------------------------------------
     # Main loop
@@ -210,6 +212,14 @@ class StepLoop:
                 before_path=evidence_paths.get("before", ""),
                 after_path=evidence_paths.get("after", ""),
             )
+
+            # Flush session state to disk after every step so partial data
+            # survives a crash before the session completes.
+            if self._on_step_complete is not None:
+                try:
+                    self._on_step_complete(session)
+                except Exception:
+                    logger.debug("on_step_complete_failed", exc_info=True)
 
             if self._debug_tracer is not None:
                 try:

@@ -105,7 +105,7 @@ def consolidate(
     )
 
     # Save to store
-    store.save(case)
+    store.save(case, session_id=session.session_id)
     logger.info(
         "consolidate_saved",
         extra={"fingerprint": fingerprint, "step_count": len(case_steps)},

@@ -1,6 +1,6 @@
 """Evidence writer — stores screenshots, OCR results, and reports to disk.
 
-Evidence for each session is stored under ``{data_dir}/evidence/{session_id}/``:
+Evidence for each session is stored under ``{data_dir}/{session_id}/``:
 - ``step_{idx}_before.png`` — screenshot before action execution
 - ``step_{idx}_after.png`` — screenshot after action execution
 - ``ocr_{idx}.json`` — OCR result cache per step
@@ -25,12 +25,12 @@ class EvidenceWriter:
     Args:
         session_id: The session identifier.
         data_dir: Root data directory. Evidence is stored under
-            ``{data_dir}/evidence/{session_id}/``.
+            ``{data_dir}/{session_id}/``.
     """
 
     def __init__(self, session_id: str, data_dir: Path) -> None:
         self._session_id = session_id
-        self._evidence_dir = data_dir / "evidence" / session_id
+        self._evidence_dir = data_dir / session_id
         self._evidence_dir.mkdir(parents=True, exist_ok=True)
 
     @property

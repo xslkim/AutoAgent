@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 _DEFAULT_ENDPOINT = "http://localhost:8000/v1"
 _DEFAULT_TIMEOUT = 60.0
 
-# Screenshot compression settings (D9: short edge 1080px, JPEG Q85)
+# Screenshot compression settings (short edge target 512px, JPEG Q85)
 _SHORT_EDGE_TARGET = 512
 _JPEG_QUALITY = 85
 

@@ -1,7 +1,7 @@
 """Session store — persistent storage for session state.
 
 Each session is stored as a ``status.json`` file under
-``{data_dir}/sessions/{session_id}/``.
+``{data_dir}/{session_id}/``.
 """
 
 from __future__ import annotations
@@ -56,17 +56,15 @@ class SessionStore:
 
     Args:
         data_dir: Root data directory. Sessions are stored under
-            ``{data_dir}/sessions/``.
+            ``{data_dir}/``.
     """
 
     def __init__(self, data_dir: Path) -> None:
         self._data_dir = data_dir
-        self._sessions_dir = data_dir / "sessions"
-        self._sessions_dir.mkdir(parents=True, exist_ok=True)
 
     def _session_dir(self, session_id: str) -> Path:
         """Return the directory for a given session."""
-        return self._sessions_dir / session_id
+        return self._data_dir / session_id
 
     def _status_path(self, session_id: str) -> Path:
         """Return the path to the status.json file."""
@@ -119,7 +117,7 @@ class SessionStore:
             List of all SessionRecord objects.
         """
         records: list[SessionRecord] = []
-        for status_file in sorted(self._sessions_dir.glob("*/status.json")):
+        for status_file in sorted(self._data_dir.glob("*/status.json")):
             try:
                 data = json.loads(status_file.read_text(encoding="utf-8"))
                 records.append(SessionRecord.model_validate(data))
