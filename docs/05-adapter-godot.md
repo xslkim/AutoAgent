@@ -153,12 +153,20 @@ func _process(_delta: float) -> void:
     while _tcp.is_connection_available():
         var conn = _tcp.take_connection()
         var peer := WebSocketPeer.new()
+        # 强制 client 必须请求 autoagent.v1 subprotocol
+        peer.supported_protocols = PackedStringArray(["autoagent.v1"])
         peer.accept_stream(conn)
         _peers.append(peer)
 
     # poll all
     for peer in _peers:
         peer.poll()
+        var state = peer.get_ready_state()
+        # 在 OPEN 之后立即校验 selected_protocol
+        if state == WebSocketPeer.STATE_OPEN \
+                and peer.get_selected_protocol() != "autoagent.v1":
+            peer.close(1002, "subprotocol mismatch: require autoagent.v1")
+            continue
         while peer.get_available_packet_count() > 0:
             var pkt = peer.get_packet().get_string_from_utf8()
             _on_message(peer, pkt)

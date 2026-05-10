@@ -48,6 +48,10 @@ adapters/unreal/
 **入口**：所有当前激活的 `UUserWidget`（通过 `UWidgetBlueprintLibrary::GetAllWidgetsOfClass`）→ 各自的 `WidgetTree` → 递归。
 
 ```cpp
+// ⚠️ 注意：UWidgetTree::ForEachWidget 已经遍历整棵树（含 panel children）。
+// 如果再对 UPanelWidget 递归调 GetChildAt，会重复访问节点 + parent_id 错乱。
+// 正确做法：只用一种遍历方式。这里采用从 RootWidget 单一递归，明确传递 parent_id。
+
 void UUmgReflector::DumpAllWidgets(TArray<FNodeData>& OutNodes) {
     UWorld* World = GetWorld();
     TArray<UUserWidget*> Widgets;
@@ -56,23 +60,38 @@ void UUmgReflector::DumpAllWidgets(TArray<FNodeData>& OutNodes) {
 
     for (UUserWidget* UserWidget : Widgets) {
         if (!UserWidget || !UserWidget->IsInViewport()) continue;
-        WalkWidgetTree(UserWidget->WidgetTree, OutNodes, /*ParentId=*/TEXT(""));
+        if (!UserWidget->WidgetTree) continue;
+
+        // UserWidget 自身作为根节点，先入树
+        FString UserWidgetId = StableIdResolver.Resolve(UserWidget).Id;
+        OutNodes.Add(BuildNode(UserWidget, /*ParentId=*/TEXT("")));
+
+        // 从 WidgetTree.RootWidget 单一递归，traverse 整棵树
+        if (UWidget* Root = UserWidget->WidgetTree->RootWidget) {
+            WalkChildren(Root, OutNodes, /*ParentId=*/UserWidgetId);
+        }
     }
 }
 
-void UUmgReflector::WalkWidgetTree(UWidgetTree* Tree, TArray<FNodeData>& Out, FString ParentId) {
-    if (!Tree) return;
-    Tree->ForEachWidget([&](UWidget* W) {
-        FNodeData Node = BuildNode(W, ParentId);
-        Out.Add(Node);
-        if (UPanelWidget* Panel = Cast<UPanelWidget>(W)) {
-            for (int32 i = 0; i < Panel->GetChildrenCount(); ++i) {
-                WalkChildren(Panel->GetChildAt(i), Out, Node.Id);
-            }
+void UUmgReflector::WalkChildren(UWidget* W, TArray<FNodeData>& Out, const FString& ParentId) {
+    if (!W) return;
+    FNodeData Node = BuildNode(W, ParentId);
+    Out.Add(Node);
+
+    // 仅 UPanelWidget 有 children；其他 widget（Button / Image / TextBlock）是叶子
+    if (UPanelWidget* Panel = Cast<UPanelWidget>(W)) {
+        for (int32 i = 0; i < Panel->GetChildrenCount(); ++i) {
+            WalkChildren(Panel->GetChildAt(i), Out, /*ParentId=*/Node.Id);
         }
-    });
+    }
+    // NamedSlot 等特殊容器：在 BuildNode 里单独处理（如果需要）
 }
 ```
+
+**遍历策略约束**：
+- 全 codebase 内**禁止使用** `UWidgetTree::ForEachWidget`（容易和 RootWidget 递归混用造成重复）
+- 单元测试 `UmgReflectorTest.NoDuplicateNodes` 验证：dump 输出的 id 集合无重复
+- 单元测试 `UmgReflectorTest.ParentChildConsistent` 验证：每个 child 的 parent_id 都在 nodes 列表里且对应节点的 children_ids 包含 child id
 
 ### 节点字段映射
 
@@ -167,32 +186,128 @@ private:
 };
 ```
 
+**Subprotocol 校验（uWS 配置）**：
+
+```cpp
+App->ws<UserData>("/*", {
+    .upgrade = [](auto* res, auto* req, auto* /*context*/) {
+        std::string_view subProtocols = req->getHeader("sec-websocket-protocol");
+        if (subProtocols.find("autoagent.v1") == std::string_view::npos) {
+            res->writeStatus("400 Bad Request")
+               ->end("subprotocol mismatch: require autoagent.v1");
+            return;
+        }
+        // upgrade 时回写选定的 subprotocol
+        res->upgrade<UserData>(
+            UserData{},
+            req->getHeader("sec-websocket-key"),
+            "autoagent.v1",   // selected subprotocol
+            req->getHeader("sec-websocket-extensions"),
+            /*context*/ nullptr
+        );
+    },
+    .open = [](auto* ws) { /* 启动 negotiation 5s watchdog */ },
+    .message = [](auto* ws, std::string_view msg, uWS::OpCode) { /* enqueue to GameThread */ },
+});
+```
+
 **线程**：WebSocket 自己线程；接收的消息 enqueue 到 `TQueue<FString, EQueueMode::Mpsc>`，GameThread 在 `Tick` 里 dequeue 处理。
 
-## 六、Meta 注入
+## 六、Meta 注入（Stable ID 持久化）
 
-### IStableIdInterface（UInterface）
+> ⚠️ **UE 不能照搬 Unity 的 MonoBehaviour 模式**。UWidget 实例在 PIE 启动 / hot reload / WidgetTree rebuild 后会被重新 New，`WeakObjectPtr<UWidget>` 失效，SaveGame key 也对不上。
+> UE 侧 stable ID **不靠运行时挂载**，靠**设计期源码声明 + 编辑期注册表**。
+
+### Stable ID 来源（优先级从高到低）
+
+#### 来源 1：`UPROPERTY` meta tag（C++ 类成员，最稳）
+
 ```cpp
-UINTERFACE(MinimalAPI, meta=(CannotImplementInterfaceInBlueprint))
-class UStableIdInterface : public UInterface { GENERATED_BODY() };
-
-class IStableIdInterface {
+UCLASS()
+class ULoginUserWidget : public UUserWidget {
     GENERATED_BODY()
 public:
-    virtual FString GetPinnedId() const = 0;
-    virtual FString GetRole() const { return TEXT(""); }
-    virtual FString GetIntent() const { return TEXT(""); }
+    UPROPERTY(meta=(BindWidget, AutoAgentId="login_button", AutoAgentRole="submit_button"))
+    UButton* LoginButton;
+
+    UPROPERTY(meta=(BindWidget, AutoAgentId="account_input"))
+    UEditableTextBox* AccountInput;
 };
 ```
 
-### UAutoAgentMeta（UWidget 上的辅助）
+Adapter 启动时反射所有 `UUserWidget` 子类的 UPROPERTY，扫描 meta map 里的 `AutoAgentId` / `AutoAgentRole` / `AutoAgentIntent`，建立 `(OuterUserWidgetClass, BindWidgetName) → StableId` 映射。
 
-由于 UWidget 是 UCLASS，最好不让用户改基类。改用**附加组件**模式：每个 UWidget 关联一个 `UAutoAgentMeta` UObject（key by `WeakObjectPtr<UWidget>`），存在 `UAutoAgentSubsystem` 的 map 里，序列化到 SaveGame。
+**关键**：key 是 *widget 名字 + outer class*，不是 instance pointer。PIE / hot reload / rebuild 后仍然有效。
 
-Editor 里加自定义 Detail Panel：选中任意 UWidget → 显示 "AutoAgent" 折叠面板 → Pin ID / Role / Intent / Tags 输入。
+#### 来源 2：运行时显式注册（业务代码声明）
 
-### Hash ID 算法
-`MD5(WidgetTreePath + WidgetName + ClassName).Left(12)` → 12 字符 hex。
+适用于 BindWidget 不方便的场景（动态创建的列表项、运行时 spawn 的 widget）：
+
+```cpp
+void ULoginUserWidget::NativeConstruct() {
+    Super::NativeConstruct();
+    if (auto* Subsystem = GetGameInstance()->GetSubsystem<UAutoAgentSubsystem>()) {
+        Subsystem->RegisterStableId(SomeRuntimeWidget, TEXT("dynamic_item_001"));
+    }
+}
+```
+
+注册表 key 用 `widget->GetFName().ToString() + "@" + widget->GetOuter()->GetFullName()`，不依赖指针。dump 时按 key 反查。
+
+#### 来源 3：Fixture 项目里的显式注册表（外部 .ini）
+
+业务代码不便修改时，fixture 项目可以提供 `Config/AutoAgentIds.ini`：
+
+```ini
+[/Game/UI/WBP_LoginScreen.WBP_LoginScreen_C:LoginButton]
+AutoAgentId=login_button
+AutoAgentRole=submit_button
+
+[/Game/UI/WBP_LoginScreen.WBP_LoginScreen_C:AccountInput]
+AutoAgentId=account_input
+```
+
+Adapter 启动时加载这份 ini，建立映射。优先级低于来源 1/2。
+
+#### 来源 4（仅诊断）：Path Hash
+
+```
+PathHash = MD5(OwningUserWidgetClass + "." + WidgetFName).Left(12)
+```
+
+`stable_id_source = "hash"`。**任务 DSL 不允许引用**（与 [01 协议规范](01-protocol-spec.md) 一致）。
+
+### Editor 工具（`AutoAgentEditor` module）
+
+1. **BindWidget Property Detail Customization**：选中 UUserWidget 类的 BindWidget 属性时，Inspector 显示 "AutoAgent ID / Role / Intent" 字段，编辑后自动写到对应 .h 的 UPROPERTY meta。
+2. **AutoAgentIds.ini Editor**：可视化编辑外部注册表。
+3. **未 pin 节点检测**：扫描 fixture project 的所有 UUserWidget，列出"还在用 hash ID"的 widget，提示 pin。
+
+### `FStableIdResolver` 接口
+
+```cpp
+class FStableIdResolver {
+public:
+    enum class ESource { Pinned, Auto, Hash };
+    struct FResolved { FString Id; ESource Source; };
+
+    FResolved Resolve(UWidget* W) const;
+
+    void LoadFromPropertyMeta();        // 来源 1：UClass UPROPERTY meta 扫描
+    void LoadFromIniRegistry();          // 来源 3：解析 AutoAgentIds.ini
+    void RegisterRuntime(UWidget* W, const FString& Id);  // 来源 2：业务代码注册
+
+private:
+    // key: OuterUserWidgetClass + "." + WidgetFName
+    TMap<FString, FString> NameToPinnedId;
+};
+```
+
+**实现禁忌**：
+- ❌ 不要用 `WeakObjectPtr<UWidget>` 作 map key
+- ❌ 不要用 SaveGame 持久化 widget 引用
+- ❌ 不要承诺 "Inspector 上挂个组件就行" 的 Unity 体验
+- ✅ 一切映射基于 widget 名字 + outer class，跨 lifecycle 稳定
 
 ## 七、Packaged Build 兼容
 

@@ -67,7 +67,7 @@
 | 引擎语言 | Unity 纯 C#（不用预制件），UE 纯 C++（不用蓝图），Godot GDScript（必要时 GDExtension） |
 | 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order） |
 | 跨引擎统一 | 同一份任务 DSL 能在三引擎落地；引擎 adapter 独立实现 |
-| 输入双轨 | 引擎事件层（默认）+ OS 级（fallback for 全屏独占 / 反作弊场景） |
+| 输入双轨 | 引擎事件层（默认）+ OS 级（fallback for 焦点丢失 / 全屏独占 / 引擎事件注入失败的测试场景；**不**承诺绕过反作弊，不用于 PvP 上线包） |
 | 适用范围 | 仅单机 / PvE / 开发阶段 / QA 包；PvP 上线版必须移除 SDK |
 | 任务粒度 | 1 个任务 = 1 个 PR（半天到 2 天工作量） |
 
@@ -90,7 +90,7 @@
 | v0.2 | Phase 1 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
 | v0.3 | Phase 2 | UE adapter 完整 + login MVP 跨引擎一致 |
 | v0.4 | Phase 3 | Godot adapter 完整 + 三引擎一致 |
-| v1.0 | Phase 4 | OS 输入双轨 + Vision fallback + Figma MCP（可选）+ 性能优化 |
+| v1.0 | Phase 4 | OS 输入双轨（仅测试场景）+ Vision fallback (LPIPS / Claude Vision) + 性能优化 |
 
 ## 七、术语表
 
@@ -116,8 +116,10 @@
 | 03-adapter-unity.md | Unity adapter 设计：UGUI / UI Toolkit 反射、EventSystem 注入 |
 | 04-adapter-unreal.md | UE adapter 设计：UWidgetTree 反射、Slate 注入 |
 | 05-adapter-godot.md | Godot adapter 设计：SceneTree 反射、parse_input_event 注入 |
-| 06-visual-regression.md | 视觉回归 + 美术保真四道防护 |
-| 99-tasks.md | 任务清单（Phase 0-4，含顺序 / 目标 / 产出 / 验证） |
+| 06-visual-regression.md | 视觉回归 + 美术保真五道防护（含源码层审计） |
+| 07-agent-operations.md | AI Agent 自治边界（迭代上限 / 路径白名单 / secret / 失败停机） |
+| 08-ci-runners.md | CI 运行环境规格（GPU runner / Xvfb / 字体 / 分辨率 / color space） |
+| 99-tasks.md | 任务清单（Phase 0-4，含顺序 / 目标 / 产出 / 验证 / go-no-go gate） |
 
 ## 九、执行约定（工程层面）
 
@@ -146,7 +148,13 @@ D:\AutoAgent\
 ├─ docs\                       # 本套文档
 │  ├─ 00-product-overview.md
 │  ├─ 01-protocol-spec.md
-│  ├─ ...
+│  ├─ 02-mcp-server.md
+│  ├─ 03-adapter-unity.md
+│  ├─ 04-adapter-unreal.md
+│  ├─ 05-adapter-godot.md
+│  ├─ 06-visual-regression.md
+│  ├─ 07-agent-operations.md
+│  ├─ 08-ci-runners.md
 │  └─ 99-tasks.md
 ├─ protocol\                   # 协议 schema 共用定义（JSON Schema 文件）
 │  └─ schema\

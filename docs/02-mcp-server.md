@@ -42,6 +42,32 @@
 
 ## 三、MCP Tools 列表
 
+### MCP Tool ↔ Wire Protocol Method 映射
+
+> AI 调用的 tool 名（左列）和 Wire Protocol method（右列）是两套命名。MCP tool 名是 AI 友好（动词+对象），wire method 名是简洁（动词）。下表是唯一权威映射，避免实现 / prompt drift。
+
+| MCP Tool（AI 调用） | Wire Protocol Method（Adapter 实现） | 备注 |
+|---|---|---|
+| `dump_ui_tree` | `dump_tree` | |
+| `find_widget` | `find_widget` | |
+| `get_widget` | `get_widget` | |
+| `click_by_id` | `click` | |
+| `send_text` | `send_text` | |
+| `drag` | `drag` | |
+| `scroll` | `scroll` | |
+| `key_press` | `key_press` | |
+| `take_screenshot` | `take_screenshot` | |
+| `compare_to_baseline` | (本地) | server 端用 scikit-image 计算，不发 wire |
+| `wait_for` | `wait_for` | |
+| `pin_id` | `pin_id` | |
+| `list_orphan_ids` | `list_orphan_ids` | |
+| `audit_visual_changes` | (本地) | server 缓存 dump，diff 计算 |
+| `connect_engine` | (本地) | session 管理，不发 wire 消息 |
+| `disconnect` | (本地) | |
+| `get_engine_info` | `get_engine_info` | |
+| `invoke_method` | `invoke_method` | Phase 4 暴露 |
+| `get_property` / `set_property` | `get_property` / `set_property` | Phase 4 暴露 |
+
 ### 树查询类
 
 #### `dump_ui_tree`
@@ -200,7 +226,10 @@ heartbeat_interval_ms = 30000
 
 [vision]
 ssim_threshold = 0.95
-lpips_threshold = 0.10
+ssim_warn_threshold = 0.92        # 触发 LLM 二次裁决
+lpips_enabled = false              # MVP 仅 SSIM；Phase 4 启用 LPIPS（依赖 PyTorch ~500MB）
+lpips_threshold = 0.10             # 仅 lpips_enabled=true 时生效
+lpips_subprocess = true            # 子进程化以隔离 PyTorch 内存
 baseline_dir = "./baselines"
 diff_dir = "./diffs"
 
@@ -208,6 +237,7 @@ diff_dir = "./diffs"
 enabled = false
 api_key_env = "ANTHROPIC_API_KEY"
 model = "claude-opus-4-7"
+max_diff_per_session = 20          # 防 token 爆炸
 ```
 
 ## 八、入口与启动
@@ -253,4 +283,5 @@ CI：每 PR 跑 unit + integration；e2e 在 Unity / Godot CI 里跑。
 - 启动时间 < 2s（不含 vision 模块加载）
 - 单 tool 调用 overhead < 10ms（本地 WebSocket）
 - 内存常驻 < 100MB
-- vision 模块按需加载（首次 `compare_to_baseline` 时加载 LPIPS 模型）
+- vision 模块按需加载，**MVP 仅 SSIM**（pure NumPy / scikit-image，~5MB 内存）
+- LPIPS（PyTorch ~500MB）作为可选 extras（`pip install autoagent-mcp[lpips]`），**Phase 4 才引入**；启用时强制子进程化（`lpips_subprocess = true`）避免污染主 server 内存

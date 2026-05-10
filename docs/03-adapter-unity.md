@@ -150,6 +150,25 @@ public class AutoAgentBootstrap {
         server.Start();
     }
 }
+
+public class ProtocolHandler : WebSocketBehavior {
+    // 在 OnHandshake 阶段校验 Sec-WebSocket-Protocol，必须包含 autoagent.v1
+    protected override void OnHandshake() {
+        var requested = Context.Headers["Sec-WebSocket-Protocol"];
+        if (string.IsNullOrEmpty(requested) ||
+            !requested.Split(',').Select(s => s.Trim()).Contains("autoagent.v1")) {
+            // websocket-sharp: 在 OnHandshake 抛错 → 自动 close with 1002 ProtocolError
+            throw new InvalidOperationException("subprotocol mismatch: require autoagent.v1");
+        }
+        // websocket-sharp 自动在 response Header 回写选定 subprotocol（首个匹配项）
+    }
+
+    protected override void OnOpen() {
+        // 握手成功后，等待 server 发起 negotiate_version；
+        // 5 秒未收到则关闭（close code 1008 PolicyViolation）
+        StartNegotiationTimeoutWatchdog(TimeSpan.FromSeconds(5));
+    }
+}
 ```
 
 **线程模型**：

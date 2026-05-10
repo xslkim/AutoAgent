@@ -109,6 +109,23 @@
 
 `id` / `type` / `engine_type` / `parent_id` / `children_ids` / `stable_id_source` / `visual.position` / `visual.size` / `visual.visible`
 
+### 节点 ID 稳定性约定（normative）
+
+`stable_id_source` 三种来源对任务可靠性的承诺**不同**：
+
+| 来源 | 来源详情 | 跨美术迭代/hot reload/PIE 稳定 | 任务 DSL 可引用 |
+|---|---|---|---|
+| `pinned` | 美术 / 程序员手动 pin（持久化到引擎组件 / 元数据） | ✅ | ✅ |
+| `auto` | 框架在源码 / 节点声明里自动收集（如 UPROPERTY meta=AutoAgentId / SerializeField StableId） | ✅ | ✅ |
+| `hash` | 框架基于 hierarchy_path + name + type 计算的回退值 | ❌ | ❌ **任务 DSL 禁止引用** |
+
+**强制约束**：任何被 task DSL 引用的节点必须 `stable_id_source ∈ {pinned, auto}`。MCP server 在加载任务时校验 → 引用了 hash ID 直接拒绝并要求 pin。
+
+**hash ID 的合法用途**：
+- AI 临时探索 UI 树（`dump_tree` 返回里包含）
+- 给程序员提示"这些节点未 pin"
+- `list_orphan_ids` 检测对照
+
 ## 四、命令集（Methods）
 
 ### 4.1 树查询
@@ -339,19 +356,59 @@ JSON-RPC 标准错误码 + 框架自定义：
 | -32006 | InputInjectionFailed | 输入注入失败（焦点丢失等） |
 | -32007 | EngineThreadViolation | 跨线程调用引擎 API |
 | -32008 | ScreenshotFailed | 截图失败 |
+| -32010 | VersionMismatch | 协议版本不兼容 |
+| -32011 | NegotiationTimeout | 握手 5 秒超时 |
+| -32012 | SubprotocolMismatch | WebSocket subprotocol 错误 |
+| -32013 | NotNegotiated | 握手前调用了其他 method |
+| -32030 | PathViolation | AI 试图修改非白名单路径（CI 层） |
 
-## 七、版本协商
+## 七、版本协商（强制握手）
 
-握手后立即交换：
+WebSocket subprotocol 协商成功后，**Server 必须在 100ms 内**发起 `negotiate_version` JSON-RPC request。Adapter **必须在 5 秒内**回复，超时或不兼容立即断开。
 
 ```json
-// Server → Adapter
-{ "method": "negotiate_version", "params": { "supported": ["0.1"] }}
-// Adapter → Server
-{ "result": { "agreed": "0.1", "adapter_supported": ["0.1"] }}
+// 1. Server → Adapter (Request)
+{
+  "jsonrpc": "2.0",
+  "id": "negotiate-1",
+  "method": "negotiate_version",
+  "params": {
+    "supported": ["0.1"],
+    "client": "autoagent-mcp/0.1.0"
+  }
+}
+
+// 2a. Adapter → Server (Response, success)
+{
+  "jsonrpc": "2.0",
+  "id": "negotiate-1",
+  "result": {
+    "agreed": "0.1",
+    "adapter_supported": ["0.1"],
+    "adapter_name": "autoagent-unity/0.1.0",
+    "engine": "Unity",
+    "engine_version": "2023.2.20f1"
+  }
+}
+
+// 2b. Adapter → Server (Response, version mismatch)
+{
+  "jsonrpc": "2.0",
+  "id": "negotiate-1",
+  "error": {
+    "code": -32010,
+    "message": "VersionMismatch",
+    "data": { "supported": ["0.2"] }
+  }
+}
 ```
 
-不兼容时 adapter 主动断开。
+**握手层错误码**：
+- `-32010 VersionMismatch`：双方版本无交集 → adapter 立即关闭连接（WebSocket close code 1002）
+- `-32011 NegotiationTimeout`：5 秒未收到回复 → server 端关闭连接（close code 1008）
+- `-32012 SubprotocolMismatch`：WebSocket subprotocol 不是 `autoagent.v1` → 在 WebSocket upgrade 阶段就拒绝（HTTP 400），不进入 JSON-RPC
+
+握手成功后才允许其他 method 调用；握手前发送其他 method → adapter 返回 `-32013 NotNegotiated` 并关闭。
 
 ## 八、扩展机制
 
