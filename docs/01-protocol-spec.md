@@ -1,0 +1,396 @@
+# 01 - Wire Protocol Specification v0.1
+
+> 框架（MCP Server）与引擎 Adapter 之间的通信协议。所有三引擎 adapter 必须实现这份协议。
+> Phase 0 PoC 完成后会出 v0.2，schema 锁定。
+
+## 一、传输层
+
+- **传输**：WebSocket over TCP
+- **默认端口**：`27842`（可配置，避开常见占用）
+- **绑定地址**：默认 `127.0.0.1`（本地通信）
+- **握手**：标准 WebSocket 升级握手 + 自定义 `Sec-WebSocket-Protocol: autoagent.v1`
+- **编码**：UTF-8 JSON
+- **每条消息**：单独一帧（一次 send，不分片）
+
+## 二、消息格式
+
+基于 JSON-RPC 2.0，三种消息类型：**Request / Response / Notification（事件）**。
+
+### Request（MCP Server → Adapter）
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "uuid-string",
+  "method": "dump_tree",
+  "params": { "root_id": null, "include_invisible": false }
+}
+```
+
+### Response（Adapter → MCP Server）
+
+成功：
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "uuid-string",
+  "result": { ... }
+}
+```
+
+错误：
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "uuid-string",
+  "error": { "code": -32001, "message": "WidgetNotFound", "data": { "id": "missing_id" } }
+}
+```
+
+### Notification（Adapter → MCP Server，事件流）
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event.scene_changed",
+  "params": { "scene_name": "MainMenu", "timestamp": 1715234567.123 }
+}
+```
+
+## 三、节点 Schema（核心数据结构）
+
+每个 UI 节点统一 schema，**属性强制分三组**：
+
+```json
+{
+  "id": "login_button",
+  "type": "Button",
+  "engine_type": "UnityEngine.UI.Button",
+  "parent_id": "login_panel",
+  "children_ids": ["login_button_text"],
+  "stable_id_source": "pinned" | "hash" | "auto",
+
+  "visual": {
+    "position": [100.0, 200.0],
+    "size": [200.0, 60.0],
+    "anchor": [0.5, 0.5],
+    "world_bounds": [50.0, 170.0, 250.0, 230.0],
+    "visible": true,
+    "alpha": 1.0,
+    "color": "#FFFFFFFF",
+    "sprite_ref": "Assets/UI/btn_login.png",
+    "z_order": 5
+  },
+
+  "behavior": {
+    "interactable": true,
+    "event_handlers": ["OnClick"],
+    "custom_scripts": ["LoginController"]
+  },
+
+  "meta": {
+    "role": "submit_button",
+    "intent": "trigger_login",
+    "tags": ["primary", "form"],
+    "task_refs": ["TASK-042"]
+  }
+}
+```
+
+### 三类属性的语义
+
+| 类别 | 含义 | AI 权限 |
+|---|---|---|
+| `visual` | 视觉表达：位置 / 尺寸 / 颜色 / 图片 / 透明度 / Z 序 | **只读**（防美术稿被破坏） |
+| `behavior` | 交互行为：是否响应 / 绑定脚本 / 事件回调 | 读写 |
+| `meta` | 语义标签：role / intent / tags / 任务引用 | 读写（初始化时由 adapter 写入或 AI 补充） |
+
+### 必填字段
+
+`id` / `type` / `engine_type` / `parent_id` / `children_ids` / `stable_id_source` / `visual.position` / `visual.size` / `visual.visible`
+
+## 四、命令集（Methods）
+
+### 4.1 树查询
+
+#### `dump_tree`
+拉取整棵 UI 树或子树。
+
+```json
+// Request
+{ "method": "dump_tree", "params": {
+  "root_id": null,        // null = 全部，或指定子树根
+  "include_invisible": false,
+  "max_depth": -1,         // -1 = 不限
+  "fields": ["visual", "behavior", "meta"]  // 可选过滤减少 token
+}}
+
+// Result
+{ "nodes": [ {...}, {...} ], "captured_at": 1715234567.123 }
+```
+
+#### `find_widget`
+按条件找节点（支持 ID / role / type / 文本）。
+
+```json
+{ "method": "find_widget", "params": {
+  "by": "id" | "role" | "type" | "text",
+  "value": "login_button",
+  "first_only": true
+}}
+
+// Result: { "nodes": [...] }
+```
+
+#### `get_widget`
+按 ID 拿单个节点的最新状态。
+
+```json
+{ "method": "get_widget", "params": { "id": "login_button" }}
+// Result: { "node": {...} }
+```
+
+### 4.2 输入操作
+
+#### `click`
+模拟点击。
+
+```json
+{ "method": "click", "params": {
+  "id": "login_button",
+  "button": "left" | "right" | "middle",
+  "modifiers": ["ctrl", "shift", "alt"],
+  "input_layer": "engine" | "os"   // 默认 engine
+}}
+// Result: { "success": true, "captured_at": ... }
+```
+
+#### `send_text`
+向输入框发送文本。
+
+```json
+{ "method": "send_text", "params": {
+  "id": "account_input",
+  "text": "alice@example.com",
+  "clear_first": true
+}}
+```
+
+#### `drag`
+从一个节点拖到另一个节点（或坐标）。
+
+```json
+{ "method": "drag", "params": {
+  "from_id": "item_001",
+  "to_id": "slot_005",
+  "duration_ms": 200,
+  "input_layer": "engine"
+}}
+```
+
+#### `scroll`
+滚动容器。
+
+```json
+{ "method": "scroll", "params": {
+  "id": "inventory_scrollview",
+  "direction": "down" | "up" | "left" | "right",
+  "amount": 100.0
+}}
+```
+
+#### `key_press`
+按键。
+
+```json
+{ "method": "key_press", "params": {
+  "keys": ["Enter"],
+  "input_layer": "engine"
+}}
+```
+
+### 4.3 截图与等待
+
+#### `take_screenshot`
+截图（整屏 / 指定节点 / 指定矩形）。
+
+```json
+{ "method": "take_screenshot", "params": {
+  "scope": "fullscreen" | "node" | "rect",
+  "node_id": "login_panel",     // scope=node 时必填
+  "rect": [x, y, w, h],          // scope=rect 时必填
+  "format": "png" | "jpg",
+  "save_path": "screenshots/login.png"   // 可选；不填返回 base64
+}}
+// Result: { "saved_path": "...", "base64": "...", "size": [w, h] }
+```
+
+#### `wait_for`
+等待条件满足。
+
+```json
+{ "method": "wait_for", "params": {
+  "condition": "widget_appeared" | "widget_disappeared" | "widget_visible" | "text_changed",
+  "id": "welcome_text",
+  "expected_value": "Welcome alice",   // text_changed 时用
+  "timeout_ms": 5000,
+  "poll_interval_ms": 100
+}}
+// Result: { "success": true, "elapsed_ms": 1234 }
+```
+
+### 4.4 反射调用（高级）
+
+#### `invoke_method`
+调用节点上挂载脚本的方法（用于测试自定义逻辑）。
+
+```json
+{ "method": "invoke_method", "params": {
+  "id": "login_panel",
+  "script": "LoginController",
+  "method_name": "ResetForm",
+  "args": []
+}}
+// Result: { "return_value": null }
+```
+
+#### `get_property` / `set_property`
+读写脚本字段（仅 behavior / meta，禁止 visual）。
+
+```json
+{ "method": "set_property", "params": {
+  "id": "login_panel",
+  "script": "LoginController",
+  "property": "errorMessage",
+  "value": "Invalid credentials",
+  "category": "behavior"   // 服务端校验，visual 拒绝
+}}
+```
+
+### 4.5 ID 管理
+
+#### `pin_id`
+钉死一个 ID 到节点（持久化到引擎组件字段）。
+
+```json
+{ "method": "pin_id", "params": {
+  "current_id": "auto_hash_abc123",
+  "new_id": "login_button"
+}}
+```
+
+#### `list_orphan_ids`
+列出"上次见过这次找不到"的 ID。
+
+```json
+{ "method": "list_orphan_ids", "params": {} }
+// Result: { "orphans": [{"id": "old_button", "last_seen_path": "..."}] }
+```
+
+### 4.6 Session 管理
+
+#### `ping` / `pong`
+存活检测，30s 心跳。
+
+#### `get_engine_info`
+拿引擎元信息。
+
+```json
+{ "method": "get_engine_info", "params": {} }
+// Result: {
+//   "engine": "Unity" | "Unreal" | "Godot",
+//   "engine_version": "2023.2.20f1",
+//   "adapter_version": "0.1.0",
+//   "protocol_version": "0.1",
+//   "platform": "Windows" | "Linux" | "Mac",
+//   "build_type": "Editor" | "Development" | "Shipping"
+// }
+```
+
+## 五、事件流（Notifications）
+
+Adapter 主动推送给 MCP Server，无需 ack。
+
+| 事件 | 触发时机 | params |
+|---|---|---|
+| `event.scene_changed` | 场景 / Level 切换 | `{scene_name, timestamp}` |
+| `event.widget_appeared` | 新节点出现 | `{id, type, parent_id, timestamp}` |
+| `event.widget_disappeared` | 节点销毁 / 隐藏 | `{id, timestamp}` |
+| `event.widget_clicked` | 用户/AI 点击 | `{id, button, timestamp, source: "user"|"automation"}` |
+| `event.text_changed` | 输入框文本变化 | `{id, old_text, new_text, timestamp}` |
+| `event.error` | adapter 内部错误 | `{level: "warn"|"error", message, stack}` |
+
+## 六、错误码
+
+JSON-RPC 标准错误码 + 框架自定义：
+
+| Code | 名称 | 说明 |
+|---|---|---|
+| -32700 | ParseError | JSON 解析失败 |
+| -32600 | InvalidRequest | 不符合 JSON-RPC 2.0 |
+| -32601 | MethodNotFound | 未知 method |
+| -32602 | InvalidParams | 参数错误 |
+| -32603 | InternalError | adapter 内部错误 |
+| -32001 | WidgetNotFound | 找不到指定 ID 的节点 |
+| -32002 | WidgetNotInteractable | 节点存在但不可交互（如 disabled） |
+| -32003 | VisualPropertyWrite | 试图写 visual 属性（被拒） |
+| -32004 | StructuralChange | 试图修改 hierarchy（被拒） |
+| -32005 | TimeoutError | wait_for 超时 |
+| -32006 | InputInjectionFailed | 输入注入失败（焦点丢失等） |
+| -32007 | EngineThreadViolation | 跨线程调用引擎 API |
+| -32008 | ScreenshotFailed | 截图失败 |
+
+## 七、版本协商
+
+握手后立即交换：
+
+```json
+// Server → Adapter
+{ "method": "negotiate_version", "params": { "supported": ["0.1"] }}
+// Adapter → Server
+{ "result": { "agreed": "0.1", "adapter_supported": ["0.1"] }}
+```
+
+不兼容时 adapter 主动断开。
+
+## 八、扩展机制
+
+### 自定义节点 attribute
+
+引擎特定的属性放在 `engine_extras`：
+
+```json
+{
+  "id": "...",
+  "engine_extras": {
+    "unity": { "canvas_render_mode": "ScreenSpaceOverlay", ... },
+    "unreal": { "widget_class": "UMyButton", ... },
+    "godot": { "control_flags": [...], ... }
+  }
+}
+```
+
+不同引擎特有字段不污染主 schema，AI 通常无视，需要时按需读取。
+
+### 自定义命令
+
+引擎特有命令前缀 `engine.`：
+
+```json
+{ "method": "engine.unity.set_canvas_scaler", "params": {...}}
+```
+
+跨引擎统一任务 DSL **不应该使用** `engine.*` 命令。
+
+## 九、性能约定
+
+- `dump_tree` 在 500 节点内 < 50ms
+- 节点 dump 增量更新（v0.2 引入）：每次只发 diff
+- WebSocket 帧大小硬上限 1MB（超过 chunk）
+- 一个 session 同时最多 100 个 in-flight request
+
+## 十、安全
+
+- 默认仅监听 `127.0.0.1`
+- 启动时打印随机生成的 session token（可选 `--require-token` 开启鉴权）
+- shipping 包默认禁用 adapter（编译期 `AUTOAGENT_ENABLED` 宏）

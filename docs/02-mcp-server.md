@@ -1,0 +1,256 @@
+# 02 - MCP Server
+
+> 暴露给 AI Agent（Claude Code）的 Model Context Protocol 服务器。Python 实现，stdio transport。
+
+## 一、技术栈
+
+- **语言**：Python 3.11+
+- **MCP SDK**：`mcp` (Anthropic 官方 Python SDK)
+- **WebSocket 客户端**：`websockets` (asyncio-based)
+- **运行模型**：单进程 + asyncio 事件循环
+- **Transport**：stdio（默认，给 Claude Code 用）；HTTP/SSE（Phase 4 可选）
+- **包管理**：`uv`（推荐）或 `pip`
+- **配置**：`pyproject.toml` + 环境变量
+
+## 二、架构
+
+```
+┌──────────────────────────────────────────┐
+│  Claude Code (MCP Client)                │
+└──────────────────────────────────────────┘
+            ↓ stdio (JSON-RPC)
+┌──────────────────────────────────────────┐
+│  MCP Server (autoagent_mcp)              │
+│  ┌────────────────────────────────────┐  │
+│  │  Tool Layer (12 tools)              │  │
+│  │  list_widgets / click_by_id / ...   │  │
+│  └────────────────────────────────────┘  │
+│  ┌────────────────────────────────────┐  │
+│  │  Engine Connector                  │  │
+│  │  WebSocket client, retry, session  │  │
+│  └────────────────────────────────────┘  │
+│  ┌────────────────────────────────────┐  │
+│  │  Vision Module                     │  │
+│  │  SSIM / LPIPS / Claude Vision      │  │
+│  └────────────────────────────────────┘  │
+└──────────────────────────────────────────┘
+            ↓ WebSocket
+┌──────────────────────────────────────────┐
+│  Engine Adapter (Unity / UE / Godot)     │
+└──────────────────────────────────────────┘
+```
+
+## 三、MCP Tools 列表
+
+### 树查询类
+
+#### `dump_ui_tree`
+**描述**：拉取当前 UI 树。AI 通常先调用这个了解界面结构。
+
+**Input**:
+```json
+{
+  "include_invisible": false,
+  "max_depth": -1,
+  "fields": ["visual", "behavior", "meta"]
+}
+```
+
+**Output**: 节点树 JSON（schema 见 01-protocol-spec.md）。
+
+**Token 预算**：典型 50 节点 UI ~5KB / ~1500 token。超过 100 节点自动剪枝（visible only + 关键字段）。
+
+---
+
+#### `find_widget`
+按 id / role / type / text 查找。返回匹配节点列表。
+
+#### `get_widget`
+按 ID 拿单个节点最新状态。
+
+### 输入操作类
+
+#### `click_by_id`
+```json
+{ "id": "login_button", "button": "left", "input_layer": "engine" }
+```
+
+#### `send_text`
+```json
+{ "id": "account_input", "text": "...", "clear_first": true }
+```
+
+#### `drag`
+```json
+{ "from_id": "item_001", "to_id": "slot_005" }
+```
+
+#### `scroll`
+#### `key_press`
+
+### 验证类
+
+#### `take_screenshot`
+```json
+{ "scope": "fullscreen", "save_path": "..." }
+```
+返回路径或 base64。
+
+#### `compare_to_baseline`
+```json
+{
+  "current_path": "screenshots/current.png",
+  "baseline_path": "baselines/login.png",
+  "method": "ssim" | "lpips" | "both",
+  "threshold": { "ssim": 0.95, "lpips": 0.10 }
+}
+```
+返回：`{ "pass": true, "ssim": 0.97, "lpips": 0.05, "diff_path": "..." }`
+
+#### `wait_for`
+等待 widget 出现 / 消失 / 文本变化。
+
+### Meta 管理类
+
+#### `pin_id`
+钉一个 stable ID 到节点。
+
+#### `list_orphan_ids`
+找出失踪的 ID（上轮见过、本轮找不到）。
+
+#### `audit_visual_changes`
+对比上次 dump 和这次 dump，列出 visual 字段的变化（用于 AI 自检：我有没有不小心碰了视觉）。
+
+### Session 类
+
+#### `connect_engine`
+```json
+{ "engine": "unity" | "unreal" | "godot", "host": "127.0.0.1", "port": 27842 }
+```
+建立 WebSocket 连接。
+
+#### `disconnect`
+#### `get_engine_info`
+
+## 四、Session 与连接管理
+
+### 单连接模型（Phase 1-3）
+
+- MCP Server 同时只连一个引擎实例
+- `connect_engine` 替换当前连接
+- 自动重连：连接断开 → 1s/2s/4s 退避 → 最多 5 次
+
+### 多连接模型（Phase 4 引入）
+
+- 同时连多个引擎实例（用于跨引擎对比测试）
+- 每个 tool 加可选 `engine_session` 参数
+
+## 五、错误处理
+
+| 场景 | 行为 |
+|---|---|
+| Adapter 返回 error | 直接透传给 AI（保留 error code + message） |
+| WebSocket 连接失败 | 自动重试，超过 5 次返回 ConnectionError |
+| Tool 参数 schema 错误 | MCP SDK 自动校验，返回结构化错误 |
+| Adapter 超时（默认 5s） | 返回 TimeoutError，附最近一次成功响应时间 |
+| Adapter 进程崩溃 | 返回 EngineDisconnected，提示 AI 重启引擎 |
+
+## 六、日志规范
+
+### 日志级别
+- `DEBUG`：每个 tool 调用的入参 / 出参
+- `INFO`：连接建立 / 断开 / 主要操作
+- `WARN`：重试 / 降级
+- `ERROR`：失败
+
+### 日志输出
+- stderr（stdio transport，stdout 给 MCP 用）
+- 同时写文件 `~/.autoagent/mcp-server.log`，rotate 50MB × 5
+
+### 结构化日志
+```json
+{
+  "ts": "2026-05-09T10:23:45Z",
+  "level": "INFO",
+  "event": "tool.invoked",
+  "tool": "click_by_id",
+  "params": {"id": "login_button"},
+  "result": {"success": true},
+  "duration_ms": 23
+}
+```
+
+AI Agent 可以通过 `read_log` tool 主动读日志（Phase 4 加）。
+
+## 七、配置文件
+
+`~/.autoagent/config.toml`：
+
+```toml
+[mcp_server]
+log_level = "INFO"
+log_file = "~/.autoagent/mcp-server.log"
+
+[engine]
+default_host = "127.0.0.1"
+default_port = 27842
+connect_timeout_ms = 5000
+operation_timeout_ms = 5000
+heartbeat_interval_ms = 30000
+
+[vision]
+ssim_threshold = 0.95
+lpips_threshold = 0.10
+baseline_dir = "./baselines"
+diff_dir = "./diffs"
+
+[claude_vision]
+enabled = false
+api_key_env = "ANTHROPIC_API_KEY"
+model = "claude-opus-4-7"
+```
+
+## 八、入口与启动
+
+### Claude Code 配置
+`.mcp.json`（项目根 or 全局）：
+
+```json
+{
+  "mcpServers": {
+    "autoagent": {
+      "command": "uv",
+      "args": ["run", "autoagent-mcp"],
+      "cwd": "D:/AutoAgent/mcp-server"
+    }
+  }
+}
+```
+
+### CLI 命令
+
+```bash
+# 启动服务（stdio mode，由 Claude Code 调用）
+autoagent-mcp
+
+# 调试模式（HTTP transport for testing）
+autoagent-mcp --transport http --port 8765
+
+# 健康检查
+autoagent-mcp ping --host 127.0.0.1 --port 27842
+```
+
+## 九、测试策略
+
+- **单元测试**：每个 tool 用 mock WebSocket server 测（pytest）
+- **集成测试**：起一个 fake adapter（Python WebSocket server，mock 协议），跑全套 MCP tools
+- **e2e 测试**：起真实 Unity adapter，跑 login MVP
+
+CI：每 PR 跑 unit + integration；e2e 在 Unity / Godot CI 里跑。
+
+## 十、性能 & 资源
+
+- 启动时间 < 2s（不含 vision 模块加载）
+- 单 tool 调用 overhead < 10ms（本地 WebSocket）
+- 内存常驻 < 100MB
+- vision 模块按需加载（首次 `compare_to_baseline` 时加载 LPIPS 模型）
