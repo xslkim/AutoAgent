@@ -1,0 +1,101 @@
+# ===== Secrets — 永远不进 git =====
+.env
+.env.*
+!.env.*.example
+.env.agent
+.env.local
+
+# ===== Orchestration 运行时状态 =====
+# state/ 整体 ignore，但保留目录骨架（.gitkeep）和初始 budget.json
+state/*
+!state/.gitkeep
+!state/queue/
+!state/ready/
+!state/in_progress/
+!state/awaiting_ci/
+!state/done/
+!state/failed/
+!state/needs_human/
+!state/blocked/
+!state/logs/
+!state/budget.json
+!state/events.jsonl
+state/queue/*
+state/ready/*
+state/in_progress/*
+state/awaiting_ci/*
+state/done/*
+state/failed/*
+state/needs_human/*
+state/blocked/*
+state/logs/*
+!state/queue/.gitkeep
+!state/ready/.gitkeep
+!state/in_progress/.gitkeep
+!state/awaiting_ci/.gitkeep
+!state/done/.gitkeep
+!state/failed/.gitkeep
+!state/needs_human/.gitkeep
+!state/blocked/.gitkeep
+!state/logs/.gitkeep
+
+# stop_signal 是运行时文件
+state/stop_signal
+
+# ===== Worktrees（在 repo 外，但保险起见） =====
+.worktrees/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# ===== Unity =====
+fixtures/unity-test-project/Library/
+fixtures/unity-test-project/Temp/
+fixtures/unity-test-project/Obj/
+fixtures/unity-test-project/Build/
+fixtures/unity-test-project/Builds/
+fixtures/unity-test-project/Logs/
+fixtures/unity-test-project/UserSettings/
+fixtures/unity-test-project/MemoryCaptures/
+fixtures/unity-test-project/*.csproj
+fixtures/unity-test-project/*.sln
+fixtures/unity-test-project/.vs/
+
+# ===== UE =====
+fixtures/unreal-test-project/Binaries/
+fixtures/unreal-test-project/Build/
+fixtures/unreal-test-project/Intermediate/
+fixtures/unreal-test-project/Saved/
+fixtures/unreal-test-project/DerivedDataCache/
+fixtures/unreal-test-project/.vs/
+fixtures/unreal-test-project/*.sln
+fixtures/unreal-test-project/*.suo
+
+# ===== Godot =====
+fixtures/godot-test-project/.godot/
+fixtures/godot-test-project/.import/
+
+# ===== IDE / OS =====
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Logs / temp =====
+*.log
+*.tmp
+tmp/
