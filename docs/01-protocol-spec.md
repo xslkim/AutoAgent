@@ -59,15 +59,20 @@
 
 ## 三、节点 Schema（核心数据结构）
 
-每个 UI 节点统一 schema，**属性强制分三组**：
+每个 UI 节点统一 schema，**属性强制分三组**。
+
+> ⚠️ **重要约定（与 [00 §四 程序员搭建边界](00-product-overview.md) 强一致）**：程序员手搭 fixture 时**只放视觉骨架**（Image / Text / 容器），`type` 字段反映的是**引擎 raw 类型**（不会出现 `Button` / `InputField`）。"逻辑控件角色"由 `meta.logical_role` 声明，AI 在源码里 `AddComponent` 对应控件实现交互。也就是说：
+> - **fixture 加载完直接 dump**：`type=Image`、`meta.logical_role=button`、`behavior.event_handlers=[]`、`behavior.custom_scripts=[]`
+> - **AI 代码 Awake 之后 dump**：`type=Image`（不变）、`engine_extras` 多出 `attached_components=[Button]`、`behavior.event_handlers=[OnClick]`、`behavior.custom_scripts=[LoginController]`
+> - **任务 DSL 引用按 `meta.logical_role`**，不再按 `type`
 
 ```json
 {
-  "id": "login_button",
-  "type": "Button",
-  "engine_type": "UnityEngine.UI.Button",
+  "id": "login_button_bg",
+  "type": "Image",
+  "engine_type": "UnityEngine.UI.Image",
   "parent_id": "login_panel",
-  "children_ids": ["login_button_text"],
+  "children_ids": ["login_button_label"],
   "stable_id_source": "pinned" | "hash" | "auto",
 
   "visual": {
@@ -78,21 +83,30 @@
     "visible": true,
     "alpha": 1.0,
     "color": "#FFFFFFFF",
-    "sprite_ref": "Assets/UI/btn_login.png",
+    "sprite_ref": "Assets/UI/btn_login_normal.png",
     "z_order": 5
   },
 
   "behavior": {
     "interactable": true,
+    "raycast_target": true,
     "event_handlers": ["OnClick"],
-    "custom_scripts": ["LoginController"]
+    "custom_scripts": ["LoginController"],
+    "attached_components": ["UnityEngine.UI.Button"]
   },
 
   "meta": {
+    "logical_role": "button",
     "role": "submit_button",
     "intent": "trigger_login",
     "tags": ["primary", "form"],
-    "task_refs": ["TASK-042"]
+    "task_refs": ["TASK-042"],
+    "state_sprites": {
+      "normal":   "Assets/UI/btn_login_normal.png",
+      "hover":    "Assets/UI/btn_login_hover.png",
+      "pressed":  "Assets/UI/btn_login_pressed.png",
+      "disabled": "Assets/UI/btn_login_disabled.png"
+    }
   }
 }
 ```
@@ -101,13 +115,34 @@
 
 | 类别 | 含义 | AI 权限 |
 |---|---|---|
-| `visual` | 视觉表达：位置 / 尺寸 / 颜色 / 图片 / 透明度 / Z 序 | **只读**（防美术稿被破坏） |
-| `behavior` | 交互行为：是否响应 / 绑定脚本 / 事件回调 | 读写 |
-| `meta` | 语义标签：role / intent / tags / 任务引用 | 读写（初始化时由 adapter 写入或 AI 补充） |
+| `visual` | 视觉表达：位置 / 尺寸 / 颜色 / `sprite_ref` 当前值 / 透明度 / Z 序 | **只读**（防美术稿被破坏） |
+| `behavior` | 交互行为：是否响应 / 绑定脚本 / 事件回调 / `raycast_target` / 运行时附加的控件组件 | 读写 |
+| `meta` | 语义标签：`logical_role` / role / intent / tags / 任务引用 / `state_sprites` 映射 | 读写（fixture 初始化时由程序员声明 `logical_role` / `state_sprites`；AI 可补充其他 meta） |
+
+#### `meta.logical_role` 取值表（normative，跨引擎统一）
+
+| 值 | 程序员手放的节点 type | AI 在代码里 AddComponent |
+|---|---|---|
+| `button` | Image / RawImage / TextureRect / UImage | Unity: `Button` ; UE: `UButton` ; Godot: `Button` |
+| `input` | Image（背景框）+ 子 Text 节点（占位/输入回显） | Unity: `TMP_InputField` / `InputField` ; UE: `UEditableTextBox` ; Godot: `LineEdit` |
+| `slider` | Image（轨道）+ Image（handle）+ 可选 Image（fill） | Unity: `Slider` ; UE: `USlider` ; Godot: `HSlider` / `VSlider` |
+| `toggle` / `checkbox` | Image（背景）+ Image（勾选标记） | Unity: `Toggle` ; UE: `UCheckBox` ; Godot: `CheckButton` / `CheckBox` |
+| `dropdown` / `combobox` | Image（背景）+ Text（当前值）+ Image（箭头） | Unity: `TMP_Dropdown` ; UE: `UComboBoxString` ; Godot: `OptionButton` |
+| `scroll_container` | Image（视口容器）+ Image（content 容器）+ 可选 Image（滚动条） | Unity: `ScrollRect` + `RectMask2D` ; UE: `UScrollBox` ; Godot: `ScrollContainer` |
+| `list_view` | Image（容器）+ Image（item 模板） | AI 自定义渲染（Instantiate 模板 + 数据绑定） |
+| `text_display` | Text / TextMeshPro / UTextBlock / Label | （不需要 AddComponent，纯显示） |
+| `image_only` | Image / Sprite / RawImage / TextureRect | （不需要 AddComponent，装饰） |
+
+**约定**：
+- fixture 阶段，每个**有交互**的节点必须 pin ID **并**声明 `meta.logical_role`；纯装饰节点可省略（默认 `image_only`）。
+- 任务 DSL 引用节点的 `logical_role` 与 fixture 声明的不匹配 → MCP server 加载任务时拒绝。
+- AI 实际 AddComponent 的引擎组件类型必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载的组件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
 
 ### 必填字段
 
 `id` / `type` / `engine_type` / `parent_id` / `children_ids` / `stable_id_source` / `visual.position` / `visual.size` / `visual.visible`
+
+`meta.logical_role` 在**有交互的节点**（任务 DSL 引用的节点）上必填。
 
 ### 节点 ID 稳定性约定（normative）
 
@@ -147,17 +182,19 @@
 ```
 
 #### `find_widget`
-按条件找节点（支持 ID / role / type / 文本）。
+按条件找节点（支持 ID / logical_role / role / type / 文本）。
 
 ```json
 { "method": "find_widget", "params": {
-  "by": "id" | "role" | "type" | "text",
-  "value": "login_button",
+  "by": "id" | "logical_role" | "role" | "type" | "text",
+  "value": "button",
   "first_only": true
 }}
 
 // Result: { "nodes": [...] }
 ```
+
+> 任务 DSL 推荐用 `by=logical_role` 而非 `by=type`，因为 fixture 里所有交互节点的 `type` 都是 `Image`，无区分度。
 
 #### `get_widget`
 按 ID 拿单个节点的最新状态。
@@ -169,12 +206,16 @@
 
 ### 4.2 输入操作
 
+> **前置条件（normative）**：所有输入操作走**引擎事件层**（Q4=A）。目标节点必须已经被 AI 在源码里 `AddComponent` 了对应的引擎控件（`Button` / `InputField` / `Slider` / ...），否则引擎事件分发不到任何 handler，adapter 返回 `-32002 WidgetNotInteractable`。
+>
+> 也就是说：**fixture 加载完直接对 `logical_role=button` 的节点发 `click` 会失败**，AI 必须先让自己写的代码 `Awake()` / `BeginPlay()` 完成 AddComponent 才能成功。CI e2e 流程必须保证这个时序。
+
 #### `click`
-模拟点击。
+模拟点击。**前置**：目标节点的 `behavior.attached_components` 包含 `Button` / `Toggle` / 其他实现了引擎 click 接口的组件，且 `behavior.raycast_target == true`。
 
 ```json
 { "method": "click", "params": {
-  "id": "login_button",
+  "id": "login_button_bg",
   "button": "left" | "right" | "middle",
   "modifiers": ["ctrl", "shift", "alt"],
   "input_layer": "engine" | "os"   // 默认 engine
@@ -183,18 +224,18 @@
 ```
 
 #### `send_text`
-向输入框发送文本。
+向输入框发送文本。**前置**：目标节点的 `behavior.attached_components` 包含 `TMP_InputField` / `InputField` / `UEditableTextBox` / `LineEdit`。
 
 ```json
 { "method": "send_text", "params": {
-  "id": "account_input",
+  "id": "account_input_bg",
   "text": "alice@example.com",
   "clear_first": true
 }}
 ```
 
 #### `drag`
-从一个节点拖到另一个节点（或坐标）。
+从一个节点拖到另一个节点（或坐标）。**前置**：from / to 节点的 `behavior.attached_components` 实现引擎拖拽接口（Unity `IBeginDragHandler` 等 / UE `OnDragDetected` / Godot `_get_drag_data`）。
 
 ```json
 { "method": "drag", "params": {
@@ -206,11 +247,11 @@
 ```
 
 #### `scroll`
-滚动容器。
+滚动容器。**前置**：目标节点的 `behavior.attached_components` 包含 `ScrollRect` / `UScrollBox` / `ScrollContainer`。
 
 ```json
 { "method": "scroll", "params": {
-  "id": "inventory_scrollview",
+  "id": "inventory_scroll_container",
   "direction": "down" | "up" | "left" | "right",
   "amount": 100.0
 }}
@@ -420,9 +461,9 @@ WebSocket subprotocol 协商成功后，**Server 必须在 100ms 内**发起 `ne
 {
   "id": "...",
   "engine_extras": {
-    "unity": { "canvas_render_mode": "ScreenSpaceOverlay", ... },
-    "unreal": { "widget_class": "UMyButton", ... },
-    "godot": { "control_flags": [...], ... }
+    "unity": { "canvas_render_mode": "ScreenSpaceOverlay", "attached_runtime_components": ["UnityEngine.UI.Button"], ... },
+    "unreal": { "widget_class": "UImage", "attached_runtime_components": ["UButton"], ... },
+    "godot": { "control_flags": [...], "attached_runtime_components": ["Button"], ... }
   }
 }
 ```

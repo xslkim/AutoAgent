@@ -46,6 +46,10 @@ adapters/unity/
 
 ## 三、UI 树反射
 
+> **前提（与 [00 §四 程序员搭建边界](00-product-overview.md) / [01 §三](01-protocol-spec.md) 对齐）**：fixture `.unity` 文件里**只放视觉骨架**——`Canvas` / `RectTransform` / `Image` / `RawImage` / `TMP_Text` / 容器节点。**不挂任何 Selectable 子类**（`Button` / `Toggle` / `Slider` / `InputField` 等）。这些控件由 AI 在源码 `Awake()` 里 `AddComponent` 添加。
+>
+> 因此反射的 `type` 字段绝大多数情况下是 `Image` / `TMP_Text` / `RectTransform`；`behavior.attached_components` 字段在 fixture 加载完是空的，AI 代码运行后才会包含 `Button` / `TMP_InputField` 等。
+
 ### UGUI（主路径）
 
 **入口**：所有 `Canvas` 组件 → 遍历其下 `RectTransform` 子树。
@@ -71,8 +75,8 @@ IEnumerable<NodeData> WalkRectTransform(Transform t) {
 | Schema 字段 | Unity 来源 |
 |---|---|
 | `id` | `StableIdComponent.Id`（pinned）or `Hash(transformPath + name + type)` |
-| `type` | 主组件类型简名（`Button` / `Image` / `Text` / `InputField` ...） |
-| `engine_type` | `component.GetType().FullName` |
+| `type` | **主图形组件类型简名**（fixture 阶段绝大多数是 `Image` / `RawImage` / `TMP_Text`；无图形组件的容器返回 `RectTransform`）。**不再使用 Selectable 子类作 type**——因为 fixture 不挂这些 |
+| `engine_type` | 主图形组件的 `component.GetType().FullName` |
 | `parent_id` | 父节点的 id |
 | `children_ids` | 子节点 id 列表 |
 | `visual.position` | `rectTransform.anchoredPosition` |
@@ -83,10 +87,27 @@ IEnumerable<NodeData> WalkRectTransform(Transform t) {
 | `visual.alpha` | `CanvasRenderer.GetAlpha()` × 父链 CanvasGroup.alpha |
 | `visual.color` | `Image.color` / `Text.color` |
 | `visual.sprite_ref` | `Image.sprite` 的 `AssetDatabase.GetAssetPath`（Editor）/ `sprite.name`（Runtime） |
-| `behavior.interactable` | `Selectable.interactable` |
-| `behavior.event_handlers` | 反射 `Button.onClick` / `Toggle.onValueChanged` 的 listener 列表 |
+| `behavior.interactable` | 若有 `Selectable` 子类（AI AddComponent 后）：`Selectable.interactable`；否则 `false` |
+| `behavior.raycast_target` | `Graphic.raycastTarget` |
+| `behavior.attached_components` | 运行时枚举 `GetComponents<Component>()` 过滤出 `Selectable` 子类 / `ScrollRect` / `RectMask2D` 等"逻辑控件"组件（白名单，详见 §三末） |
+| `behavior.event_handlers` | 反射已挂载的 `Button.onClick` / `Toggle.onValueChanged` 等 listener 列表（fixture 阶段为空） |
 | `behavior.custom_scripts` | `GetComponents<MonoBehaviour>()` 排除 Unity 内置 |
+| `meta.logical_role` | `StableIdComponent.LogicalRole` 字段（fixture 阶段由程序员填） |
 | `meta.role` / `meta.intent` | `StableIdComponent.Meta` 字段 |
+| `meta.state_sprites` | `StableIdComponent.StateSprites` 字段（`{ normal, hover, pressed, ... } → Sprite`，序列化时输出 AssetPath） |
+
+### `attached_components` 白名单
+
+为避免把所有 MonoBehaviour 都序列化，adapter 维护一份"逻辑控件组件白名单"，只这些组件出现在 `behavior.attached_components`：
+
+```
+UnityEngine.UI.Button / Toggle / Slider / Scrollbar / Dropdown / InputField
+TMPro.TMP_InputField / TMP_Dropdown
+UnityEngine.UI.ScrollRect / RectMask2D / Mask
+（未来扩展：用户在 ~/.autoagent/config.toml 的 [unity.attached_components_whitelist] 加自定义）
+```
+
+CI 校验：若节点 `meta.logical_role == "button"` 但 `attached_components` 不含 `Button`（或等价），视为 AI 没正确实现 → e2e fail。
 
 ### UI Toolkit（Phase 1 末加入）
 
@@ -98,10 +119,14 @@ IEnumerable<NodeData> WalkRectTransform(Transform t) {
 
 ### 引擎事件层（默认）
 
+> **前置约束**：`Click` / `SendText` / `Drag` / `Scroll` 都要求 AI 已经在源码里给目标 GameObject `AddComponent` 对应的引擎控件（`Button` / `TMP_InputField` / 实现 `IDragHandler` 的脚本 / `ScrollRect`）。fixture 阶段直接调这些会抛 `-32002 WidgetNotInteractable`。错误信息明确提示"节点未挂 Button / InputField / ScrollRect 等"——这是 AI 自检的关键信号。
+
 ```csharp
 public class EngineInputDriver {
     public bool Click(NodeData node, PointerButton button) {
-        if (!IsInteractable(node)) throw new WidgetNotInteractable();
+        // IsInteractable 同时检查：节点存在 + raycastTarget + Selectable.interactable（若挂了）
+        if (!IsInteractable(node)) throw new WidgetNotInteractable(
+            "Node has no Selectable component attached — AI must AddComponent<Button>/Toggle/... first");
 
         var pointerData = new PointerEventData(EventSystem.current) {
             position = node.WorldCenterScreen,
@@ -109,6 +134,7 @@ public class EngineInputDriver {
         };
 
         // 模拟完整 down → up 序列以触发 IPointerClickHandler
+        // Button.OnPointerClick 是 IPointerClickHandler.OnPointerClick 的实现，所以 AI AddComponent<Button> 之后这套就工作
         ExecuteEvents.Execute<IPointerDownHandler>(node.GameObject, pointerData, ExecuteEvents.pointerDownHandler);
         ExecuteEvents.Execute<IPointerUpHandler>(node.GameObject, pointerData, ExecuteEvents.pointerUpHandler);
         ExecuteEvents.Execute<IPointerClickHandler>(node.GameObject, pointerData, ExecuteEvents.pointerClickHandler);
@@ -118,7 +144,8 @@ public class EngineInputDriver {
     public bool SendText(NodeData node, string text, bool clearFirst) {
         var input = node.GameObject.GetComponent<TMP_InputField>()
                  ?? (Component)node.GameObject.GetComponent<InputField>();
-        if (input == null) throw new WidgetNotInteractable("not an input field");
+        if (input == null) throw new WidgetNotInteractable(
+            "not an input field — AI must AddComponent<TMP_InputField> first");
         if (clearFirst) SetInputText(input, "");
         AppendInputText(input, text);
         // 触发 onValueChanged + onEndEdit
@@ -127,6 +154,15 @@ public class EngineInputDriver {
 
     public bool Drag(NodeData from, NodeData to, int durationMs) {
         // OnBeginDrag → 多帧 OnDrag（按 durationMs 分帧）→ OnEndDrag → OnDrop
+        // 要求 from 节点挂了实现 IBeginDragHandler/IDragHandler/IEndDragHandler 的脚本
+        ...
+    }
+
+    public bool Scroll(NodeData node, ScrollDirection dir, float amount) {
+        var scrollRect = node.GameObject.GetComponent<ScrollRect>();
+        if (scrollRect == null) throw new WidgetNotInteractable(
+            "not a scroll container — AI must AddComponent<ScrollRect> first");
+        // 修改 normalizedPosition 或 dispatch IScrollHandler
         ...
     }
 }
@@ -179,20 +215,26 @@ public class ProtocolHandler : WebSocketBehavior {
 ## 六、Meta 注入机制
 
 ### StableIdComponent
-挂到任意 GameObject 的 MonoBehaviour：
+挂到任意 GameObject 的 MonoBehaviour（**注意**：这是 adapter 自己的 metadata 组件，**不是交互控件**，挂这个不违反"程序员不放控件"约束）：
 
 ```csharp
 public class StableIdComponent : MonoBehaviour {
     [SerializeField] public string PinnedId;        // 美术/程序员手动 pin
     [SerializeField] public string AutoHashId;      // 框架自动生成
+    [SerializeField] public string LogicalRole;     // button / input / slider / ... (见 01 协议 logical_role 取值表)
     [SerializeField] public string Role;
     [SerializeField] public string Intent;
     [SerializeField] public List<string> Tags;
+
+    [Serializable] public class StateSpriteEntry { public string State; public Sprite Sprite; }
+    [SerializeField] public List<StateSpriteEntry> StateSprites;  // normal/hover/pressed/disabled → Sprite
 
     public string Id => !string.IsNullOrEmpty(PinnedId) ? PinnedId : AutoHashId;
     public string Source => !string.IsNullOrEmpty(PinnedId) ? "pinned" : "hash";
 }
 ```
+
+Inspector 自定义：`StableIdInspector.cs` 显示 LogicalRole 下拉（限制为 [01 §三 logical_role 取值表](01-protocol-spec.md) 的合法值）+ StateSprites 数组编辑器。
 
 ### IdAllocator
 框架启动时遍历所有 RectTransform，给每个节点：
@@ -230,28 +272,42 @@ public class StableIdComponent : MonoBehaviour {
 ## 八、测试 Fixture（用户准备）
 
 ### `fixtures/unity-test-project/`
-最小 Unity 项目，包含：
+最小 Unity 项目，**只包含视觉骨架**（[00 §四 程序员搭建边界](00-product-overview.md)）：
 
 #### Scene: `LoginScene.unity`
 - Main Camera
-- Canvas (Screen Space - Overlay)
-  - LoginPanel (Image, RectTransform)
-    - AccountInput (TMP_InputField)
-    - PasswordInput (TMP_InputField)
-    - LoginButton (Button + Image + Text)
-    - ErrorLabel (TMP_Text, initially empty)
-  - WelcomePanel (initially inactive)
-    - WelcomeText (TMP_Text)
+- Canvas (Screen Space - Overlay) ← 容器组件 OK
+  - LoginPanel (Image, RectTransform) — `logical_role=image_only`
+    - AccountInputBg (Image)        — `logical_role=input`（不挂 InputField，AI 加）
+      - AccountInputText (TMP_Text) — `logical_role=text_display`（占位字段，AI 写入用户输入）
+    - PasswordInputBg (Image)       — `logical_role=input`
+      - PasswordInputText (TMP_Text)— `logical_role=text_display`
+    - LoginButtonBg (Image)         — `logical_role=button`（不挂 Button，AI 加）
+      - LoginButtonLabel (TMP_Text "Login") — `logical_role=text_display`
+    - ErrorLabel (TMP_Text, initially empty) — `logical_role=text_display`
+  - WelcomePanel (Image, initially inactive) — `logical_role=image_only`
+    - WelcomeText (TMP_Text)        — `logical_role=text_display`
 
-每个交互元素挂 `StableIdComponent`，PinnedId 分别为：
-`login_panel / account_input / password_input / login_button / error_label / welcome_panel / welcome_text`
+每个节点挂 `StableIdComponent`，PinnedId / LogicalRole / StateSprites 分别为：
+
+| PinnedId | LogicalRole | StateSprites（如适用） |
+|---|---|---|
+| `login_panel` | image_only | — |
+| `account_input_bg` | input | { normal, focused } |
+| `password_input_bg` | input | { normal, focused } |
+| `login_button_bg` | button | { normal, hover, pressed, disabled } |
+| `error_label` | text_display | — |
+| `welcome_panel` | image_only | — |
+| `welcome_text` | text_display | — |
+
+**关键**：fixture 加载完，整棵树 **没有任何 `Selectable` 子类组件**；AI 写的 `LoginController.cs` 在 `Awake()` 里给 `account_input_bg` / `password_input_bg` `AddComponent<TMP_InputField>()`，给 `login_button_bg` `AddComponent<Button>()`，并设置 `raycastTarget=true`。
 
 #### Scene: `PocPlaygroundScene.unity` (Phase 0)
-覆盖 4 动作：
-- `click_target` (Button) — click 验证
-- `text_target` (TMP_InputField) — send_text 验证
-- `drag_source` + `drag_target` (RawImage 实现 IBeginDragHandler/IDragHandler/IEndDragHandler/IDropHandler) — drag 验证
-- `scroll_view` (ScrollView with 30 items) — scroll 验证
+4 动作的视觉骨架（同样不放控件，PoC 测试代码自行 AddComponent）：
+- `click_target` (Image, logical_role=button) — click 验证（PoC 测试代码 AddComponent<Button>）
+- `text_target` (Image + 子 TMP_Text, logical_role=input) — send_text 验证（PoC AddComponent<TMP_InputField>）
+- `drag_source` + `drag_target` (RawImage, logical_role=draggable/drop_zone) — drag 验证（PoC 挂自实现 IBeginDragHandler/IDragHandler/IEndDragHandler/IDropHandler 脚本）
+- `scroll_container` (Image 容器 + 30 个 Image item, logical_role=scroll_container) — scroll 验证（PoC AddComponent<ScrollRect> + AddComponent<RectMask2D>）
 
 #### `Packages/manifest.json`
 依赖 `com.autoagent.unity`（local file path 或 git URL）。

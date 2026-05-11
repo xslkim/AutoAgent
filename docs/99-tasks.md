@@ -291,30 +291,45 @@ risk: medium
 ### TASK-0008: Unity 测试 fixture 项目（手动）
 
 ```yaml
-title: Unity 2023 测试项目 + PocPlaygroundScene + LoginScene
+title: Unity 2023 测试项目 + PocPlaygroundScene + LoginScene（只放视觉骨架）
 phase: 0
 engine: unity
 depends_on: [TASK-0000]
-goal: 用户在 Unity 里手动建立 fixture 项目并 commit
+goal: 用户在 Unity 里手动建立 fixture 项目并 commit。严格遵循 [00 §四 程序员搭建边界]——只放 Image / TMP_Text / 容器，**不挂任何 Selectable 子类**
 output:
   - fixtures/unity-test-project/Packages/manifest.json (依赖 com.autoagent.unity local)
   - fixtures/unity-test-project/ProjectSettings/* (ColorSpace=Linear 锁定)
-  - fixtures/unity-test-project/Assets/Scenes/PocPlaygroundScene.unity
-    (5 个按钮 + 1 个 input + drag source/target + ScrollView 30 items, 每个挂 StableIdComponent + PinnedId)
-  - fixtures/unity-test-project/Assets/Scenes/LoginScene.unity
-    (LoginPanel: AccountInput / PasswordInput / LoginButton / ErrorLabel + WelcomePanel/WelcomeText)
+  - fixtures/unity-test-project/Assets/Scenes/PocPlaygroundScene.unity（视觉骨架）：
+    - click_target (Image, logical_role=button) + state_sprites (normal/hover/pressed)
+    - text_target (Image + 子 TMP_Text 占位, logical_role=input)
+    - drag_source / drag_target (Image, logical_role=draggable / drop_zone)
+    - scroll_container (Image 视口 + Image content + 30 Image item, logical_role=scroll_container)
+    - 5 个 click_target_variant_N 共测 click（不是 5 个按钮，是 5 个 Image+button role）
+    每节点挂 StableIdComponent + PinnedId + LogicalRole + StateSprites（如适用）
+  - fixtures/unity-test-project/Assets/Scenes/LoginScene.unity（视觉骨架）：
+    - LoginPanel (Image, logical_role=image_only)
+      - AccountInputBg (Image, logical_role=input) + 子 AccountInputText (TMP_Text, logical_role=text_display)
+      - PasswordInputBg (Image, logical_role=input) + 子 PasswordInputText (TMP_Text)
+      - LoginButtonBg (Image, logical_role=button) + state_sprites + 子 LoginButtonLabel (TMP_Text "Login")
+      - ErrorLabel (TMP_Text, logical_role=text_display, 初始 empty)
+    - WelcomePanel (Image, logical_role=image_only, 初始 inactive)
+      - WelcomeText (TMP_Text, logical_role=text_display)
+  - fixtures/unity-test-project/Assets/Sprites/UI/btn_login_{normal,hover,pressed,disabled}.png（4 套按钮 sprite）
+  - fixtures/unity-test-project/Assets/Sprites/UI/input_bg_{normal,focused}.png
   - fixtures/unity-test-project/Assets/Fonts/Roboto-Regular.ttf
   - fixtures/unity-test-project/Assets/Fonts/NotoSansCJK-Regular.otf
 verification:
   - 在 Unity 2023.2.20f1 打开能正常加载
-  - 两个 scene 都能 Play 起来
-  - StableIdComponent 字段已 pin (PinnedId 非空)
-effort: 4h
+  - 两个 scene 都能 Play 起来（什么交互都没有，纯视觉）
+  - StableIdComponent 字段已 pin (PinnedId 非空) + LogicalRole 已填
+  - grep -r "Button\|TMP_InputField\|Toggle\|Slider\|ScrollRect" Assets/Scenes/*.unity → 无匹配（强约束）
+  - 用 adapter PoC dump 整棵树，每个 logical_role != image_only 的节点都有非空 LogicalRole
+effort: 5h
 mode: manual
 risk: low
 ```
 
-**Context**：用户手动操作。AI 不能改 .unity 文件（路径白名单禁）。
+**Context**：用户手动操作。AI 不能改 .unity 文件（路径白名单禁）。**严格不放控件**——AI 在 [TASK-0132] 里通过源码 AddComponent 实现交互。
 
 ---
 
@@ -350,22 +365,38 @@ risk: medium
 ### TASK-0010: Godot 测试 fixture 项目（手动）
 
 ```yaml
-title: Godot 4.3 测试项目 + poc_playground.tscn + login.tscn
+title: Godot 4.3 测试项目 + poc_playground.tscn + login.tscn（只放视觉骨架）
 phase: 0
 engine: godot
 depends_on: [TASK-0000]
-goal: 用户在 Godot 里手动建立 fixture
+goal: 用户在 Godot 里手动建立 fixture。严格遵循 [00 §四 程序员搭建边界]——只放 TextureRect / ColorRect / Label / Container，**不放 Button / LineEdit / HSlider / ScrollContainer 等交互 Control**
 output:
   - fixtures/godot-test-project/project.godot
-  - fixtures/godot-test-project/scenes/poc_playground.tscn
-  - fixtures/godot-test-project/scenes/login.tscn
+  - fixtures/godot-test-project/scenes/poc_playground.tscn（视觉骨架）：
+    - click_target (TextureRect, logical_role=button) + state_sprites
+    - text_target (TextureRect + 子 Label 占位, logical_role=input)
+    - drag_source / drag_target (TextureRect)
+    - scroll_container (TextureRect 视口 + content + 30 TextureRect item)
+  - fixtures/godot-test-project/scenes/login.tscn（视觉骨架）：
+    - LoginPanel (Control + ColorRect bg)
+      - AccountInputBg (TextureRect, logical_role=input)
+      - PasswordInputBg (TextureRect, logical_role=input)
+      - LoginButtonBg (TextureRect, logical_role=button) + state_sprites
+        - LoginButtonLabel (Label "Login")
+      - ErrorLabel (Label, 初始 empty)
+    - WelcomePanel (Control, visible=false)
+      - WelcomeText (Label)
+  - fixtures/godot-test-project/assets/ui/btn_login_{normal,hover,pressed,disabled}.png
+  - fixtures/godot-test-project/assets/ui/input_bg_{normal,focused}.png
   - fixtures/godot-test-project/assets/fonts/*.ttf
-  - 关键节点 set_meta("autoagent_pinned_id", "...") 已设置
+  - 每个节点 set_meta autoagent_pinned_id + autoagent_logical_role；button/input 节点设 autoagent_state_sprites
 verification:
   - Godot 4.3 打开正常
-  - 两个 scene 跑起来不报错
-  - 用 grep 'autoagent_pinned_id' 在 .tscn 里能看到 meta 数据
-effort: 3h
+  - 两个 scene 跑起来不报错（纯视觉，无交互）
+  - grep 'type="Button"\|type="LineEdit"\|type="HSlider"\|type="ScrollContainer"' scenes/*.tscn → 无匹配（强约束）
+  - grep 'autoagent_pinned_id' 在 .tscn 里能看到 meta 数据
+  - grep 'autoagent_logical_role' 同样能看到
+effort: 4h
 mode: manual
 risk: low
 ```
@@ -408,25 +439,42 @@ risk: high
 ### TASK-0012: UE 测试 fixture 项目（手动）
 
 ```yaml
-title: UE 5.6 测试项目 + PocPlaygroundMap + LoginMap
+title: UE 5.6 测试项目 + PocPlaygroundMap + LoginMap（只放视觉骨架）
 phase: 0
 engine: unreal
 depends_on: [TASK-0000]
-goal: 用户在 UE 5.6 里手动建立 fixture
+goal: 用户在 UE 5.6 里手动建立 fixture。严格遵循 [00 §四 程序员搭建边界]——WidgetTree 只放 UImage / UTextBlock / UCanvasPanel / UVerticalBox 等，**不放 UButton / UEditableTextBox / USlider / UScrollBox 等交互 widget**
 output:
   - fixtures/unreal-test-project/AutoAgentTest.uproject (C++ project, UE 5.6)
   - fixtures/unreal-test-project/Source/AutoAgentTest/* (C++ user widget classes)
-    - ULoginUserWidget.h/.cpp (UPROPERTY meta=(AutoAgentId="login_button") 等)
-    - UPocPlaygroundUserWidget.h/.cpp
+    - ULoginUserWidget.h/.cpp
+      （BindWidget 全部指向 UImage / UTextBlock；UPROPERTY meta 含
+        AutoAgentId="login_button_bg" + AutoAgentLogicalRole="button" 等）
+    - UPocPlaygroundUserWidget.h/.cpp（同样只 BindWidget UImage）
+  - fixtures/unreal-test-project/Content/UI/WBP_LoginScreen.uasset（视觉骨架）：
+    - LoginPanel (UCanvasPanel)
+      - AccountInputBg (UImage, logical_role=input)
+      - PasswordInputBg (UImage, logical_role=input)
+      - LoginButtonBg (UImage, logical_role=button) + state_sprites（4 张 png）
+        - LoginButtonLabel (UTextBlock "Login")
+      - ErrorLabel (UTextBlock, initially empty)
+    - WelcomePanel (UCanvasPanel, initially Hidden)
+      - WelcomeText (UTextBlock)
+  - fixtures/unreal-test-project/Content/UI/WBP_PocPlayground.uasset（视觉骨架）
+  - fixtures/unreal-test-project/Content/UI/Sprites/btn_login_{normal,hover,pressed,disabled}.png
+  - fixtures/unreal-test-project/Content/UI/Sprites/input_bg_{normal,focused}.png
   - fixtures/unreal-test-project/Content/Maps/PocPlaygroundMap.umap
   - fixtures/unreal-test-project/Content/Maps/LoginMap.umap
   - fixtures/unreal-test-project/Content/UI/Fonts/* (NotoSansCJK + Roboto)
   - fixtures/unreal-test-project/Config/DefaultEngine.ini (锁定分辨率/color space)
+  - fixtures/unreal-test-project/Config/AutoAgentIds.ini（备用注册表）
 verification:
   - UE 5.6 打开 + 编译通过
-  - PIE 跑两个 map 不报错
+  - PIE 跑两个 map 不报错（纯视觉，无交互响应）
+  - 在 .h / .uasset 里 grep 'UButton\|UEditableTextBox\|USlider\|UScrollBox' → 0 matches（强约束；UButton 仅在 AI 写的 NativeConstruct 里出现）
   - 在 .h 里 grep 'AutoAgentId' 能看到至少 7 个声明
-effort: 1d
+  - 在 .h 里 grep 'AutoAgentLogicalRole' 同样
+effort: 1.5d
 mode: manual
 risk: low
 ```
@@ -831,14 +879,16 @@ title: Click 模拟完整: PointerDown → Up → Click 序列
 phase: 1
 engine: unity
 depends_on: [TASK-0100]
-goal: 引擎事件层 click 在所有 Selectable 子类工作
+goal: 引擎事件层 click 在所有 Selectable 子类工作（含 AI AddComponent 后挂上的 Button/Toggle/...）
 output:
   - adapters/unity/Runtime/Input/EngineInputDriver.cs (Click 实现完整)
   - adapters/unity/Tests/Runtime/ClickTests.cs
 verification:
-  - 测试: Button.onClick 触发
-  - 测试: Toggle.onValueChanged 触发
-  - 测试: 不可交互 widget 抛 -32002 WidgetNotInteractable
+  - 测试 setup: 在测试 GameObject 上代码 AddComponent<Button> / AddComponent<Toggle>（模拟 AI 业务代码做的事）
+  - 测试: Click → Button.onClick 触发
+  - 测试: Click → Toggle.onValueChanged 触发
+  - 测试: 节点未 AddComponent<Selectable> 子类 → 抛 -32002 WidgetNotInteractable + 错误消息含 "AddComponent" 提示
+  - 测试: 不可交互 widget (interactable=false) 抛 -32002
   - 测试: 父链 CanvasGroup interactable=false 时也抛 -32002
 effort: 1d
 mode: auto-with-review
@@ -854,15 +904,16 @@ title: send_text — TMP_InputField + 旧 InputField 兼容
 phase: 1
 engine: unity
 depends_on: [TASK-0105]
-goal: 实现 send_text + clear_first
+goal: 实现 send_text + clear_first（要求节点已 AddComponent<TMP_InputField> 或 <InputField>）
 output:
   - adapters/unity/Runtime/Input/EngineInputDriver.cs (SendText 方法)
   - adapters/unity/Tests/Runtime/SendTextTests.cs
 verification:
+  - 测试 setup: 测试 GameObject 上 AddComponent<TMP_InputField>
   - 测试: TMP_InputField 设值 + onValueChanged 触发
   - 测试: 旧 InputField 设值 + onValueChanged 触发
   - 测试: clear_first=true 清空旧值
-  - 测试: 非 input field 抛 WidgetNotInteractable
+  - 测试: 节点未 AddComponent input field → 抛 WidgetNotInteractable + 错误消息含 "AddComponent<TMP_InputField>" 提示
 effort: 4h
 mode: auto-with-review
 risk: low
@@ -895,7 +946,7 @@ risk: medium
 ### TASK-0108: EngineInputDriver — scroll
 
 ```yaml
-title: Scroll — ScrollRect / ScrollView 滚动
+title: Scroll — ScrollRect 滚动（要求节点已 AddComponent<ScrollRect> + <RectMask2D>）
 phase: 1
 engine: unity
 depends_on: [TASK-0105]
@@ -904,8 +955,10 @@ output:
   - adapters/unity/Runtime/Input/EngineInputDriver.cs (Scroll 实现)
   - adapters/unity/Tests/Runtime/ScrollTests.cs
 verification:
-  - 测试: ScrollView 30 items, scroll down 100 → ScrollRect.normalizedPosition 正确变化
+  - 测试 setup: 测试代码 AddComponent<ScrollRect> + <RectMask2D> + 填充 30 Image item
+  - 测试: scroll down 100 → ScrollRect.normalizedPosition 正确变化
   - 测试: 滚动后某 item 进入视口
+  - 测试: 节点未 AddComponent<ScrollRect> → 抛 WidgetNotInteractable
 effort: 4h
 mode: auto-with-review
 risk: low
@@ -1432,20 +1485,31 @@ risk: medium
 ### TASK-0131: Login fixture 程序员准备（手动确认）
 
 ```yaml
-title: TASK-0008 的 LoginScene 完整性确认
+title: TASK-0008 的 LoginScene 完整性确认（视觉骨架 + logical_role + state_sprites）
 phase: 1
 engine: unity
 depends_on: [TASK-0008]
-goal: 确认 LoginScene 满足 MVP 验收要求
+goal: 确认 LoginScene 满足 MVP 验收要求；fixture 完全不含交互控件
 output:
-  - 在 LoginScene 里所有元素都 pin ID (login_panel / account_input / password_input / login_button / error_label / welcome_panel / welcome_text)
+  - 在 LoginScene 里所有元素都 pin ID + LogicalRole：
+    - login_panel (image_only)
+    - account_input_bg (input) + 子 account_input_text (text_display)
+    - password_input_bg (input) + 子 password_input_text (text_display)
+    - login_button_bg (button) + 子 login_button_label (text_display)
+    - error_label (text_display)
+    - welcome_panel (image_only)
+    - welcome_text (text_display)
+  - login_button_bg 设 state_sprites (normal/hover/pressed/disabled)
+  - account_input_bg / password_input_bg 设 state_sprites (normal/focused)
   - WelcomePanel 初始 inactive
   - ErrorLabel 初始 empty
-  - 截图 baselines/unity/windows/login_screen.png 通过 review
+  - 截图 baselines/unity/windows/login_screen.png 通过 review（视觉骨架的 normal 态）
 verification:
-  - 手动 PlayMode → 看起来正确
-  - dump_tree 输出 7 个 pinned ID
-effort: 2h
+  - 手动 PlayMode → 看起来正确，所有 UI 不响应任何输入（视觉骨架的预期行为）
+  - dump_tree 输出 ≥ 7 个 pinned ID 且每个 LogicalRole 非空（除 image_only 节点）
+  - dump_tree 输出的 type 字段：所有非容器节点都是 Image / TMP_Text（无 Button / TMP_InputField）
+  - behavior.attached_components 字段在所有节点上为空数组（fixture 阶段还没 AI 代码）
+effort: 3h
 mode: manual
 risk: low
 path_exception: ["fixtures/unity-test-project/Assets/Scenes/LoginScene.unity"]
@@ -1456,20 +1520,33 @@ path_exception: ["fixtures/unity-test-project/Assets/Scenes/LoginScene.unity"]
 ### TASK-0132: AI Agent 实现 LoginController.cs (autonomous loop 真实试运行)
 
 ```yaml
-title: MVP 任务 — AI 写 LoginController 实现登录交互
+title: MVP 任务 — AI 写 LoginController 实现登录交互（含 AddComponent 控件）
 phase: 1
 engine: unity
 depends_on: [TASK-0117 ... TASK-0130, TASK-0131]
-goal: 给 Claude Code 任务 DSL, autonomous loop 实现 login 功能
+goal: 给 Claude Code 任务 DSL, autonomous loop 实现 login 功能。AI 必须在源码里 AddComponent 引擎控件，fixture 阶段视觉骨架无控件
 output:
   - fixtures/unity-test-project/Scripts/LoginController.cs (AI 实现)
+    Awake() 里:
+      - account_input_bg.gameObject.AddComponent<TMP_InputField>() + 设 textComponent 指向子 account_input_text + caretWidth 等
+      - password_input_bg.gameObject.AddComponent<TMP_InputField>() + contentType=Password
+      - login_button_bg.gameObject.AddComponent<Button>() + AddListener(OnLoginClicked)
+      - 三个节点 raycastTarget=true (behavior 字段，合法)
+      - 配合 StableIdComponent.StateSprites 设置 Button.spriteState / InputField focused 状态切换
   - fixtures/unity-test-project/Scripts/MockApi.cs (AI 实现 mock POST /login)
   - fixtures/unity-test-project/Scripts/Tests/LoginControllerTests.cs (AI 写测试)
   - 任务 DSL: docs/canonical-tasks/login.yaml (人工写, 给 AI 输入)
 verification:
-  - 任务 DSL 包含 login_panel / account_input / password_input / login_button / error_label / welcome_panel / welcome_text 引用
+  - 任务 DSL 按 logical_role 引用节点（如 "the input field with id account_input_bg, logical_role=input"）
+  - 源码 diff 审计通过（防护 0.2，含 §2.5 logical_role 实现豁免）
+  - dump_before vs dump_after：
+    - visual 字段完全一致
+    - after 中 account_input_bg / password_input_bg 的 behavior.attached_components 包含 TMP_InputField
+    - after 中 login_button_bg 的 behavior.attached_components 包含 Button
+    - 所有 pinned_id 都还在
   - AI 在 ≤ 5 iterations 内完成
   - 单元测试: 输入 valid 触发 mock API, 调用次数正确
+  - e2e: send_text → click → mock 收到 POST → welcome_text 出现
   - PR 自动 open + 全部 CI step 绿
 effort: 2d (AI iterating; 用户监督)
 mode: auto-with-review
@@ -1477,7 +1554,7 @@ risk: high
 max_iterations: 5
 ```
 
-**Context**：这是 Phase 1 真正的"AI 自动化"试运行。前面所有任务都是为这一刻铺路。
+**Context**：这是 Phase 1 真正的"AI 自动化"试运行。前面所有任务都是为这一刻铺路。重点观察 AI 在"fixture 没有任何控件" + "logical_role 取值表 + state_sprites 已声明"的语境下，能否正确 AddComponent 实现交互。
 
 ---
 

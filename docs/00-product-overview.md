@@ -4,18 +4,30 @@
 
 ## 一、产品定位
 
-**一句话**：程序员在 Unity / UE / Godot 引擎里手动搭好静态 UI（Canvas + Image / UMG / Control），框架自动遍历 UI 树注入 ID/meta；AI Agent 接到任务描述（含 UI 元素 ID）后自动写引擎代码（C# / C++ / GDScript），框架自动启动引擎模拟用户操作、收集日志和截图，AI 看反馈判断是否完成，形成闭环。
+**一句话**：程序员在 Unity / UE / Godot 引擎里手动搭好**静态视觉骨架**（仅 UI 树 + 图片 + 文字显示元素，**不放任何交互控件**），框架自动遍历 UI 树注入 ID/meta；AI Agent 接到任务描述（含 UI 元素 ID 与目标 logical_role）后自动写引擎代码（C# / C++ / GDScript），在代码里**为图片节点 AddComponent 引擎自带的控件类**（Button / InputField / Slider 等）并实现交互逻辑；框架自动启动引擎模拟用户操作、收集日志和截图，AI 看反馈判断是否完成，形成闭环。
 
 **不做什么**：
 - ❌ 不生成 UI 视觉（不替代美术）
 - ❌ 不做 Figma → 引擎自动导入（已论证不可行）
 - ❌ 不支持多人在线 PvP（反作弊会拦反射注入）
 
+### 程序员搭建边界（normative）
+
+程序员在引擎工程文件（`.unity` / `.uasset` / `.tscn`）里**只放视觉骨架**——目的只有一个：和美术稿视觉对齐。**不放任何交互控件**，控件功能由 AI 在源码里运行时 `AddComponent` 引擎自带控件实现。
+
+| 类别 | 程序员可手放 | 谁负责 |
+|---|---|---|
+| **图片 / 容器**：`Image` / `RawImage` / `Sprite` / `TextureRect` / `UImage`、`Canvas` / `CanvasLayer`、`Panel` / `VerticalBox` / `Container` / `RectTransform`、`Mask` 由 AI 加 | ✅ | 程序员手放，对齐美术稿 |
+| **文字显示**：`Text` / `TextMeshPro` / `UTextBlock` / `Label`（纯显示，不接收输入） | ✅ | 程序员手放（美术决定字体 / 字号 / 颜色） |
+| **交互控件**：`Button`、`InputField` / `TMP_InputField` / `UEditableTextBox` / `LineEdit`、`Slider`、`Toggle` / `CheckBox`、`Dropdown` / `ComboBox`、`ScrollView` / `ScrollBar` / `ScrollBox` / `ScrollRect`、`ListView` / `TreeView`、`Mask` / `RectMask2D`（裁剪） | ❌ | AI 在源码里 `AddComponent` 添加 |
+
+**例外说明**：`Image.raycastTarget` / `Control.mouse_filter` / `Widget.Visibility`（"是否参与命中测试"）属于 `behavior` 字段（不是 `visual`），AI 可以在代码里改这些以让自己挂的控件能被点击——这条豁免明确写进 [06 防护 0.2](06-visual-regression.md#22-源码-diff-审计-astregex-扫描)。
+
 ## 二、目标用户
 
 | 角色 | 用法 |
 |---|---|
-| 游戏程序员 | 搭完静态 UI 后，写一份任务 DSL，让 AI Agent 实现交互；review PR |
+| 游戏程序员 | 搭完静态视觉骨架（仅图片 + 文字 + 容器，不放控件），pin stable ID 并声明 logical_role，写一份任务 DSL，让 AI Agent 实现交互；review PR |
 | 技术美术 | 给 UI 元素 pin stable ID；定义"美术约束"（哪些视觉属性不允许 AI 修改） |
 | QA | 用框架做回归测试、视觉回归 |
 | AI Agent (Claude Code) | 框架的"程序员"，读任务 → 写代码 → 跑测试 → 看日志 → 迭代 |
@@ -25,39 +37,56 @@
 ### 场景 1：实现一个登录界面的交互（MVP 验证场景）
 
 ```
-1. 程序员在 Unity 里搭好 Login Canvas（手动拖 Image / InputField / Button）
-2. 框架启动，遍历 Canvas，给每个元素分配 ID：
-   - login_panel / account_input / password_input / login_button / error_label
+1. 程序员在 Unity 里搭好 Login Canvas，只放视觉骨架：
+   - LoginPanel (Image)
+     - AccountInputBg (Image)  ← 输入框背景图，没挂 InputField
+     - PasswordInputBg (Image) ← 输入框背景图
+     - LoginButtonBg (Image)   ← 按钮视觉，没挂 Button
+       - LoginButtonLabel (TMP_Text "Login")
+     - ErrorLabel (TMP_Text, 初始空)
+   - WelcomePanel (Image, 初始 inactive)
+     - WelcomeText (TMP_Text)
+2. 程序员给每个节点 pin stable ID + 声明目标 logical_role:
+   - account_input_bg   (meta.logical_role="input")
+   - password_input_bg  (meta.logical_role="input")
+   - login_button_bg    (meta.logical_role="button")
+   - error_label / welcome_text (meta.logical_role="text_display")
 3. 程序员写任务 DSL：
-   "实现登录功能：用户在 account_input 和 password_input 输入文本，
-    点击 login_button 后调用 mock API（POST /login）。
+   "实现登录功能：用户在 account_input_bg / password_input_bg 输入文本，
+    点击 login_button_bg 后调用 mock API（POST /login）。
     返回成功 → 隐藏 login_panel，显示 welcome_text；
     返回失败 → 在 error_label 显示错误信息。"
-4. AI Agent 读任务 + 当前 UI 树 dump
-5. AI Agent 写 LoginController.cs，挂到 login_panel 上
+4. AI Agent 读任务 + 当前 UI 树 dump（看到节点 type=Image, meta.logical_role=button）
+5. AI Agent 写 LoginController.cs，在 Awake() 里:
+   - account_input_bg.gameObject.AddComponent<TMP_InputField>()
+   - password_input_bg.gameObject.AddComponent<TMP_InputField>() + contentType=Password
+   - login_button_bg.gameObject.AddComponent<Button>() + AddListener(OnLogin)
+   - 同时把 raycastTarget=true 设上（behavior 字段，允许写）
 6. AI Agent 触发 GitHub Actions CI，CI 跑：
-   - 编译通过
-   - 单元测试通过
-   - e2e 测试：启动 Unity headless → 框架模拟点击 login_button → 检查
-     network mock 收到 POST → 检查 welcome_text 出现
+   - 路径白名单 + 源码 diff 审计（防护 0）通过
+   - dump_before（fixture 加载完）vs dump_after（AI Awake 后）：
+     visual 字段无变化（OK），behavior 字段有新组件（预期）
+   - 单元测试 / e2e: 模拟点击 login_button_bg → mock API 收到 POST
 7. CI 通过 → AI 自动 commit + PR
 8. CI 失败 → AI 读日志 → 修代码 → 再触发（autonomous loop）
 ```
 
-### 场景 2：给已有按钮添加新功能（增量场景）
+### 场景 2：给已有"图片按钮"添加新功能（增量场景）
 
 ```
-1. UI 已经有 settings_button + settings_panel
-2. 任务 DSL: "点击 settings_button 切换 settings_panel 显隐"
-3. AI 读 UI 树 → 写 Toggle 行为 → 测试 → PR
+1. UI 已经有 settings_button_bg (Image, logical_role="button") + settings_panel (Image)
+2. 任务 DSL: "点击 settings_button_bg 切换 settings_panel 显隐"
+3. AI 读 UI 树 → 在代码里 AddComponent<Button>() → 写 Toggle 行为 → 测试 → PR
 ```
 
 ### 场景 3：复杂列表 + 数据绑定
 
 ```
-1. UI 有 inventory_list (ScrollView + Item Prefab)
+1. UI 视觉骨架: inventory_list (Image 容器) + ItemTemplate (Image 子节点，作为 prefab 模板)
+   注意：程序员不挂 ScrollRect / RectMask2D，AI 代码里加
 2. 任务 DSL: "调用 mock API GET /inventory，返回的物品列表渲染到 inventory_list"
-3. AI 读 UI 树 → 写 InventoryController + Item ViewModel → 测试列表渲染、滚动、点击 → PR
+3. AI 在代码里 AddComponent<ScrollRect> + AddComponent<RectMask2D>，
+   Instantiate ItemTemplate 填充数据 → 写 InventoryController + Item ViewModel → 测试 → PR
 ```
 
 ## 四、关键约束（硬约束，不可违反）
@@ -65,7 +94,7 @@
 | 约束 | 说明 |
 |---|---|
 | 引擎语言 | Unity 纯 C#（不用预制件），UE 纯 C++（不用蓝图），Godot GDScript（必要时 GDExtension） |
-| 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order） |
+| 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order）。`raycastTarget` / `mouse_filter` / `Visibility` 归 behavior，AI 可写。`meta.state_sprites` 例外见 [06 §三 防护 1 例外条款](06-visual-regression.md) |
 | 跨引擎统一 | 同一份任务 DSL 能在三引擎落地；引擎 adapter 独立实现 |
 | 输入双轨 | 引擎事件层（默认）+ OS 级（fallback for 焦点丢失 / 全屏独占 / 引擎事件注入失败的测试场景；**不**承诺绕过反作弊，不用于 PvP 上线包） |
 | 适用范围 | 仅单机 / PvE / 开发阶段 / QA 包；PvP 上线版必须移除 SDK |
@@ -102,7 +131,9 @@
 | Stable ID | 节点的稳定标识符，跨美术迭代不变 |
 | Pin ID | 美术/程序员手动钉死的 ID（持久化到组件字段） |
 | Visual / Behavior / Meta | 节点属性的三类分组，AI 只能写 behavior + meta |
-| Test Fixture | 用户预先在引擎里搭好的最小测试场景（commit 到 repo） |
+| Logical Role | 节点的"逻辑控件角色"标签（`button` / `input` / `slider` / `toggle` / `scroll_container` / `text_display` / `image_only` / ...），写在 `meta.logical_role`。**程序员搭 fixture 时声明**（pin ID 时一起写），任务 DSL 按 logical_role 引用而非 type，AI 据此 AddComponent 对应控件 |
+| State Sprites | `meta.state_sprites` 字段：节点的多状态视觉资源映射（`{ normal, hover, pressed, focused, disabled } → sprite_ref`），美术 commit 多套 sprite；AI 在代码里按状态切换 `Image.sprite`——此切换属于 behavior 而非 visual 写入（**05/06 防护 0.2 的明确豁免**） |
+| Test Fixture | 用户预先在引擎里搭好的最小测试场景（commit 到 repo），含视觉骨架 + pinned ID + logical_role + state_sprites |
 | Canonical Task | MVP 验收用的标准任务（首版 = login 界面） |
 | Autonomous Loop | AI Agent 写代码 → 触发 CI → 读结果 → 修复 → 再触发的自迭代闭环 |
 

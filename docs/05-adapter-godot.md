@@ -45,6 +45,12 @@ adapters/godot/
 
 ## 三、UI 树反射
 
+> **前提（与 [00 §四 程序员搭建边界](00-product-overview.md) / [01 §三](01-protocol-spec.md) 对齐）**：fixture `.tscn` 里**只放视觉骨架**——`Control` / `TextureRect` / `ColorRect` / `Label` / `Container` / `VBoxContainer` / `HBoxContainer` 等纯显示节点。**不放任何交互 Control 子类**（`Button` / `LineEdit` / `HSlider` / `VSlider` / `CheckBox` / `CheckButton` / `OptionButton` / `ScrollContainer` / `ItemList` / `Tree`）。
+>
+> **Godot 模型特殊性**：Godot 的节点 class 是静态的，无法像 Unity 那样 AddComponent，也不能像 UE 那样直接 SetContent 包裹。AI 必须走"**替换 + 视觉迁移**"路径（§六-A）：在 `_ready()` 里 free 原 TextureRect 节点，instantiate Button，把 TextureRect 的 texture 通过 `add_theme_stylebox_override("normal", StyleBoxTexture)` 转给 Button，让视觉保持一致。
+>
+> 因此反射的 `type` 字段在 fixture 阶段是 `TextureRect` / `ColorRect` / `Label`；AI `_ready()` 后变成 `Button` / `LineEdit` / `ScrollContainer`（节点 class 已变更）。
+
 ### 入口
 所有 `CanvasLayer` 下的 `Control` 节点。
 
@@ -75,8 +81,8 @@ func _walk(node: Node, parent_id: String, out: Array) -> void:
 | Schema 字段 | Godot 来源 |
 |---|---|
 | `id` | `node.get_meta("autoagent_pinned_id")` or hash |
-| `type` | `node.get_class()` 简名 |
-| `engine_type` | `node.get_class()`（如 `Button` / `LineEdit`） |
+| `type` | `node.get_class()` 简名（fixture 阶段：`TextureRect` / `ColorRect` / `Label` 等；AI `_ready()` 替换后：`Button` / `LineEdit` / ...） |
+| `engine_type` | `node.get_class()` |
 | `parent_id` | parent control id |
 | `visual.position` | `node.global_position` |
 | `visual.size` | `node.size` |
@@ -85,10 +91,16 @@ func _walk(node: Node, parent_id: String, out: Array) -> void:
 | `visual.alpha` | `node.modulate.a * node_path_alpha_chain()` |
 | `visual.color` | `node.modulate` 或 `theme_color` |
 | `behavior.interactable` | `node.mouse_filter != MOUSE_FILTER_IGNORE && !node.disabled` |
+| `behavior.raycast_target` | `node.mouse_filter != Control.MOUSE_FILTER_IGNORE` |
+| `behavior.attached_components` | Godot 没有"组件挂载"。dump 时序列化"AI 替换后的节点 class"（`Button` / `LineEdit` / ...），与 `type` 一致。便于 CI 校验 logical_role |
 | `behavior.event_handlers` | 反射 `node.get_signal_connection_list("pressed")` 等 |
 | `behavior.custom_scripts` | `node.get_script().resource_path` |
+| `meta.logical_role` | `node.get_meta("autoagent_logical_role")` |
+| `meta.state_sprites` | `node.get_meta("autoagent_state_sprites")` — Dictionary 形式 `{ normal: Texture2D, hover: Texture2D, ... }` |
 
 ## 四、输入注入
+
+> **前置约束**：`click` / `send_text` / `scroll` 都要求 AI 已经走"替换 + 视觉迁移"把 fixture 的 TextureRect 替换成 Button / LineEdit / ScrollContainer。fixture 阶段直接对 TextureRect 发 `click` → `node.button_index` / `node.text` 等属性不存在 → adapter 返回 `-32002 WidgetNotInteractable`，错误信息明确提示"节点 class 仍是 TextureRect，需要先替换为 Button/LineEdit/..."。
 
 ### 引擎事件层（默认）
 
@@ -180,16 +192,74 @@ func _process(_delta: float) -> void:
 Godot 节点的 `Object.set_meta(key, value)` 持久化到 .tscn。
 
 ```gdscript
-# 写
-node.set_meta("autoagent_pinned_id", "login_button")
+# 写（程序员搭 fixture 时设置）
+node.set_meta("autoagent_pinned_id", "login_button_bg")
+node.set_meta("autoagent_logical_role", "button")
 node.set_meta("autoagent_role", "submit_button")
+node.set_meta("autoagent_state_sprites", {
+    "normal":   preload("res://assets/ui/btn_login_normal.png"),
+    "hover":    preload("res://assets/ui/btn_login_hover.png"),
+    "pressed":  preload("res://assets/ui/btn_login_pressed.png"),
+    "disabled": preload("res://assets/ui/btn_login_disabled.png"),
+})
 
 # 读
 if node.has_meta("autoagent_pinned_id"):
     return node.get_meta("autoagent_pinned_id")
 ```
 
-Editor Plugin 提供 Inspector 扩展：选中 Control → "AutoAgent ID" 字段编辑。
+Editor Plugin 提供 Inspector 扩展：选中 Control → "AutoAgent ID / LogicalRole / StateSprites" 字段编辑（LogicalRole 限制为 [01 §三 logical_role 取值表](01-protocol-spec.md) 合法值）。
+
+### A. AI 替换节点的视觉迁移路径
+
+```gdscript
+# AI 在 _ready() 里实现（业务代码，不是 adapter 代码）
+func _replace_with_button(bg_node: TextureRect, on_pressed: Callable) -> Button:
+    var parent := bg_node.get_parent()
+    var pos := bg_node.position
+    var sz  := bg_node.size
+    var anc_l := bg_node.anchor_left
+    var anc_t := bg_node.anchor_top
+    var anc_r := bg_node.anchor_right
+    var anc_b := bg_node.anchor_bottom
+
+    # 从 state_sprites meta 取多状态视觉
+    var ss: Dictionary = bg_node.get_meta("autoagent_state_sprites")
+
+    var btn := Button.new()
+    btn.name = bg_node.name
+    btn.flat = true  # 关掉 Button 默认背景
+    btn.add_theme_stylebox_override("normal",   _styleboxify(ss.normal))
+    btn.add_theme_stylebox_override("hover",    _styleboxify(ss.hover))
+    btn.add_theme_stylebox_override("pressed",  _styleboxify(ss.pressed))
+    btn.add_theme_stylebox_override("disabled", _styleboxify(ss.disabled))
+
+    # 转移 meta（pinned_id / logical_role）
+    btn.set_meta("autoagent_pinned_id", bg_node.get_meta("autoagent_pinned_id"))
+    btn.set_meta("autoagent_logical_role", "button")
+
+    # 替换
+    var idx := bg_node.get_index()
+    parent.remove_child(bg_node)
+    bg_node.queue_free()
+    parent.add_child(btn)
+    parent.move_child(btn, idx)
+    btn.position = pos; btn.size = sz
+    btn.anchor_left = anc_l; btn.anchor_top = anc_t
+    btn.anchor_right = anc_r; btn.anchor_bottom = anc_b
+
+    btn.pressed.connect(on_pressed)
+    return btn
+
+func _styleboxify(tex: Texture2D) -> StyleBoxTexture:
+    var sb := StyleBoxTexture.new()
+    sb.texture = tex
+    return sb
+```
+
+**关键约束（写进 [06 §二 防护 0](06-visual-regression.md)）**：
+- 这条路径修改 `.tscn` 节点树结构，正常情况下属于"AI 不允许改结构"违规。豁免规则与 UE 的"包裹"路径同：**新节点的 type 必须能在 logical_role 取值表里匹配 + state_sprites 完整迁移 + position/size/anchor 一致 → 不算结构破坏**（dump 前后 diff gate 校验）。
+- pinned_id 必须显式转移到新节点（如上 `btn.set_meta("autoagent_pinned_id", ...)`），否则 orphan tracker 报警。
 
 ### Hash ID
 `(node.get_path() as String + node.name + node.get_class()).md5_text().substr(0, 12)`
@@ -225,20 +295,29 @@ adapter 启动时跑一次 self-check：尝试反射几个 known control，比�
 
 ### `fixtures/godot-test-project/`
 
-#### Scene: `login.tscn`
+#### Scene: `login.tscn`（**只放视觉骨架**，无任何 Button / LineEdit）
 - CanvasLayer
-  - LoginPanel (Control + ColorRect background)
-    - AccountInput (LineEdit)
-    - PasswordInput (LineEdit, secret = true)
-    - LoginButton (Button)
-    - ErrorLabel (Label)
-  - WelcomePanel (Control, visible = false)
-    - WelcomeText (Label)
+  - LoginPanel (Control + ColorRect background) — `autoagent_logical_role=image_only`
+    - AccountInputBg (TextureRect)               — `autoagent_logical_role=input`
+    - PasswordInputBg (TextureRect)              — `autoagent_logical_role=input`
+    - LoginButtonBg (TextureRect)                — `autoagent_logical_role=button` + state_sprites
+      - LoginButtonLabel (Label "Login")         — `autoagent_logical_role=text_display`
+    - ErrorLabel (Label, initially empty)        — `autoagent_logical_role=text_display`
+  - WelcomePanel (Control, visible = false)      — `autoagent_logical_role=image_only`
+    - WelcomeText (Label)                        — `autoagent_logical_role=text_display`
 
-每个交互节点 set_meta autoagent_pinned_id（编辑器手动设或 .tscn 直接编辑）。
+每个节点 set_meta `autoagent_pinned_id` + `autoagent_logical_role`（编辑器手动设或 .tscn 直接编辑）。state_sprites 在 button / input 节点上设。
+
+**关键**：fixture 加载完，整棵树 **没有任何 Button / LineEdit / ScrollContainer**；AI 在 `_ready()` 里走 §六-A 路径替换节点 class。
 
 #### Scene: `poc_playground.tscn` (Phase 0)
-4 动作覆盖。
+4 动作视觉骨架覆盖（同前两引擎模式）：
+- `click_target` (TextureRect, logical_role=button)
+- `text_target` (TextureRect, logical_role=input)
+- `drag_source` + `drag_target` (TextureRect)
+- `scroll_container` (TextureRect 容器 + 30 个 TextureRect item, logical_role=scroll_container)
+
+PoC 测试代码自行实现节点替换路径。
 
 ## 九、已知坑（必读）
 
