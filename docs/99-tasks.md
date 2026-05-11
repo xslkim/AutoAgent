@@ -143,7 +143,7 @@ output:
 verification:
   - uv run autoagent-mcp --help 正常输出
   - pytest mcp-server/tests/ -v
-  - Claude Code 配置 .mcp.json 后能启动并 list 出 12 个 tool
+  - Claude Code 配置 .mcp.json 后能启动并 list 出 17 个 Phase 1 tools（12 core + 5 aux，见 [02 §三](02-mcp-server.md)）
 effort: 1d
 mode: auto-with-review
 risk: medium

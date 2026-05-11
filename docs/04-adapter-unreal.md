@@ -401,7 +401,7 @@ Shipping build 默认禁用；用户可在 `Target.cs` 里强制开启。
 
 ### Slate API 在 Shipping 的可用性
 - `FSlateApplication::ProcessMouseButtonDownEvent` ✅ 可调用（无 WITH_EDITOR 守卫）
-- `UWidgetTree::ForEachWidget` ✅
+- `WidgetTree->RootWidget` + `UPanelWidget::GetChildAt` 递归遍历 ✅（本 adapter 禁用 `ForEachWidget` 以避免重复节点）
 - `GetAllWidgetsOfClass` ✅
 - 反射 `OnClicked.IsBound()` ✅（FMulticastDelegate API 公开）
 

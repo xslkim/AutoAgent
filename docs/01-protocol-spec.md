@@ -61,9 +61,9 @@
 
 每个 UI 节点统一 schema，**属性强制分三组**。
 
-> ⚠️ **重要约定（与 [00 §四 程序员搭建边界](00-product-overview.md) 强一致）**：程序员手搭 fixture 时**只放视觉骨架**（Image / Text / 容器），`type` 字段反映的是**引擎 raw 类型**（不会出现 `Button` / `InputField`）。"逻辑控件角色"由 `meta.logical_role` 声明，AI 在源码里 `AddComponent` 对应控件实现交互。也就是说：
+> ⚠️ **重要约定（与 [00 §四 程序员搭建边界](00-product-overview.md) 强一致）**：程序员手搭 fixture 时**只放视觉骨架**（Image / Text / 容器），`type` 字段反映的是**引擎 raw 类型**（不会出现 `Button` / `InputField`）。"逻辑控件角色"由 `meta.logical_role` 声明，AI 在源码里按引擎模型实现对应控件能力：Unity `AddComponent`，UE 包裹 / 替换为 UMG widget，Godot 替换节点并迁移视觉。也就是说：
 > - **fixture 加载完直接 dump**：`type=Image`、`meta.logical_role=button`、`behavior.event_handlers=[]`、`behavior.custom_scripts=[]`
-> - **AI 代码 Awake 之后 dump**：`type=Image`（不变）、`engine_extras` 多出 `attached_components=[Button]`、`behavior.event_handlers=[OnClick]`、`behavior.custom_scripts=[LoginController]`
+> - **AI 代码运行之后 dump**：Unity 通常 `type=Image` 不变且 `behavior.attached_components=[Button]`；UE/Godot 可能因包裹 / 替换出现新 widget class，但同一 pinned ID 必须保留，且 `behavior.attached_components` 反映已实现的控件能力
 > - **任务 DSL 引用按 `meta.logical_role`**，不再按 `type`
 
 ```json
@@ -121,7 +121,7 @@
 
 #### `meta.logical_role` 取值表（normative，跨引擎统一）
 
-| 值 | 程序员手放的节点 type | AI 在代码里 AddComponent |
+| 值 | 程序员手放的节点 type | AI 在代码里实现的控件能力 |
 |---|---|---|
 | `button` | Image / RawImage / TextureRect / UImage | Unity: `Button` ; UE: `UButton` ; Godot: `Button` |
 | `input` | Image（背景框）+ 子 Text 节点（占位/输入回显） | Unity: `TMP_InputField` / `InputField` ; UE: `UEditableTextBox` ; Godot: `LineEdit` |
@@ -136,7 +136,7 @@
 **约定**：
 - fixture 阶段，每个**有交互**的节点必须 pin ID **并**声明 `meta.logical_role`；纯装饰节点可省略（默认 `image_only`）。
 - 任务 DSL 引用节点的 `logical_role` 与 fixture 声明的不匹配 → MCP server 加载任务时拒绝。
-- AI 实际 AddComponent 的引擎组件类型必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载的组件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
+- AI 实际实现的控件能力必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载 / 包裹 / 替换后的控件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
 
 ### 必填字段
 
@@ -206,9 +206,9 @@
 
 ### 4.2 输入操作
 
-> **前置条件（normative）**：所有输入操作走**引擎事件层**（Q4=A）。目标节点必须已经被 AI 在源码里 `AddComponent` 了对应的引擎控件（`Button` / `InputField` / `Slider` / ...），否则引擎事件分发不到任何 handler，adapter 返回 `-32002 WidgetNotInteractable`。
+> **前置条件（normative）**：所有输入操作走**引擎事件层**（Q4=A）。目标节点必须已经被 AI 在源码里实现对应控件能力（Unity `AddComponent`；UE 包裹 / 替换为交互 widget；Godot 替换为交互 Control），否则引擎事件分发不到任何 handler，adapter 返回 `-32002 WidgetNotInteractable`。
 >
-> 也就是说：**fixture 加载完直接对 `logical_role=button` 的节点发 `click` 会失败**，AI 必须先让自己写的代码 `Awake()` / `BeginPlay()` 完成 AddComponent 才能成功。CI e2e 流程必须保证这个时序。
+> 也就是说：**fixture 加载完直接对 `logical_role=button` 的节点发 `click` 会失败**，AI 必须先让自己写的代码 `Awake()` / `NativeConstruct()` / `_ready()` 完成控件实现才能成功。CI e2e 流程必须保证这个时序。
 
 #### `click`
 模拟点击。**前置**：目标节点的 `behavior.attached_components` 包含 `Button` / `Toggle` / 其他实现了引擎 click 接口的组件，且 `behavior.raycast_target == true`。

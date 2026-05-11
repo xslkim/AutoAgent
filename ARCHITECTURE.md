@@ -43,7 +43,7 @@
 - 协议设计参考 Poco `AbstractDumper / AbstractNode / StdRpcReactor`（Apache-2.0）
 - 协议设计参考 WebDriver BiDi（W3C 标准）
 - Unity 实现参考 AltTester Unity SDK 架构（GPL，clean room，**只学不抄**）
-- UE 实现基于 `UWidgetTree::ForEachWidget` + `FSlateApplication::ProcessMouseButtonDownEvent`
+- UE 实现基于 `WidgetTree->RootWidget` 单一递归遍历 + `FSlateApplication::ProcessMouseButtonDownEvent`
 - Godot 实现基于 `SceneTree` + `Input.parse_input_event`
 
 ### 决策 2：Figma 不做自动导入，仅作视觉 ground truth

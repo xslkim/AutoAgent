@@ -4,7 +4,7 @@
 
 ## 一、产品定位
 
-**一句话**：程序员在 Unity / UE / Godot 引擎里手动搭好**静态视觉骨架**（仅 UI 树 + 图片 + 文字显示元素，**不放任何交互控件**），框架自动遍历 UI 树注入 ID/meta；AI Agent 接到任务描述（含 UI 元素 ID 与目标 logical_role）后自动写引擎代码（C# / C++ / GDScript），在代码里**为图片节点 AddComponent 引擎自带的控件类**（Button / InputField / Slider 等）并实现交互逻辑；框架自动启动引擎模拟用户操作、收集日志和截图，AI 看反馈判断是否完成，形成闭环。
+**一句话**：程序员在 Unity / UE / Godot 引擎里手动搭好**静态视觉骨架**（仅 UI 树 + 图片 + 文字显示元素，**不放任何交互控件**），框架自动遍历 UI 树注入 ID/meta；AI Agent 接到任务描述（含 UI 元素 ID 与目标 logical_role）后自动写引擎代码（C# / C++ / GDScript），在代码里**运行时赋予视觉节点对应的交互控件能力**（Unity `AddComponent`；UE 包裹 / 替换为 UMG widget；Godot 替换节点并迁移视觉）并实现交互逻辑；框架自动启动引擎模拟用户操作、收集日志和截图，AI 看反馈判断是否完成，形成闭环。
 
 **不做什么**：
 - ❌ 不生成 UI 视觉（不替代美术）
@@ -13,13 +13,13 @@
 
 ### 程序员搭建边界（normative）
 
-程序员在引擎工程文件（`.unity` / `.uasset` / `.tscn`）里**只放视觉骨架**——目的只有一个：和美术稿视觉对齐。**不放任何交互控件**，控件功能由 AI 在源码里运行时 `AddComponent` 引擎自带控件实现。
+程序员在引擎工程文件（`.unity` / `.uasset` / `.tscn`）里**只放视觉骨架**——目的只有一个：和美术稿视觉对齐。**不放任何交互控件**，控件功能由 AI 在源码里运行时实现：Unity 用 `AddComponent`，UE 用包裹 / 替换 UMG widget，Godot 用替换节点 + 视觉迁移。
 
 | 类别 | 程序员可手放 | 谁负责 |
 |---|---|---|
 | **图片 / 容器**：`Image` / `RawImage` / `Sprite` / `TextureRect` / `UImage`、`Canvas` / `CanvasLayer`、`Panel` / `VerticalBox` / `Container` / `RectTransform`、`Mask` 由 AI 加 | ✅ | 程序员手放，对齐美术稿 |
 | **文字显示**：`Text` / `TextMeshPro` / `UTextBlock` / `Label`（纯显示，不接收输入） | ✅ | 程序员手放（美术决定字体 / 字号 / 颜色） |
-| **交互控件**：`Button`、`InputField` / `TMP_InputField` / `UEditableTextBox` / `LineEdit`、`Slider`、`Toggle` / `CheckBox`、`Dropdown` / `ComboBox`、`ScrollView` / `ScrollBar` / `ScrollBox` / `ScrollRect`、`ListView` / `TreeView`、`Mask` / `RectMask2D`（裁剪） | ❌ | AI 在源码里 `AddComponent` 添加 |
+| **交互控件**：`Button`、`InputField` / `TMP_InputField` / `UEditableTextBox` / `LineEdit`、`Slider`、`Toggle` / `CheckBox`、`Dropdown` / `ComboBox`、`ScrollView` / `ScrollBar` / `ScrollBox` / `ScrollRect`、`ListView` / `TreeView`、`Mask` / `RectMask2D`（裁剪） | ❌ | AI 在源码里按引擎模型运行时创建 / 挂载 / 替换 |
 
 **例外说明**：`Image.raycastTarget` / `Control.mouse_filter` / `Widget.Visibility`（"是否参与命中测试"）属于 `behavior` 字段（不是 `visual`），AI 可以在代码里改这些以让自己挂的控件能被点击——这条豁免明确写进 [06 防护 0.2](06-visual-regression.md#22-源码-diff-审计-astregex-扫描)。
 
@@ -131,7 +131,7 @@
 | Stable ID | 节点的稳定标识符，跨美术迭代不变 |
 | Pin ID | 美术/程序员手动钉死的 ID（持久化到组件字段） |
 | Visual / Behavior / Meta | 节点属性的三类分组，AI 只能写 behavior + meta |
-| Logical Role | 节点的"逻辑控件角色"标签（`button` / `input` / `slider` / `toggle` / `scroll_container` / `text_display` / `image_only` / ...），写在 `meta.logical_role`。**程序员搭 fixture 时声明**（pin ID 时一起写），任务 DSL 按 logical_role 引用而非 type，AI 据此 AddComponent 对应控件 |
+| Logical Role | 节点的"逻辑控件角色"标签（`button` / `input` / `slider` / `toggle` / `scroll_container` / `text_display` / `image_only` / ...），写在 `meta.logical_role`。**程序员搭 fixture 时声明**（pin ID 时一起写），任务 DSL 按 logical_role 引用而非 type，AI 据此按引擎模型实现对应控件能力（Unity `AddComponent`；UE 包裹 / 替换；Godot 替换迁移） |
 | State Sprites | `meta.state_sprites` 字段：节点的多状态视觉资源映射（`{ normal, hover, pressed, focused, disabled } → sprite_ref`），美术 commit 多套 sprite；AI 在代码里按状态切换 `Image.sprite`——此切换属于 behavior 而非 visual 写入（**05/06 防护 0.2 的明确豁免**） |
 | Test Fixture | 用户预先在引擎里搭好的最小测试场景（commit 到 repo），含视觉骨架 + pinned ID + logical_role + state_sprites |
 | Canonical Task | MVP 验收用的标准任务（首版 = login 界面） |
