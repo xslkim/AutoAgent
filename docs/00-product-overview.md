@@ -151,6 +151,7 @@
 | 07-agent-operations.md | AI Agent 自治边界（迭代上限 / 路径白名单 / secret / 失败停机） |
 | 08-ci-runners.md | CI 运行环境规格（GPU runner / Xvfb / 字体 / 分辨率 / color space） |
 | 09-orchestration.md | 自动化调度（两层 agent + 状态文件 + DAG + 自然语言裁决） |
+| 10-fixture-setup-guide.md | 三引擎静态 fixture 搭建步骤 + 辅助脚本 |
 | 99-tasks.md | 任务清单（Phase 0-4，含顺序 / 目标 / 产出 / 验证 / go-no-go gate） |
 
 ## 九、执行约定（工程层面）
