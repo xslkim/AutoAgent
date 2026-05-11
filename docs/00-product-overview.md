@@ -119,6 +119,7 @@
 | 06-visual-regression.md | 视觉回归 + 美术保真五道防护（含源码层审计） |
 | 07-agent-operations.md | AI Agent 自治边界（迭代上限 / 路径白名单 / secret / 失败停机） |
 | 08-ci-runners.md | CI 运行环境规格（GPU runner / Xvfb / 字体 / 分辨率 / color space） |
+| 09-orchestration.md | 自动化调度（两层 agent + 状态文件 + DAG + 自然语言裁决） |
 | 99-tasks.md | 任务清单（Phase 0-4，含顺序 / 目标 / 产出 / 验证 / go-no-go gate） |
 
 ## 九、执行约定（工程层面）
@@ -155,6 +156,7 @@ D:\AutoAgent\
 │  ├─ 06-visual-regression.md
 │  ├─ 07-agent-operations.md
 │  ├─ 08-ci-runners.md
+│  ├─ 09-orchestration.md
 │  └─ 99-tasks.md
 ├─ protocol\                   # 协议 schema 共用定义（JSON Schema 文件）
 │  └─ schema\

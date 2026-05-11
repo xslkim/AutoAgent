@@ -40,12 +40,12 @@
 
 | Phase | 任务数 | 详细程度 | 时长 | 关键产出 |
 |---|---|---|---|---|
-| Phase 0 | 18 | 详写 | 2 周 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 |
+| Phase 0 | 23 | 详写 | 2-3 周 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 + orchestration scaffolding |
 | Phase 1 | 35 | 详写 | 2 月 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
 | Phase 2 | 12 (anchor) | anchor | 2.5-3 月 | UE adapter 完整 + 跨引擎 MVP 一致 |
 | Phase 3 | 10 (anchor) | anchor | 1 月 | Godot adapter 完整 + 三引擎一致 |
 | Phase 4 | 10 (anchor) | anchor | 1 月 | OS 输入 / LPIPS / 性能优化 / v1.0 release |
-| **合计** | **85** | | **~7 月** | |
+| **合计** | **90** | | **~7 月** | |
 
 ---
 
@@ -530,14 +530,152 @@ risk: medium
 
 ---
 
+### TASK-0018: Orchestration — state/ 目录初始化
+
+```yaml
+title: 创建 state/ 目录骨架 + .gitignore + 文件锁约定
+phase: 0
+engine: none
+depends_on: [TASK-0000]
+goal: 为自动化调度建立状态文件根目录 + 初始 budget.json
+output:
+  - state/{queue,ready,in_progress,awaiting_ci,done,failed,needs_human,blocked,logs}/.gitkeep
+  - state/budget.json (初始: today_usd=0, session_usd=0, task_count=0)
+  - state/events.jsonl (空文件)
+  - .gitignore 加 state/* 但保留 state/*/.gitkeep
+  - .env.agent.example (commit, 含 AGENT_ANTHROPIC_KEY / AGENT_GITHUB_TOKEN 占位符)
+  - .gitignore 加 .env.agent (绝不进 git)
+verification:
+  - ls state/queue / state/ready / ... 全部存在
+  - cat state/budget.json 是合法 JSON
+  - git status 显示 .env.agent 被 ignore
+  - .env.agent.example 不含真实 secret
+effort: 1h
+mode: manual
+risk: low
+```
+
+---
+
+### TASK-0019: Orchestration — scripts/orchestrator/*.py（顶层 helper）
+
+```yaml
+title: 顶层 Claude 用的调度 helper 脚本（poll/spawn/collect/stop/resume/status）
+phase: 0
+engine: none
+depends_on: [TASK-0018]
+goal: 实现 docs/09-orchestration.md §8 + §13 描述的 6 个 helper 脚本
+output:
+  - scripts/orchestrator/poll.py (一轮 polling, 详见 09 §8)
+  - scripts/orchestrator/spawn.py (spawn 单个 Python agent)
+  - scripts/orchestrator/collect.py (扫 in_progress + awaiting_ci 收集结果)
+  - scripts/orchestrator/stop.py (写 stop_signal)
+  - scripts/orchestrator/resume.py (删 stop_signal)
+  - scripts/orchestrator/status.py (打印当前状态摘要)
+  - scripts/orchestrator/lib/ (state_io.py, dag.py, budget.py, events.py)
+  - scripts/orchestrator/tests/test_*.py (单元测试)
+verification:
+  - python scripts/orchestrator/status.py 在空 state/ 上不崩
+  - python scripts/orchestrator/poll.py --dry-run 输出"无任务可调度"
+  - 单测覆盖: dag 算法 / state 转移 / budget 累计 / 事件追加
+  - 故意造死循环依赖 → poll.py 应报错退出
+  - 故意造孤儿 PID → poll.py 健康检查应 detect
+effort: 2d
+mode: auto-with-review
+risk: medium
+```
+
+---
+
+### TASK-0020: Orchestration — scripts/agent/run_task.py（Python agent）
+
+```yaml
+title: 单任务 Python agent — spawn claude CLI + 验证产出 + 写 result.json
+phase: 0
+engine: none
+depends_on: [TASK-0018, TASK-0019]
+goal: 实现 docs/09-orchestration.md §9 描述的 run_task.py
+output:
+  - scripts/agent/run_task.py (主入口)
+  - scripts/agent/prompt_template.py (build_prompt 函数)
+  - scripts/agent/worktree.py (setup/cleanup git worktree)
+  - scripts/agent/classify.py (分类 claude exit code → failed/needs_human)
+  - scripts/agent/tests/test_*.py
+verification:
+  - 用 mock claude CLI (echo + exit 0) 跑 dry run，agent 能写 result.json
+  - 用 mock claude (exit 1 + 路径违规 stderr) → result.status=needs_human
+  - 用 mock claude (timeout) → result.status=failed
+  - worktree 创建成功后被 git worktree list 看到
+  - .env.agent 加载后 ANTHROPIC_API_KEY 不出现在 child env outside agent process
+  - log 不包含明文 secret (单测断言)
+effort: 2d
+mode: auto-with-review
+risk: high
+```
+
+---
+
+### TASK-0021: Orchestration — 顶层 Claude /loop 启动 prompt + 操作指南
+
+```yaml
+title: 写顶层 Claude Code 会话的 /loop 启动 prompt + 用户日常操作指南
+phase: 0
+engine: none
+depends_on: [TASK-0019, TASK-0020]
+goal: 用户可以打开 Claude Code, /loop 一次启动整个调度系统
+output:
+  - docs/orchestrator-prompt.md (顶层 /loop 启动用的完整 prompt 模板)
+  - docs/user-guide-orchestration.md (用户怎么启动/停止/裁决 needs_human)
+  - .claude/skills/autoagent-loop.md (可选, 包装成 /autoagent-loop skill)
+verification:
+  - prompt 模板包含: state 目录路径 / poll 命令 / 自然语言裁决规则 / ScheduleWakeup 节奏
+  - 用户指南覆盖: 首次启动 / 每日观察 / needs_human 裁决说法 / 紧急停机 / 恢复
+  - 模板里的所有命令路径存在 (静态 lint)
+  - 写完后用户人工试跑 1 个 echo 任务 (TASK-0022 再做)
+effort: 4h
+mode: manual
+risk: low
+```
+
+---
+
+### TASK-0022: Orchestration — 端到端 dry run
+
+```yaml
+title: 用 1 个 echo 任务验证整套 orchestration 跑通
+phase: 0
+engine: none
+depends_on: [TASK-0019, TASK-0020, TASK-0021]
+goal: Phase 0 真正启动前, 验证 spawn → claude → PR → CI → done 整链路
+output:
+  - state/queue/TASK-DRY-001.json (echo task: 仅创建 docs/dry-run.md commit + push + PR)
+  - docs/dry-run-report.md (dry run 全程截图 + log + 时间线)
+verification:
+  - 用户在主 Claude Code 会话 /loop 启动顶层
+  - 顶层 poll 找到 ready, spawn Python agent
+  - Python agent spawn claude CLI, claude 在 worktree 创建 docs/dry-run.md 并 PR
+  - 顶层 collect 检测 result.status=awaiting_ci, 移到 awaiting_ci/
+  - 顶层 poll PR check, all green, 移到 done/
+  - 整个流程无人工干预 (除最初 /loop 启动)
+  - events.jsonl 含完整事件链
+  - 故意触发 1 次 needs_human (改 task 强制让 agent 改 .gitignore), 用户用自然语言 "approve 重试" → 顶层正确解析并恢复
+  - 故意 kill in_progress agent → 顶层 resume 能正确恢复 (僵尸检测)
+  - 故意写 stop_signal → 顶层下轮 polling 停机
+effort: 4h
+mode: manual
+risk: high
+```
+
+---
+
 ### TASK-0017: Phase 0 出口 gate review（手动）
 
 ```yaml
-title: Phase 0 6 个 go/no-go gate 全量 review
+title: Phase 0 10 个 go/no-go gate 全量 review
 phase: 0
 engine: all
-depends_on: [TASK-0007, TASK-0009, TASK-0011, TASK-0013, TASK-0014, TASK-0015, TASK-0016]
-goal: 人工逐项确认 6 个 gate 全部通过，签发 Phase 1 启动
+depends_on: [TASK-0007, TASK-0009, TASK-0011, TASK-0013, TASK-0014, TASK-0015, TASK-0016, TASK-0022]
+goal: 人工逐项确认 10 个 gate 全部通过，签发 Phase 1 启动
 output:
   - docs/phase0-gate-report.md (gate 检查结果 + 截图证据 + 签字)
 verification:
@@ -547,6 +685,10 @@ verification:
   - Gate 4: 故意破坏 PR (TASK-0015 + 0016) 全部 CI fail (附 Action run URL)
   - Gate 5: 三引擎 wscat 测试 subprotocol 握手成功 (附终端截图)
   - Gate 6: negotiate_version 三引擎都返回完整 JSON-RPC response (附 wireshark/log)
+  - Gate 7: orchestration scaffolding 跑通 1 个 echo 任务 (TASK-0022 通过, 附 events.jsonl + screenshot)
+  - Gate 8: 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human (附 needs_human/ JSON)
+  - Gate 9: 故意 kill 掉一个 in_progress agent → 顶层 resume 时正确恢复 (附 events.jsonl)
+  - Gate 10: 写 stop_signal → 顶层正确停机 (附 events.jsonl)
   - 任意一项 fail → Phase 1 不启动, 标 needs-investigation
 effort: 1d
 mode: manual
@@ -2017,6 +2159,10 @@ risk: low
 4. ☐ 防护 0.1（路径白名单）+ 0.2（源码 diff）能拦下故意破坏
 5. ☐ Subprotocol 握手在三引擎都正确返回 `autoagent.v1`
 6. ☐ `negotiate_version` JSON-RPC 握手符合 [01](01-protocol-spec.md) 规范
+7. ☐ Orchestration scaffolding 跑通 1 个 echo 任务（详见 [09](09-orchestration.md) §15）
+8. ☐ 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human
+9. ☐ 故意 kill 掉一个 in_progress agent → 顶层 resume 时正确恢复
+10. ☐ 写 stop_signal → 顶层正确停机
 
 ### Phase 1 出口 (TASK-0135 验证)
 1. ☐ AI Agent 完整 autonomous loop（写代码 → CI → 修 → PR）跑通 login MVP
@@ -2057,3 +2203,4 @@ risk: low
 | 日期 | 版本 | 变更 |
 |---|---|---|
 | 2026-05-10 | 0.1 | 初版（Phase 0/1 详写，Phase 2-4 anchor） |
+| 2026-05-10 | 0.2 | Phase 0 加 5 个 orchestration task (TASK-0018~0022) + 4 个新 gate (7~10)，对应 docs/09-orchestration.md |
