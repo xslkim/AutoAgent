@@ -17,13 +17,15 @@
 ```
 
 **硬约束**：
-- Unity 纯 C#（不用预制件）/ Unreal 纯 C++（不用蓝图）
+- **业务逻辑全部文本代码**：Unity 纯 C#，Unreal 纯 C++，Godot GDScript（必要时 GDExtension）。允许 `.unity` / `.prefab` / `.uasset` (WBP) / `.tscn` 作为**纯数据的视觉骨架容器**（含 UI 树 + 图片 + meta，不含逻辑节点 / Blueprint Event Graph / UnityEvent 序列化引用）。详见 [docs/00-product-overview.md §四 程序员搭建边界](docs/00-product-overview.md)。
 - 任务描述统一（同一份 prompt 驱动多引擎）
 - 引擎插件独立实现
-- OS 级输入注入 + 引擎事件层 双轨
+- OS 级输入注入 + 引擎事件层 双轨（OS 级**仅用于焦点丢失 / 全屏独占 / 引擎事件注入失败的 QA 场景，不绕过反作弊**）
 - AI Agent 自决策迭代
 - 覆盖：按钮 / 输入 / 拖拽 / 动画 / 场景切换 / 网络 mock 全场景
-- **仅适用于：单机 / PvE / 开发阶段 / QA 包**（PvP 反作弊会拦反射注入）
+- **仅适用于：单机 / PvE / 开发阶段 / QA 包**（PvP 反作弊会拦反射注入，上线包必须移除 SDK）
+
+> **本文档状态**：v1.0 顶层架构稿，已被 `docs/00-09` 系列产品文档取代。当两份文档冲突时，以 `docs/` 系列为准。
 
 ## 关键决策（已经过调研验证）
 
@@ -75,7 +77,8 @@
   - UE: `FSlateApplication::ProcessMouseButtonDownEvent`（必须 GameThread）
   - Godot: `Input.parse_input_event(InputEventMouseButton.new())`
 - **OS 级输入**（fallback）：Windows SendInput / macOS CGEventPost / Linux XTest
-  - 用于反作弊场景或全屏独占
+  - 用于焦点丢失 / 全屏独占 / 引擎事件注入失败的 QA 测试场景
+  - **不**承诺绕过反作弊；**不**用于 PvP 上线包（与 [00 §四 关键约束](docs/00-product-overview.md) 一致）
 
 ## 最终架构图
 
@@ -148,14 +151,14 @@ Figma 设计
 | 1 | Unity 单引擎完整闭环（含视觉回归 + 美术保真） | 2 月 | Claude Code 通过 MCP 完成一个真实 UI 任务 |
 | 2 | UE 接入 | 2.5-3 月 | UE 跑通同一份任务 DSL，验证协议跨引擎一致性 |
 | 3 | Godot 接入 | 1 月 | 三引擎一致 |
-| 4 | OS 输入双轨 + Vision fallback + Figma MCP 集成 + 优化 | 1 月 | 反作弊不拦的场景全覆盖 |
+| 4 | OS 输入双轨 + Vision fallback + Figma MCP 集成 + 优化 | 1 月 | QA 场景全覆盖（焦点丢失 / 全屏独占 / 引擎事件失败）|
 
 ## 隐藏风险（必须心理建设）
 
 1. **UE Slate 私有 API 漂移**：每次 UE 5.x 升级要回归 dump/click/text 三件套。长期人力成本可能高于另两引擎之和。
 2. **Godot release export 反射 silent failure**（issue [#99722](https://github.com/godotengine/godot/issues/99722)）：开发期跑通的代码到打包后才报"找不到节点"。必须 SDK 内置 release-mode 自检。
 3. **三套输入注入语义完全不同**：协议 schema 冻结前 Phase 0 PoC 必跑。
-4. **反作弊边界**：仅适用于单机/PvE/开发阶段/QA 包，PvP 上线版必须移除 SDK——README 第一行写清楚。
+4. **反作弊边界**：仅适用于单机/PvE/开发阶段/QA 包，PvP 上线版必须移除 SDK。OS 输入双轨**不**承诺绕过任何反作弊系统——README 第一行写清楚。
 5. **Unity 官方 MCP 演进风险**：Unity AI Beta 2026 已上线，未来可能压缩自研 Unity adapter 差异化空间，要预留替换路径。
 6. **Figma MCP 是新东西**：API 还在演进，框架要做版本兼容。
 

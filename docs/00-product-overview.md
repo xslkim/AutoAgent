@@ -93,7 +93,7 @@
 
 | 约束 | 说明 |
 |---|---|
-| 引擎语言 | Unity 纯 C#（不用预制件），UE 纯 C++（不用蓝图），Godot GDScript（必要时 GDExtension） |
+| 引擎语言 | Unity 纯 C#，UE 纯 C++，Godot GDScript（必要时 GDExtension）。"纯 C# / 纯 C++"指**业务逻辑全部用文本代码**，不在蓝图图表 / prefab 上挂可视化脚本节点。**仍可使用 prefab / Widget Blueprint (WBP) / .tscn 作为"纯数据的视觉骨架容器"**——它们用来声明 UI 树 + 图片资源 + StableId/LogicalRole/StateSprites meta，但不承载任何逻辑（无 Blueprint event graph、无 onClick UnityEvent 序列化）。AI 通过 BindWidget / GetWidgetFromName 在 C++/C# 代码里拿到这些视觉骨架节点，运行时挂控件实现交互 |
 | 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order）。`raycastTarget` / `mouse_filter` / `Visibility` 归 behavior，AI 可写。`meta.state_sprites` 例外见 [06 §三 防护 1 例外条款](06-visual-regression.md) |
 | 跨引擎统一 | 同一份任务 DSL 能在三引擎落地；引擎 adapter 独立实现 |
 | 输入双轨 | 引擎事件层（默认）+ OS 级（fallback for 焦点丢失 / 全屏独占 / 引擎事件注入失败的测试场景；**不**承诺绕过反作弊，不用于 PvP 上线包） |

@@ -42,9 +42,22 @@
 |---|---|
 | 单天 API 成本 | $200 USD |
 | 单天 PR 数 | 50 |
-| 连续路径违规 | 3 次 → 全局停 |
+| 连续路径违规 | 3 次 → 全局停（**negative_test 任务不计入**，见 §2.5） |
 
 触达后自动暂停所有 background agent，开 GitHub Issue。
+
+### 2.5 负面测试任务（`negative_test: true`）的例外
+
+任务清单里有少数任务（如 [99 TASK-0015 / TASK-0016](99-tasks.md)）的目的是**故意触发 CI 拦截**以验证防护生效。这类任务和本文档的默认 agent contract 直接冲突——按默认规则它们会被 §2.4 "立即停，不重试" + §2.3 "连续 3 次违规全局停" 算作真违规。为了不让正常的防护验证拖死自动化，**`negative_test: true` 任务享受以下例外**：
+
+- ✅ CI fail 是预期 verification（任务的 verification 字段明确写"... → CI fail ..."）
+- ✅ 这类违规**不计入** §2.3 "连续 3 次路径违规" / "连续 5 次任务 CI 失败" 计数
+- ✅ 配 `mode: manual` —— 由人工执行，不进 autonomous loop 调度
+- ✅ 配 `sandbox_only: true` —— commit 推到独立 sandbox repo，不污染主 repo 的 PR 历史 / cost / counters
+- ❌ **不允许** auto-with-review / auto-merge-safe / background agent 调用这类任务
+- ❌ **不允许** 普通任务声明 `negative_test: true` —— orchestrator 加载任务时校验任务标题含 "故意破坏 / negative test / 验证 CI 拦下" 等关键词，否则拒绝
+
+实现约束：`scripts/orchestrator/poll.py` 在调度前校验 task YAML，`negative_test: true && mode != manual` → 直接 reject。
 
 ### 2.4 失败模式分类
 
@@ -70,31 +83,47 @@
 
 ### 3.2 AI 可写路径
 
-✅ **允许写**：
+> **完整权威列表见 [06-visual-regression.md §2.1](06-visual-regression.md)**——配置文件 `scripts/ci/path_whitelist.yml` 是 CI 唯一权威源；本节是该表的浓缩版本，覆盖三大类常见路径。
+
+✅ **允许写（部分）**：
 ```
-adapters/{unity,unreal,godot}/Runtime/**/*.cs *.cpp *.h *.gd
-adapters/{unity,unreal,godot}/Tests/**
-mcp-server/src/**/*.py
-mcp-server/tests/**/*.py
-fixtures/*/Scripts/**/*.cs *.cpp *.h *.gd
-docs/99-tasks.md  (仅状态字段更新允许；新任务/重排需人工)
+adapters/unity/{Runtime,Editor,Tests}/**/*.cs            # Unity UPM 包
+adapters/unreal/Source/**/*.h *.cpp *.cs                  # UE 插件源码
+adapters/unreal/Tests/**                                  # UE 自动化测试
+adapters/godot/addons/autoagent/**/*.gd *.cfg             # Godot addon
+mcp-server/src/**/*.py, mcp-server/tests/**/*.py          # MCP server
+protocol/schema/**/*.json, protocol/tests/**/*.py         # 协议 schema
+scripts/ci/**, scripts/e2e/**, scripts/orchestrator/**    # CI / e2e / 调度脚本
+fixtures/*/Scripts/**/*.cs *.cpp *.h *.gd                 # fixture 业务脚本（AI 实现交互）
+fixtures/unreal-test-project/Source/**/*.h *.cpp          # UE fixture C++ user widget
+docs/99-tasks.md                                          # 仅状态字段；新任务/重排需人工
+```
+
+⚠️ **可改但加 `needs-human-review` label**：
+```
+.github/workflows/**                                      # CI workflow（自动加 review gate）
+docs/canonical-tasks/**/*.yaml                            # 任务 DSL（专门任务才能改）
+docs/runners-inventory.md docs/orchestrator-prompt.md     # 运维 / 调度配置
+docs/phase*-gate-report.md                                # phase 出口报告
+fixtures/*/Packages/manifest.json                         # Unity 包依赖
+fixtures/unreal-test-project/Config/AutoAgentIds.ini      # UE stable ID 注册表
+.gitignore LICENSE README.md                              # repo 根
+adapters/unreal/Resources/**                              # 插件图标（人工 review 是否含美术）
 ```
 
 ❌ **禁止写**：
 ```
-fixtures/*/*.unity *.uasset *.tscn *.umap          # 场景文件
+fixtures/*/*.unity *.uasset *.tscn *.umap                 # 场景文件 / WBP
 fixtures/*/Assets/Sprites/** Resources/UI/** Content/UI/**   # 美术资源
-fixtures/*/Assets/Fonts/**                          # 字体
-fixtures/*/ProjectSettings/** Config/DefaultEngine.ini   # 引擎配置
-baselines/**                                         # 视觉 baseline
-.github/workflows/**                                # CI 配置（除非任务明确）
-.env *.key *.pem secrets/**                         # secret
-docs/00-08*.md                                      # 产品文档
-.gitignore .git/**                                  # git 元
-package.json package-lock.json pyproject.toml uv.lock pnpm-lock.yaml   # 依赖锁
+fixtures/*/Assets/Fonts/** Content/UI/Fonts/**            # 字体
+fixtures/*/ProjectSettings/** Config/DefaultEngine.ini    # 引擎配置（fixture-level）
+baselines/**                                              # 视觉 baseline（单独 PR）
+.env *.key *.pem secrets/**                               # secret（永禁）
+docs/00-09*.md                                            # 产品文档（除非任务明确）
+.git/**                                                   # git 元
 ```
 
-CI 第一步 `scripts/ci/check_changed_paths.py` 强制执行。违反 → PR 立即关闭，agent 收到 `-32030 PathViolation`。
+CI 第一步 `scripts/ci/check_changed_paths.py` 强制执行。违反 → PR 立即关闭，agent 收到 `-32030 PathViolation`。⚠️ 类不算违反，CI 通过但加 review label。
 
 ### 3.3 例外申请流程
 确实需要改禁止路径时：

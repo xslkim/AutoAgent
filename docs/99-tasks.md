@@ -24,6 +24,8 @@
 | `risk` | enum | ✅ | `low` / `medium` / `high` |
 | `max_iterations` | int | ⬜ | 默认见 [07 §2.1](07-agent-operations.md#21-单任务最大迭代次数) |
 | `path_exception` | list | ⬜ | 突破路径白名单的明确豁免（[07 §3.3](07-agent-operations.md#33-例外申请流程)） |
+| `negative_test` | bool | ⬜ | 故意破坏 / 违规验证类任务。CI fail 是预期 verification；**违规不计入** [07 §2.3](07-agent-operations.md) 全局违规计数 |
+| `sandbox_only` | bool | ⬜ | 任务 commit 推到独立 sandbox repo，不污染主 repo PR 历史 / cost session / global counters。常与 `negative_test` 一起用 |
 
 ### 任务状态
 
@@ -134,7 +136,7 @@ output:
   - mcp-server/pyproject.toml (uv 管理, 依赖 mcp / websockets / scikit-image / pydantic)
   - mcp-server/src/autoagent_mcp/__init__.py
   - mcp-server/src/autoagent_mcp/server.py (MCP entry, stdio)
-  - mcp-server/src/autoagent_mcp/tools/__init__.py (dummy stubs for all 12 tools)
+  - mcp-server/src/autoagent_mcp/tools/__init__.py (dummy stubs for 12 core + 5 aux tools，见 [02 §三 分组](02-mcp-server.md))
   - mcp-server/src/autoagent_mcp/cli.py (autoagent-mcp CLI)
   - mcp-server/tests/test_server_starts.py
   - mcp-server/README.md
@@ -535,46 +537,60 @@ path_exception: ["baselines/**"]
 ### TASK-0015: 故意破坏验证 — 防护 0.1（路径白名单）
 
 ```yaml
-title: 验证 CI 拦下: AI 改 fixture/.unity / Sprites / .uasset
+title: 验证 CI 拦下: 故意改 fixture/.unity / Sprites / .uasset
 phase: 0
 engine: all
 depends_on: [TASK-0006]
-goal: 故意推 PR 触发路径白名单违规，确认 CI 立即 fail
+goal: 在 sandbox repo 故意推 PR 触发路径白名单违规，确认 CI 立即 fail
 output:
-  - scripts/ci/tests/integration/test_path_violation.sh (起 sandbox repo, 故意 commit, 跑 CI)
-  - 一个 deliberately-bad PR (打 wontfix label, 用于演示, 不 merge)
+  - scripts/ci/tests/integration/test_path_violation.sh
+    (本地 / sandbox repo 起脚本：克隆 sandbox 副本 + 故意 commit + 跑 CI workflow + 断言 fail)
+  - 一组演示 commit (推到独立 sandbox repo, 不 push 到 main repo)
 verification:
-  - PR 改 fixtures/unity-test-project/Assets/Scenes/LoginScene.unity → CI fail with PathViolation
-  - PR 改 baselines/unity/windows/login_screen.png → CI fail
-  - PR 改 .env → CI fail
+  - sandbox: 改 fixtures/unity-test-project/Assets/Scenes/LoginScene.unity → CI fail with PathViolation
+  - sandbox: 改 baselines/unity/windows/login_screen.png → CI fail
+  - sandbox: 改 .env → CI fail
   - 失败信息含具体路径 + 违反的规则
+  - **main repo 全局违规计数不增加**（见下方 negative_test 例外）
 effort: 4h
-mode: auto-with-review
+mode: manual  # 必须人工执行：违规演示不走 autonomous loop
 risk: medium
+negative_test: true
+sandbox_only: true
 ```
+
+**Context**：本任务故意触发 [07 §3 路径白名单](07-agent-operations.md) + [07 §2.4 失败模式](07-agent-operations.md) 里"立即停 + 不重试"的拦截路径——正是 autonomous loop 永远**不应**做的事。所以必须：
+- `mode: manual`：由人工在 sandbox repo 跑，**不**由 background agent 调度
+- `sandbox_only: true`：所有 commit 推到独立 sandbox repo（如 `<org>/AutoAgent-negative-tests`），不污染主 repo PR 历史 / 全局违规计数 / cost session
+- `negative_test: true`：orchestrator / agent contract 解释为"预期 CI fail 才算 verification 通过"，**违规不计入** [07 §2.3 全局上限](07-agent-operations.md) 的 "连续 3 次路径违规 → 全局停" 计数
 
 ---
 
 ### TASK-0016: 故意破坏验证 — 防护 0.2（源码 diff）
 
 ```yaml
-title: 验证 CI 拦下: AI 在 C# 写 image.color = ...
+title: 验证 CI 拦下: 故意在 C# 写 image.color = ...
 phase: 0
 engine: unity
 depends_on: [TASK-0006, TASK-0007]
-goal: 故意推 PR 在 fixture script 改 visual 属性，确认 CI 拦下
+goal: 在 sandbox repo 故意推 PR 在 fixture script 改 visual 属性，确认 CI 拦下
 output:
   - scripts/ci/tests/integration/test_visual_audit.sh
-  - 一个 deliberately-bad PR (各语言一个示例)
+  - 一组演示 commit (sandbox repo)
 verification:
-  - PR 在 fixture .cs 写 image.color = Color.red → CI fail
-  - PR 在 fixture .cpp 写 SetVisibility(...) → CI fail (UE)
-  - PR 在 fixture .gd 写 .modulate = ... → CI fail (Godot)
-  - PR 顶部加 // AUTOAGENT_ALLOW_VISUAL: ... 注释 → CI 跳过
+  - sandbox: fixture .cs 写 image.color = Color.red → CI fail
+  - sandbox: fixture .cpp 写 SetVisibility(...) → CI fail (UE)
+  - sandbox: fixture .gd 写 .modulate = ... → CI fail (Godot)
+  - sandbox: 文件顶部加 // AUTOAGENT_ALLOW_VISUAL: ... 注释 → CI 跳过
+  - **main repo 全局违规计数不增加**
 effort: 4h
-mode: auto-with-review
+mode: manual
 risk: medium
+negative_test: true
+sandbox_only: true
 ```
+
+**Context**：与 TASK-0015 相同的 `negative_test` / `sandbox_only` 约束——见上方 Context。
 
 ---
 
@@ -1172,7 +1188,7 @@ output:
   - mcp-server/tests/test_tools.py (mock adapter 跑全部 tool)
 verification:
   - pytest mcp-server/tests/test_tools.py -v 全绿
-  - 用 fake adapter 跑通 12 tools
+  - 用 fake adapter 跑通 12 core MVP tools + 5 aux tools（共 17 个，见 [02 §三 分组](02-mcp-server.md)）
 effort: 2d
 mode: auto-with-review
 risk: medium
@@ -1523,7 +1539,7 @@ path_exception: ["fixtures/unity-test-project/Assets/Scenes/LoginScene.unity"]
 title: MVP 任务 — AI 写 LoginController 实现登录交互（含 AddComponent 控件）
 phase: 1
 engine: unity
-depends_on: [TASK-0117 ... TASK-0130, TASK-0131]
+depends_on: [TASK-0117, TASK-0118, TASK-0119, TASK-0120, TASK-0121, TASK-0122, TASK-0123, TASK-0124, TASK-0125, TASK-0126, TASK-0127, TASK-0128, TASK-0129, TASK-0130, TASK-0131]
 goal: 给 Claude Code 任务 DSL, autonomous loop 实现 login 功能。AI 必须在源码里 AddComponent 引擎控件，fixture 阶段视觉骨架无控件
 output:
   - fixtures/unity-test-project/Scripts/LoginController.cs (AI 实现)
@@ -1582,22 +1598,32 @@ risk: medium
 ### TASK-0134: 视觉回归 baseline + 比对
 
 ```yaml
-title: Login 视觉回归 — baseline + compare 全流程
+title: Login 视觉回归 — 先创建 welcome_screen baseline 再做 compare 全流程
 phase: 1
 engine: unity
-depends_on: [TASK-0133, TASK-0123]
-goal: e2e 跑完后自动 take_screenshot + compare_to_baseline
+depends_on: [TASK-0133, TASK-0123, TASK-0132]
+goal: |
+  分两步:
+  (1) 在 TASK-0132 实现的 LoginController 跑通后, take_screenshot 拿到 welcome_panel 状态 →
+      人工 review → commit 为 baselines/unity/windows/welcome_screen.png (TASK-0014 只拍了 fixture 视觉骨架初始态, 不含 welcome state)
+  (2) e2e 跑完后自动 take_screenshot + compare_to_baseline, 验证 login_screen + welcome_screen 两张都 SSIM ≥ 0.95
 output:
   - fixtures/unity-test-project/Scripts/Tests/E2ELoginRunner.cs (扩展)
   - 在 e2e 里 take_screenshot login_panel + welcome_panel 两张
-  - 比对 baselines/unity/windows/login_screen.png + welcome_screen.png
+  - baselines/unity/windows/welcome_screen.png + .meta.json (本任务首次创建, 人工 approve)
+  - 比对 baselines/unity/windows/login_screen.png (已存在, TASK-0014 产出) + welcome_screen.png (本任务产出)
 verification:
-  - SSIM ≥ 0.95 → CI green
+  - 步骤 (1): welcome_screen.png 人工 review approve, commit 走 path_exception
+  - 步骤 (2): SSIM ≥ 0.95 → CI green
   - 故意改 fixture LoginScene (path exception PR) 让视觉变化 → SSIM < 0.92 → CI fail + diff 图生成
-effort: 4h
+effort: 6h (含 baseline 创建 + review + 回归实现)
 mode: auto-with-review
-risk: medium
+risk: high  # 涉及 baseline 创建 ([07 §2.1] baseline 任务 max_iterations=1)
+max_iterations: 1
+path_exception: ["baselines/unity/windows/welcome_screen.png", "baselines/unity/windows/welcome_screen.meta.json"]
 ```
+
+**Context**：TASK-0014 在 Phase 0 只能产出"fixture 视觉骨架初始态"的 baseline（welcome_panel 此时 inactive，截不到）。welcome_screen baseline 必须等 TASK-0132 AI 实现登录交互后才能截到，所以 Phase 1 末由本任务**首次创建**。任何其他用户态截图同理：**baseline 在第一个能复现该状态的任务里创建，不是在 fixture 准备阶段创建**。
 
 ---
 
@@ -1819,7 +1845,7 @@ risk: low
 title: AI 在 UE 实现 ULoginController (镜像 TASK-0132)
 phase: 2
 engine: unreal
-depends_on: [TASK-0200..TASK-0208]
+depends_on: [TASK-0200, TASK-0201, TASK-0202, TASK-0203, TASK-0204, TASK-0205, TASK-0206, TASK-0207, TASK-0208]
 status: anchor
 goal: 同一份 task DSL 在 UE 跑通
 includes:
@@ -2020,7 +2046,7 @@ risk: low
 title: 同任务 DSL 在 Godot 跑通
 phase: 3
 engine: godot
-depends_on: [TASK-0300..TASK-0307]
+depends_on: [TASK-0300, TASK-0301, TASK-0302, TASK-0303, TASK-0304, TASK-0305, TASK-0306, TASK-0307]
 status: anchor
 includes:
   - AI 写 LoginController.gd

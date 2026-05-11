@@ -37,20 +37,62 @@ CI 第一步是 diff 路径检查。AI 触发 PR 后，扫 changed paths：
 
 | 路径模式 | AI 是否允许修改 | 备注 |
 |---|---|---|
-| `adapters/{unity,unreal,godot}/Runtime/**/*.cs *.cpp *.h *.gd` | ✅ | adapter 框架代码 |
-| `adapters/{unity,unreal,godot}/Tests/**` | ✅ | adapter 测试 |
-| `mcp-server/src/**/*.py mcp-server/tests/**/*.py` | ✅ | MCP server 代码 + 测试 |
+| **Unity adapter** | | |
+| `adapters/unity/Runtime/**/*.cs` | ✅ | UPM 包 Runtime 代码 |
+| `adapters/unity/Editor/**/*.cs` | ✅ | UPM 包 Editor 工具（Inspector 等） |
+| `adapters/unity/Tests/**/*.cs` | ✅ | adapter 测试 |
+| `adapters/unity/package.json` | ✅ | UPM manifest |
+| **UE adapter** | | |
+| `adapters/unreal/Source/**/*.h *.cpp *.cs` | ✅ | UE 插件源码（Build.cs / Public / Private） |
+| `adapters/unreal/Tests/**` | ✅ | UE Automation 测试 |
+| `adapters/unreal/AutoAgent.uplugin` | ✅ | UE plugin manifest |
+| `adapters/unreal/Resources/**` | ⚠️ | 插件图标等；需 review 是否含美术资源 |
+| **Godot adapter** | | |
+| `adapters/godot/addons/autoagent/**/*.gd *.cfg` | ✅ | Godot addon 源码（plugin.cfg / runtime / editor / tests） |
+| `adapters/godot/addons/autoagent/**/*.gdextension` | ✅ | GDExtension 配置（Phase 3 末性能优化） |
+| **MCP server** | | |
+| `mcp-server/src/**/*.py` | ✅ | MCP server 代码 |
+| `mcp-server/tests/**/*.py` | ✅ | MCP server 测试 |
+| `mcp-server/pyproject.toml` | ✅ | Python 包配置 |
+| **Protocol** | | |
+| `protocol/schema/**/*.json` | ✅ | JSON Schema 文件 |
+| `protocol/tests/**/*.py` | ✅ | schema 校验测试 |
+| `protocol/README.md` | ✅ | schema 使用说明 |
+| **CI / 脚本** | | |
+| `scripts/ci/**/*.py *.sh *.yml` | ✅ | CI 脚本（路径检查 / 源码审计 / dump diff 等） |
+| `scripts/e2e/**/*.py *.sh` | ✅ | e2e runner 脚本 |
+| `scripts/orchestrator/**/*.py` | ✅ | 顶层调度 helper（见 [09 §8](09-orchestration.md)） |
+| `.github/workflows/**/*.yml` | ⚠️ | **需人工 review**——AI 可写 PR 但 CI 会触发额外 manual gate；orchestrator 把改 workflow 的 PR 自动标 `needs-workflow-review` label |
+| **Fixture 业务代码** | | |
 | `fixtures/*/Scripts/**/*.cs *.cpp *.h *.gd` | ✅ | fixture 业务脚本（AI 实现交互，含 AddComponent / 包裹 widget / 替换节点） |
+| `fixtures/unreal-test-project/Source/**/*.h *.cpp` | ✅ | UE fixture C++ user widget 子类 + Game Mode（AI 在 NativeConstruct 实现路径 A/B） |
+| **Fixture 视觉骨架（禁改）** | | |
 | `fixtures/*/*.unity *.uasset *.tscn *.umap` | ❌ | 视觉骨架场景文件（程序员手搭视觉骨架，AI 不碰；AI 在源码运行时给节点 AddComponent / 包裹 / 替换，**不写回场景文件**） |
 | `fixtures/*/Assets/Sprites/** Resources/UI/** Content/UI/**` | ❌ | 美术资源 |
-| `fixtures/*/Assets/Fonts/**` | ❌ | 字体 |
+| `fixtures/*/Assets/Fonts/** Content/UI/Fonts/**` | ❌ | 字体 |
 | `fixtures/*/ProjectSettings/** Config/DefaultEngine.ini` | ❌ | 引擎配置 |
-| `baselines/**` | ❌ | 视觉 baseline，单独 PR |
-| `.github/workflows/**` | ⚠️ | 需人工 review |
-| `**/.env **/secrets/** **/*.key **/*.pem` | ❌ | 永禁 |
-| `docs/00-08*.md` | ❌ | 产品文档（除非任务明确要求） |
+| `fixtures/*/Packages/manifest.json` | ⚠️ | Unity 包依赖；AI 改需 review |
+| `fixtures/unreal-test-project/Config/AutoAgentIds.ini` | ⚠️ | UE stable ID 注册表；AI 改需 review（与 fixture .uasset 联动） |
+| **文档** | | |
+| `docs/00-09*.md docs/99-tasks.md` | ❌ | 产品文档（除非任务明确要求） |
+| `docs/canonical-tasks/**/*.yaml` | ⚠️ | 任务 DSL；AI 不主动改，只读引用（人工或专门任务才能改） |
+| `docs/runners-inventory.md` | ⚠️ | runner 清单；运维任务专属，需人工 review |
+| `docs/orchestrator-prompt.md` | ⚠️ | 顶层调度 prompt；改动需人工 review |
+| `docs/phase*-gate-report.md` | ⚠️ | Phase 出口报告；签字任务才能改 |
+| **Baseline / 配置** | | |
+| `baselines/**` | ❌ | 视觉 baseline，**单独 PR**（path_exception 任务） |
+| `.gitignore .env.agent.example LICENSE README.md` | ⚠️ | repo 根；任务粒度小心 review |
+| **永禁** | | |
+| `**/.env **/secrets/** **/*.key **/*.pem` | ❌ | 永禁（secret 永远不进 git） |
 
-CI 实现：`scripts/ci/check_changed_paths.py` 用 `git diff --name-only origin/main...HEAD` 拿 changed 文件列表，对照白名单 fail-closed。
+**列规则**：
+- ✅ = AI 自由修改
+- ⚠️ = AI 可改但 CI 自动加 `needs-human-review` label，必须人工 approve 才能 merge
+- ❌ = AI 改触发 `PathViolation`，CI 立即 fail，**不重试**（见 [07 §3.4](07-agent-operations.md)），需 `path_exception` 显式豁免
+
+CI 实现：`scripts/ci/check_changed_paths.py` 用 `git diff --name-only origin/main...HEAD` 拿 changed 文件列表，对照 `scripts/ci/path_whitelist.yml` fail-closed。规则配置文件是唯一权威，本表是人类可读副本。
+
+**任务 path_exception**：YAML 任务可声明 `path_exception: ["specific/path.ext"]` 豁免单条路径——仅当任务明确要求改 fixture 视觉骨架 / baseline / docs 等。Phase 0 出口 gate 必须验证：`path_exception` 列出的路径在该任务 PR 内**全部命中**（不能开多余豁免）。
 
 ### 2.2 源码 diff 审计（AST/regex 扫描）
 

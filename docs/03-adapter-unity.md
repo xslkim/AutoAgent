@@ -1,6 +1,13 @@
 # 03 - Unity Adapter
 
-> Unity 引擎 adapter 设计。纯 C# 实现（不用预制件），Unity 2023.x LTS。
+> Unity 引擎 adapter 设计。**业务逻辑纯 C#**，Unity 2023.x LTS。
+>
+> **"不用预制件 / 纯 C#"的精确语义**（与 [00 §四 / §硬约束](00-product-overview.md) 对齐）：
+> - ✅ **允许** `.unity` scene / `.prefab` 作为**纯数据的视觉骨架容器**——含 RectTransform / Image / TMP_Text / StableIdComponent (meta) 等。
+> - ❌ **禁止** 在 prefab / scene 里序列化 UnityEvent 调用（如 Button.onClick 在 Inspector 里拖引用 LoginController.OnLogin）——所有事件绑定必须在 C# `Awake()` 里 `AddListener(...)` 完成。
+> - ❌ **禁止** Visual Scripting / Bolt / Playmaker 节点图。
+>
+> 这条约束让 fixture .unity 文件 git-diff 可读（无 UnityEvent 序列化的 GUID 漂移），同时逻辑全部在 .cs 里被源码审计扫到。
 
 ## 一、范围
 

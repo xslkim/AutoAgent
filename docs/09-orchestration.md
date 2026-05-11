@@ -301,7 +301,19 @@ git branch -D agent/TASK-0007  # 本地清理；远端分支 GitHub 自动清
 
 - 不同任务在不同 worktree，**绝不**在同一 worktree 跑两个任务。
 - worktree 之间的修改通过 PR + main merge 串行化，避免直接互相影响。
-- 同一 task 重试时**重用同一个 worktree**（先 `git reset --hard origin/main`），节省 setup 时间。
+- 同一 task 重试时**销毁旧 worktree + 新建 fresh worktree**（见 §10.2），不复用——避免 `git reset --hard` 越过 [07 §5.2](07-agent-operations.md) 的 git 禁令。
+
+### 6.4 与 [07 git 禁令](07-agent-operations.md) 的边界
+
+[07 §5.2](07-agent-operations.md) 禁止 AI agent 用 `git reset --hard` / `git push --force` / `git rebase` 等破坏性操作。**orchestrator（顶层调度脚本）也必须遵守这条**——因为 orchestrator 写出来后 agent 调用 orchestrator helper 就等于间接执行这些操作。
+
+**重试 / 故障恢复的正确做法**：
+- ✅ `git worktree remove --force ../AutoAgent.worktrees/TASK-XXXX` + `git worktree add` 新建（fresh checkout）
+- ✅ `git branch -D agent/TASK-XXXX` 删旧分支 + 新建同名分支（在 fresh worktree 内）
+- ❌ `git reset --hard origin/main` 重置已有 worktree
+- ❌ `git push --force` 覆盖远端分支历史
+
+唯一例外：本地未推送的 worktree 在**销毁前**清理工作区，可以 `git clean -fdx` + `git checkout .`（不属于 reset），目的是释放磁盘 / 避免锁文件残留。这条仍要写进 `scripts/orchestrator/lib/git_ops.py` 的白名单 + 单元测试。
 
 ---
 
@@ -535,8 +547,13 @@ def main(task_id):
 ### 10.2 Python agent 自身崩溃
 
 agent 在 worktree 里 `git commit` 后但 `gh pr create` 前崩溃：
-- worktree 有未推的 commit → 顶层重试时检测到，要么继续 push 要么 reset
-- 当前实现简化：直接 `git reset --hard origin/main` 重跑（小成本，避免复杂恢复逻辑）
+- worktree 有未推的 commit → 顶层重试时检测到
+- **当前实现**（与 [07 §5.2](07-agent-operations.md) git 禁令一致）：
+  1. `git worktree remove --force ../AutoAgent.worktrees/TASK-XXXX`（销毁旧 worktree，未推 commit 一并丢弃）
+  2. `git branch -D agent/TASK-XXXX`（删旧分支）
+  3. `git worktree add` + 新建同名分支（fresh checkout）
+  4. 在新 worktree 里重跑 agent
+- **不**用 `git reset --hard`——orchestrator 必须遵守 agent contract，所有破坏性操作通过销毁 / 重建 worktree 隔离
 
 ### 10.3 GitHub Actions CI 自身故障
 

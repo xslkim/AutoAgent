@@ -22,8 +22,9 @@
 ┌──────────────────────────────────────────┐
 │  MCP Server (autoagent_mcp)              │
 │  ┌────────────────────────────────────┐  │
-│  │  Tool Layer (12 tools)              │  │
-│  │  list_widgets / click_by_id / ...   │  │
+│  │  Tool Layer (12 core + 5 aux       │  │
+│  │              + 3 phase4 = 20)      │  │
+│  │  dump_ui_tree / click_by_id / ...  │  │
 │  └────────────────────────────────────┘  │
 │  ┌────────────────────────────────────┐  │
 │  │  Engine Connector                  │  │
@@ -45,6 +46,15 @@
 ### MCP Tool ↔ Wire Protocol Method 映射
 
 > AI 调用的 tool 名（左列）和 Wire Protocol method（右列）是两套命名。MCP tool 名是 AI 友好（动词+对象），wire method 名是简洁（动词）。下表是唯一权威映射，避免实现 / prompt drift。
+>
+> **分组（口径统一）**：
+> - **核心 MVP tools（12 个）** — MVP 验收必须实现，Phase 1 完成
+> - **辅助 tools（5 个）** — Phase 1 完成（session 管理 + audit）
+> - **Phase 4 tools（3 个）** — 反射调用类，Phase 4 末暴露
+>
+> Phase 1 出口标准 = 17 个 tools 全实现。99-tasks.md / 测试 verification 引用时按本分组名指代，**不再写 "all 12 tools" / "12 tools" 这种含糊措辞**。
+
+#### 核心 MVP tools（12 个）
 
 | MCP Tool（AI 调用） | Wire Protocol Method（Adapter 实现） | 备注 |
 |---|---|---|
@@ -60,13 +70,24 @@
 | `compare_to_baseline` | (本地) | server 端用 scikit-image 计算，不发 wire |
 | `wait_for` | `wait_for` | |
 | `pin_id` | `pin_id` | |
+
+#### 辅助 tools（5 个，Phase 1 完成）
+
+| MCP Tool | Wire Protocol Method | 备注 |
+|---|---|---|
 | `list_orphan_ids` | `list_orphan_ids` | |
 | `audit_visual_changes` | (本地) | server 缓存 dump，diff 计算 |
 | `connect_engine` | (本地) | session 管理，不发 wire 消息 |
 | `disconnect` | (本地) | |
 | `get_engine_info` | `get_engine_info` | |
+
+#### Phase 4 tools（3 个）
+
+| MCP Tool | Wire Protocol Method | 备注 |
+|---|---|---|
 | `invoke_method` | `invoke_method` | Phase 4 暴露 |
-| `get_property` / `set_property` | `get_property` / `set_property` | Phase 4 暴露 |
+| `get_property` | `get_property` | Phase 4 暴露 |
+| `set_property` | `set_property` | Phase 4 暴露 |
 
 ### 树查询类
 

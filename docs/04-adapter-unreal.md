@@ -1,6 +1,14 @@
 # 04 - Unreal Adapter
 
-> Unreal 引擎 adapter 设计。纯 C++ 实现（不用蓝图），UE 5.6。
+> Unreal 引擎 adapter 设计。**业务逻辑纯 C++**（不在 Blueprint event graph 里写逻辑），UE 5.6。
+>
+> **"不用蓝图"的精确语义**（与 [00 §四 / §硬约束](00-product-overview.md) 对齐）：
+> - ✅ **允许** `WBP_LoginScreen.uasset` 等 Widget Blueprint asset 作为**纯数据的视觉骨架容器**——里头声明 UI 树 + 图片 + StableId/LogicalRole/StateSprites meta，**没有 Event Graph / Function Graph 节点**。
+> - ✅ **允许** WBP 继承自 C++ `UUserWidget` 子类（如 `ULoginUserWidget`），BindWidget 把 WBP 里的 UImage 反映回 C++ 字段。
+> - ❌ **禁止** 在 WBP 里用 Blueprint Visual Scripting 写任何 OnClicked / Tick / Custom Event 逻辑——所有逻辑必须在对应 C++ class 里。
+> - ❌ **禁止** 用 Blueprint-only widget class（无 C++ parent），调度 / 反射 / 跨 PIE 稳定性都会出问题。
+>
+> 这条约束既保证 UE fixture 可以可视化预览（程序员对齐美术稿的关键工具），又保证逻辑由文本代码承载（git diff / 源码审计 / IDE refactor 全部可工作）。
 
 ## 一、范围
 
@@ -440,7 +448,7 @@ PoC 测试代码自行实现包裹路径。
 4. **uWebSockets 在 UE Build 系统集成有坑**：需要 disable RTTI 适配；最稳的做法是把 uWebSockets 作为 ThirdParty 静态库，独立编译。
 5. **OnClicked.IsBound() 的限制**：仅显式 BindDynamic 的能反射出来，C++ lambda binding 反射不到。
 6. **Hot Reload 后 WidgetClass 失效**：dev workflow 时 hot reload 会让 `GetAllWidgetsOfClass` 返回空；adapter 在 Subsystem `OnReinitialized` 时重启 server。
-7. **WidgetTree::ForEachWidget vs RootWidget->GetChildAt**：前者扁平，后者递归层级。深度遍历时混用易漏。建议统一用 ForEachWidget。
+7. **WidgetTree::ForEachWidget vs RootWidget->GetChildAt 混用风险**：前者扁平遍历整棵树（含 panel children），后者递归层级。**混用会产生重复节点 + parent_id 错乱**。与 §三 "遍历策略约束" 一致：**全 codebase 禁用 `UWidgetTree::ForEachWidget`**，统一从 `WidgetTree->RootWidget` 单一递归 `WalkChildren` 并明确传递 `parent_id`。单元测试 `NoDuplicateNodes` + `ParentChildConsistent` 强制验证。
 8. **EditableTextBox 的文本输入**：`SetText` 不触发 `OnTextChanged`；用 `OnTextChanged.Broadcast(...)` 或 `ProcessKeyCharEvent`。
 9. **UE 5.6 升级风险**：Slate 内部 API（FPointerEvent constructor 等）跨小版本可能调整。Adapter 用 `#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 6` 隔离版本差异。
 10. **Subsystem 生命周期**：`UGameInstanceSubsystem::Initialize` 早于第一个 World，但 WebSocket server 启动失败不能 abort 游戏 → 必须 try-catch。
