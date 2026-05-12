@@ -2,6 +2,16 @@
 
 > 用引擎自带工具 + 业界阈值，**不自研算法**。叠 5 道防护保证 AI 不会破坏美术效果。
 
+**防护编号 → 章节对照**：
+
+| 防护 | 章节 | 内容 |
+|---|---|---|
+| 防护 0 | §二 | 源码层审计（路径白名单 + AST/regex 扫描 + dump diff gate + PR review） |
+| 防护 1 | §三 | 协议层 Schema 权限分离（runtime setter 拒绝 visual/结构写入） |
+| 防护 2 | §四 | ID 稳定性（pinned / auto declared，禁用 hash 作 task contract） |
+| 防护 3 | §五 | 视觉回归（截图 + SSIM + LLM 二次裁决） |
+| 防护 4 | §六 | 资源 GUID 追踪（引擎自带 .meta / AssetRegistry / .uid） |
+
 ## 一、整体策略
 
 > ⚠️ **重要边界**：协议层的 schema 权限分离只能拦住 *runtime API* 写 visual。
@@ -74,7 +84,7 @@ CI 第一步是 diff 路径检查。AI 触发 PR 后，扫 changed paths：
 | `fixtures/*/Packages/manifest.json` | ⚠️ | Unity 包依赖；AI 改需 review |
 | `fixtures/unreal-test-project/Config/AutoAgentIds.ini` | ⚠️ | UE stable ID 注册表；AI 改需 review（与 fixture .uasset 联动） |
 | **文档** | | |
-| `docs/00-09*.md docs/tasks.md` | ❌ | 产品文档（除非任务明确要求） |
+| `docs/0[0-9]-*.md docs/tasks.md` | ❌ | 产品文档（除非任务明确要求） |
 | `docs/canonical-tasks/**/*.yaml` | ⚠️ | 任务 DSL；AI 不主动改，只读引用（人工或专门任务才能改） |
 | `docs/runners-inventory.md` | ⚠️ | runner 清单；运维任务专属，需人工 review |
 | `docs/orchestrator-prompt.md` | ⚠️ | 顶层调度 prompt；改动需人工 review |

@@ -51,11 +51,11 @@
 
 | Phase | 文件 |
 |---|---|
-| Phase 0 | [99-tasks-phase0.md](99-tasks-phase0.md) |
-| Phase 1 | [99-tasks-phase1.md](99-tasks-phase1.md) |
-| Phase 2 | [99-tasks-phase2.md](99-tasks-phase2.md) |
-| Phase 3 | [99-tasks-phase3.md](99-tasks-phase3.md) |
-| Phase 4 | [99-tasks-phase4.md](99-tasks-phase4.md) |
+| Phase 0 | [tasks-phase0.md](tasks-phase0.md) |
+| Phase 1 | [tasks-phase1.md](tasks-phase1.md) |
+| Phase 2 | [tasks-phase2.md](tasks-phase2.md) |
+| Phase 3 | [tasks-phase3.md](tasks-phase3.md) |
+| Phase 4 | [tasks-phase4.md](tasks-phase4.md) |
 
 ## 四、Go/No-Go Gates 汇总
 

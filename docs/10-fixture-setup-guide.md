@@ -145,12 +145,14 @@ click_target_variant_4     button
 click_target_variant_5     button
 text_target                input
 text_target_text           text_display
-drag_source                draggable
-drag_target                drop_zone
+drag_source                drag_source
+drag_target                drop_target
 scroll_container           scroll_container
 scroll_content             image_only
 scroll_item_001..030       image_only
 ```
+
+> **PoC 阶段说明**：`click_target_variant_1` ~ `variant_5` 是扩展测试用节点（多按钮场景），各 adapter 的 Phase 0 PoC 只需覆盖主节点（`click_target` / `text_target` / `drag_source` / `drag_target` / `scroll_container`）即可。variant 节点在 Phase 1 起才用于验证多实例行为一致性。
 
 ## 五、Unity 搭建步骤
 

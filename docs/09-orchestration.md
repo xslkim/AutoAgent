@@ -50,18 +50,18 @@
 ## 二、状态文件目录结构
 
 ```
-<REPO_ROOT>\state\         # Windows 示例: D:\AutoAgent\state\；Linux/macOS: /path/to/AutoAgent/state/
-├─ queue\                  # 待执行任务（文件名 = TASK-NNNN.json）
-├─ ready\                  # 依赖已满足，可立即 spawn 的任务
-├─ in_progress\            # Python agent 正在跑（含 PID + 启动时间 + worktree 路径）
-├─ awaiting_ci\            # Python agent 已退出，PR 已开，等 CI 结果
-├─ done\                   # 已完成（含 PR URL + commit SHA + CI 状态）
-├─ failed\                 # 永久失败（重试耗尽 / 全局停止）
-├─ needs_human\            # 等用户裁决（路径违规 / 同错连续 3 次 / 其他）
-├─ blocked\                # 被上游 needs_human/failed 任务阻塞的下游
-├─ events.jsonl            # 全局事件日志（append-only，时间戳 + 事件类型）
-├─ budget.json             # 预算状态（今日累计 $ / session 累计 $ / 任务计数）
-└─ stop_signal             # 紧急停机文件（存在即全局停）
+<REPO_ROOT>/state/            # Linux/macOS/WSL: /path/to/AutoAgent/state/
+├─ queue/                     # 待执行任务（文件名 = TASK-NNNN.json）
+├─ ready/                     # 依赖已满足，可立即 spawn 的任务
+├─ in_progress/               # Python agent 正在跑（含 PID + 启动时间 + worktree 路径）
+├─ awaiting_ci/               # Python agent 已退出，PR 已开，等 CI 结果
+├─ done/                      # 已完成（含 PR URL + commit SHA + CI 状态）
+├─ failed/                    # 永久失败（重试耗尽 / 全局停止）
+├─ needs_human/               # 等用户裁决（路径违规 / 同错连续 3 次 / 其他）
+├─ blocked/                   # 被上游 needs_human/failed 任务阻塞的下游
+├─ events.jsonl               # 全局事件日志（append-only，时间戳 + 事件类型）
+├─ budget.json                # 预算状态（今日累计 $ / session 累计 $ / 任务计数）
+└─ stop_signal                # 紧急停机文件（存在即全局停）
 ```
 
 **状态转移图**：
@@ -117,6 +117,7 @@
 
   "retries": 0,
   "max_retries": 5,
+  "max_duration_seconds": 3600,
 
   "spawn": {
     "pid": null,
@@ -310,13 +311,13 @@ if running == 0 and ready_tasks:
 ### 6.1 命名约定
 
 ```
-D:\AutoAgent.worktrees\
-├─ TASK-0007\         # branch: agent/TASK-0007, path: <REPO_ROOT>.worktrees\TASK-0007
-├─ TASK-0009\         # branch: agent/TASK-0009
-└─ TASK-0011\         # branch: agent/TASK-0011
+<REPO_ROOT>.worktrees/
+├─ TASK-0007/            # branch: agent/TASK-0007
+├─ TASK-0009/            # branch: agent/TASK-0009
+└─ TASK-0011/            # branch: agent/TASK-0011
 ```
 
-worktree 根目录在主 repo 外（`<REPO_ROOT>.worktrees\`），避免污染主 repo。在 Windows 上形如 `D:\AutoAgent.worktrees\`，Linux/macOS 上形如 `/home/user/AutoAgent.worktrees/`。
+worktree 根目录在主 repo 外（`<REPO_ROOT>.worktrees/`），避免污染主 repo。Linux/macOS/WSL 上形如 `/home/user/AutoAgent.worktrees/`，Windows 上形如 `D:\AutoAgent.worktrees\`。
 
 ### 6.2 生命周期
 
@@ -612,7 +613,7 @@ agent 在 worktree 里 `git commit` 后但 `gh pr create` 前崩溃：
 
 ```bash
 # 用户在另一个终端写 stop signal（路径相对 repo root）
-# Windows PowerShell:  ni <REPO_ROOT>\state\stop_signal -Force
+# Windows PowerShell:  ni <REPO_ROOT>/state/stop_signal -Force
 # Linux/macOS:         touch <REPO_ROOT>/state/stop_signal
 
 # 或 CLI helper
@@ -636,7 +637,7 @@ stop_signal 存在时：
 ### 11.3 恢复
 
 ```bash
-# Windows: del <REPO_ROOT>\state\stop_signal
+# Windows: del <REPO_ROOT>/state/stop_signal
 # Linux/macOS: rm <REPO_ROOT>/state/stop_signal
 # 用户在 Claude Code 重新启动 /loop
 ```
@@ -708,7 +709,7 @@ stop_signal 存在时：
 ## 十三、目录与脚本清单
 
 ```
-<REPO_ROOT>\
+<REPO_ROOT>/
 ├─ scripts/
 │  ├─ orchestrator/        # 顶层 Claude 调用的 helper
 │  │  ├─ poll.py           # 一轮 polling（read state + compute ready + report）

@@ -96,12 +96,12 @@ xvfb-run -a -s "-screen 0 1920x1080x24" \
 - 标签：`self-hosted, Windows, UE-5.7, GPU`
 
 ### 4.2 启动命令
-```cmd
-"%UE_INSTALL%\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" ^
-  fixtures/unreal-test-project/AutoAgentTest.uproject ^
-  -ExecCmds="Automation RunTests AutoAgent.E2E; Quit" ^
-  -unattended -ResX=1920 -ResY=1080 ^
-  -log -ABSLOG="%CD%\ue-log.txt"
+```powershell
+& "$env:UE_INSTALL\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" `
+  fixtures/unreal-test-project/AutoAgentTest.uproject `
+  -ExecCmds="Automation RunTests AutoAgent.E2E; Quit" `
+  -unattended -ResX=1920 -ResY=1080 `
+  -log -ABSLOG="$env:CD\ue-log.txt"
 ```
 
 **注意**：**不要**加 `-nullrhi`。null RHI 模式下 Slate widget 不渲染、不可截图。

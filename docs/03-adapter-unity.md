@@ -321,7 +321,7 @@ Inspector 自定义：`StableIdInspector.cs` 显示 LogicalRole 下拉（限制�
 4 动作的视觉骨架（同样不放控件，PoC 测试代码自行 AddComponent）：
 - `click_target` (Image, logical_role=button) — click 验证（PoC 测试代码 AddComponent<Button>）
 - `text_target` (Image + 子 TMP_Text, logical_role=input) — send_text 验证（PoC AddComponent<TMP_InputField>）
-- `drag_source` + `drag_target` (RawImage, logical_role=draggable/drop_zone) — drag 验证（PoC 挂自实现 IBeginDragHandler/IDragHandler/IEndDragHandler/IDropHandler 脚本）
+- `drag_source` + `drag_target` (RawImage, logical_role=drag_source/drop_target) — drag 验证（PoC 挂自实现 IBeginDragHandler/IDragHandler/IEndDragHandler/IDropHandler 脚本）
 - `scroll_container` (Image 容器 + 30 个 Image item, logical_role=scroll_container) — scroll 验证（PoC AddComponent<ScrollRect> + AddComponent<RectMask2D>）
 
 #### `Packages/manifest.json`

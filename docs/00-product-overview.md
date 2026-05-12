@@ -94,7 +94,7 @@
 | 约束 | 说明 |
 |---|---|
 | 引擎语言 | Unity 纯 C#，UE 纯 C++，Godot GDScript（必要时 GDExtension）。"纯 C# / 纯 C++"指**业务逻辑全部用文本代码**，不在蓝图图表 / prefab 上挂可视化脚本节点。**仍可使用 prefab / Widget Blueprint (WBP) / .tscn 作为"纯数据的视觉骨架容器"**——它们用来声明 UI 树 + 图片资源 + StableId/LogicalRole/StateSprites meta，但不承载任何逻辑（无 Blueprint event graph、无 onClick UnityEvent 序列化）。AI 通过 BindWidget / GetWidgetFromName 在 C++/C# 代码里拿到这些视觉骨架节点，运行时挂控件实现交互 |
-| 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order）。`raycastTarget` / `mouse_filter` / `Visibility` 归 behavior，AI 可写。`meta.state_sprites` 例外见 [06 §三 防护 1 例外条款](06-visual-regression.md) |
+| 美术保真 | AI 只能写 behavior + meta，禁止修改 visual 属性（color / sprite / position / scale 等）和结构（parent / sibling order）。`raycastTarget` / `mouse_filter` / `Visibility` 归 behavior，AI 可写。`meta.state_sprites` 例外见 [06 §2.5.1 state_sprites 状态切换豁免](06-visual-regression.md) |
 | 跨引擎统一 | 同一份任务 DSL 能在三引擎落地；引擎 adapter 独立实现 |
 | 输入双轨 | 引擎事件层（默认）+ OS 级（fallback for 焦点丢失 / 全屏独占 / 引擎事件注入失败的测试场景；**不**承诺绕过反作弊，不用于 PvP 上线包） |
 | 适用范围 | 仅单机 / PvE / 开发阶段 / QA 包；PvP 上线版必须移除 SDK |
@@ -132,7 +132,7 @@
 | Pin ID | 美术/程序员手动钉死的 ID（持久化到组件字段） |
 | Visual / Behavior / Meta | 节点属性的三类分组，AI 只能写 behavior + meta |
 | Logical Role | 节点的"逻辑控件角色"标签（`button` / `input` / `slider` / `toggle` / `scroll_container` / `text_display` / `image_only` / ...），写在 `meta.logical_role`。**程序员搭 fixture 时声明**（pin ID 时一起写），任务 DSL 按 logical_role 引用而非 type，AI 据此按引擎模型实现对应控件能力（Unity `AddComponent`；UE 包裹 / 替换；Godot 替换迁移） |
-| State Sprites | `meta.state_sprites` 字段：节点的多状态视觉资源映射（`{ normal, hover, pressed, focused, disabled } → sprite_ref`），美术 commit 多套 sprite；AI 在代码里按状态切换 `Image.sprite`——此切换属于 behavior 而非 visual 写入（**05/06 防护 0.2 的明确豁免**） |
+| State Sprites | `meta.state_sprites` 字段：节点的多状态视觉资源映射（`{ normal, hover, pressed, focused, disabled } → sprite_ref`），美术 commit 多套 sprite；AI 在代码里按状态切换 `Image.sprite`——此切换属于 behavior 而非 visual 写入（**06 §2.5.1 的明确豁免**） |
 | Test Fixture | 用户预先在引擎里搭好的最小测试场景（commit 到 repo），含视觉骨架 + pinned ID + logical_role + state_sprites |
 | Canonical Task | MVP 验收用的标准任务（首版 = login 界面） |
 | Autonomous Loop | AI Agent 写代码 → 触发 CI → 读结果 → 修复 → 再触发的自迭代闭环 |
@@ -188,8 +188,8 @@
 > Windows 示例为 `D:\AutoAgent\`；任何文档中 `<REPO_ROOT>` 占位符均指代此根目录，跨平台等价。
 
 ```
-<REPO_ROOT>\
-├─ docs\                       # 本套文档
+<REPO_ROOT>/
+├─ docs/                       # 本套文档
 │  ├─ 00-product-overview.md
 │  ├─ 01-protocol-spec.md
 │  ├─ 02-mcp-server.md
@@ -200,7 +200,16 @@
 │  ├─ 07-agent-operations.md
 │  ├─ 08-ci-runners.md
 │  ├─ 09-orchestration.md
-│  └─ tasks.md
+│  ├─ 10-fixture-setup-guide.md
+│  ├─ tasks.md
+│  ├─ tasks-phase0.md
+│  ├─ tasks-phase1.md
+│  ├─ tasks-phase2.md
+│  ├─ tasks-phase3.md
+│  ├─ tasks-phase4.md
+│  ├─ canonical-tasks/         # 任务 DSL（未来产出）
+│  ├─ users/                   # 用户指南（未来产出）
+│  └─ migration/               # 迁移指南（未来产出）
 ├─ protocol\                   # 协议 schema 共用定义（JSON Schema 文件）
 │  └─ schema\
 ├─ mcp-server\                 # Python MCP Server

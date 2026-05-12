@@ -46,19 +46,6 @@
 
 触达后自动暂停所有 background agent，开 GitHub Issue。
 
-### 2.5 负面测试任务（`negative_test: true`）的例外
-
-任务清单里有少数任务（如 [99 TASK-0015 / TASK-0016](tasks.md)）的目的是**故意触发 CI 拦截**以验证防护生效。这类任务和本文档的默认 agent contract 直接冲突——按默认规则它们会被 §2.4 "立即停，不重试" + §2.3 "连续 3 次违规全局停" 算作真违规。为了不让正常的防护验证拖死自动化，**`negative_test: true` 任务享受以下例外**：
-
-- ✅ CI fail 是预期 verification（任务的 verification 字段明确写"... → CI fail ..."）
-- ✅ 这类违规**不计入** §2.3 "连续 3 次路径违规" / "连续 5 次任务 CI 失败" 计数
-- ✅ 配 `mode: manual` —— 由人工执行，不进 autonomous loop 调度
-- ✅ 配 `sandbox_only: true` —— commit 推到独立 sandbox repo，不污染主 repo 的 PR 历史 / cost / counters
-- ❌ **不允许** auto-with-review / auto-merge-safe / background agent 调用这类任务
-- ❌ **不允许** 普通任务声明 `negative_test: true` —— orchestrator 加载任务时校验任务标题含 "故意破坏 / negative test / 验证 CI 拦下" 等关键词，否则拒绝
-
-实现约束：`scripts/orchestrator/poll.py` 在调度前校验 task YAML，`negative_test: true && mode != manual` → 直接 reject。
-
 ### 2.4 失败模式分类
 
 | 失败类型 | 行为 |
@@ -73,6 +60,19 @@
 | 网络超时 / API rate limit | 退避重试，最多 3 次 |
 | Claude API 返回 `stop_reason="refusal"` | 立即停，记录上下文给人工 |
 | Token 上限触达 | 同上 |
+
+### 2.5 负面测试任务（`negative_test: true`）的例外
+
+任务清单里有少数任务（如 [99 TASK-0015 / TASK-0016](tasks.md)）的目的是**故意触发 CI 拦截**以验证防护生效。这类任务和本文档的默认 agent contract 直接冲突——按默认规则它们会被 §2.4 "立即停，不重试" + §2.3 "连续 3 次违规全局停" 算作真违规。为了不让正常的防护验证拖死自动化，**`negative_test: true` 任务享受以下例外**：
+
+- ✅ CI fail 是预期 verification（任务的 verification 字段明确写"... → CI fail ..."）
+- ✅ 这类违规**不计入** §2.3 "连续 3 次路径违规" / "连续 5 次任务 CI 失败" 计数
+- ✅ 配 `mode: manual` —— 由人工执行，不进 autonomous loop 调度
+- ✅ 配 `sandbox_only: true` —— commit 推到独立 sandbox repo，不污染主 repo 的 PR 历史 / cost / counters
+- ❌ **不允许** auto-with-review / auto-merge-safe / background agent 调用这类任务
+- ❌ **不允许** 普通任务声明 `negative_test: true` —— orchestrator 加载任务时校验任务标题含 "故意破坏 / negative test / 验证 CI 拦下" 等关键词，否则拒绝
+
+实现约束：`scripts/orchestrator/poll.py` 在调度前校验 task YAML，`negative_test: true && mode != manual` → 直接 reject。
 
 ## 三、路径权限
 
@@ -119,7 +119,7 @@ fixtures/*/Assets/Fonts/** Content/UI/Fonts/**            # 字体
 fixtures/*/ProjectSettings/** Config/DefaultEngine.ini    # 引擎配置（fixture-level）
 baselines/**                                              # 视觉 baseline（单独 PR）
 .env *.key *.pem secrets/**                               # secret（永禁）
-docs/00-09*.md                                            # 产品文档（除非任务明确）
+docs/0[0-9]-*.md                                           # 产品文档（除非任务明确）
 .git/**                                                   # git 元
 ```
 

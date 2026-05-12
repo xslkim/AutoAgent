@@ -416,6 +416,7 @@ JSON-RPC 标准错误码 + 框架自定义：
 | -32006 | InputInjectionFailed | 输入注入失败（焦点丢失等） |
 | -32007 | EngineThreadViolation | 跨线程调用引擎 API |
 | -32008 | ScreenshotFailed | 截图失败 |
+| -32009 | (reserved) | 保留错误码 |
 | -32010 | VersionMismatch | 协议版本不兼容 |
 | -32011 | NegotiationTimeout | 握手 5 秒超时 |
 | -32012 | SubprotocolMismatch | WebSocket subprotocol 错误 |
