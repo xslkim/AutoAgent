@@ -34,11 +34,14 @@
 
 反复验证后确认 Figma → 游戏 UI 自动化不可行。Figma 在框架内的角色：美术产出 PNG + 字体 + 效果图 → 程序员手动放置 → Figma 截图作为视觉验收 baseline。
 
-### 决策 3：美术保真四道防护
+### 决策 3：美术保真五道防护
 
-1. **非侵入硬约束**：协议层 schema 属性分 visual / behavior / meta 三类
+> 编号与 [06-visual-regression.md](docs/06-visual-regression.md) 对齐。防护 0 是源码层审计——最重要的一道，因为 AI 直接写源码，能绕过 runtime API 层（防护 1）。
+
+0. **源码层审计**（最重要）：PR diff 路径白名单 + AST/regex 扫描视觉字段写入 + dump 前后 diff gate + PR review
+1. **协议层 Schema 权限分离**：runtime setter 拒绝 visual / 结构写入（`-32003` / `-32004`）
 2. **ID 稳定性**：pinned / auto declared，禁止 hash ID 用于任务 contract
-3. **视觉回归**：SSIM ≥ 0.95 / LPIPS < 0.10 + 多模态 LLM 二次裁决
+3. **视觉回归**：SSIM ≥ 0.95 + Claude Vision 二次裁决（LPIPS Phase 4 引入，子进程化）
 4. **资源 GUID 追踪**：引擎自带（.meta / AssetRegistry / .uid）
 
 ### 决策 4：双轨输入

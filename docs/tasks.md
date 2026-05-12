@@ -41,11 +41,11 @@
 | Phase | 任务数 | 产出 |
 |---|---|---|
 | Phase 0 | 25 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 + orchestration scaffolding |
-| Phase 1 | 34 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
+| Phase 1 | 35 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
 | Phase 2 | 12 (anchor) | UE adapter 完整 + 跨引擎 MVP 一致 |
 | Phase 3 | 10 (anchor) | Godot adapter 完整 + 三引擎一致 |
 | Phase 4 | 11 (anchor) | OS 输入 / LPIPS / 性能优化 / v1.0 release |
-| **合计** | **92** | |
+| **合计** | **93** | |
 
 ## 三、分 Phase 任务文件
 
@@ -73,13 +73,15 @@
 9. ☐ 故意 kill 掉一个 in_progress agent → 顶层 resume 时正确恢复
 10. ☐ 写 stop_signal → 顶层正确停机
 
-### Phase 1 出口 (TASK-0134 验证)
+### Phase 1 出口 (TASK-0135 验证)
 1. ☐ AI Agent 完整 autonomous loop 跑通 login MVP
 2. ☐ 防护 0.2 拦下 AI 在 .cs 写 visual 字段
 3. ☐ 防护 0.1 拦下 AI 改 .unity 文件
 4. ☐ 防护 0.3 dump 前后 visual diff 拦下故意写入
 5. ☐ SSIM 视觉回归通过 login + welcome
 6. ☐ 全程无人工敲键盘（除 review/approve PR）
+7. ☐ AI 单任务平均迭代数 < 3
+8. ☐ Cost tracking 正常工作
 
 ### Phase 2 出口 (TASK-0211 验证)
 1. ☐ login MVP 跨 Unity / UE 一致（同一份 task DSL）

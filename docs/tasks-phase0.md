@@ -258,7 +258,7 @@ risk: medium
 title: Unity 测试项目 + PocPlaygroundScene + LoginScene（仅视觉骨架 + 节点命名）
 phase: 0
 engine: unity
-depends_on: [TASK-0000]
+depends_on: [TASK-0000, TASK-0001b]
 goal: 用户在 Unity 里手动建立 fixture 项目并 commit。严格遵循 [00 §四]——只放 Image / TMP_Text / 容器，不挂任何 Selectable 子类。节点命名 = 未来 PinnedId
 output:
   - fixtures/unity-test-project/Packages/manifest.json
@@ -340,7 +340,7 @@ risk: medium
 title: Godot 测试项目 + poc_playground.tscn + login.tscn（只放视觉骨架）
 phase: 0
 engine: godot
-depends_on: [TASK-0000]
+depends_on: [TASK-0000, TASK-0001b]
 goal: 用户在 Godot 里手动建立 fixture。严格遵循 [00 §四]——只放 TextureRect / ColorRect / Label / Container
 output:
   - fixtures/godot-test-project/project.godot
@@ -395,7 +395,7 @@ risk: high
 title: UE 测试项目 + PocPlaygroundMap + LoginMap（只放视觉骨架）
 phase: 0
 engine: unreal
-depends_on: [TASK-0000]
+depends_on: [TASK-0000, TASK-0001b]
 goal: 用户在 UE 里手动建立 fixture。严格遵循 [00 §四]——WidgetTree 只放 UImage / UTextBlock / UCanvasPanel
 output:
   - fixtures/unreal-test-project/AutoAgentTest.uproject
@@ -443,7 +443,7 @@ risk: medium
 title: 三引擎初次 baseline 截图 + commit
 phase: 0
 engine: all
-depends_on: [TASK-0007, TASK-0009, TASK-0011]
+depends_on: [TASK-0007, TASK-0008b, TASK-0009, TASK-0011]
 goal: 在三个 fixture project 跑 take_screenshot，人工 review 后 commit baseline
 output:
   - baselines/unity/windows/poc_playground.png + .meta.json

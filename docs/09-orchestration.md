@@ -160,42 +160,61 @@
 
 ```json
 {
-  "today": "2026-05-12",
-  "daily": {
-    "cost_usd": 14.32,
+  "schema_version": 1,
+  "today": {
+    "date": "2026-05-12",
+    "usd": 14.32,
     "task_count": 5,
-    "pr_count": 5,
-    "path_violations": 0
+    "ci_run_count": 12,
+    "pr_count": 5
   },
   "session": {
     "started_at": "2026-05-12T09:00:00Z",
-    "cost_usd": 14.32,
+    "usd": 14.32,
     "task_count": 5,
-    "ci_triggers": 8
+    "ci_run_count": 8
   },
-  "global": {
-    "consecutive_path_violations": 0,
-    "consecutive_ci_failures": 0
-  }
+  "limits": {
+    "single_task_usd": 5.0,
+    "session_usd": 50.0,
+    "session_task_count": 20,
+    "session_ci_run_count": 50,
+    "session_duration_hours": 12,
+    "daily_usd": 200.0,
+    "daily_pr_count": 50,
+    "consecutive_path_violations": 3
+  },
+  "consecutive_path_violations": 0,
+  "updated_at": "2026-05-12T14:23:00Z"
 }
 ```
 
+**字段说明**：
+- `schema_version`：schema 版本号，未来字段变更时 +1，调度器加载时校验
+- `today.date`：当前日期（`YYYY-MM-DD`）；`!= now.date()` 时整个 `today` 段归零
+- `today.{usd, task_count, ci_run_count, pr_count}`：当日累计
+- `session.started_at`：本次 `/loop` 启动时间（ISO 8601）；session 结束 / 重启时清空 + 重算
+- `session.{usd, task_count, ci_run_count}`：本 session 累计
+- `limits`：上限阈值（commit 到 repo 的常量，调度器只读不写）
+- `consecutive_path_violations`：跨任务连续路径违规计数，任意成功归零；触达 `limits.consecutive_path_violations` → 写 `stop_signal`
+- `updated_at`：最近一次写入时间（ISO 8601），调试用
+
 **更新规则**：
-- `daily` 字段每次 CI 完成时累加（顶层 poll 第 6 步）；跨日自动归零（`today != now.date()` 时重置）
-- `session` 字段每次 spawn agent 时累加；顶层重启时从 `events.jsonl` 重算
-- `global.consecutive_path_violations`：连续 +1，任意成功归零；触达 3 → 写 `stop_signal`
+- `today` 字段每次 CI 完成时累加（顶层 poll 第 6 步）；跨日自动归零
+- `session` 字段每次 spawn agent / CI 完成时累加；顶层重启时从 `events.jsonl` 重算
+- `consecutive_path_violations`：连续 +1，任意成功归零
 - 原子写：先写 `.budget.tmp`，`os.replace` 到 `budget.json`（同盘原子操作）
 
 **上限阈值（对应 [07 §2.2-2.3](07-agent-operations.md)）**：
 
-| 字段 | 上限 | 触发行为 |
+| 字段 | 阈值字段 | 触发行为 |
 |---|---|---|
-| `session.cost_usd` | ≥ $50 | session 停 |
-| `daily.cost_usd` | ≥ $200 | 全局停（写 stop_signal） |
-| `daily.task_count` | ≥ 50 | 全局停 |
-| `session.task_count` | ≥ 20 | session 停 |
-| `session.ci_triggers` | ≥ 50 | session 停 |
-| `global.consecutive_path_violations` | ≥ 3 | 全局停 |
+| `session.usd` | `limits.session_usd`（$50） | session 停 |
+| `today.usd` | `limits.daily_usd`（$200） | 全局停（写 stop_signal） |
+| `today.pr_count` | `limits.daily_pr_count`（50） | 全局停 |
+| `session.task_count` | `limits.session_task_count`（20） | session 停 |
+| `session.ci_run_count` | `limits.session_ci_run_count`（50） | session 停 |
+| `consecutive_path_violations` | `limits.consecutive_path_violations`（3） | 全局停 |
 
 ---
 

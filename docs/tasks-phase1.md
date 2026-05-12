@@ -779,6 +779,8 @@ verification:
   - Gate 4: 防护 0.3 dump 前后 diff 验证
   - Gate 5: SSIM 视觉回归通过
   - Gate 6: 全程无人工敲键盘
+  - Gate 7: AI 单任务平均迭代数 < 3（从 state/events.jsonl 统计 Phase 1 所有 auto-with-review 任务的 retries 均值）
+  - Gate 8: Cost tracking 正常工作（state/budget.json 累计准确 + ~/.autoagent/cost-daily.csv 生成）
   - 任意一项 fail → Phase 2 不启动
 mode: manual
 risk: high
