@@ -1,6 +1,6 @@
 # 04 - Unreal Adapter
 
-> Unreal 引擎 adapter 设计。**业务逻辑纯 C++**（不在 Blueprint event graph 里写逻辑），UE 5.6。
+> Unreal 引擎 adapter 设计。**业务逻辑纯 C++**（不在 Blueprint event graph 里写逻辑），UE 5.7。
 >
 > **"不用蓝图"的精确语义**（与 [00 §四 / §硬约束](00-product-overview.md) 对齐）：
 > - ✅ **允许** `WBP_LoginScreen.uasset` 等 Widget Blueprint asset 作为**纯数据的视觉骨架容器**——里头声明 UI 树 + 图片 + StableId/LogicalRole/StateSprites meta，**没有 Event Graph / Function Graph 节点**。
@@ -12,7 +12,7 @@
 
 ## 一、范围
 
-- **支持版本**：UE 5.6
+- **支持版本**：UE 5.7
 - **支持 UI 系统**：UMG（UUserWidget / UWidget 树）— 第一优先级；Slate 原生 SWidget — Phase 2 末加入
 - **支持 Build Type**：Editor / Development / Shipping（Shipping 需编译期开关）
 - **支持平台**：Windows Editor + Standalone；Linux Server（CI 用）
@@ -123,7 +123,7 @@ void UUmgReflector::WalkChildren(UWidget* W, TArray<FNodeData>& Out, const FStri
 | `visual.sprite_ref` | `Image->Brush.GetResourceObject()->GetPathName()` |
 | `behavior.interactable` | `W->GetIsEnabled()` && Visibility 接受输入 |
 | `behavior.raycast_target` | `W->GetVisibility() == ESlateVisibility::Visible`（HitTestInvisible / SelfHitTestInvisible 返回 false） |
-| `behavior.attached_components` | UE 模型下没有"组件挂载"，但 AI 通过 §六-A "包裹节点"添加的 UButton / UEditableTextBox 自身就是 widget。这里序列化为 ["UButton"] 等，**当被包裹的子 widget 的视觉是它的 brush/content 时**，便于 CI 校验 logical_role |
+| `behavior.attached_components` | UE 模型下没有"组件挂载"，但 AI 通过 [§三 AI 实现路径](#ue-特殊性fixture-不放交互-widget-的两条-ai-实现路径) "包裹节点"添加的 UButton / UEditableTextBox 自身就是 widget。这里序列化为 ["UButton"] 等，**当被包裹的子 widget 的视觉是它的 brush/content 时**，便于 CI 校验 logical_role |
 | `behavior.event_handlers` | `OnClicked.IsBound() ? ["OnClicked"] : []`（运行时反射） |
 | `meta.logical_role` | C++ UPROPERTY `meta=(AutoAgentLogicalRole="button")` 或 `Config/AutoAgentIds.ini` 里的 `AutoAgentLogicalRole` 字段 |
 | `meta.state_sprites` | UPROPERTY `meta=(AutoAgentStateSprites="...")` 指向同 UClass 内多个 `UPROPERTY UTexture2D*` 字段，或在 ini 配置 |
@@ -411,7 +411,7 @@ Shipping build 默认禁用；用户可在 `Target.cs` 里强制开启。
 ## 八、测试 Fixture（用户准备）
 
 ### `fixtures/unreal-test-project/`
-最小 UE 5.6 项目（C++ project），**WidgetTree 只放视觉骨架**（[00 §四 程序员搭建边界](00-product-overview.md)）：
+最小 UE 5.7 项目（C++ project），**WidgetTree 只放视觉骨架**（[00 §四 程序员搭建边界](00-product-overview.md)）：
 
 #### Map: `LoginMap.umap`
 - GameMode 在 BeginPlay 时 `CreateWidget<ULoginUserWidget>` 加到 viewport
@@ -450,7 +450,7 @@ PoC 测试代码自行实现包裹路径。
 6. **Hot Reload 后 WidgetClass 失效**：dev workflow 时 hot reload 会让 `GetAllWidgetsOfClass` 返回空；adapter 在 Subsystem `OnReinitialized` 时重启 server。
 7. **WidgetTree::ForEachWidget vs RootWidget->GetChildAt 混用风险**：前者扁平遍历整棵树（含 panel children），后者递归层级。**混用会产生重复节点 + parent_id 错乱**。与 §三 "遍历策略约束" 一致：**全 codebase 禁用 `UWidgetTree::ForEachWidget`**，统一从 `WidgetTree->RootWidget` 单一递归 `WalkChildren` 并明确传递 `parent_id`。单元测试 `NoDuplicateNodes` + `ParentChildConsistent` 强制验证。
 8. **EditableTextBox 的文本输入**：`SetText` 不触发 `OnTextChanged`；用 `OnTextChanged.Broadcast(...)` 或 `ProcessKeyCharEvent`。
-9. **UE 5.6 升级风险**：Slate 内部 API（FPointerEvent constructor 等）跨小版本可能调整。Adapter 用 `#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 6` 隔离版本差异。
+9. **UE 5.7 升级风险**：Slate 内部 API（FPointerEvent constructor 等）跨小版本可能调整。Adapter 用 `#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 7` 隔离版本差异。
 10. **Subsystem 生命周期**：`UGameInstanceSubsystem::Initialize` 早于第一个 World，但 WebSocket server 启动失败不能 abort 游戏 → 必须 try-catch。
 
 ## 十、Phase 2 出口标准
@@ -459,7 +459,7 @@ PoC 测试代码自行实现包裹路径。
 2. CI nightly 全绿（编译 + e2e）
 3. 所有 tool 实现且与 Unity adapter 行为一致
 4. Shipping build 验证（编译期开关关掉 → adapter 不包含到二进制）
-5. UE 5.6 升级到 5.6.x 小版本时 adapter 不破
+5. UE 5.7 升级到 5.7.x 小版本时 adapter 不破
 
 ## 十一、性能目标
 

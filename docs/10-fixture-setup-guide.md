@@ -43,7 +43,9 @@ Phase 0 需要两个场景：
 
 ## 二、硬规则
 
-1. **只放视觉骨架**：图片、文字、容器、布局节点可以放；交互控件不放。
+> **唯一权威定义见 [00 §四 程序员搭建边界](00-product-overview.md)**。本节为 fixture 搭建特定补充。
+>
+> 1. **只放视觉骨架**：图片、文字、容器、布局节点可以放；交互控件不放。
 2. **节点命名等于 stable ID**：在 adapter 的 metadata Inspector 可用之前，先让节点名严格等于未来 `PinnedId`，例如 `login_button_bg`。
 3. **后补 metadata**：adapter 的 `StableIdComponent` / UE meta / Godot Inspector 可用后，再给每个关键节点补 `PinnedId`、`LogicalRole`、`StateSprites`。
 4. **不写业务逻辑**：Unity 不绑 UnityEvent；UE WBP 不写 Event Graph；Godot 不挂脚本做交互。
@@ -249,7 +251,7 @@ python scripts/fixtures/validate_static_fixtures.py --engine unity
 
 ### 6.1 创建项目
 
-1. 用 UE 5.6 创建 C++ 项目，路径 `fixtures/unreal-test-project`。
+1. 用 UE 5.7 创建 C++ 项目，路径 `fixtures/unreal-test-project`。
 2. 项目名建议 `AutoAgentTest`。
 3. 不创建 Blueprint-only UI 类；所有 WBP 必须继承 C++ `UUserWidget` 子类。
 4. 不在 WBP Event Graph / Function Graph 写任何逻辑。
@@ -383,7 +385,7 @@ WBP 内部是否真的没有 `UButton` 需要你在 UE Editor 里人工确认，
 
 ### 7.1 创建项目
 
-1. 用 Godot 4.3 创建项目，路径 `fixtures/godot-test-project`。
+1. 用 Godot 4.6 创建项目，路径 `fixtures/godot-test-project`。
 2. 渲染窗口设为 `1920x1080`。
 3. 不给 fixture 节点挂业务脚本。
 4. 不使用 `Button` / `LineEdit` / `ScrollContainer` 等交互 Control。

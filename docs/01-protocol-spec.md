@@ -61,10 +61,7 @@
 
 每个 UI 节点统一 schema，**属性强制分三组**。
 
-> ⚠️ **重要约定（与 [00 §四 程序员搭建边界](00-product-overview.md) 强一致）**：程序员手搭 fixture 时**只放视觉骨架**（Image / Text / 容器），`type` 字段反映的是**引擎 raw 类型**（不会出现 `Button` / `InputField`）。"逻辑控件角色"由 `meta.logical_role` 声明，AI 在源码里按引擎模型实现对应控件能力：Unity `AddComponent`，UE 包裹 / 替换为 UMG widget，Godot 替换节点并迁移视觉。也就是说：
-> - **fixture 加载完直接 dump**：`type=Image`、`meta.logical_role=button`、`behavior.event_handlers=[]`、`behavior.custom_scripts=[]`
-> - **AI 代码运行之后 dump**：Unity 通常 `type=Image` 不变且 `behavior.attached_components=[Button]`；UE/Godot 可能因包裹 / 替换出现新 widget class，但同一 pinned ID 必须保留，且 `behavior.attached_components` 反映已实现的控件能力
-> - **任务 DSL 引用按 `meta.logical_role`**，不再按 `type`
+> ⚠️ **重要约定（与 [00 §四 程序员搭建边界](00-product-overview.md) 对齐）**：fixture 加载完直接 dump 时，`type` 为引擎 raw 类型（`Image` / `TextureRect` 等），`meta.logical_role` 声明了逻辑控件角色。AI 在源码里按引擎模型实现对应控件能力（Unity `AddComponent`；UE 包裹/替换为 UMG widget；Godot 替换节点并迁移视觉）。任务 DSL 引用按 `meta.logical_role`，不按 `type`。完整约束以 [00 §四](00-product-overview.md) 为唯一权威源。
 
 ```json
 {
@@ -123,6 +120,8 @@
 
 | 值 | 程序员手放的节点 type | AI 在代码里实现的控件能力 |
 |---|---|---|
+| `drag_source` | Image / RawImage / TextureRect / UImage | Unity: 实现 `IBeginDragHandler`/`IDragHandler`/`IEndDragHandler` 的自定义脚本 ; UE: `UDragDropOperation` wrapper ; Godot: 自定义 `_get_drag_data` 脚本 |
+| `drop_target` | Image / RawImage / TextureRect / UImage | Unity: 实现 `IDropHandler` 的自定义脚本 ; UE: `UDragDropOperation` receiver ; Godot: 自定义 `_drop_data` 脚本 |
 | `button` | Image / RawImage / TextureRect / UImage | Unity: `Button` ; UE: `UButton` ; Godot: `Button` |
 | `input` | Image（背景框）+ 子 Text 节点（占位/输入回显） | Unity: `TMP_InputField` / `InputField` ; UE: `UEditableTextBox` ; Godot: `LineEdit` |
 | `slider` | Image（轨道）+ Image（handle）+ 可选 Image（fill） | Unity: `Slider` ; UE: `USlider` ; Godot: `HSlider` / `VSlider` |

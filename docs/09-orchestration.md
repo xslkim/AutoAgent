@@ -105,7 +105,7 @@ D:\AutoAgent\state\
   "phase": 0,
   "engine": "unity",
   "depends_on": ["TASK-0001", "TASK-0002"],
-  "spec_path": "docs/99-tasks.md#task-0007",
+  "spec_path": "docs/tasks.md#task-0007",
   "mode": "auto-with-review",
   "effort_estimate": "5d",
   "risk": "medium",
@@ -209,7 +209,7 @@ if running == 0 and ready_tasks:
 **为什么不并发**：
 - 单机资源有限，三引擎各自有 CI 跑就够并行了（CI 在 GitHub 那边并发）
 - 串行调试容易，状态文件无锁竞争
-- 99-tasks.md 里大部分任务有依赖串联，并发收益有限
+- tasks.md 里大部分任务有依赖串联，并发收益有限
 - `awaiting_ci/` 里的任务**不算占用** spawn slot（它已经退出，只是等 CI），所以同时可能有多个 awaiting_ci 任务在等
 
 ### 4.4 关键不变量
@@ -268,27 +268,27 @@ if running == 0 and ready_tasks:
 
 ```
 D:\AutoAgent.worktrees\
-├─ TASK-0007\         # branch: agent/TASK-0007
+├─ TASK-0007\         # branch: agent/TASK-0007, path: <REPO_ROOT>.worktrees\TASK-0007
 ├─ TASK-0009\         # branch: agent/TASK-0009
 └─ TASK-0011\         # branch: agent/TASK-0011
 ```
 
-worktree 根目录在主 repo 外（`D:\AutoAgent.worktrees\`），避免污染主 repo。
+worktree 根目录在主 repo 外（`<REPO_ROOT>.worktrees\`），避免污染主 repo。在 Windows 上形如 `D:\AutoAgent.worktrees\`，Linux/macOS 上形如 `/home/user/AutoAgent.worktrees/`。
 
 ### 6.2 生命周期
 
 ```bash
 # spawn 时
-git worktree add ../AutoAgent.worktrees/TASK-0007 -b agent/TASK-0007 origin/main
+git worktree add ../<REPO_ROOT>.worktrees/TASK-0007 -b agent/TASK-0007 origin/main
 
 # claude 在 worktree 里跑，提交，开 PR
-cd ../AutoAgent.worktrees/TASK-0007
+cd ../<REPO_ROOT>.worktrees/TASK-0007
 claude -p "<task prompt>"
 git push -u origin agent/TASK-0007
 gh pr create ...
 
 # done 时（PR merged，CI green）
-git worktree remove ../AutoAgent.worktrees/TASK-0007
+git worktree remove ../<REPO_ROOT>.worktrees/TASK-0007
 git branch -D agent/TASK-0007  # 本地清理；远端分支 GitHub 自动清
 
 # failed/needs_human 时
@@ -308,7 +308,7 @@ git branch -D agent/TASK-0007  # 本地清理；远端分支 GitHub 自动清
 [07 §5.2](07-agent-operations.md) 禁止 AI agent 用 `git reset --hard` / `git push --force` / `git rebase` 等破坏性操作。**orchestrator（顶层调度脚本）也必须遵守这条**——因为 orchestrator 写出来后 agent 调用 orchestrator helper 就等于间接执行这些操作。
 
 **重试 / 故障恢复的正确做法**：
-- ✅ `git worktree remove --force ../AutoAgent.worktrees/TASK-XXXX` + `git worktree add` 新建（fresh checkout）
+- ✅ `git worktree remove --force ../<REPO_ROOT>.worktrees/TASK-XXXX` + `git worktree add` 新建（fresh checkout）
 - ✅ `git branch -D agent/TASK-XXXX` 删旧分支 + 新建同名分支（在 fresh worktree 内）
 - ❌ `git reset --hard origin/main` 重置已有 worktree
 - ❌ `git push --force` 覆盖远端分支历史
@@ -427,7 +427,7 @@ def main(task_id):
 
     # 2. 拼 prompt
     prompt = build_prompt(task)
-    # = task spec from 99-tasks.md + 相关上下文文件路径
+    # = task spec from tasks.md + 相关上下文文件路径
     # + 强制约束："你只能修改路径白名单内的文件"
     # + 退出条件："完成后必须 git commit + git push + gh pr create"
 
@@ -489,7 +489,7 @@ def main(task_id):
 
 # TASK-0007: Unity adapter PoC + unit tests
 
-[完整任务规格从 docs/99-tasks.md 嵌入]
+[完整任务规格从 docs/tasks.md 嵌入]
 
 ## 你必须遵守的约束
 
@@ -549,7 +549,7 @@ def main(task_id):
 agent 在 worktree 里 `git commit` 后但 `gh pr create` 前崩溃：
 - worktree 有未推的 commit → 顶层重试时检测到
 - **当前实现**（与 [07 §5.2](07-agent-operations.md) git 禁令一致）：
-  1. `git worktree remove --force ../AutoAgent.worktrees/TASK-XXXX`（销毁旧 worktree，未推 commit 一并丢弃）
+  1. `git worktree remove --force ../<REPO_ROOT>.worktrees/TASK-XXXX`（销毁旧 worktree，未推 commit 一并丢弃）
   2. `git branch -D agent/TASK-XXXX`（删旧分支）
   3. `git worktree add` + 新建同名分支（fresh checkout）
   4. 在新 worktree 里重跑 agent
@@ -663,7 +663,7 @@ rm D:\AutoAgent\state\stop_signal
 ## 十三、目录与脚本清单
 
 ```
-D:\AutoAgent\
+<REPO_ROOT>\
 ├─ scripts/
 │  ├─ orchestrator/        # 顶层 Claude 调用的 helper
 │  │  ├─ poll.py           # 一轮 polling（read state + compute ready + report）
@@ -692,7 +692,7 @@ D:\AutoAgent\
 
 ---
 
-## 十四、新增任务（追加到 99-tasks.md）
+## 十四、新增任务（追加到 tasks.md）
 
 orchestration scaffolding 本身要作为 Phase 0 一部分：
 
@@ -704,7 +704,7 @@ orchestration scaffolding 本身要作为 Phase 0 一部分：
 | TASK-0021 | 顶层 Claude /loop 启动 prompt 模板（doc + 用户操作指南） | manual | 4h | low |
 | TASK-0022 | 端到端 dry run（1 个 echo 任务跑通整个 loop） | manual | 4h | high |
 
-详细 YAML 加到 `docs/99-tasks.md` Phase 0 节末尾，依赖关系：
+详细 YAML 加到 `docs/tasks.md` Phase 0 节末尾，依赖关系：
 - TASK-0018 → TASK-0019 → TASK-0020 → TASK-0022
 - TASK-0021 与 TASK-0019/0020 并行
 - TASK-0022 是 Phase 0 的最后一个 gate（在 TASK-0017 之前必须通过）
@@ -730,6 +730,6 @@ Phase 0 出口在原 6 项基础上加 4 项：
 - **不**做 Slack/Discord 通知 —— 顶层会话里看就够
 - **不**做多用户协作 —— 单用户单仓库
 - **不**做跨机器分布式 —— 单机串行（MVP）
-- **不**做任务热加载 —— 改 99-tasks.md 后需要重新生成 queue/
+- **不**做任务热加载 —— 改 tasks.md 后需要重新生成 queue/
 - **不**做 agent 之间通信 —— Python agent 互相不知道对方
 - **不**让 Python agent 操作 GitHub merge —— merge 由人或独立 bot 做

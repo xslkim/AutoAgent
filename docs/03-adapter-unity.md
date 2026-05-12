@@ -226,8 +226,9 @@ public class ProtocolHandler : WebSocketBehavior {
 
 ```csharp
 public class StableIdComponent : MonoBehaviour {
-    [SerializeField] public string PinnedId;        // 美术/程序员手动 pin
-    [SerializeField] public string AutoHashId;      // 框架自动生成
+    [SerializeField] public string PinnedId;        // 美术/程序员手动 pin（来源 1: pinned）
+    [SerializeField] public string AutoDeclaredId;  // 框架从代码注解自动收集（来源 2: auto）
+    [SerializeField] public string AutoHashId;      // 框架自动 hash 计算（来源 3: hash，诊断用）
     [SerializeField] public string LogicalRole;     // button / input / slider / ... (见 01 协议 logical_role 取值表)
     [SerializeField] public string Role;
     [SerializeField] public string Intent;
@@ -236,8 +237,12 @@ public class StableIdComponent : MonoBehaviour {
     [Serializable] public class StateSpriteEntry { public string State; public Sprite Sprite; }
     [SerializeField] public List<StateSpriteEntry> StateSprites;  // normal/hover/pressed/disabled → Sprite
 
-    public string Id => !string.IsNullOrEmpty(PinnedId) ? PinnedId : AutoHashId;
-    public string Source => !string.IsNullOrEmpty(PinnedId) ? "pinned" : "hash";
+    public string Id => !string.IsNullOrEmpty(PinnedId) ? PinnedId
+                      : !string.IsNullOrEmpty(AutoDeclaredId) ? AutoDeclaredId
+                      : AutoHashId;
+    public string Source => !string.IsNullOrEmpty(PinnedId) ? "pinned"
+                          : !string.IsNullOrEmpty(AutoDeclaredId) ? "auto"
+                          : "hash";
 }
 ```
 
@@ -245,9 +250,12 @@ Inspector 自定义：`StableIdInspector.cs` 显示 LogicalRole 下拉（限制�
 
 ### IdAllocator
 框架启动时遍历所有 RectTransform，给每个节点：
-1. 已有 `StableIdComponent.PinnedId` → 直接用
-2. 否则 → 计算 `Hash(transformPath + gameObject.name + 主组件类型)` → 写入 `AutoHashId`
-3. 检测冲突 → 在重复节点上加序号后缀
+1. 已有 `StableIdComponent.PinnedId` → `stable_id_source = "pinned"`
+2. 已有 `StableIdComponent.AutoDeclaredId`（由框架从代码注解 `[AutoAgentId("...")]` 或命名约定自动填充）→ `stable_id_source = "auto"`
+3. 否则 → 计算 `Hash(transformPath + gameObject.name + 主组件类型)` → 写入 `AutoHashId`，`stable_id_source = "hash"`
+4. 检测冲突 → 在重复节点上加序号后缀
+
+**`auto` 来源的收集机制**：框架扫描 GameObject 上挂载的 MonoBehaviour 脚本，查找标有 `[AutoAgentId("id_string")]` 特性的字段或类，自动将其声明的 ID 填入 `AutoDeclaredId`。这与 UE 的 `UPROPERTY(meta=(AutoAgentId="..."))` 等价——程序员在源码中声明，框架自动收集，不需要 Inspector 手动 pin。
 
 ### OrphanTracker
 持久化"上次扫描看到的 ID 列表"到 `Library/AutoAgent/last_scan.json`。每次新扫描比对，找不到的 ID 标 orphan。
@@ -327,7 +335,7 @@ Inspector 自定义：`StableIdInspector.cs` 显示 LogicalRole 下拉（限制�
 4. **Drag 序列必须分帧**：单帧内 OnBeginDrag → OnDrag → OnEndDrag 部分 IDragHandler 实现会出问题（如 Slider）。用 coroutine。
 5. **Canvas 的 sortingOrder 影响射线**。多 Canvas 时 RaycastAll 优先返回最高 sortingOrder。
 6. **CanvasGroup 链条上的 alpha=0 或 interactable=false 让节点 visible 但不可点**。`interactable` 字段要遍历父链 CanvasGroup 计算。
-7. **StableIdComponent 不能挂到 prefab 实例的根**（用户原始约束："不用预制件"），但子物体上 OK。
+7. **StableIdComponent 可以挂到任意 GameObject**（包括 prefab 子节点）。prefab 根节点也支持，但建议优先挂到具体 UI 元素上以获得更精确的 ID 绑定。
 8. **IL2CPP 下 websocket-sharp 偶发卡顿**：keep-alive 频率调到 10s（非默认 30s）。
 9. **Scene 切换时**：必须 `[RuntimeInitializeOnLoadMethod]` 重新 attach；老的 WebSocket 在 `OnApplicationQuit` 关掉。
 

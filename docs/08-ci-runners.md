@@ -8,8 +8,8 @@
 | 引擎 | Build | Unit Test | E2E + Screenshot | 触发频率 |
 |---|---|---|---|---|
 | Unity 2023 | `windows-latest`（DX11 WARP） | `windows-latest` | `windows-latest`（保留显示） | 每 PR |
-| Godot 4.3 | `ubuntu-latest`（Xvfb） | `ubuntu-latest`（Xvfb） | `ubuntu-latest`（Xvfb + 软渲） | 每 PR |
-| UE 5.6 | **`self-hosted-windows-gpu`** | **`self-hosted-windows-gpu`** | **`self-hosted-windows-gpu`** | **Nightly only** |
+| Godot 4.6 | `ubuntu-latest`（Xvfb） | `ubuntu-latest`（Xvfb） | `ubuntu-latest`（Xvfb + 软渲） | 每 PR |
+| UE 5.7 | **`self-hosted-windows-gpu`** | **`self-hosted-windows-gpu`** | **`self-hosted-windows-gpu`** | **Nightly only** |
 | MCP server (Python) | `ubuntu-latest` | `ubuntu-latest` | (与引擎 e2e 一起跑) | 每 PR |
 
 `self-hosted-windows-gpu` = 用户提供的 Windows 11 + RTX 30/40 系 / 32GB RAM / 200GB+ SSD runner。**Phase 0 必须先确认这台机器到位**，否则 UE 不能上 CI（也就不能进 Phase 2）。
@@ -57,7 +57,7 @@ Linux + Xvfb + Vulkan 软渲在 UGUI 字体渲染上不稳定（默认 fallback 
 ### 3.1 Linux runner（推荐 + 默认）
 - OS：Ubuntu 22.04
 - Image：`ubuntu-latest`
-- Godot install：从 GitHub Release 下载 `Godot_v4.3-stable_linux.x86_64`
+- Godot install：从 GitHub Release 下载 `Godot_v4.6-stable_linux.x86_64`
 - 字体：`apt install fonts-noto fonts-noto-cjk`
 - Xvfb：必需
 
@@ -80,7 +80,7 @@ xvfb-run -a -s "-screen 0 1920x1080x24" \
 ### 4.1 Self-hosted Windows GPU runner（必需）
 
 **为什么不能用 GitHub-hosted**：
-- UE 5.6 编译需 ~30GB SSD + 16GB RAM 峰值
+- UE 5.7 编译需 ~30GB SSD + 16GB RAM 峰值
 - Vulkan / DX12 截图需要真实 GPU（软渲性能太差）
 - 编译时间在 GitHub-hosted ubuntu-latest 上 1+ 小时，超出免费额度
 - UE Marketplace license 流程繁琐
@@ -88,12 +88,12 @@ xvfb-run -a -s "-screen 0 1920x1080x24" \
 **Self-hosted runner 规格**：
 - OS：Windows 11
 - Visual Studio 2022（含 "C++ Desktop Development" + "Game Development with C++"）
-- UE 5.6（Epic Games Launcher 安装 或 source build）
+- UE 5.7（Epic Games Launcher 安装 或 source build）
 - GPU：NVIDIA RTX 3060+ 推荐
 - RAM：32GB
 - SSD：200GB+（含 UE source + DerivedDataCache + 项目）
 - GitHub Actions self-hosted runner agent 安装
-- 标签：`self-hosted, Windows, UE-5.6, GPU`
+- 标签：`self-hosted, Windows, UE-5.7, GPU`
 
 ### 4.2 启动命令
 ```cmd

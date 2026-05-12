@@ -17,7 +17,7 @@
 
 | 类别 | 程序员可手放 | 谁负责 |
 |---|---|---|
-| **图片 / 容器**：`Image` / `RawImage` / `Sprite` / `TextureRect` / `UImage`、`Canvas` / `CanvasLayer`、`Panel` / `VerticalBox` / `Container` / `RectTransform`、`Mask` 由 AI 加 | ✅ | 程序员手放，对齐美术稿 |
+| **图片 / 容器**：`Image` / `RawImage` / `Sprite` / `TextureRect` / `UImage`、`Canvas` / `CanvasLayer`、`Panel` / `VerticalBox` / `Container` / `RectTransform` | ✅ | 程序员手放，对齐美术稿。`Mask` / `RectMask2D` 由 AI 在代码里加 |
 | **文字显示**：`Text` / `TextMeshPro` / `UTextBlock` / `Label`（纯显示，不接收输入） | ✅ | 程序员手放（美术决定字体 / 字号 / 颜色） |
 | **交互控件**：`Button`、`InputField` / `TMP_InputField` / `UEditableTextBox` / `LineEdit`、`Slider`、`Toggle` / `CheckBox`、`Dropdown` / `ComboBox`、`ScrollView` / `ScrollBar` / `ScrollBox` / `ScrollRect`、`ListView` / `TreeView`、`Mask` / `RectMask2D`（裁剪） | ❌ | AI 在源码里按引擎模型运行时创建 / 挂载 / 替换 |
 
@@ -139,20 +139,28 @@
 
 ## 八、文档导航
 
-| 文档 | 内容 |
-|---|---|
-| 00-product-overview.md | 本文档 |
-| 01-protocol-spec.md | Wire Protocol（adapter ↔ MCP server）的 JSON schema、命令、事件 |
-| 02-mcp-server.md | MCP Server 的 tools API、架构、配置 |
-| 03-adapter-unity.md | Unity adapter 设计：UGUI / UI Toolkit 反射、EventSystem 注入 |
-| 04-adapter-unreal.md | UE adapter 设计：UWidgetTree 反射、Slate 注入 |
-| 05-adapter-godot.md | Godot adapter 设计：SceneTree 反射、parse_input_event 注入 |
-| 06-visual-regression.md | 视觉回归 + 美术保真五道防护（含源码层审计） |
-| 07-agent-operations.md | AI Agent 自治边界（迭代上限 / 路径白名单 / secret / 失败停机） |
-| 08-ci-runners.md | CI 运行环境规格（GPU runner / Xvfb / 字体 / 分辨率 / color space） |
-| 09-orchestration.md | 自动化调度（两层 agent + 状态文件 + DAG + 自然语言裁决） |
-| 10-fixture-setup-guide.md | 三引擎静态 fixture 搭建步骤 + 辅助脚本 |
-| 99-tasks.md | 任务清单（Phase 0-4，含顺序 / 目标 / 产出 / 验证 / go-no-go gate） |
+| 文档 | 内容 | 状态 |
+|---|---|---|
+| 00-product-overview.md | 本文档 | ✅ |
+| 01-protocol-spec.md | Wire Protocol（adapter ↔ MCP server）的 JSON schema、命令、事件 | ✅ |
+| 02-mcp-server.md | MCP Server 的 tools API、架构、配置 | ✅ |
+| 03-adapter-unity.md | Unity adapter 设计：UGUI / UI Toolkit 反射、EventSystem 注入 | ✅ |
+| 04-adapter-unreal.md | UE adapter 设计：UWidgetTree 反射、Slate 注入 | ✅ |
+| 05-adapter-godot.md | Godot adapter 设计：SceneTree 反射、parse_input_event 注入 | ✅ |
+| 06-visual-regression.md | 视觉回归 + 美术保真五道防护（含源码层审计） | ✅ |
+| 07-agent-operations.md | AI Agent 自治边界（迭代上限 / 路径白名单 / secret / 失败停机） | ✅ |
+| 08-ci-runners.md | CI 运行环境规格（GPU runner / Xvfb / 字体 / 分辨率 / color space） | ✅ |
+| 09-orchestration.md | 自动化调度（两层 agent + 状态文件 + DAG + 自然语言裁决） | ✅ |
+| 10-fixture-setup-guide.md | 三引擎静态 fixture 搭建步骤 + 辅助脚本 | ✅ |
+| tasks.md | 任务清单索引（按 Phase 拆分） | ✅ |
+| canonical-tasks/login.yaml | Login MVP 任务 DSL（AI 输入的标准化任务描述） | 未来产出（TASK-0132） |
+| runners-inventory.md | Self-hosted runner 清单 | 未来产出（TASK-0013） |
+| orchestrator-prompt.md | 顶层 Claude /loop 启动 prompt 模板 | 未来产出（TASK-0021） |
+| user-guide-orchestration.md | 用户日常操作指南 | 未来产出（TASK-0021） |
+| phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 未来产出（TASK-0017） |
+| dry-run-report.md | Orchestration 端到端 dry run 报告 | 未来产出（TASK-0022） |
+| users/il2cpp-setup.md | 用户 IL2CPP link.xml 配置指南 | 未来产出（TASK-0104） |
+| migration/v0.x-to-v1.0.md | v1.0 迁移指南 | 未来产出（TASK-0408） |
 
 ## 九、执行约定（工程层面）
 
@@ -164,7 +172,7 @@
 | 测试 Fixture | 用户手动在三引擎里准备最小项目并 commit | Q4 = B |
 | MVP 验收 | login 界面 canonical task | Q5 = A |
 | AI 执行模式 | Autonomous loop：写代码 → 触发 CI → 读结果 → 修复 → 再触发 | Q6 = C |
-| 引擎顺序 | Unity 2023.x LTS → UE 5.6 → Godot 4.3 | 用户指定 |
+| 引擎顺序 | Unity 2023.x LTS → UE 5.7 → Godot 4.6 | 用户指定 |
 | 任务粒度 | 1 task = 1 PR | Q2 (granularity) = A |
 | 文档语言 | 中文为主，代码 / API 名 / 术语英文 | 默认 |
 | 代码语言 | 英文（注释 / 命名 / commit message） | 默认 |
@@ -189,7 +197,7 @@ D:\AutoAgent\
 │  ├─ 07-agent-operations.md
 │  ├─ 08-ci-runners.md
 │  ├─ 09-orchestration.md
-│  └─ 99-tasks.md
+│  └─ tasks.md
 ├─ protocol\                   # 协议 schema 共用定义（JSON Schema 文件）
 │  └─ schema\
 ├─ mcp-server\                 # Python MCP Server

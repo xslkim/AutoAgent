@@ -1,10 +1,10 @@
 # 05 - Godot Adapter
 
-> Godot 引擎 adapter 设计。GDScript 主路径，性能热点用 GDExtension（C++），Godot 4.3。
+> Godot 引擎 adapter 设计。GDScript 主路径，性能热点用 GDExtension（C++），Godot 4.6。
 
 ## 一、范围
 
-- **支持版本**：Godot 4.3+
+- **支持版本**：Godot 4.6+
 - **支持 UI 系统**：Control 节点（CanvasLayer / Control / Container 树）
 - **支持 Build**：Editor / Debug Export / Release Export
 - **支持平台**：Windows / Linux / macOS
@@ -189,7 +189,15 @@ func _process(_delta: float) -> void:
 ## 六、Meta 注入
 
 ### Stable ID 存储
-Godot 节点的 `Object.set_meta(key, value)` 持久化到 .tscn。
+Godot 节点的 `Object.set_meta(key, value)` 持久化到 .tscn。框架支持三种来源：
+
+| 来源 | Meta key | 设置方式 |
+|---|---|---|
+| `pinned` | `autoagent_pinned_id` | 程序员在 Inspector / Editor Plugin 手动填写 |
+| `auto` | `autoagent_declared_id` | 框架扫描 GDScript 中的 `@export var autoagent_id: String` 或脚本级注解自动收集 |
+| `hash` | `autoagent_hash_id` | 框架基于 `node.get_path() + node.name + node.get_class()` 自动计算 |
+
+**`auto` 来源的收集机制**：框架在启动时扫描所有挂载脚本的 `@export` 变量，查找命名符合 `autoagent_id` 或 `auto_agent_id` 约定的字符串字段。这与 UE 的 `UPROPERTY(meta=(AutoAgentId="..."))` 和 Unity 的 `[AutoAgentId("...")]` 特性等价——程序员在源码中声明，框架自动收集。
 
 ```gdscript
 # 写（程序员搭 fixture 时设置）
@@ -203,9 +211,18 @@ node.set_meta("autoagent_state_sprites", {
     "disabled": preload("res://assets/ui/btn_login_disabled.png"),
 })
 
-# 读
-if node.has_meta("autoagent_pinned_id"):
-    return node.get_meta("autoagent_pinned_id")
+# 框架自动收集来源 2 (auto)：扫描 @export var autoagent_id
+# 业务代码中声明:
+# @export var autoagent_id: String = "dynamic_item_001"
+# → 框架在 dump 时将该值写入 autoagent_declared_id
+
+# 读（优先级: pinned > auto > hash）
+func _resolve_stable_id(node: Node) -> Dictionary:
+    if node.has_meta("autoagent_pinned_id"):
+        return {"id": node.get_meta("autoagent_pinned_id"), "source": "pinned"}
+    if node.has_meta("autoagent_declared_id"):
+        return {"id": node.get_meta("autoagent_declared_id"), "source": "auto"}
+    return {"id": _compute_hash_id(node), "source": "hash"}
 ```
 
 Editor Plugin 提供 Inspector 扩展：选中 Control → "AutoAgent ID / LogicalRole / StateSprites" 字段编辑（LogicalRole 限制为 [01 §三 logical_role 取值表](01-protocol-spec.md) 合法值）。
@@ -326,7 +343,7 @@ PoC 测试代码自行实现节点替换路径。
 3. **GDScript 反射性能**：`get_property_list` / `get_method_list` 在大量节点上调用慢。1000 节点全 dump > 200ms。需缓存。
 4. **WebSocketPeer 的 close code**：默认 1000；客户端意外断开返回 1006。adapter 都当作正常断开处理。
 5. **Release export 反射裁剪**：上面已写。silent failure，必须自检。
-6. **C# adapter 不行**：Godot 4.6 之前 C# 不支持 web export，且和 GDExtension 不能直接互调。Phase 1 选 GDScript 是对的。
+6. **Godot C# 支持受限**：Godot 4.6 C# web export 支持仍有限，且和 GDExtension 不能直接互调。Phase 1 选 GDScript 是对的。
 7. **theme_override vs theme**：`Button.add_theme_color_override("font_color", ...)` 和 `theme.get_color("font_color", "Button")` 不同。dump 时优先 override。
 8. **Container 自动布局会覆盖 size 设置**：测试 fixture 里的固定布局用 anchor + offset，不要依赖 HBoxContainer 这种容器的自动 size。
 9. **autoload singleton 的初始化时序**：`_ready` 比第一个 scene 早。`get_tree().root` 此时只有 root 没有用户场景。要等到 `tree_changed` 第一次触发再启动。

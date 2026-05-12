@@ -74,7 +74,7 @@ CI 第一步是 diff 路径检查。AI 触发 PR 后，扫 changed paths：
 | `fixtures/*/Packages/manifest.json` | ⚠️ | Unity 包依赖；AI 改需 review |
 | `fixtures/unreal-test-project/Config/AutoAgentIds.ini` | ⚠️ | UE stable ID 注册表；AI 改需 review（与 fixture .uasset 联动） |
 | **文档** | | |
-| `docs/00-09*.md docs/99-tasks.md` | ❌ | 产品文档（除非任务明确要求） |
+| `docs/00-09*.md docs/tasks.md` | ❌ | 产品文档（除非任务明确要求） |
 | `docs/canonical-tasks/**/*.yaml` | ⚠️ | 任务 DSL；AI 不主动改，只读引用（人工或专门任务才能改） |
 | `docs/runners-inventory.md` | ⚠️ | runner 清单；运维任务专属，需人工 review |
 | `docs/orchestrator-prompt.md` | ⚠️ | 顶层调度 prompt；改动需人工 review |
@@ -90,7 +90,7 @@ CI 第一步是 diff 路径检查。AI 触发 PR 后，扫 changed paths：
 - ⚠️ = AI 可改但 CI 自动加 `needs-human-review` label，必须人工 approve 才能 merge
 - ❌ = AI 改触发 `PathViolation`，CI 立即 fail，**不重试**（见 [07 §3.4](07-agent-operations.md)），需 `path_exception` 显式豁免
 
-CI 实现：`scripts/ci/check_changed_paths.py` 用 `git diff --name-only origin/main...HEAD` 拿 changed 文件列表，对照 `scripts/ci/path_whitelist.yml` fail-closed。规则配置文件是唯一权威，本表是人类可读副本。
+CI 实现：`scripts/ci/check_changed_paths.py` 用 `git diff --name-only origin/main...HEAD` 拿 changed 文件列表，对照 `scripts/ci/path_whitelist.yml` fail-closed。**`scripts/ci/path_whitelist.yml` 是路径规则的唯一权威源**；本节表格及 [07 §3.2](07-agent-operations.md) 均为人类可读副本，与 YAML 不一致时以 YAML 为准。
 
 **任务 path_exception**：YAML 任务可声明 `path_exception: ["specific/path.ext"]` 豁免单条路径——仅当任务明确要求改 fixture 视觉骨架 / baseline / docs 等。Phase 0 出口 gate 必须验证：`path_exception` 列出的路径在该任务 PR 内**全部命中**（不能开多余豁免）。
 
@@ -118,7 +118,7 @@ SetRenderTransform|SetRenderScale|SetRenderTranslation
 SetBrush\(|SetBrushFromAsset
 ```
 
-> **明确归 behavior**：`SetIsEnabled` / `OnClicked.AddDynamic` / `ConstructWidget<UButton>` + `Btn->SetContent(...)`（§3.5 包裹路径）/ `AutoAgentSubsystem->TransferStableId`。
+> **明确归 behavior**：`SetIsEnabled` / `OnClicked.AddDynamic` / `ConstructWidget<UButton>` + `Btn->SetContent(...)`（[04 §三 路径 A](04-adapter-unreal.md) 包裹路径）/ `AutoAgentSubsystem->TransferStableId`。
 > **包裹 widget 的 visual 字段提取与赋值豁免**：`Btn->WidgetStyle.BackgroundImageNormal = OldBrush` 这种"把原 UImage 的 brush 迁移给新 UButton"不算 visual 写入——因为视觉值未改变，只是迁移容器（详见 §2.5）。
 
 **Godot（GDScript）禁止：**
@@ -149,45 +149,6 @@ public class ButtonFeedback : MonoBehaviour {
 
 扫描器跳过这些文件的视觉字段检查（仍记录到 audit log，方便 review 时核对）。
 
-### 2.5 实现 `logical_role` 的标准化豁免（无需文件级注释）
-
-为了支持 [00 §四 程序员搭建边界](00-product-overview.md) 选定的"程序员只放视觉骨架 + AI 运行时挂控件"模式，源码 diff 审计**默认允许**以下三类操作，无需 `AUTOAGENT_ALLOW_VISUAL` 注释：
-
-#### 2.5.1 `state_sprites` 状态切换（三引擎通用）
-
-AI 切换 `Image.sprite` / `Btn->WidgetStyle.BackgroundImageNormal` / `Button.add_theme_stylebox_override` 的目标值**必须**来自该节点 `meta.state_sprites` 字典里某个已声明的状态：
-
-```csharp
-// Unity 合法：sprite 切换到 state_sprites["pressed"] 已声明的资源
-image.sprite = stableId.GetStateSprite("pressed");
-
-// Unity 非法：sprite 切换到任意路径 / 新建 Sprite / 来自非 state_sprites 的资源
-image.sprite = Resources.Load<Sprite>("Some/Other/Path");        // ❌ 被拦
-image.sprite = anotherImage.sprite;                                // ❌ 被拦
-image.sprite = Sprite.Create(newTexture, ...);                     // ❌ 被拦
-```
-
-CI 实现：源码 diff 审计在看到 `\.sprite\s*=` 时，AST 检查右值是否是 `StableIdComponent.GetStateSprite(...)` / 等价 helper 调用；不是 → fail。
-
-#### 2.5.2 实现 `logical_role` 必需的"挂控件"动作（三引擎各有路径）
-
-| 引擎 | 允许的动作 | 校验 |
-|---|---|---|
-| Unity | `gameObject.AddComponent<T>()` where `T ∈ { Button, Toggle, Slider, Scrollbar, Dropdown, InputField, TMP_InputField, TMP_Dropdown, ScrollRect, RectMask2D, Mask }` 或 `<T>` 是 fixture 节点 `meta.logical_role` 对应的合法控件类（见 [01 §三 logical_role 取值表](01-protocol-spec.md)） | AST 扫 `AddComponent<X>` 调用，校验 X ∈ 白名单；且**调用点 GameObject 的 logical_role** 必须允许该 X |
-| UE | `WidgetTree->ConstructWidget<UButton>(...) + Parent->ReplaceChildAt + AutoAgentSubsystem->TransferStableId` 一整套（[04 §三末 路径 A/B](04-adapter-unreal.md)） | AST 校验：ConstructWidget 的目标 class ∈ logical_role 映射表；TransferStableId 必须被调用 |
-| Godot | `parent.remove_child(old) + parent.add_child(new) + new.set_meta("autoagent_pinned_id", old.get_meta(...))` 一整套（[05 §六-A](05-adapter-godot.md)） | AST 校验：新节点 class ∈ logical_role 映射；pinned_id 必须迁移；position/size/anchor 必须完全迁移 |
-
-CI 实现：`scripts/ci/audit_logical_role_implementation.py`，输入"AI 代码 diff + fixture 的 logical_role 声明"，输出每个 logical_role 节点是否被合法实现。
-
-#### 2.5.3 `behavior` 字段的合法写入
-
-明确归 `behavior` 而非 `visual`、AI 任意可写：
-- `raycastTarget` / `mouse_filter` / `Widget.Visibility` / `Widget.SetIsEnabled` / `Selectable.interactable` / `CanvasGroup.interactable` / `CanvasGroup.blocksRaycasts`
-- 事件绑定 / 解绑：`onClick.AddListener` / `OnClicked.AddDynamic` / `pressed.connect`
-- 数据状态：自定义 MonoBehaviour / UMG widget controller / Node script 的公开字段
-
-不在 §2.2 / §2.5.1 / §2.5.2 / §2.5.3 范围内的 visual 写入 → 默认拦截，需 `AUTOAGENT_ALLOW_VISUAL` 文件级豁免（§2.2 末）。
-
 ### 2.3 dump 前后 diff gate（运行时验证）
 
 CI e2e 测试时：
@@ -213,6 +174,45 @@ CI e2e 测试时：
 - CI 全绿才允许 merge（GitHub branch protection rule）
 - visual / 结构 diff 失败的 PR 必须 human review approve（不允许 AI 自己 dismiss）
 - baseline 更新走单独 PR（path: `baselines/**`），强制 human review
+
+### 2.5 实现 `logical_role` 的标准化豁免（无需文件级注释）
+
+为了支持 [00 §四 程序员搭建边界](00-product-overview.md) 选定的"程序员只放视觉骨架 + AI 运行时挂控件"模式，源码 diff 审计**默认允许**以下三类操作，无需 `AUTOAGENT_ALLOW_VISUAL` 注释：
+
+#### 2.5.1 `state_sprites` 状态切换（三引擎通用）
+
+AI 切换 `Image.sprite` / `Btn->WidgetStyle.BackgroundImageNormal` / `Button.add_theme_stylebox_override` 的目标值**必须**来自该节点 `meta.state_sprites` 字典里某个已声明的状态：
+
+```csharp
+// Unity 合法：sprite 切换到 state_sprites["pressed"] 已声明的资源
+image.sprite = stableId.GetStateSprite("pressed");
+
+// Unity 非法：sprite 切换到任意路径 / 新建 Sprite / 来自非 state_sprites 的资源
+image.sprite = Resources.Load<Sprite>("Some/Other/Path");        // ❌ 被拦
+image.sprite = anotherImage.sprite;                                // ❌ 被拦
+image.sprite = Sprite.Create(newTexture, ...);                     // ❌ 被拦
+```
+
+CI 实现：源码 diff 审计在看到 `\.sprite\s*=` 时，AST 检查右值是否是 `StableIdComponent.GetStateSprite(...)` / 等价 helper 调用；不是 → fail。
+
+#### 2.5.2 实现 `logical_role` 必需的"挂控件"动作（三引擎各有路径）
+
+| 引擎 | 允许的动作 | 校验 |
+|---|---|---|
+| Unity | `gameObject.AddComponent<T>()` where `T ∈ { Button, Toggle, Slider, Scrollbar, Dropdown, InputField, TMP_InputField, TMP_Dropdown, ScrollRect, RectMask2D, Mask }` 或 `<T>` 是 fixture 节点 `meta.logical_role` 对应的合法控件类（见 [01 §三 logical_role 取值表](01-protocol-spec.md)） | AST 扫 `AddComponent<X>` 调用，校验 X ∈ 白名单；且**调用点 GameObject 的 logical_role** 必须允许该 X |
+| UE | `WidgetTree->ConstructWidget<UButton>(...) + Parent->ReplaceChildAt + AutoAgentSubsystem->TransferStableId` 一整套（[04 §三 路径 A/B](04-adapter-unreal.md)） | AST 校验：ConstructWidget 的目标 class ∈ logical_role 映射表；TransferStableId 必须被调用 |
+| Godot | `parent.remove_child(old) + parent.add_child(new) + new.set_meta("autoagent_pinned_id", old.get_meta(...))` 一整套（[05 §六-A](05-adapter-godot.md)） | AST 校验：新节点 class ∈ logical_role 映射；pinned_id 必须迁移；position/size/anchor 必须完全迁移 |
+
+CI 实现：`scripts/ci/audit_logical_role_implementation.py`，输入"AI 代码 diff + fixture 的 logical_role 声明"，输出每个 logical_role 节点是否被合法实现。
+
+#### 2.5.3 `behavior` 字段的合法写入
+
+明确归 `behavior` 而非 `visual`、AI 任意可写：
+- `raycastTarget` / `mouse_filter` / `Widget.Visibility` / `Widget.SetIsEnabled` / `Selectable.interactable` / `CanvasGroup.interactable` / `CanvasGroup.blocksRaycasts`
+- 事件绑定 / 解绑：`onClick.AddListener` / `OnClicked.AddDynamic` / `pressed.connect`
+- 数据状态：自定义 MonoBehaviour / UMG widget controller / Node script 的公开字段
+
+不在 §2.2 / §2.5.1 / §2.5.2 / §2.5.3 范围内的 visual 写入 → 默认拦截，需 `AUTOAGENT_ALLOW_VISUAL` 文件级豁免（§2.2 末）。
 
 ## 三、防护 1：协议层 Schema 权限分离
 

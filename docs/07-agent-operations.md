@@ -48,7 +48,7 @@
 
 ### 2.5 负面测试任务（`negative_test: true`）的例外
 
-任务清单里有少数任务（如 [99 TASK-0015 / TASK-0016](99-tasks.md)）的目的是**故意触发 CI 拦截**以验证防护生效。这类任务和本文档的默认 agent contract 直接冲突——按默认规则它们会被 §2.4 "立即停，不重试" + §2.3 "连续 3 次违规全局停" 算作真违规。为了不让正常的防护验证拖死自动化，**`negative_test: true` 任务享受以下例外**：
+任务清单里有少数任务（如 [99 TASK-0015 / TASK-0016](tasks.md)）的目的是**故意触发 CI 拦截**以验证防护生效。这类任务和本文档的默认 agent contract 直接冲突——按默认规则它们会被 §2.4 "立即停，不重试" + §2.3 "连续 3 次违规全局停" 算作真违规。为了不让正常的防护验证拖死自动化，**`negative_test: true` 任务享受以下例外**：
 
 - ✅ CI fail 是预期 verification（任务的 verification 字段明确写"... → CI fail ..."）
 - ✅ 这类违规**不计入** §2.3 "连续 3 次路径违规" / "连续 5 次任务 CI 失败" 计数
@@ -83,7 +83,7 @@
 
 ### 3.2 AI 可写路径
 
-> **完整权威列表见 [06-visual-regression.md §2.1](06-visual-regression.md)**——配置文件 `scripts/ci/path_whitelist.yml` 是 CI 唯一权威源；本节是该表的浓缩版本，覆盖三大类常见路径。
+> **唯一权威源：`scripts/ci/path_whitelist.yml`**。本节为人类可读摘要，与 YAML 不一致时以 YAML 为准。完整表格见 [06-visual-regression.md §2.1](06-visual-regression.md)。
 
 ✅ **允许写（部分）**：
 ```
@@ -96,7 +96,7 @@ protocol/schema/**/*.json, protocol/tests/**/*.py         # 协议 schema
 scripts/ci/**, scripts/e2e/**, scripts/orchestrator/**    # CI / e2e / 调度脚本
 fixtures/*/Scripts/**/*.cs *.cpp *.h *.gd                 # fixture 业务脚本（AI 实现交互）
 fixtures/unreal-test-project/Source/**/*.h *.cpp          # UE fixture C++ user widget
-docs/99-tasks.md                                          # 仅状态字段；新任务/重排需人工
+docs/tasks.md                                          # 仅状态字段；新任务/重排需人工
 ```
 
 ⚠️ **可改但加 `needs-human-review` label**：
@@ -163,7 +163,7 @@ CI 第一步 `scripts/ci/check_changed_paths.py` 强制执行。违反 → PR �
 
 ### 5.2 禁止的 git 操作
 - `git push origin main`（任何方式）
-- `git push --force` to **任何** branch
+- `git push --force` 到 `main` / protected branch（feature branch 允许 force push，但 AI 应在 worktree 隔离环境下操作）
 - `git rebase` / `git merge`（PR 通过 GitHub UI 或人 / auto-merge bot 完成）
 - `git reset --hard`（AI 工作目录也禁，避免误丢工作）
 - `git config` 改 user.email / user.name / remote
@@ -280,9 +280,9 @@ Risk: <low/medium/high>
 3. 重置 counter：`autoagent-reset --session` 或 `--global`
 4. 启动：`autoagent-start --task TASK-XXX` 或 `autoagent-start --resume`
 
-## 十、与 99-tasks.md 的关系
+## 十、与 tasks.md 的关系
 
-任务清单（`99-tasks.md`）的每个任务必须显式声明：
+任务清单（`tasks.md`）的每个任务必须显式声明：
 
 ```yaml
 TASK-0042:

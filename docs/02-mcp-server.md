@@ -52,7 +52,7 @@
 > - **辅助 tools（5 个）** — Phase 1 完成（session 管理 + audit）
 > - **Phase 4 tools（3 个）** — 反射调用类，Phase 4 末暴露
 >
-> Phase 1 出口标准 = 17 个 tools 全实现。99-tasks.md / 测试 verification 引用时按本分组名指代，**不再写 "all 12 tools" / "12 tools" 这种含糊措辞**。
+> Phase 1 出口标准 = 17 个 tools 全实现。tasks.md / 测试 verification 引用时按本分组名指代，**不再写 "all 12 tools" / "12 tools" 这种含糊措辞**。
 
 #### 核心 MVP tools（12 个）
 
@@ -212,7 +212,7 @@
 
 ### 日志输出
 - stderr（stdio transport，stdout 给 MCP 用）
-- 同时写文件 `~/.autoagent/mcp-server.log`，rotate 50MB × 5
+- 同时写文件 `~/.autoagent/mcp-server.log`（Windows: `%USERPROFILE%\.autoagent\mcp-server.log`），rotate 50MB × 5
 
 ### 结构化日志
 ```json
@@ -231,7 +231,7 @@ AI Agent 可以通过 `read_log` tool 主动读日志（Phase 4 加）。
 
 ## 七、配置文件
 
-`~/.autoagent/config.toml`：
+`~/.autoagent/config.toml`（Windows 对应 `%USERPROFILE%\.autoagent\config.toml`）：
 
 ```toml
 [mcp_server]
@@ -272,7 +272,7 @@ max_diff_per_session = 20          # 防 token 爆炸
     "autoagent": {
       "command": "uv",
       "args": ["run", "autoagent-mcp"],
-      "cwd": "D:/AutoAgent/mcp-server"
+      "cwd": "<REPO_ROOT>/mcp-server"
     }
   }
 }
@@ -304,5 +304,5 @@ CI：每 PR 跑 unit + integration；e2e 在 Unity / Godot CI 里跑。
 - 启动时间 < 2s（不含 vision 模块加载）
 - 单 tool 调用 overhead < 10ms（本地 WebSocket）
 - 内存常驻 < 100MB
-- vision 模块按需加载，**MVP 仅 SSIM**（pure NumPy / scikit-image，~5MB 内存）
+- vision 模块按需加载，**MVP 仅 SSIM**（pure NumPy / scikit-image，运行时内存 ~5MB，安装大小约 80-100MB）
 - LPIPS（PyTorch ~500MB）作为可选 extras（`pip install autoagent-mcp[lpips]`），**Phase 4 才引入**；启用时强制子进程化（`lpips_subprocess = true`）避免污染主 server 内存
