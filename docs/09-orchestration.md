@@ -153,6 +153,49 @@ D:\AutoAgent\state\
 
 `history[]` 记录每次重试的 result 摘要（保留全部历史，方便事后复盘）。
 
+### budget.json schema
+
+`state/budget.json`（顶层 poll + Python agent 共用，原子写入用 temp file + `os.replace`）：
+
+```json
+{
+  "today": "2026-05-12",
+  "daily": {
+    "cost_usd": 14.32,
+    "task_count": 5,
+    "pr_count": 5,
+    "path_violations": 0
+  },
+  "session": {
+    "started_at": "2026-05-12T09:00:00Z",
+    "cost_usd": 14.32,
+    "task_count": 5,
+    "ci_triggers": 8
+  },
+  "global": {
+    "consecutive_path_violations": 0,
+    "consecutive_ci_failures": 0
+  }
+}
+```
+
+**更新规则**：
+- `daily` 字段每次 CI 完成时累加（顶层 poll 第 6 步）；跨日自动归零（`today != now.date()` 时重置）
+- `session` 字段每次 spawn agent 时累加；顶层重启时从 `events.jsonl` 重算
+- `global.consecutive_path_violations`：连续 +1，任意成功归零；触达 3 → 写 `stop_signal`
+- 原子写：先写 `.budget.tmp`，`os.replace` 到 `budget.json`（同盘原子操作）
+
+**上限阈值（对应 [07 §2.2-2.3](07-agent-operations.md)）**：
+
+| 字段 | 上限 | 触发行为 |
+|---|---|---|
+| `session.cost_usd` | ≥ $50 | session 停 |
+| `daily.cost_usd` | ≥ $200 | 全局停（写 stop_signal） |
+| `daily.task_count` | ≥ 50 | 全局停 |
+| `session.task_count` | ≥ 20 | session 停 |
+| `session.ci_triggers` | ≥ 50 | session 停 |
+| `global.consecutive_path_violations` | ≥ 3 | 全局停 |
+
 ---
 
 ## 四、调度算法（依赖图）

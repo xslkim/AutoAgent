@@ -137,6 +137,27 @@
 - 任务 DSL 引用节点的 `logical_role` 与 fixture 声明的不匹配 → MCP server 加载任务时拒绝。
 - AI 实际实现的控件能力必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载 / 包裹 / 替换后的控件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
 
+#### `logical_role` → `state_sprites` 状态集映射（normative）
+
+每个 logical_role 必须 / 可选声明以下 `state_sprites` 状态。CI 校验 sprite 切换（[06 §2.5.1](06-visual-regression.md#251-state_sprites-状态切换三引擎通用)）时，AI 只能切到该 logical_role **已声明**的状态。若切到未声明状态 → CI fail。
+
+| logical_role | 必须声明的状态 | 可选状态 | 说明 |
+|---|---|---|---|
+| `button` | `normal`, `pressed` | `hover`, `focused`, `disabled` | 至少 2 态；hover/disabled 可选 |
+| `input` | `normal`, `focused` | `disabled` | 输入框背景至少需要 focused 态区分 |
+| `slider` | `normal` | `hover`, `pressed`, `focused` | 轨道 + handle 各至少 1 态 |
+| `toggle` / `checkbox` | `normal`, `checked` | `hover`, `pressed`, `focused` | checked 态 = 勾选视觉效果 |
+| `dropdown` / `combobox` | `normal`, `expanded` | `hover`, `focused` | expanded 态 = 下拉展开时的箭头/边框变化 |
+| `scroll_container` | `normal` | `hover`, `focused` | 滚动条/视口样式，通常单态即可 |
+| `list_view` | — | — | 数据驱动，不使用 state_sprites |
+| `text_display` | — | — | 纯文本显示，无交互状态 |
+| `image_only` | — | — | 装饰元素，无交互状态 |
+| `drag_source` | `normal` | `dragging` | dragging 态 = 拖拽中的半透明/高亮 |
+| `drop_target` | `normal` | `hover` | hover 态 = 拖拽悬停时的目标高亮 |
+
+**校验规则**：CI 的 `audit_logical_role_implementation.py` 在扫到 `sprite` / `state_sprites` 切换时，交叉检查目标状态是否在该节点 logical_role 的必须+可选状态集中。不在 → CI fail。
+- AI 实际实现的控件能力必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载 / 包裹 / 替换后的控件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
+
 ### 必填字段
 
 `id` / `type` / `engine_type` / `parent_id` / `children_ids` / `stable_id_source` / `visual.position` / `visual.size` / `visual.visible`

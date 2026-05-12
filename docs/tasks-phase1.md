@@ -677,7 +677,7 @@ risk: medium
 title: TASK-0008 的 LoginScene 完整性确认
 phase: 1
 engine: unity
-depends_on: [TASK-0008]
+depends_on: [TASK-0008b]
 goal: 确认 LoginScene 满足 MVP 验收要求；fixture 完全不含交互控件
 output:
   - 所有元素 pin ID + LogicalRole + state_sprites 完整

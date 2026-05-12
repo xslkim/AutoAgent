@@ -154,10 +154,11 @@
 | 10-fixture-setup-guide.md | 三引擎静态 fixture 搭建步骤 + 辅助脚本 | ✅ |
 | tasks.md | 任务清单索引（按 Phase 拆分） | ✅ |
 | canonical-tasks/login.yaml | Login MVP 任务 DSL（AI 输入的标准化任务描述） | 未来产出（TASK-0132） |
+| canonical-tasks/README.md | 任务 DSL schema 规范（字段定义、校验规则、parser 行为） | 未来产出（TASK-0132 同步创建） |
 | runners-inventory.md | Self-hosted runner 清单 | 未来产出（TASK-0013） |
 | orchestrator-prompt.md | 顶层 Claude /loop 启动 prompt 模板 | 未来产出（TASK-0021） |
 | user-guide-orchestration.md | 用户日常操作指南 | 未来产出（TASK-0021） |
-| phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 未来产出（TASK-0017） |
+| phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 未来产出（TASK-0023） |
 | dry-run-report.md | Orchestration 端到端 dry run 报告 | 未来产出（TASK-0022） |
 | users/il2cpp-setup.md | 用户 IL2CPP link.xml 配置指南 | 未来产出（TASK-0104） |
 | migration/v0.x-to-v1.0.md | v1.0 迁移指南 | 未来产出（TASK-0408） |

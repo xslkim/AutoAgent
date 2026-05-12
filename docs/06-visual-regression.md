@@ -199,7 +199,7 @@ CI 实现：源码 diff 审计在看到 `\.sprite\s*=` 时，AST 检查右值是
 
 | 引擎 | 允许的动作 | 校验 |
 |---|---|---|
-| Unity | `gameObject.AddComponent<T>()` where `T ∈ { Button, Toggle, Slider, Scrollbar, Dropdown, InputField, TMP_InputField, TMP_Dropdown, ScrollRect, RectMask2D, Mask }` 或 `<T>` 是 fixture 节点 `meta.logical_role` 对应的合法控件类（见 [01 §三 logical_role 取值表](01-protocol-spec.md)） | AST 扫 `AddComponent<X>` 调用，校验 X ∈ 白名单；且**调用点 GameObject 的 logical_role** 必须允许该 X |
+| Unity | `gameObject.AddComponent<T>()` where `T ∈ { Button, Toggle, Slider, Scrollbar, Dropdown, InputField, TMP_InputField, TMP_Dropdown, ScrollRect, RectMask2D, Mask }` 或 `<T>` 是 fixture 节点 `meta.logical_role` 对应的合法控件类（见 [01 §三 logical_role 取值表](01-protocol-spec.md)）。**例外**：`drag_source` / `drop_target` 的实现不要求特定 `T`，而是要求挂载的脚本实现了对应 handler interface（`IBeginDragHandler` / `IDragHandler` / `IEndDragHandler` / `IDropHandler`），adapter 在 dump 时检测 | AST 扫 `AddComponent<X>` 调用，校验 X ∈ 白名单；且**调用点 GameObject 的 logical_role** 必须允许该 X。`drag_source` / `drop_target` 走 interface 检测而非组件白名单 |
 | UE | `WidgetTree->ConstructWidget<UButton>(...) + Parent->ReplaceChildAt + AutoAgentSubsystem->TransferStableId` 一整套（[04 §三 路径 A/B](04-adapter-unreal.md)） | AST 校验：ConstructWidget 的目标 class ∈ logical_role 映射表；TransferStableId 必须被调用 |
 | Godot | `parent.remove_child(old) + parent.add_child(new) + new.set_meta("autoagent_pinned_id", old.get_meta(...))` 一整套（[05 §六-A](05-adapter-godot.md)） | AST 校验：新节点 class ∈ logical_role 映射；pinned_id 必须迁移；position/size/anchor 必须完全迁移 |
 

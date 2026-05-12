@@ -179,9 +179,24 @@ func _process(_delta: float) -> void:
                 and peer.get_selected_protocol() != "autoagent.v1":
             peer.close(1002, "subprotocol mismatch: require autoagent.v1")
             continue
+        
+        # 握手成功后启动 negotiate_version 5s watchdog（与 01 §七 一致）
+        if state == WebSocketPeer.STATE_OPEN and not _negotiate_watchdog_running.has(peer):
+            _start_negotiate_timeout(peer)
+        
         while peer.get_available_packet_count() > 0:
             var pkt = peer.get_packet().get_string_from_utf8()
             _on_message(peer, pkt)
+
+func _start_negotiate_timeout(peer: WebSocketPeer) -> void:
+    _negotiate_watchdog_running[peer] = true
+    await get_tree().create_timer(5.0).timeout
+    if not _negotiate_done.has(peer):
+        peer.close(1008, "negotiate_version timeout: no response in 5s")
+        _remove_peer(peer)
+
+func _on_negotiate_received(peer: WebSocketPeer) -> void:
+    _negotiate_done[peer] = true
 ```
 
 样板代码比 Unity / UE 多但稳定。

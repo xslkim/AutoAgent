@@ -77,6 +77,29 @@ risk: medium
 
 ---
 
+### TASK-0001b: Fixture 辅助脚本
+
+```yaml
+title: scripts/fixtures/bootstrap_fixture_assets.py + validate_static_fixtures.py
+phase: 0
+engine: none
+depends_on: [TASK-0000]
+goal: 为三引擎 fixture 搭建提供辅助脚本——生成占位 PNG 资源 + 静态验证 fixture 无交互控件
+output:
+  - scripts/fixtures/bootstrap_fixture_assets.py (生成 8 张占位 PNG: btn_login_{normal,hover,pressed,disabled}.png, input_bg_{normal,focused}.png, panel_bg.png, slot_bg.png)
+  - scripts/fixtures/validate_static_fixtures.py (引擎静态检查: 场景文件存在 / 命名合规 / 无交互控件误入 / sprite 和 font 齐全)
+  - scripts/fixtures/tests/ (pytest)
+verification:
+  - python scripts/fixtures/bootstrap_fixture_assets.py 执行后在 fixtures/*/ 下生成 PNG
+  - python scripts/fixtures/validate_static_fixtures.py --engine all 对占位 fixture 跑通（至少文件存在性检查通过）
+mode: auto-with-review
+risk: low
+```
+
+**Context**：TASK-0008a/0010/0012 的手动 fixture 搭建依赖这两个脚本。`bootstrap_fixture_assets.py` 生成占位图使 fixture 场景可搭建；`validate_static_fixtures.py` 用于手动搭建后的自检。
+
+---
+
 ### TASK-0002: MCP Server skeleton
 
 ```yaml
@@ -205,7 +228,7 @@ path_exception: [".github/workflows/**"]
 title: Unity adapter PoC — 4 动作 + WebSocket + subprotocol + negotiate_version
 phase: 0
 engine: unity
-depends_on: [TASK-0001, TASK-0008]
+depends_on: [TASK-0001, TASK-0008a]
 goal: Unity adapter 最小可行版，能 dump UI 树 + 4 动作 (click/drag/text/scroll) + 完整握手
 output:
   - adapters/unity/package.json
@@ -229,14 +252,14 @@ risk: medium
 
 ---
 
-### TASK-0008: Unity 测试 fixture 项目（手动）
+### TASK-0008a: Unity 测试 fixture 项目 — 视觉骨架（手动）
 
 ```yaml
-title: Unity 测试项目 + PocPlaygroundScene + LoginScene（只放视觉骨架）
+title: Unity 测试项目 + PocPlaygroundScene + LoginScene（仅视觉骨架 + 节点命名）
 phase: 0
 engine: unity
 depends_on: [TASK-0000]
-goal: 用户在 Unity 里手动建立 fixture 项目并 commit。严格遵循 [00 §四]——只放 Image / TMP_Text / 容器，不挂任何 Selectable 子类
+goal: 用户在 Unity 里手动建立 fixture 项目并 commit。严格遵循 [00 §四]——只放 Image / TMP_Text / 容器，不挂任何 Selectable 子类。节点命名 = 未来 PinnedId
 output:
   - fixtures/unity-test-project/Packages/manifest.json
   - fixtures/unity-test-project/ProjectSettings/*
@@ -247,10 +270,38 @@ output:
 verification:
   - 在 Unity 打开能正常加载
   - 两个 scene 都能 Play 起来（纯视觉，无交互）
-  - StableIdComponent 字段已 pin + LogicalRole 已填
+  - GameObject 命名严格遵循 stable ID 清单（如 "login_button_bg", "account_input_bg"...）
   - grep -r "Button\|TMP_InputField\|Toggle\|Slider\|ScrollRect" Assets/Scenes/*.unity → 无匹配
+  - metadata（PinnedId/LogicalRole）待 TASK-0008b 补，此时可以不填
 mode: manual
 risk: low
+```
+
+**Context**：本任务只搭视觉骨架 + 节点命名。StableIdComponent 由 TASK-0007（Unity adapter）产出，metadata（PinnedId / LogicalRole / StateSprites）由 TASK-0008b 后补。这与 Godot/UE 不同——Unity 的 metadata 依赖 adapter 自己的 MonoBehaviour 组件，所以必须分两步走，避免循环依赖。
+
+---
+
+### TASK-0008b: Unity 测试 fixture — 补 StableIdComponent metadata（手动）
+
+```yaml
+title: 给 Unity fixture 节点补 StableIdComponent + PinnedId + LogicalRole + StateSprites
+phase: 0
+engine: unity
+depends_on: [TASK-0007, TASK-0008a]
+goal: TASK-0007 实现 StableIdComponent 后，回到 Unity Editor 给所有关键节点挂组件 + 填 metadata
+output:
+  - 所有 LoginScene / PocPlaygroundScene 关键节点挂 StableIdComponent
+  - PinnedId 填入（= GameObject 名称）
+  - LogicalRole 填入（按 01 协议取值表）
+  - StateSprites 填入（button 4 状态 / input 2 状态）
+verification:
+  - dump_tree 输出所有关键节点 stable_id_source = "pinned"
+  - dump_tree 输出 LogicalRole 非空（除 image_only 节点）
+  - dump_tree 输出 StateSprites 字段包含 sprite 引用
+  - behavior.attached_components 在所有节点上为空数组（尚未有 AI 代码）
+mode: manual
+risk: low
+path_exception: ["fixtures/unity-test-project/Assets/Scenes/LoginScene.unity", "fixtures/unity-test-project/Assets/Scenes/PocPlaygroundScene.unity"]
 ```
 
 ---
@@ -585,7 +636,7 @@ risk: high
 title: Phase 0 10 个 go/no-go gate 全量 review
 phase: 0
 engine: all
-depends_on: [TASK-0007, TASK-0009, TASK-0011, TASK-0013, TASK-0014, TASK-0015, TASK-0016, TASK-0022]
+depends_on: [TASK-0007, TASK-0008b, TASK-0009, TASK-0011, TASK-0013, TASK-0014, TASK-0015, TASK-0016, TASK-0022]
 goal: 人工逐项确认 10 个 gate 全部通过，签发 Phase 1 启动
 output:
   - docs/phase0-gate-report.md (gate 检查结果 + 截图证据 + 签字)

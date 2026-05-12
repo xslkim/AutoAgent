@@ -40,12 +40,12 @@
 
 | Phase | 任务数 | 产出 |
 |---|---|---|
-| Phase 0 | 23 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 + orchestration scaffolding |
+| Phase 0 | 25 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 + orchestration scaffolding |
 | Phase 1 | 34 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
 | Phase 2 | 12 (anchor) | UE adapter 完整 + 跨引擎 MVP 一致 |
 | Phase 3 | 10 (anchor) | Godot adapter 完整 + 三引擎一致 |
 | Phase 4 | 11 (anchor) | OS 输入 / LPIPS / 性能优化 / v1.0 release |
-| **合计** | **90** | |
+| **合计** | **92** | |
 
 ## 三、分 Phase 任务文件
 
