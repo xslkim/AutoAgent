@@ -127,9 +127,12 @@ CI 第一步 `scripts/ci/check_changed_paths.py` 强制执行。违反 → PR �
 
 ### 3.3 例外申请流程
 确实需要改禁止路径时：
-1. 任务 doc 必须明确声明 `path_exception: ["specific/path/here"]`
-2. 任务必须标 `risk: high`，强制 human review
+1. 任务 doc 必须明确声明 `path_exception: ["specific/path/here"]`（推荐写具体文件，glob 仅在 baseline 等本就走单独 PR 的场景使用）
+2. risk 标记规则：
+   - `mode: manual` 任务（人工执行 + 人工开 PR）→ `risk` 可标 `low` / `medium` / `high`，按实际改动复杂度判断；人工 review 已是 hard gate
+   - `mode: auto-with-review` / `auto-merge-safe` 任务 → **必须** `risk: high`，强制 human review；不允许 `auto-merge-safe` 与 path_exception 同时存在
 3. CI 仍跑路径白名单检查，但允许 exception list
+4. Phase 0 出口 gate 必须验证：每个 path_exception 列出的路径在该任务 PR 内**全部命中**（不能开多余豁免）— 与 [06 §2.1](06-visual-regression.md) 末段一致
 
 ## 四、Secret 管理
 

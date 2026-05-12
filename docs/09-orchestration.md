@@ -50,7 +50,7 @@
 ## 二、状态文件目录结构
 
 ```
-D:\AutoAgent\state\
+<REPO_ROOT>\state\         # Windows 示例: D:\AutoAgent\state\；Linux/macOS: /path/to/AutoAgent/state/
 ├─ queue\                  # 待执行任务（文件名 = TASK-NNNN.json）
 ├─ ready\                  # 依赖已满足，可立即 spawn 的任务
 ├─ in_progress\            # Python agent 正在跑（含 PID + 启动时间 + worktree 路径）
@@ -401,7 +401,7 @@ subprocess.Popen(
 ```bash
 # .env.agent.example （commit 到 repo，含占位符）
 AGENT_ANTHROPIC_KEY=sk-ant-...   # 独立账户独立计费
-AGENT_GITHUB_TOKEN=ghp_...        # repo:write + pull-requests:write，仅 D:\AutoAgent
+AGENT_GITHUB_TOKEN=ghp_...        # repo:write + pull-requests:write，仅本 repo（<REPO_ROOT>）
 ```
 
 **严禁**：
@@ -611,8 +611,9 @@ agent 在 worktree 里 `git commit` 后但 `gh pr create` 前崩溃：
 ### 11.1 紧急停机
 
 ```bash
-# 用户在另一个终端写 stop signal
-echo "" > D:\AutoAgent\state\stop_signal
+# 用户在另一个终端写 stop signal（路径相对 repo root）
+# Windows PowerShell:  ni <REPO_ROOT>\state\stop_signal -Force
+# Linux/macOS:         touch <REPO_ROOT>/state/stop_signal
 
 # 或 CLI helper
 python scripts/orchestrator/stop.py
@@ -635,7 +636,8 @@ stop_signal 存在时：
 ### 11.3 恢复
 
 ```bash
-rm D:\AutoAgent\state\stop_signal
+# Windows: del <REPO_ROOT>\state\stop_signal
+# Linux/macOS: rm <REPO_ROOT>/state/stop_signal
 # 用户在 Claude Code 重新启动 /loop
 ```
 
@@ -750,7 +752,7 @@ orchestration scaffolding 本身要作为 Phase 0 一部分：
 详细 YAML 加到 `docs/tasks.md` Phase 0 节末尾，依赖关系：
 - TASK-0018 → TASK-0019 → TASK-0020 → TASK-0022
 - TASK-0021 与 TASK-0019/0020 并行
-- TASK-0022 是 Phase 0 的最后一个 gate（在 TASK-0017 之前必须通过）
+- TASK-0022 是 orchestration 子链的最后一个验证任务，必须在 TASK-0023（Phase 0 出口 gate review）之前通过
 
 ---
 

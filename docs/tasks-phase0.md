@@ -298,7 +298,7 @@ verification:
   - dump_tree 输出所有关键节点 stable_id_source = "pinned"
   - dump_tree 输出 LogicalRole 非空（除 image_only 节点）
   - dump_tree 输出 StateSprites 字段包含 sprite 引用
-  - behavior.attached_components 在所有节点上为空数组（尚未有 AI 代码）
+  - fixture 加载后立即 dump（无业务代码运行）→ behavior.attached_components 为空（Phase 0 阶段无 AI 控件挂载）
 mode: manual
 risk: low
 path_exception: ["fixtures/unity-test-project/Assets/Scenes/LoginScene.unity", "fixtures/unity-test-project/Assets/Scenes/PocPlaygroundScene.unity"]

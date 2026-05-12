@@ -704,7 +704,8 @@ output:
   - fixtures/unity-test-project/Scripts/LoginController.cs (AI 实现)
   - fixtures/unity-test-project/Scripts/MockApi.cs
   - fixtures/unity-test-project/Scripts/Tests/LoginControllerTests.cs
-  - docs/canonical-tasks/login.yaml (任务 DSL)
+  - docs/canonical-tasks/login.yaml (任务 DSL 实例)
+  - docs/canonical-tasks/README.md (任务 DSL schema 规范：字段定义 / 校验规则 / parser 行为)
 verification:
   - 源码 diff 审计通过（防护 0.2）
   - dump_before vs dump_after：visual 字段完全一致

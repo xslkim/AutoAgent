@@ -156,7 +156,6 @@
 | `drop_target` | `normal` | `hover` | hover 态 = 拖拽悬停时的目标高亮 |
 
 **校验规则**：CI 的 `audit_logical_role_implementation.py` 在扫到 `sprite` / `state_sprites` 切换时，交叉检查目标状态是否在该节点 logical_role 的必须+可选状态集中。不在 → CI fail。
-- AI 实际实现的控件能力必须与 `logical_role` 对应表一致；adapter 在 dump 时把实际挂载 / 包裹 / 替换后的控件写入 `behavior.attached_components`，CI 校验一致性（防 AI 偷换控件）。
 
 ### 必填字段
 

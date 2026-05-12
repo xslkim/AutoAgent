@@ -156,6 +156,9 @@ class_name WebSocketServer
 
 var _tcp := TCPServer.new()
 var _peers: Array[WebSocketPeer] = []
+# negotiate_version watchdog 状态（与 01 §七 5s 超时一致）
+var _negotiate_watchdog_running: Dictionary = {}  # peer -> true
+var _negotiate_done: Dictionary = {}              # peer -> true（adapter 收到 negotiate_version request 后置位）
 
 func start(port: int) -> int:
     return _tcp.listen(port, "127.0.0.1")

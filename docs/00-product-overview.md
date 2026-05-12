@@ -177,7 +177,7 @@
 | 任务粒度 | 1 task = 1 PR | Q2 (granularity) = A |
 | 文档语言 | 中文为主，代码 / API 名 / 术语英文 | 默认 |
 | 代码语言 | 英文（注释 / 命名 / commit message） | 默认 |
-| Repo 结构 | Monorepo（D:\AutoAgent 下分目录） | 默认 |
+| Repo 结构 | Monorepo（`<REPO_ROOT>` 下分目录；当前作者环境为 `D:\AutoAgent`） | 默认 |
 | Git 流程 | 每任务一个 feature branch + PR，main 保护 | 默认 |
 | Branch 命名 | `task/XXX-short-desc` | 默认 |
 | PR 命名 | `[TASK-XXX] Title` | 默认 |
@@ -185,8 +185,10 @@
 
 ## 十、Repo 目录结构
 
+> Windows 示例为 `D:\AutoAgent\`；任何文档中 `<REPO_ROOT>` 占位符均指代此根目录，跨平台等价。
+
 ```
-D:\AutoAgent\
+<REPO_ROOT>\
 ├─ docs\                       # 本套文档
 │  ├─ 00-product-overview.md
 │  ├─ 01-protocol-spec.md
