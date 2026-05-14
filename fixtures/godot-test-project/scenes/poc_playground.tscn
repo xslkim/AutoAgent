@@ -1,0 +1,471 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/ui/slot_bg.png" id="slot_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/input_bg_normal.png" id="input_normal"]
+[ext_resource type="Texture2D" path="res://assets/ui/input_bg_focused.png" id="input_focused"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_bg.png" id="panel_bg"]
+
+[node name="PocPlaygroundScene" type="CanvasLayer"]
+
+[node name="click_target" type="TextureRect" parent="."]
+offset_left = 100.0
+offset_top = 100.0
+offset_right = 220.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target"
+metadata/autoagent_logical_role = "button"
+
+[node name="click_target_variant_1" type="TextureRect" parent="."]
+offset_left = 240.0
+offset_top = 100.0
+offset_right = 360.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target_variant_1"
+metadata/autoagent_logical_role = "button"
+
+[node name="click_target_variant_2" type="TextureRect" parent="."]
+offset_left = 380.0
+offset_top = 100.0
+offset_right = 500.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target_variant_2"
+metadata/autoagent_logical_role = "button"
+
+[node name="click_target_variant_3" type="TextureRect" parent="."]
+offset_left = 520.0
+offset_top = 100.0
+offset_right = 640.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target_variant_3"
+metadata/autoagent_logical_role = "button"
+
+[node name="click_target_variant_4" type="TextureRect" parent="."]
+offset_left = 660.0
+offset_top = 100.0
+offset_right = 780.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target_variant_4"
+metadata/autoagent_logical_role = "button"
+
+[node name="click_target_variant_5" type="TextureRect" parent="."]
+offset_left = 800.0
+offset_top = 100.0
+offset_right = 920.0
+offset_bottom = 180.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "click_target_variant_5"
+metadata/autoagent_logical_role = "button"
+
+[node name="text_target" type="TextureRect" parent="."]
+offset_left = 100.0
+offset_top = 220.0
+offset_right = 460.0
+offset_bottom = 276.0
+texture = ExtResource("input_normal")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "text_target"
+metadata/autoagent_logical_role = "input"
+metadata/autoagent_state_sprites = {
+"normal": ExtResource("input_normal"),
+"focused": ExtResource("input_focused")
+}
+
+[node name="text_target_text" type="Label" parent="text_target"]
+offset_left = 12.0
+offset_top = 16.0
+offset_right = 348.0
+offset_bottom = 40.0
+text = ""
+vertical_alignment = 1
+metadata/autoagent_pinned_id = "text_target_text"
+metadata/autoagent_logical_role = "text_display"
+
+[node name="drag_source" type="TextureRect" parent="."]
+offset_left = 100.0
+offset_top = 320.0
+offset_right = 200.0
+offset_bottom = 420.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "drag_source"
+metadata/autoagent_logical_role = "drag_source"
+
+[node name="drag_target" type="TextureRect" parent="."]
+offset_left = 260.0
+offset_top = 320.0
+offset_right = 360.0
+offset_bottom = 420.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "drag_target"
+metadata/autoagent_logical_role = "drop_target"
+
+[node name="scroll_container" type="TextureRect" parent="."]
+offset_left = 100.0
+offset_top = 460.0
+offset_right = 740.0
+offset_bottom = 960.0
+texture = ExtResource("panel_bg")
+expand_mode = 1
+stretch_mode = 6
+clip_contents = true
+metadata/autoagent_pinned_id = "scroll_container"
+metadata/autoagent_logical_role = "scroll_container"
+
+[node name="scroll_content" type="Control" parent="scroll_container"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 630.0
+offset_bottom = 2410.0
+metadata/autoagent_pinned_id = "scroll_content"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_001" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 620.0
+offset_bottom = 72.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_001"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_002" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 80.0
+offset_right = 620.0
+offset_bottom = 152.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_002"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_003" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 160.0
+offset_right = 620.0
+offset_bottom = 232.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_003"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_004" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 240.0
+offset_right = 620.0
+offset_bottom = 312.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_004"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_005" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 320.0
+offset_right = 620.0
+offset_bottom = 392.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_005"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_006" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 400.0
+offset_right = 620.0
+offset_bottom = 472.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_006"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_007" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 480.0
+offset_right = 620.0
+offset_bottom = 552.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_007"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_008" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 560.0
+offset_right = 620.0
+offset_bottom = 632.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_008"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_009" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 640.0
+offset_right = 620.0
+offset_bottom = 712.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_009"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_010" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 720.0
+offset_right = 620.0
+offset_bottom = 792.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_010"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_011" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 800.0
+offset_right = 620.0
+offset_bottom = 872.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_011"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_012" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 880.0
+offset_right = 620.0
+offset_bottom = 952.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_012"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_013" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 960.0
+offset_right = 620.0
+offset_bottom = 1032.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_013"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_014" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1040.0
+offset_right = 620.0
+offset_bottom = 1112.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_014"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_015" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1120.0
+offset_right = 620.0
+offset_bottom = 1192.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_015"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_016" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1200.0
+offset_right = 620.0
+offset_bottom = 1272.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_016"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_017" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1280.0
+offset_right = 620.0
+offset_bottom = 1352.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_017"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_018" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1360.0
+offset_right = 620.0
+offset_bottom = 1432.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_018"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_019" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1440.0
+offset_right = 620.0
+offset_bottom = 1512.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_019"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_020" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1520.0
+offset_right = 620.0
+offset_bottom = 1592.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_020"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_021" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1600.0
+offset_right = 620.0
+offset_bottom = 1672.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_021"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_022" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1680.0
+offset_right = 620.0
+offset_bottom = 1752.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_022"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_023" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1760.0
+offset_right = 620.0
+offset_bottom = 1832.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_023"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_024" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1840.0
+offset_right = 620.0
+offset_bottom = 1912.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_024"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_025" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 1920.0
+offset_right = 620.0
+offset_bottom = 1992.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_025"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_026" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 2000.0
+offset_right = 620.0
+offset_bottom = 2072.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_026"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_027" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 2080.0
+offset_right = 620.0
+offset_bottom = 2152.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_027"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_028" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 2160.0
+offset_right = 620.0
+offset_bottom = 2232.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_028"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_029" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 2240.0
+offset_right = 620.0
+offset_bottom = 2312.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_029"
+metadata/autoagent_logical_role = "image_only"
+
+[node name="scroll_item_030" type="TextureRect" parent="scroll_container/scroll_content"]
+offset_left = 0.0
+offset_top = 2320.0
+offset_right = 620.0
+offset_bottom = 2392.0
+texture = ExtResource("slot_bg")
+expand_mode = 1
+stretch_mode = 6
+metadata/autoagent_pinned_id = "scroll_item_030"
+metadata/autoagent_logical_role = "image_only"

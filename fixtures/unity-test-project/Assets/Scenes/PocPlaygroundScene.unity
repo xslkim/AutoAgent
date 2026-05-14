@@ -1,0 +1,6 @@
+# AutoAgent Phase 0 fixture placeholder.
+#
+# Open this project in Unity, then run:
+#   Tools > AutoAgent > Build PocPlaygroundScene
+# That menu item is provided by Assets/Editor/AutoAgentFixtureBuilder.cs and
+# will overwrite this file with a proper Unity scene.

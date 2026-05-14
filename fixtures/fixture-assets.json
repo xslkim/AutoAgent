@@ -1,0 +1,18 @@
+{
+  "generated_by": "scripts/fixtures/bootstrap_fixture_assets.py",
+  "required_fonts": [
+    "NotoSansCJK-Regular.otf",
+    "Roboto-Regular.ttf",
+    "RobotoMono-Regular.ttf"
+  ],
+  "placeholder_sprites": [
+    "btn_login_disabled.png",
+    "btn_login_hover.png",
+    "btn_login_normal.png",
+    "btn_login_pressed.png",
+    "input_bg_focused.png",
+    "input_bg_normal.png",
+    "panel_bg.png",
+    "slot_bg.png"
+  ]
+}

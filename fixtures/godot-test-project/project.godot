@@ -1,0 +1,22 @@
+; Engine configuration file.
+; AutoAgent Phase 0 fixture project. Visual skeleton only.
+
+config_version=5
+
+[application]
+
+config/name="AutoAgent Godot Fixture"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+run/main_scene="res://scenes/login.tscn"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
