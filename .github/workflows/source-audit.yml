@@ -1,0 +1,48 @@
+name: Source audit (防护 0.1 + 0.2)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Path whitelist + visual-write audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps
+        run: pip install pyyaml jsonschema referencing
+
+      - name: Determine diff range
+        id: range
+        run: |
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            git fetch origin "$GITHUB_BASE_REF" --depth=1
+            echo "BASE=origin/$GITHUB_BASE_REF" >> "$GITHUB_OUTPUT"
+          else
+            echo "BASE=HEAD~1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Step 1 — Path whitelist (防护 0.1)
+        run: |
+          git diff --name-only ${{ steps.range.outputs.BASE }}...HEAD \
+            | python scripts/ci/check_changed_paths.py
+
+      - name: Step 2 — Visual-write audit (防护 0.2)
+        run: |
+          python scripts/ci/audit_visual_writes.py \
+            --diff ${{ steps.range.outputs.BASE }}...HEAD

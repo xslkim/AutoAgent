@@ -1,0 +1,48 @@
+name: Unity adapter PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "adapters/unity/**"
+      - "fixtures/unity-test-project/**"
+      - ".github/workflows/unity-pr.yml"
+
+permissions:
+  contents: read
+
+# Phase 0 scope: lint + fixture static checks only. Real Unity build via
+# GameCI lands with TASK-0007 (Unity adapter PoC).
+jobs:
+  lint:
+    name: Lint + fixture validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install pyyaml
+
+      - name: Static fixture validation (Unity slice)
+        run: python scripts/fixtures/validate_static_fixtures.py --engine unity
+
+  # Placeholder for the real Unity Test Runner job. Filled in by TASK-0007.
+  # build:
+  #   name: Unity Test Runner (PlayMode + EditMode)
+  #   runs-on: ubuntu-latest
+  #   needs: lint
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: game-ci/unity-test-runner@v4
+  #       env:
+  #         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #       with:
+  #         projectPath: fixtures/unity-test-project
+  #         testMode: all
+  #         coverageOptions: "useProjectSettings"

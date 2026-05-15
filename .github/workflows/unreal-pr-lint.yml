@@ -1,0 +1,50 @@
+name: Unreal adapter PR (lint only)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "adapters/unreal/**"
+      - "fixtures/unreal-test-project/**"
+      - ".github/workflows/unreal-pr-lint.yml"
+
+permissions:
+  contents: read
+
+# UE PR jobs are lint-only on GitHub-hosted runners. The actual build /
+# automation tests run nightly on the self-hosted runner — see
+# `unreal-nightly.yml`. Reason: UE build needs ~30 GB / 30 min, infeasible
+# on GitHub-hosted SKUs per docs/08-ci-runners.md.
+jobs:
+  lint:
+    name: Static fixture validation + clang-format check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          pip install pyyaml
+          sudo apt-get update && sudo apt-get install -y clang-format-15
+
+      - name: Static fixture validation (UE slice)
+        run: python scripts/fixtures/validate_static_fixtures.py --engine unreal
+
+      - name: clang-format dry-run on adapter & fixture C++
+        run: |
+          set -e
+          # Phase 0 fixture C++ exists; adapter C++ lands with TASK-0011.
+          # `|| true` keeps PRs that touch only docs/fixtures green if no .cpp/.h is staged.
+          FILES=$(find fixtures/unreal-test-project/Source adapters/unreal/Source \
+            -type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) 2>/dev/null || true)
+          if [ -z "$FILES" ]; then
+            echo "no C++ files to format-check"
+            exit 0
+          fi
+          clang-format-15 --dry-run --Werror $FILES

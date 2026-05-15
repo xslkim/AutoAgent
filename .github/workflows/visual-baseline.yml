@@ -1,0 +1,51 @@
+name: Visual baseline review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "baselines/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+# Baselines are art ground-truth and must go through dedicated human review.
+# This workflow forces the needs-baseline-review label on any PR touching
+# baselines/** so it cannot auto-merge.
+jobs:
+  guard:
+    name: Force human review for baseline PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install pyyaml
+
+      - name: List PNG additions / changes
+        run: |
+          git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD \
+            | grep -E '^baselines/.*\.(png|jpg|jpeg)$' \
+            || echo "no PNG/JPG changes under baselines/"
+
+      - name: Add needs-baseline-review label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: needs-baseline-review
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            This PR touches `baselines/**`. Per docs/06-visual-regression.md §2.4,
+            visual baseline updates require **explicit human approval** and cannot
+            be auto-merged. Reviewers: please verify each image is an intentional
+            art update, then approve.

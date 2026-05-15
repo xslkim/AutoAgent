@@ -1,0 +1,66 @@
+name: Unreal nightly (self-hosted)
+
+on:
+  schedule:
+    # 02:00 UTC = 10:00 China time = quiet hours for most contributors.
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Runs on a single self-hosted Windows GPU runner (provisioned per TASK-0013).
+# Roster: docs/runners-inventory.md.
+jobs:
+  build-and-test:
+    name: UE build + automation tests (Win64)
+    runs-on: [self-hosted, windows, ue]
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show runner info
+        shell: pwsh
+        run: |
+          Write-Host "Runner: $env:RUNNER_NAME"
+          Write-Host "OS: $(Get-CimInstance Win32_OperatingSystem | Select-Object -ExpandProperty Caption)"
+          Write-Host "UE_ROOT: $env:UE_ROOT"
+
+      - name: Generate project files
+        shell: pwsh
+        working-directory: fixtures/unreal-test-project
+        run: |
+          & "$env:UE_ROOT\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" `
+            -projectfiles `
+            -project="$PWD\AutoAgentTest.uproject" `
+            -game -engine -rocket
+
+      - name: Build Development Editor
+        shell: pwsh
+        working-directory: fixtures/unreal-test-project
+        run: |
+          & "$env:UE_ROOT\Engine\Build\BatchFiles\Build.bat" `
+            AutoAgentTestEditor Win64 Development `
+            -Project="$PWD\AutoAgentTest.uproject" `
+            -WaitMutex -FromMsBuild
+
+      - name: Run UE Automation tests
+        shell: pwsh
+        working-directory: fixtures/unreal-test-project
+        run: |
+          & "$env:UE_ROOT\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" `
+            "$PWD\AutoAgentTest.uproject" `
+            -ExecCmds="Automation RunTests AutoAgent" `
+            -TestExit="Automation Test Queue Empty" `
+            -Log -NoSplash -Unattended
+
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ue-nightly-logs
+          path: |
+            fixtures/unreal-test-project/Saved/Logs/**
+            fixtures/unreal-test-project/Saved/Automation/**
+          retention-days: 7
