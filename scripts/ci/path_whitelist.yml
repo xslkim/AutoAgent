@@ -44,10 +44,11 @@ allow:
   - "protocol/tests/**/*.py"
   - "protocol/README.md"
 
-  # CI / e2e / orchestrator scripts
+  # CI / e2e / orchestrator / agent scripts
   - "scripts/ci/**"
   - "scripts/e2e/**"
   - "scripts/orchestrator/**"
+  - "scripts/agent/**"
   - "scripts/fixtures/**/*.py"
 
   # Fixture user scripts (AI implements interactivity)
@@ -65,10 +66,11 @@ review_required:
   # CI workflow — auto-add needs-human-review label
   - ".github/workflows/**"
 
-  # Task DSL / runner config / orchestrator prompt
+  # Task DSL / runner config / orchestrator prompt / user guides
   - "docs/canonical-tasks/**/*.yaml"
   - "docs/runners-inventory.md"
   - "docs/orchestrator-prompt.md"
+  - "docs/user-guide-*.md"
   - "docs/phase*-gate-report.md"
 
   # Engine package manifests (fixture-level deps)
