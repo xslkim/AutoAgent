@@ -1,0 +1,54 @@
+{
+  "nodes": [
+    {
+      "id": "login_panel",
+      "type": "Image",
+      "engine_type": "UnityEngine.UI.Image",
+      "parent_id": null,
+      "children_ids": ["login_button_bg"],
+      "stable_id_source": "pinned",
+      "visual": {
+        "position": [0.0, 0.0],
+        "size": [640.0, 480.0],
+        "anchor": [0.5, 0.5],
+        "visible": true,
+        "alpha": 1.0,
+        "color": "#FFFFFFFF",
+        "sprite_ref": "Assets/UI/panel_bg.png",
+        "z_order": 0
+      },
+      "meta": { "logical_role": "image_only" }
+    },
+    {
+      "id": "login_button_bg",
+      "type": "Image",
+      "engine_type": "UnityEngine.UI.Image",
+      "parent_id": "login_panel",
+      "children_ids": [],
+      "stable_id_source": "pinned",
+      "visual": {
+        "position": [0.0, 60.0],
+        "size": [240.0, 64.0],
+        "anchor": [0.5, 0.5],
+        "visible": true,
+        "alpha": 1.0,
+        "color": "#FFFFFFFF",
+        "sprite_ref": "Assets/UI/btn_login_normal.png",
+        "z_order": 1
+      },
+      "behavior": {
+        "interactable": true,
+        "raycast_target": true,
+        "attached_components": ["UnityEngine.UI.Button"]
+      },
+      "meta": {
+        "logical_role": "button",
+        "state_sprites": {
+          "normal": "Assets/UI/btn_login_normal.png",
+          "pressed": "Assets/UI/btn_login_pressed.png"
+        }
+      }
+    }
+  ],
+  "captured_at": 1715234568.5
+}
