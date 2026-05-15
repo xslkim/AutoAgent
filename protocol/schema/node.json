@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autoagent.dev/schema/v0.1/node.json",
+  "title": "AutoAgent Node v0.1",
+  "description": "Single UI node. Authoritative source: docs/01-protocol-spec.md §三. Wire protocol v0.1.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "engine_type",
+    "parent_id",
+    "children_ids",
+    "stable_id_source",
+    "visual"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier. Source recorded in stable_id_source."
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Engine raw widget type (e.g. Image, TextureRect, UImage)."
+    },
+    "engine_type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Fully qualified engine type name (e.g. UnityEngine.UI.Image)."
+    },
+    "parent_id": {
+      "type": ["string", "null"],
+      "description": "Parent node id, or null for the tree root."
+    },
+    "children_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stable_id_source": {
+      "enum": ["pinned", "auto", "hash"],
+      "description": "How the id was derived. hash ids are not referenceable by task DSL."
+    },
+    "visual": { "$ref": "#/$defs/visual" },
+    "behavior": { "$ref": "#/$defs/behavior" },
+    "meta": { "$ref": "#/$defs/meta" },
+    "engine_extras": { "$ref": "#/$defs/engine_extras" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "visual": {
+      "type": "object",
+      "description": "Visual properties. Read-only for AI (protects art baseline).",
+      "required": ["position", "size", "visible"],
+      "properties": {
+        "position": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "size": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "anchor": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "world_bounds": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Axis-aligned world-space bounds [x_min, y_min, x_max, y_max]."
+        },
+        "visible": { "type": "boolean" },
+        "alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "description": "Hex color, #RRGGBB or #RRGGBBAA."
+        },
+        "sprite_ref": {
+          "type": ["string", "null"]
+        },
+        "z_order": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "description": "Interaction behavior. Read-write for AI.",
+      "properties": {
+        "interactable": { "type": "boolean" },
+        "raycast_target": { "type": "boolean" },
+        "event_handlers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "custom_scripts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "attached_components": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Components added/wrapped at runtime by AI implementation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "meta": {
+      "type": "object",
+      "description": "Semantic tags. Read-write for AI. logical_role + state_sprites are normally pinned by fixture author.",
+      "properties": {
+        "logical_role": { "$ref": "#/$defs/logical_role" },
+        "role": { "type": "string" },
+        "intent": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "task_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "state_sprites": { "$ref": "#/$defs/state_sprites" }
+      },
+      "additionalProperties": false
+    },
+    "logical_role": {
+      "enum": [
+        "drag_source",
+        "drop_target",
+        "button",
+        "input",
+        "slider",
+        "toggle",
+        "checkbox",
+        "dropdown",
+        "combobox",
+        "scroll_container",
+        "list_view",
+        "text_display",
+        "image_only"
+      ]
+    },
+    "state_sprites": {
+      "type": "object",
+      "description": "Map from state name to sprite path. Allowed states depend on logical_role; cross-validation is application-layer (see docs/01-protocol-spec.md §三).",
+      "propertyNames": {
+        "enum": [
+          "normal",
+          "hover",
+          "pressed",
+          "focused",
+          "disabled",
+          "checked",
+          "expanded",
+          "dragging"
+        ]
+      },
+      "additionalProperties": { "type": "string" }
+    },
+    "engine_extras": {
+      "type": "object",
+      "description": "Engine-specific fields. Extensible by design (see docs/01-protocol-spec.md §八).",
+      "properties": {
+        "unity": { "type": "object" },
+        "unreal": { "type": "object" },
+        "godot": { "type": "object" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

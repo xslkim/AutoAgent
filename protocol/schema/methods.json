@@ -1,0 +1,480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autoagent.dev/schema/v0.1/methods.json",
+  "title": "AutoAgent Wire Protocol Methods v0.1",
+  "description": "JSON-RPC request envelope schema for all wire methods. Per-method params and result schemas live in $defs.methods. Authoritative source: docs/01-protocol-spec.md §四 + §七.",
+  "type": "object",
+  "required": ["jsonrpc", "method"],
+  "properties": {
+    "jsonrpc": { "const": "2.0" },
+    "id": { "type": ["string", "number"] },
+    "method": { "$ref": "#/$defs/method_name" },
+    "params": {}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "method": { "const": "negotiate_version" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/negotiate_version/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "dump_tree" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/methods/dump_tree/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "find_widget" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/find_widget/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "get_widget" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/get_widget/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "click" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/click/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "send_text" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/send_text/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "drag" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/drag/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "scroll" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/scroll/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "key_press" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/key_press/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "take_screenshot" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/take_screenshot/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "wait_for" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/wait_for/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "invoke_method" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/invoke_method/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "get_property" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/get_property/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "set_property" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/set_property/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "pin_id" } }, "required": ["method"] },
+      "then": { "required": ["params"], "properties": { "params": { "$ref": "#/$defs/methods/pin_id/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "list_orphan_ids" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/methods/list_orphan_ids/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "ping" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/methods/ping/params" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "get_engine_info" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/methods/get_engine_info/params" } } }
+    }
+  ],
+  "$defs": {
+    "method_name": {
+      "enum": [
+        "negotiate_version",
+        "dump_tree",
+        "find_widget",
+        "get_widget",
+        "click",
+        "send_text",
+        "drag",
+        "scroll",
+        "key_press",
+        "take_screenshot",
+        "wait_for",
+        "invoke_method",
+        "get_property",
+        "set_property",
+        "pin_id",
+        "list_orphan_ids",
+        "ping",
+        "get_engine_info"
+      ]
+    },
+    "input_layer": { "enum": ["engine", "os"] },
+    "empty_params": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "methods": {
+      "negotiate_version": {
+        "params": {
+          "type": "object",
+          "required": ["supported", "client"],
+          "properties": {
+            "supported": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "client": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["agreed", "adapter_supported", "adapter_name", "engine", "engine_version"],
+          "properties": {
+            "agreed": { "type": "string" },
+            "adapter_supported": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "adapter_name": { "type": "string" },
+            "engine": { "$ref": "#/$defs/engine_name" },
+            "engine_version": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "dump_tree": {
+        "params": {
+          "type": "object",
+          "properties": {
+            "root_id": { "type": ["string", "null"] },
+            "include_invisible": { "type": "boolean" },
+            "max_depth": { "type": "integer", "minimum": -1 },
+            "fields": {
+              "type": "array",
+              "items": { "enum": ["visual", "behavior", "meta", "engine_extras"] }
+            }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["nodes", "captured_at"],
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": { "$ref": "https://autoagent.dev/schema/v0.1/node.json" }
+            },
+            "captured_at": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "find_widget": {
+        "params": {
+          "type": "object",
+          "required": ["by", "value"],
+          "properties": {
+            "by": { "enum": ["id", "logical_role", "role", "type", "text"] },
+            "value": { "type": "string" },
+            "first_only": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["nodes"],
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": { "$ref": "https://autoagent.dev/schema/v0.1/node.json" }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "get_widget": {
+        "params": {
+          "type": "object",
+          "required": ["id"],
+          "properties": { "id": { "type": "string" } },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["node"],
+          "properties": {
+            "node": { "$ref": "https://autoagent.dev/schema/v0.1/node.json" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "click": {
+        "params": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string" },
+            "button": { "enum": ["left", "right", "middle"] },
+            "modifiers": {
+              "type": "array",
+              "items": { "enum": ["ctrl", "shift", "alt", "meta"] }
+            },
+            "input_layer": { "$ref": "#/$defs/input_layer" }
+          },
+          "additionalProperties": false
+        },
+        "result": { "$ref": "#/$defs/methods/action_result" }
+      },
+      "send_text": {
+        "params": {
+          "type": "object",
+          "required": ["id", "text"],
+          "properties": {
+            "id": { "type": "string" },
+            "text": { "type": "string" },
+            "clear_first": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "result": { "$ref": "#/$defs/methods/action_result" }
+      },
+      "drag": {
+        "params": {
+          "type": "object",
+          "required": ["from_id", "to_id"],
+          "properties": {
+            "from_id": { "type": "string" },
+            "to_id": { "type": "string" },
+            "duration_ms": { "type": "integer", "minimum": 0 },
+            "input_layer": { "$ref": "#/$defs/input_layer" }
+          },
+          "additionalProperties": false
+        },
+        "result": { "$ref": "#/$defs/methods/action_result" }
+      },
+      "scroll": {
+        "params": {
+          "type": "object",
+          "required": ["id", "direction"],
+          "properties": {
+            "id": { "type": "string" },
+            "direction": { "enum": ["up", "down", "left", "right"] },
+            "amount": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "result": { "$ref": "#/$defs/methods/action_result" }
+      },
+      "key_press": {
+        "params": {
+          "type": "object",
+          "required": ["keys"],
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "input_layer": { "$ref": "#/$defs/input_layer" }
+          },
+          "additionalProperties": false
+        },
+        "result": { "$ref": "#/$defs/methods/action_result" }
+      },
+      "take_screenshot": {
+        "params": {
+          "type": "object",
+          "required": ["scope"],
+          "properties": {
+            "scope": { "enum": ["fullscreen", "node", "rect"] },
+            "node_id": { "type": "string" },
+            "rect": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "format": { "enum": ["png", "jpg"] },
+            "save_path": { "type": "string" }
+          },
+          "additionalProperties": false,
+          "allOf": [
+            { "if": { "properties": { "scope": { "const": "node" } }, "required": ["scope"] }, "then": { "required": ["node_id"] } },
+            { "if": { "properties": { "scope": { "const": "rect" } }, "required": ["scope"] }, "then": { "required": ["rect"] } }
+          ]
+        },
+        "result": {
+          "type": "object",
+          "required": ["size"],
+          "properties": {
+            "saved_path": { "type": ["string", "null"] },
+            "base64": { "type": ["string", "null"] },
+            "size": {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 0 },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "wait_for": {
+        "params": {
+          "type": "object",
+          "required": ["condition", "id"],
+          "properties": {
+            "condition": { "enum": ["widget_appeared", "widget_disappeared", "widget_visible", "text_changed"] },
+            "id": { "type": "string" },
+            "expected_value": { "type": "string" },
+            "timeout_ms": { "type": "integer", "minimum": 0 },
+            "poll_interval_ms": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["success", "elapsed_ms"],
+          "properties": {
+            "success": { "type": "boolean" },
+            "elapsed_ms": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "invoke_method": {
+        "params": {
+          "type": "object",
+          "required": ["id", "script", "method_name"],
+          "properties": {
+            "id": { "type": "string" },
+            "script": { "type": "string" },
+            "method_name": { "type": "string" },
+            "args": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["return_value"],
+          "properties": { "return_value": {} },
+          "additionalProperties": false
+        }
+      },
+      "get_property": {
+        "params": {
+          "type": "object",
+          "required": ["id", "script", "property"],
+          "properties": {
+            "id": { "type": "string" },
+            "script": { "type": "string" },
+            "property": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["value"],
+          "properties": { "value": {} },
+          "additionalProperties": false
+        }
+      },
+      "set_property": {
+        "params": {
+          "type": "object",
+          "required": ["id", "script", "property", "value", "category"],
+          "properties": {
+            "id": { "type": "string" },
+            "script": { "type": "string" },
+            "property": { "type": "string" },
+            "value": {},
+            "category": { "enum": ["behavior", "meta"] }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["success"],
+          "properties": { "success": { "type": "boolean" } },
+          "additionalProperties": false
+        }
+      },
+      "pin_id": {
+        "params": {
+          "type": "object",
+          "required": ["current_id", "new_id"],
+          "properties": {
+            "current_id": { "type": "string" },
+            "new_id": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "result": {
+          "type": "object",
+          "required": ["success"],
+          "properties": { "success": { "type": "boolean" } },
+          "additionalProperties": false
+        }
+      },
+      "list_orphan_ids": {
+        "params": { "$ref": "#/$defs/empty_params" },
+        "result": {
+          "type": "object",
+          "required": ["orphans"],
+          "properties": {
+            "orphans": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "last_seen_path": { "type": "string" }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "ping": {
+        "params": { "$ref": "#/$defs/empty_params" },
+        "result": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "get_engine_info": {
+        "params": { "$ref": "#/$defs/empty_params" },
+        "result": {
+          "type": "object",
+          "required": ["engine", "engine_version", "adapter_version", "protocol_version", "platform", "build_type"],
+          "properties": {
+            "engine": { "$ref": "#/$defs/engine_name" },
+            "engine_version": { "type": "string" },
+            "adapter_version": { "type": "string" },
+            "protocol_version": { "type": "string" },
+            "platform": { "enum": ["Windows", "Linux", "Mac"] },
+            "build_type": { "enum": ["Editor", "Development", "Shipping"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "action_result": {
+        "type": "object",
+        "required": ["success"],
+        "properties": {
+          "success": { "type": "boolean" },
+          "captured_at": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "engine_name": { "enum": ["Unity", "Unreal", "Godot"] }
+  }
+}

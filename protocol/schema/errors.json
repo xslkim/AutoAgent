@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autoagent.dev/schema/v0.1/errors.json",
+  "title": "AutoAgent Error Codes v0.1",
+  "description": "JSON-RPC error code registry. Authoritative source: docs/01-protocol-spec.md §六.",
+  "type": "object",
+  "required": ["code", "message"],
+  "properties": {
+    "code": { "$ref": "#/$defs/code" },
+    "message": { "$ref": "#/$defs/name" },
+    "data": {}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "code": {
+      "description": "Numeric error code.",
+      "enum": [
+        -32700,
+        -32600,
+        -32601,
+        -32602,
+        -32603,
+        -32001,
+        -32002,
+        -32003,
+        -32004,
+        -32005,
+        -32006,
+        -32007,
+        -32008,
+        -32009,
+        -32010,
+        -32011,
+        -32012,
+        -32013,
+        -32030
+      ]
+    },
+    "name": {
+      "description": "Error code name. Must match the code per the registry below.",
+      "enum": [
+        "ParseError",
+        "InvalidRequest",
+        "MethodNotFound",
+        "InvalidParams",
+        "InternalError",
+        "WidgetNotFound",
+        "WidgetNotInteractable",
+        "VisualPropertyWrite",
+        "StructuralChange",
+        "TimeoutError",
+        "InputInjectionFailed",
+        "EngineThreadViolation",
+        "ScreenshotFailed",
+        "VersionMismatch",
+        "NegotiationTimeout",
+        "SubprotocolMismatch",
+        "NotNegotiated",
+        "PathViolation"
+      ]
+    },
+    "registry": {
+      "description": "Code-to-name reference table. Not used by validation; consumers can read this for documentation.",
+      "type": "object",
+      "properties": {
+        "-32700": { "const": "ParseError" },
+        "-32600": { "const": "InvalidRequest" },
+        "-32601": { "const": "MethodNotFound" },
+        "-32602": { "const": "InvalidParams" },
+        "-32603": { "const": "InternalError" },
+        "-32001": { "const": "WidgetNotFound" },
+        "-32002": { "const": "WidgetNotInteractable" },
+        "-32003": { "const": "VisualPropertyWrite" },
+        "-32004": { "const": "StructuralChange" },
+        "-32005": { "const": "TimeoutError" },
+        "-32006": { "const": "InputInjectionFailed" },
+        "-32007": { "const": "EngineThreadViolation" },
+        "-32008": { "const": "ScreenshotFailed" },
+        "-32009": { "const": "Reserved" },
+        "-32010": { "const": "VersionMismatch" },
+        "-32011": { "const": "NegotiationTimeout" },
+        "-32012": { "const": "SubprotocolMismatch" },
+        "-32013": { "const": "NotNegotiated" },
+        "-32030": { "const": "PathViolation" }
+      }
+    }
+  }
+}

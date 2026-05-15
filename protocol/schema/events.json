@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autoagent.dev/schema/v0.1/events.json",
+  "title": "AutoAgent Event Notifications v0.1",
+  "description": "JSON-RPC notifications pushed by adapter to MCP server. Authoritative source: docs/01-protocol-spec.md §五.",
+  "type": "object",
+  "required": ["jsonrpc", "method", "params"],
+  "properties": {
+    "jsonrpc": { "const": "2.0" },
+    "method": { "$ref": "#/$defs/event_name" },
+    "params": { "type": "object" }
+  },
+  "not": { "required": ["id"] },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "method": { "const": "event.scene_changed" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/scene_changed" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "event.widget_appeared" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/widget_appeared" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "event.widget_disappeared" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/widget_disappeared" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "event.widget_clicked" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/widget_clicked" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "event.text_changed" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/text_changed" } } }
+    },
+    {
+      "if": { "properties": { "method": { "const": "event.error" } }, "required": ["method"] },
+      "then": { "properties": { "params": { "$ref": "#/$defs/error" } } }
+    }
+  ],
+  "$defs": {
+    "event_name": {
+      "enum": [
+        "event.scene_changed",
+        "event.widget_appeared",
+        "event.widget_disappeared",
+        "event.widget_clicked",
+        "event.text_changed",
+        "event.error"
+      ]
+    },
+    "timestamp": {
+      "type": "number",
+      "description": "Unix epoch seconds with fractional precision."
+    },
+    "scene_changed": {
+      "type": "object",
+      "required": ["scene_name", "timestamp"],
+      "properties": {
+        "scene_name": { "type": "string" },
+        "timestamp": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "widget_appeared": {
+      "type": "object",
+      "required": ["id", "type", "parent_id", "timestamp"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "parent_id": { "type": ["string", "null"] },
+        "timestamp": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "widget_disappeared": {
+      "type": "object",
+      "required": ["id", "timestamp"],
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "widget_clicked": {
+      "type": "object",
+      "required": ["id", "button", "timestamp", "source"],
+      "properties": {
+        "id": { "type": "string" },
+        "button": { "enum": ["left", "right", "middle"] },
+        "timestamp": { "$ref": "#/$defs/timestamp" },
+        "source": { "enum": ["user", "automation"] }
+      },
+      "additionalProperties": false
+    },
+    "text_changed": {
+      "type": "object",
+      "required": ["id", "old_text", "new_text", "timestamp"],
+      "properties": {
+        "id": { "type": "string" },
+        "old_text": { "type": "string" },
+        "new_text": { "type": "string" },
+        "timestamp": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "required": ["level", "message"],
+      "properties": {
+        "level": { "enum": ["warn", "error"] },
+        "message": { "type": "string" },
+        "stack": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
