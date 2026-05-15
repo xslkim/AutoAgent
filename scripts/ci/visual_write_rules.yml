@@ -1,0 +1,116 @@
+# Visual write regex rules — 防护 0.2（初版 regex）
+#
+# Authoritative source: docs/06-visual-regression.md §2.2.
+#
+# Each language has:
+#   extensions: file extensions to scan
+#   line_comment: prefix used to strip line comments before matching
+#   rules:
+#     - name: short identifier for log output
+#       pattern: Python regex; case-sensitive; matched against single line (after comment-strip)
+#       reason: human-readable explanation
+#       allow_if_line_contains: optional list — if any substring appears on the same line, skip this rule
+#
+# File-level exemption: any file whose first 30 lines contain the marker
+# `AUTOAGENT_ALLOW_VISUAL` is skipped entirely. Use sparingly — auto-merge tasks
+# may not bypass via this mechanism (audit log still records the marker for review).
+
+exempt_marker: "AUTOAGENT_ALLOW_VISUAL"
+exempt_marker_max_lines: 30
+
+languages:
+  csharp:
+    extensions: [".cs"]
+    line_comment: "//"
+    rules:
+      - name: transform_visual
+        pattern: '\.transform\.(position|localPosition|rotation|localRotation|localScale)\s*='
+        reason: "Transform position / rotation / scale are visual — let the engine drive them, not source code."
+      - name: rect_transform_visual
+        pattern: '\.rectTransform\.(anchoredPosition|sizeDelta|anchorMin|anchorMax|pivot)\s*='
+        reason: "RectTransform layout fields are visual."
+      - name: color_write
+        pattern: '\.color\s*='
+        reason: "Image/Text/Graphic .color is visual."
+      - name: sprite_write
+        pattern: '\.sprite\s*='
+        reason: "Image.sprite is visual; state_sprites switching must go through StableIdComponent.GetStateSprite()."
+        allow_if_line_contains: ["GetStateSprite", "stateSprites["]
+      - name: material_write
+        pattern: '\.material\s*='
+        reason: "Renderer.material is visual."
+      - name: set_active
+        pattern: 'SetActive\s*\(\s*(true|false)\s*\)'
+        reason: "GameObject.SetActive(literal) hides/shows visuals; route visibility through behavior layer."
+      - name: enabled_write
+        pattern: '\.enabled\s*='
+        reason: "Image/Renderer/Graphic .enabled is visual."
+
+  cpp:
+    extensions: [".cpp", ".h", ".hpp", ".cc"]
+    line_comment: "//"
+    rules:
+      - name: ue_visibility
+        pattern: '\bSetVisibility\s*\('
+        reason: "UWidget::SetVisibility is visual."
+      - name: ue_render_opacity
+        pattern: '\bSetRenderOpacity\s*\('
+        reason: "SetRenderOpacity is visual."
+      - name: ue_color_and_opacity
+        pattern: '\bSetColorAndOpacity\s*\('
+        reason: "SetColorAndOpacity is visual."
+      - name: ue_brush_from_texture
+        pattern: '\bSetBrushFromTexture\s*\('
+        reason: "SetBrushFromTexture changes visual."
+      - name: ue_brush_from_asset
+        pattern: '\bSetBrushFromAsset\s*\('
+        reason: "SetBrushFromAsset changes visual."
+      - name: ue_set_brush
+        pattern: '\bSetBrush\s*\('
+        reason: "SetBrush is visual; state_sprites switching must go through AutoAgentSubsystem helper."
+        allow_if_line_contains: ["GetStateBrush", "StateSprite"]
+      - name: ue_render_transform
+        pattern: '\bSetRenderTransform\s*\('
+        reason: "SetRenderTransform is visual."
+      - name: ue_render_scale
+        pattern: '\bSetRenderScale\s*\('
+        reason: "SetRenderScale is visual."
+      - name: ue_render_translation
+        pattern: '\bSetRenderTranslation\s*\('
+        reason: "SetRenderTranslation is visual."
+
+  gdscript:
+    extensions: [".gd"]
+    line_comment: "#"
+    rules:
+      - name: position_write
+        pattern: '\.position\s*='
+        reason: "Node2D/Control .position is visual."
+      - name: global_position_write
+        pattern: '\.global_position\s*='
+        reason: "Node2D .global_position is visual."
+      - name: size_write
+        pattern: '\.size\s*='
+        reason: "Control .size is visual."
+      - name: modulate_write
+        pattern: '\.modulate\s*='
+        reason: "CanvasItem .modulate is visual color tint."
+      - name: self_modulate_write
+        pattern: '\.self_modulate\s*='
+        reason: "CanvasItem .self_modulate is visual."
+      - name: texture_write
+        pattern: '\.texture\s*='
+        reason: "TextureRect/Sprite .texture is visual; state_sprites switching must go through helper."
+        allow_if_line_contains: ["get_state_texture", "state_sprites["]
+      - name: icon_write
+        pattern: '\.icon\s*='
+        reason: "Button/TextureButton .icon is visual."
+      - name: visible_write
+        pattern: '\.visible\s*='
+        reason: "CanvasItem .visible is visual."
+      - name: show_call
+        pattern: '\.show\s*\(\s*\)'
+        reason: ".show() toggles visual visibility."
+      - name: hide_call
+        pattern: '\.hide\s*\(\s*\)'
+        reason: ".hide() toggles visual visibility."
