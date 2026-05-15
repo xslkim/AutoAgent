@@ -1,26 +1,20 @@
-"""AutoAgent Phase 0 — UE Editor Python builder.
+"""AutoAgent Phase 0 - UE Editor Python builder (simplified).
 
-Usage inside Unreal Editor (after the AutoAgentTest C++ module has been
-compiled and the editor reopened):
+What this DOES (reliable, no UE Python WidgetTree gymnastics):
+  1. Delete the small placeholder .uasset/.umap stubs committed to the repo.
+  2. Import every PNG under Content/UI/Sprites/ as Texture2D (UI group).
+  3. Create empty WBP_LoginScreen / WBP_PocPlayground parented to the C++
+     classes ULoginUserWidget / UPocPlaygroundUserWidget.
+  4. Create empty LoginMap.umap / PocPlaygroundMap.umap.
 
-    Window > Output Log > switch input dropdown to "Python"
-    > exec(open(r"D:/AutoAgent/fixtures/unreal-test-project/Scripts/build_fixtures.py").read())
+What this DOES NOT do (would be flaky; left as manual steps):
+  - Populate WidgetTree of the WBPs (drag widgets, set names, assign brushes).
+  - Wire Level Blueprint -> Add To Viewport in each Map.
+  - Set Project Settings > Maps & Modes default map.
 
-Or:
-
-    Tools > Execute Python Script... > select this file
-
-What it does:
-1. Imports every PNG under Content/UI/Sprites/ as Texture2D + UI_BASE.
-2. Creates WBP_LoginScreen (parent ULoginUserWidget) and WBP_PocPlayground
-   (parent UPocPlaygroundUserWidget) under Content/UI/.
-3. Best-effort populates each WBP's WidgetTree with the canonical visual
-   skeleton (CanvasPanel + UImage/UTextBlock children).
-4. Creates LoginMap and PocPlaygroundMap under Content/Maps/ that boot the
-   matching WBP via a small Level Blueprint snippet (user wires it manually
-   if Python can't set Level Blueprint code; see DOC printed at the end).
-
-Existing stub .uasset / .umap files are overwritten.
+Usage in UE Editor:
+  Window > Output Log > switch input dropdown to "Python", then run:
+      exec(open(r"D:/AutoAgent/fixtures/unreal-test-project/Scripts/build_fixtures.py").read())
 """
 
 import os
@@ -30,59 +24,44 @@ UI_DIR = "/Game/UI"
 SPRITES_DIR = "/Game/UI/Sprites"
 MAPS_DIR = "/Game/Maps"
 SOURCE_PNG_DIR = unreal.SystemLibrary.get_project_directory() + "Content/UI/Sprites"
-
 LOGIN_CLASS_PATH = "/Script/AutoAgentTest.LoginUserWidget"
 POC_CLASS_PATH = "/Script/AutoAgentTest.PocPlaygroundUserWidget"
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
 asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
 editor_asset = unreal.EditorAssetLibrary
 level_lib = unreal.EditorLevelLibrary
 
 
-def remove_repo_stubs() -> None:
-    """Delete the small placeholder .uasset/.umap files committed to the repo."""
+def remove_repo_stubs():
     project_dir = unreal.SystemLibrary.get_project_directory()
-    stubs = [
+    for rel in (
         "Content/UI/WBP_LoginScreen.uasset",
         "Content/UI/WBP_PocPlayground.uasset",
         "Content/Maps/LoginMap.umap",
         "Content/Maps/PocPlaygroundMap.umap",
-    ]
-    for rel in stubs:
+    ):
         path = os.path.join(project_dir, rel)
-        if not os.path.exists(path):
-            continue
-        if os.path.getsize(path) < 4096:
+        if os.path.exists(path) and os.path.getsize(path) < 4096:
             try:
                 os.remove(path)
-                unreal.log(f"[AutoAgent] removed stub {rel}")
+                unreal.log("[AutoAgent] removed stub %s" % rel)
             except OSError as exc:
-                unreal.log_warning(f"[AutoAgent] could not remove stub {rel}: {exc}")
+                unreal.log_warning("[AutoAgent] could not remove %s: %s" % (rel, exc))
 
 
-def ensure_dir(path: str) -> None:
-    if not editor_asset.does_directory_exist(path):
-        editor_asset.make_directory(path)
-
-
-def import_sprites() -> dict:
-    """Import every PNG under Content/UI/Sprites as Texture2D. Returns dict[name]=Texture2D."""
-    ensure_dir(SPRITES_DIR)
-    imported: dict = {}
+def import_sprites():
+    if not editor_asset.does_directory_exist(SPRITES_DIR):
+        editor_asset.make_directory(SPRITES_DIR)
     if not os.path.isdir(SOURCE_PNG_DIR):
-        unreal.log_warning(f"[AutoAgent] sprite source dir missing: {SOURCE_PNG_DIR}")
-        return imported
+        unreal.log_warning("[AutoAgent] sprite source missing: %s" % SOURCE_PNG_DIR)
+        return {}
+    imported = {}
     for fn in sorted(os.listdir(SOURCE_PNG_DIR)):
         if not fn.lower().endswith(".png"):
             continue
         name = os.path.splitext(fn)[0]
-        asset_path = f"{SPRITES_DIR}/{name}"
-        if editor_asset.does_asset_exist(asset_path):
-            tex = editor_asset.load_asset(asset_path)
-        else:
+        asset_path = "%s/%s" % (SPRITES_DIR, name)
+        if not editor_asset.does_asset_exist(asset_path):
             task = unreal.AssetImportTask()
             task.filename = os.path.join(SOURCE_PNG_DIR, fn)
             task.destination_path = SPRITES_DIR
@@ -91,199 +70,83 @@ def import_sprites() -> dict:
             task.replace_existing = True
             task.save = True
             asset_tools.import_asset_tasks([task])
-            tex = editor_asset.load_asset(asset_path)
+        tex = editor_asset.load_asset(asset_path)
         if tex is None:
-            unreal.log_warning(f"[AutoAgent] failed to import {fn}")
+            unreal.log_warning("[AutoAgent] failed to import %s" % fn)
             continue
-        # set to UI usage
         tex.set_editor_property("lod_group", unreal.TextureGroup.TEXTUREGROUP_UI)
-        tex.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_EDITOR_ICON)
         editor_asset.save_loaded_asset(tex)
         imported[name] = tex
     return imported
 
 
-def delete_if_exists(asset_path: str) -> None:
+def delete_if_exists(asset_path):
     if editor_asset.does_asset_exist(asset_path):
         editor_asset.delete_asset(asset_path)
 
 
-def make_widget_blueprint(name: str, parent_class_path: str) -> unreal.WidgetBlueprint:
-    asset_path = f"{UI_DIR}/{name}"
+def make_widget_blueprint(name, parent_class_path):
+    asset_path = "%s/%s" % (UI_DIR, name)
     delete_if_exists(asset_path)
-    factory = unreal.WidgetBlueprintFactory()
+    if not editor_asset.does_directory_exist(UI_DIR):
+        editor_asset.make_directory(UI_DIR)
     parent_class = unreal.load_class(None, parent_class_path)
     if parent_class is None:
         unreal.log_error(
-            f"[AutoAgent] Cannot find C++ class {parent_class_path}. "
-            "Did you compile the AutoAgentTest module? "
-            "Build the editor target then rerun."
+            "[AutoAgent] Cannot find C++ class %s. "
+            "Did you compile the AutoAgentTest module? Rebuild then rerun." % parent_class_path
         )
         return None
+    factory = unreal.WidgetBlueprintFactory()
     factory.set_editor_property("parent_class", parent_class)
     wb = asset_tools.create_asset(name, UI_DIR, unreal.WidgetBlueprint, factory)
+    if wb is not None:
+        editor_asset.save_loaded_asset(wb)
+        unreal.log("[AutoAgent] created %s (parent=%s)" % (asset_path, parent_class_path))
     return wb
 
 
-def make_image(tree: unreal.WidgetTree, name: str, texture) -> unreal.Image:
-    img = tree.construct_widget(unreal.Image, name)
-    if texture is not None:
-        brush = unreal.SlateBrush()
-        brush.set_editor_property("resource_object", texture)
-        brush.set_editor_property("image_size", unreal.Vector2D(texture.blueprint_get_size_x(), texture.blueprint_get_size_y()))
-        img.set_editor_property("brush", brush)
-    return img
-
-
-def make_text(tree: unreal.WidgetTree, name: str, content: str) -> unreal.TextBlock:
-    t = tree.construct_widget(unreal.TextBlock, name)
-    t.set_text(unreal.Text(content))
-    return t
-
-
-def slot_canvas(parent: unreal.CanvasPanel, child, x: float, y: float, w: float, h: float, anchor_center: bool = True):
-    slot: unreal.CanvasPanelSlot = parent.add_child_to_canvas_panel(child)
-    if anchor_center:
-        slot.set_anchors(unreal.Anchors(0.5, 0.5, 0.5, 0.5))
-        slot.set_alignment(unreal.Vector2D(0.5, 0.5))
-    else:
-        slot.set_anchors(unreal.Anchors(0, 0, 0, 0))
-    slot.set_position(unreal.Vector2D(x, y))
-    slot.set_size(unreal.Vector2D(w, h))
-    return slot
-
-
-def populate_login(wb: unreal.WidgetBlueprint, sprites: dict) -> None:
-    tree: unreal.WidgetTree = wb.get_editor_property("widget_tree")
-    root = tree.construct_widget(unreal.CanvasPanel, "RootCanvas")
-    tree.set_editor_property("root_widget", root)
-
-    # login_panel centered (anchor center)
-    panel = make_image(tree, "LoginPanel", sprites.get("panel_bg"))
-    slot_canvas(root, panel, 0, 0, 640, 480)
-
-    panel_canvas = tree.construct_widget(unreal.CanvasPanel, "LoginPanelInner")
-    # we need a canvas inside login_panel to place children; do that by wrapping
-    # via SizeBox isn't trivial — instead put children directly on root_canvas
-    # offset by panel center.
-    # To keep things simple, place all sub-widgets on root_canvas with the
-    # panel's global anchor as reference.
-
-    def child(name: str, sprite_name: str, x: float, y: float, w: float, h: float, is_text=False, text=""):
-        if is_text:
-            widget = make_text(tree, name, text)
-        else:
-            widget = make_image(tree, name, sprites.get(sprite_name))
-        slot_canvas(root, widget, x, y, w, h)
-        return widget
-
-    child("AccountInputBg", "input_bg_normal", 0, -120, 360, 56)
-    child("AccountInputText", "", 0, -120, 360, 56, is_text=True, text="")
-    child("PasswordInputBg", "input_bg_normal", 0, -40, 360, 56)
-    child("PasswordInputText", "", 0, -40, 360, 56, is_text=True, text="")
-    child("LoginButtonBg", "btn_login_normal", 0, 60, 240, 64)
-    child("LoginButtonLabel", "", 0, 60, 240, 64, is_text=True, text="Login")
-    child("ErrorLabel", "", 0, 140, 480, 28, is_text=True, text="")
-
-    welcome = make_image(tree, "WelcomePanel", sprites.get("panel_bg"))
-    slot_canvas(root, welcome, 0, 0, 640, 480)
-    welcome.set_visibility(unreal.SlateVisibility.HIDDEN)
-    welcome_text = make_text(tree, "WelcomeText", "Welcome")
-    slot_canvas(root, welcome_text, 0, 0, 640, 480)
-
-    compile_and_save(wb)
-
-
-def populate_poc(wb: unreal.WidgetBlueprint, sprites: dict) -> None:
-    tree: unreal.WidgetTree = wb.get_editor_property("widget_tree")
-    root = tree.construct_widget(unreal.CanvasPanel, "RootCanvas")
-    tree.set_editor_property("root_widget", root)
-
-    for i, x in enumerate([100, 240, 380, 520, 660, 800]):
-        name = "ClickTarget" if i == 0 else f"ClickTargetVariant{i}"
-        widget = make_image(tree, name, sprites.get("slot_bg"))
-        slot_canvas(root, widget, x, 100, 120, 80, anchor_center=False)
-
-    tt = make_image(tree, "TextTarget", sprites.get("input_bg_normal"))
-    slot_canvas(root, tt, 100, 220, 360, 56, anchor_center=False)
-    tt_text = make_text(tree, "TextTargetText", "")
-    slot_canvas(root, tt_text, 112, 236, 336, 24, anchor_center=False)
-
-    ds = make_image(tree, "DragSource", sprites.get("slot_bg"))
-    slot_canvas(root, ds, 100, 320, 100, 100, anchor_center=False)
-    dt = make_image(tree, "DragTarget", sprites.get("slot_bg"))
-    slot_canvas(root, dt, 260, 320, 100, 100, anchor_center=False)
-
-    sc = make_image(tree, "ScrollContainer", sprites.get("panel_bg"))
-    slot_canvas(root, sc, 100, 460, 640, 500, anchor_center=False)
-
-    # scroll_content is a UCanvasPanel placed inside scroll_container's bounds.
-    # Since UImage cannot host children, we put scroll_content directly on root
-    # but visually overlapping the scroll_container — the adapter understands
-    # this via the metadata mapping.
-    content = tree.construct_widget(unreal.CanvasPanel, "ScrollContent")
-    slot_canvas(root, content, 110, 470, 620, 480, anchor_center=False)
-
-    item_h = 72
-    spacing = 8
-    for i in range(1, 31):
-        item = make_image(tree, f"ScrollItem{i:03d}", sprites.get("slot_bg"))
-        cslot: unreal.CanvasPanelSlot = content.add_child_to_canvas_panel(item)
-        cslot.set_anchors(unreal.Anchors(0, 0, 0, 0))
-        cslot.set_position(unreal.Vector2D(0, (i - 1) * (item_h + spacing)))
-        cslot.set_size(unreal.Vector2D(620, item_h))
-
-    compile_and_save(wb)
-
-
-def compile_and_save(wb: unreal.WidgetBlueprint) -> None:
-    unreal.SystemLibrary.execute_console_command(None, "")  # no-op, ensures editor flush
-    unreal.EditorAssetLibrary.save_loaded_asset(wb)
-
-
-def make_map(name: str) -> None:
-    asset_path = f"{MAPS_DIR}/{name}"
+def make_map(name):
+    asset_path = "%s/%s" % (MAPS_DIR, name)
     delete_if_exists(asset_path)
-    ensure_dir(MAPS_DIR)
+    if not editor_asset.does_directory_exist(MAPS_DIR):
+        editor_asset.make_directory(MAPS_DIR)
     new_world = level_lib.new_level(asset_path)
-    if new_world is None:
-        unreal.log_warning(f"[AutoAgent] could not create level {asset_path}")
-        return
-    editor_asset.save_asset(asset_path)
+    if new_world is not None:
+        editor_asset.save_asset(asset_path)
+        unreal.log("[AutoAgent] created %s" % asset_path)
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-def run() -> None:
+def run():
     unreal.log("[AutoAgent] removing repo stubs...")
     remove_repo_stubs()
     unreal.log("[AutoAgent] importing sprites...")
     sprites = import_sprites()
-    unreal.log(f"[AutoAgent] imported {len(sprites)} sprites: {sorted(sprites)}")
-
-    unreal.log("[AutoAgent] creating WBP_LoginScreen...")
-    wb_login = make_widget_blueprint("WBP_LoginScreen", LOGIN_CLASS_PATH)
-    if wb_login is not None:
-        populate_login(wb_login, sprites)
-
-    unreal.log("[AutoAgent] creating WBP_PocPlayground...")
-    wb_poc = make_widget_blueprint("WBP_PocPlayground", POC_CLASS_PATH)
-    if wb_poc is not None:
-        populate_poc(wb_poc, sprites)
-
-    unreal.log("[AutoAgent] creating maps...")
+    unreal.log("[AutoAgent] imported %d sprites: %s" % (len(sprites), sorted(sprites)))
+    make_widget_blueprint("WBP_LoginScreen", LOGIN_CLASS_PATH)
+    make_widget_blueprint("WBP_PocPlayground", POC_CLASS_PATH)
     make_map("LoginMap")
     make_map("PocPlaygroundMap")
-
-    unreal.log("\n[AutoAgent] DONE.\n"
-               "Manual follow-up (one-time):\n"
-               " 1. Open Content/Maps/LoginMap. In the Level Blueprint's BeginPlay,\n"
-               "    'Create Widget' -> WBP_LoginScreen -> 'Add to Viewport'.\n"
-               " 2. Same for PocPlaygroundMap -> WBP_PocPlayground.\n"
-               " 3. Open each WBP and confirm BindWidget names match the C++ fields\n"
-               "    (UMG editor shows green checkmarks). The Python builder uses the\n"
-               "    canonical names so this should already be the case.\n")
+    unreal.log(
+        "\n[AutoAgent] DONE. Manual UMG steps remaining (see docs/10 §6.3/§6.4):\n"
+        " 1. Open Content/UI/WBP_LoginScreen in UMG editor.\n"
+        "    Add widgets with EXACTLY these names (each: tick 'Is Variable'):\n"
+        "      LoginPanel (UImage)        - center, 640x480, Brush=panel_bg\n"
+        "      AccountInputBg (UImage)    - 360x56, Brush=input_bg_normal\n"
+        "      AccountInputText (UTextBlock, child of AccountInputBg, text='')\n"
+        "      PasswordInputBg, PasswordInputText (same as Account)\n"
+        "      LoginButtonBg (UImage 240x64, Brush=btn_login_normal)\n"
+        "      LoginButtonLabel (UTextBlock child of LoginButtonBg, text='Login')\n"
+        "      ErrorLabel (UTextBlock, text='')\n"
+        "      WelcomePanel (UImage 640x480, Visibility=Hidden)\n"
+        "      WelcomeText (UTextBlock child of WelcomePanel, text='Welcome')\n"
+        " 2. Open Content/UI/WBP_PocPlayground in UMG editor. See docs/10 §6.4.\n"
+        " 3. Open Content/Maps/LoginMap -> Level Blueprint -> BeginPlay:\n"
+        "    Create Widget(WBP_LoginScreen) -> Add to Viewport.\n"
+        " 4. Same for PocPlaygroundMap -> WBP_PocPlayground.\n"
+        " 5. Edit > Project Settings > Maps & Modes -> Default Maps:\n"
+        "    Editor Startup Map = LoginMap, Game Default Map = LoginMap.\n"
+    )
 
 
 run()

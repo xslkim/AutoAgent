@@ -57,18 +57,12 @@ public static class AutoAgentFixtureBuilder
 
     static Sprite LoadSprite(string name) => AssetDatabase.LoadAssetAtPath<Sprite>($"{SpriteRoot}/{name}");
 
-    static TMP_FontAsset LoadFont()
-    {
-        var ttf = $"{FontRoot}/Roboto-Regular.ttf";
-        var font = AssetDatabase.LoadAssetAtPath<Font>(ttf);
-        if (font == null) return null;
-        var assetPath = $"{FontRoot}/Roboto-Regular_SDF.asset";
-        var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(assetPath);
-        if (fontAsset != null) return fontAsset;
-        fontAsset = TMP_FontAsset.CreateFontAsset(font);
-        AssetDatabase.CreateAsset(fontAsset, assetPath);
-        return fontAsset;
-    }
+    // Intentionally not assigning a custom TMP_FontAsset here.
+    // Reason: creating one via TMP_FontAsset.CreateFontAsset(font) at edit-time produces a
+    // Dynamic-mode SDF whose atlas Texture2D is not persisted as a sub-asset, so reopening
+    // the scene throws MissingReferenceException when TMP tries to add glyphs to the atlas.
+    // Fixture phase uses TMP's built-in default font; swap to a real Roboto SDF asset only
+    // when capturing visual baselines (manually via Window > TextMeshPro > Font Asset Creator).
 
     // -----------------------------------------------------------------------
     // Login scene
@@ -205,8 +199,6 @@ public static class AutoAgentFixtureBuilder
         t.alignment = TextAlignmentOptions.Center;
         t.color = Color.black;
         t.raycastTarget = false;
-        var font = LoadFont();
-        if (font != null) t.font = font;
         return go;
     }
 }
