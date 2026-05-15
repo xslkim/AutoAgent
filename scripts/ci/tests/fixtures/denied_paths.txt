@@ -1,0 +1,17 @@
+fixtures/unity-test-project/Assets/Scenes/LoginScene.unity
+fixtures/unreal-test-project/Content/UI/WBP_LoginScreen.uasset
+fixtures/godot-test-project/scenes/login.tscn
+fixtures/unreal-test-project/Content/Maps/LoginMap.umap
+fixtures/unity-test-project/Assets/Sprites/UI/btn_login_normal.png
+fixtures/unity-test-project/Assets/Fonts/Roboto-Regular.ttf
+fixtures/unreal-test-project/Content/UI/Fonts/Roboto-Regular.ttf
+fixtures/unity-test-project/ProjectSettings/ProjectSettings.asset
+fixtures/unreal-test-project/Config/DefaultEngine.ini
+baselines/unity/windows/login_screen.png
+.env
+.env.production
+private.key
+server.pem
+secrets/api_token.txt
+docs/01-protocol-spec.md
+docs/03-adapter-unity.md

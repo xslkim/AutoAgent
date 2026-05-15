@@ -1,0 +1,12 @@
+.github/workflows/unity-ci.yml
+.github/workflows/visual-baseline.yml
+docs/canonical-tasks/login_mvp.yaml
+docs/runners-inventory.md
+docs/orchestrator-prompt.md
+docs/phase0-gate-report.md
+fixtures/unity-test-project/Packages/manifest.json
+fixtures/unreal-test-project/Config/AutoAgentIds.ini
+.gitignore
+LICENSE
+README.md
+adapters/unreal/Resources/icon.png

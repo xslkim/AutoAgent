@@ -1,0 +1,5 @@
+mcp-server/src/autoagent_mcp/server.py
+fixtures/unity-test-project/Assets/Scenes/LoginScene.unity
+.github/workflows/unity-ci.yml
+.env
+adapters/unity/Runtime/Foo.cs

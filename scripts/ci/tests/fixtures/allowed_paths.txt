@@ -1,0 +1,13 @@
+adapters/unity/Runtime/AutoAgentBootstrap.cs
+adapters/unity/Editor/AutoAgentMenu.cs
+adapters/unreal/Source/AutoAgentRuntime/AutoAgent.cpp
+adapters/godot/addons/autoagent/main.gd
+mcp-server/src/autoagent_mcp/server.py
+mcp-server/tests/test_server_starts.py
+protocol/schema/node.json
+protocol/tests/test_schema_valid.py
+scripts/ci/check_changed_paths.py
+scripts/e2e/run_login.py
+fixtures/unity-test-project/Scripts/LoginController.cs
+fixtures/unreal-test-project/Source/AutoAgentTest/LoginController.cpp
+docs/tasks.md
