@@ -72,6 +72,7 @@ review_required:
   - "docs/orchestrator-prompt.md"
   - "docs/user-guide-*.md"
   - "docs/phase*-gate-report.md"
+  - "docs/*-report.md"
 
   # Engine package manifests (fixture-level deps)
   - "fixtures/*/Packages/manifest.json"

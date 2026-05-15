@@ -99,3 +99,6 @@ desktop.ini
 *.log
 *.tmp
 tmp/
+
+# dry-run sandbox (see docs/dry-run-report.md)
+state-dryrun/
