@@ -1,0 +1,9 @@
+{
+  "name": "com.autoagent.runtime",
+  "version": "0.1.0",
+  "displayName": "AutoAgent Runtime",
+  "description": "AutoAgent UI automation adapter for Unity — WebSocket wire protocol server.",
+  "unity": "2021.3",
+  "author": { "name": "AutoAgent" },
+  "dependencies": {}
+}

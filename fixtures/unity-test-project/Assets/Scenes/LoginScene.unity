@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 60029572}
   - component: {fileID: 60029574}
   - component: {fileID: 60029573}
+  - component: {fileID: 60029575}
   m_Layer: 0
   m_Name: welcome_text
   m_TagString: Untagged
@@ -255,6 +256,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60029571}
   m_CullTransparentMesh: 1
+--- !u!114 &60029575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60029571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: welcome_text
+  logicalRole: 12
+  stateSprites: []
 --- !u!1 &165883722
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +282,7 @@ GameObject:
   - component: {fileID: 165883723}
   - component: {fileID: 165883725}
   - component: {fileID: 165883724}
+  - component: {fileID: 165883726}
   m_Layer: 0
   m_Name: login_panel
   m_TagString: Untagged
@@ -334,6 +351,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 165883722}
   m_CullTransparentMesh: 1
+--- !u!114 &165883726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165883722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: login_panel
+  logicalRole: 13
+  stateSprites: []
 --- !u!1 &208294399
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,6 +377,7 @@ GameObject:
   - component: {fileID: 208294400}
   - component: {fileID: 208294402}
   - component: {fileID: 208294401}
+  - component: {fileID: 208294403}
   m_Layer: 0
   m_Name: error_label
   m_TagString: Untagged
@@ -393,8 +426,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0bdee6529912fb46b0bb1a0793782d8, type: 2}
-  m_sharedMaterial: {fileID: 799015095}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -470,6 +503,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208294399}
   m_CullTransparentMesh: 1
+--- !u!114 &208294403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208294399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: error_label
+  logicalRole: 12
+  stateSprites: []
 --- !u!1 &280098440
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +529,7 @@ GameObject:
   - component: {fileID: 280098441}
   - component: {fileID: 280098443}
   - component: {fileID: 280098442}
+  - component: {fileID: 280098444}
   m_Layer: 0
   m_Name: welcome_panel
   m_TagString: Untagged
@@ -546,6 +595,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280098440}
   m_CullTransparentMesh: 1
+--- !u!114 &280098444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280098440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: welcome_panel
+  logicalRole: 13
+  stateSprites: []
 --- !u!1 &593517949
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +621,7 @@ GameObject:
   - component: {fileID: 593517950}
   - component: {fileID: 593517952}
   - component: {fileID: 593517951}
+  - component: {fileID: 593517953}
   m_Layer: 0
   m_Name: login_button_label
   m_TagString: Untagged
@@ -605,8 +670,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Login
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0bdee6529912fb46b0bb1a0793782d8, type: 2}
-  m_sharedMaterial: {fileID: 799015095}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -682,6 +747,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593517949}
   m_CullTransparentMesh: 1
+--- !u!114 &593517953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593517949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: login_button_label
+  logicalRole: 12
+  stateSprites: []
 --- !u!1 &595726514
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,6 +773,7 @@ GameObject:
   - component: {fileID: 595726515}
   - component: {fileID: 595726517}
   - component: {fileID: 595726516}
+  - component: {fileID: 595726518}
   m_Layer: 0
   m_Name: login_button_bg
   m_TagString: Untagged
@@ -758,6 +839,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595726514}
   m_CullTransparentMesh: 1
+--- !u!114 &595726518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595726514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: login_button_bg
+  logicalRole: 3
+  stateSprites:
+  - state: normal
+    spritePath: btn_login_normal
+  - state: hover
+    spritePath: btn_login_hover
+  - state: pressed
+    spritePath: btn_login_pressed
+  - state: disabled
+    spritePath: btn_login_disabled
 --- !u!21 &799015095
 Material:
   serializedVersion: 8
@@ -836,6 +940,7 @@ GameObject:
   - component: {fileID: 1008248829}
   - component: {fileID: 1008248831}
   - component: {fileID: 1008248830}
+  - component: {fileID: 1008248832}
   m_Layer: 0
   m_Name: password_input_text
   m_TagString: Untagged
@@ -884,8 +989,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0bdee6529912fb46b0bb1a0793782d8, type: 2}
-  m_sharedMaterial: {fileID: 799015095}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -961,6 +1066,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1008248828}
   m_CullTransparentMesh: 1
+--- !u!114 &1008248832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008248828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: password_input_text
+  logicalRole: 12
+  stateSprites: []
 --- !u!1 &1133104805
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,6 +1092,7 @@ GameObject:
   - component: {fileID: 1133104806}
   - component: {fileID: 1133104808}
   - component: {fileID: 1133104807}
+  - component: {fileID: 1133104809}
   m_Layer: 0
   m_Name: account_input_text
   m_TagString: Untagged
@@ -1020,8 +1141,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0bdee6529912fb46b0bb1a0793782d8, type: 2}
-  m_sharedMaterial: {fileID: 799015095}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1097,6 +1218,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1133104805}
   m_CullTransparentMesh: 1
+--- !u!114 &1133104809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133104805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: account_input_text
+  logicalRole: 12
+  stateSprites: []
 --- !u!1 &1318136764
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,6 +1461,7 @@ GameObject:
   - component: {fileID: 1646525482}
   - component: {fileID: 1646525484}
   - component: {fileID: 1646525483}
+  - component: {fileID: 1646525485}
   m_Layer: 0
   m_Name: password_input_bg
   m_TagString: Untagged
@@ -1390,6 +1527,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646525481}
   m_CullTransparentMesh: 1
+--- !u!114 &1646525485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646525481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: password_input_bg
+  logicalRole: 4
+  stateSprites:
+  - state: normal
+    spritePath: input_bg_normal
+  - state: focused
+    spritePath: input_bg_focused
 --- !u!1 &1891451366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1557,7 @@ GameObject:
   - component: {fileID: 1891451367}
   - component: {fileID: 1891451369}
   - component: {fileID: 1891451368}
+  - component: {fileID: 1891451370}
   m_Layer: 0
   m_Name: account_input_bg
   m_TagString: Untagged
@@ -1466,6 +1623,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891451366}
   m_CullTransparentMesh: 1
+--- !u!114 &1891451370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891451366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c17f1c4335a5748b78fcd3fec1ecd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinnedId: account_input_bg
+  logicalRole: 4
+  stateSprites:
+  - state: normal
+    spritePath: input_bg_normal
+  - state: focused
+    spritePath: input_bg_focused
 --- !u!1 &1952209131
 GameObject:
   m_ObjectHideFlags: 0
