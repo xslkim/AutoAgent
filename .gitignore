@@ -85,6 +85,8 @@ fixtures/unreal-test-project/*.suo
 # ===== Godot =====
 fixtures/godot-test-project/.godot/
 fixtures/godot-test-project/.import/
+# autoagent adapter is junctioned in from adapters/godot/ — tracked there, not here
+fixtures/godot-test-project/addons/
 
 # ===== IDE / OS =====
 .vscode/

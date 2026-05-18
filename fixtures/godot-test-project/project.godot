@@ -14,6 +14,10 @@ config/name="AutoAgent Godot Fixture"
 run/main_scene="res://scenes/login.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
+[autoload]
+
+AutoAgent="*res://addons/autoagent/runtime/autoagent.gd"
+
 [display]
 
 window/size/viewport_width=1920
@@ -23,6 +27,10 @@ window/stretch/mode="canvas_items"
 [dotnet]
 
 project/assembly_name="AutoAgent Godot Fixture"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/autoagent/plugin.cfg")
 
 [rendering]
 

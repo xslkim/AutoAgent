@@ -1,18 +1,20 @@
-"""End-to-end smoke test — drive a running Unity adapter over the wire protocol.
+"""End-to-end smoke test — drive a running engine adapter over the wire protocol.
 
-Connects to the Unity AutoAgent adapter, exercises the LoginScene fixture, and
-validates every dumped node against protocol/schema/node.json.
+Connects to a running AutoAgent adapter (Unity or Godot), exercises the Login
+scene fixture, and validates every dumped node against protocol/schema/node.json.
+The protocol, port, and pinned-node set are identical across engines, so this
+single script verifies any engine adapter.
 
 Prerequisites
 -------------
-1. Open fixtures/unity-test-project in Unity.
-2. Open Assets/Scenes/LoginScene.unity and press Play.
-   (The adapter starts a WebSocket server on ws://127.0.0.1:27842.)
-3. pip install websockets jsonschema
+Run ONE engine adapter so it serves on ws://127.0.0.1:27842, then run this:
+  - Unity:  open fixtures/unity-test-project, open LoginScene.unity, press Play.
+  - Godot:  open fixtures/godot-test-project (autoagent plugin enabled), run it.
+Plus: pip install websockets jsonschema
 
 Run
 ---
-    python scripts/e2e/unity_login_smoke.py
+    python scripts/e2e/login_smoke.py
 
 Exit code 0 = all checks passed; non-zero = a check failed.
 """
@@ -173,13 +175,13 @@ def run_smoke() -> None:
 
 
 def main() -> int:
-    print("AutoAgent — Unity LoginScene e2e smoke test")
+    print("AutoAgent — Login scene e2e smoke test")
     try:
         run_smoke()
     except SmokeFailure as exc:
         print(f"\nFAILED: {exc}", file=sys.stderr)
         return 1
-    print("\nALL CHECKS PASSED — Unity LoginScene automation is live.")
+    print("\nALL CHECKS PASSED — Login scene automation is live.")
     return 0
 
 
