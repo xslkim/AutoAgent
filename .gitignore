@@ -81,6 +81,8 @@ fixtures/unreal-test-project/DerivedDataCache/
 fixtures/unreal-test-project/.vs/
 fixtures/unreal-test-project/*.sln
 fixtures/unreal-test-project/*.suo
+# autoagent adapter is junctioned in from adapters/unreal/ — tracked there, not here
+fixtures/unreal-test-project/Plugins/
 
 # ===== Godot =====
 fixtures/godot-test-project/.godot/
