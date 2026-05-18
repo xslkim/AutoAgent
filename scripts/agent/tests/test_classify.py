@@ -74,6 +74,16 @@ def test_missing_api_key_routes_to_needs_human():
     assert v.status == "needs_human"
 
 
+def test_missing_deepseek_key_routes_to_needs_human():
+    v = classify(1, "", "DEEPSEEK_API_KEY not set")
+    assert v.status == "needs_human"
+
+
+def test_provider_not_configured_routes_to_needs_human():
+    v = classify(1, "", "No provider found for model deepseek/deepseek-v4-pro")
+    assert v.status == "needs_human"
+
+
 def test_policy_violation_beats_clean_exit():
     """Even if claude returns 0, a policy violation in stderr should fail safe."""
     v = classify(0, "PR: https://github.com/a/b/pull/1", "PathViolation flagged")

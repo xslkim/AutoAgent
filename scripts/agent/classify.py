@@ -30,6 +30,8 @@ NEEDS_HUMAN_PATTERNS: tuple[tuple[str, str], ...] = (
     # Auth / config errors that humans must fix
     (r"\b(401|403)\s+(Unauthorized|Forbidden)", "auth failure"),
     (r"ANTHROPIC_API_KEY\s+(not\s+set|invalid|missing)", "missing API key"),
+    (r"DEEPSEEK_API_KEY\s+(not\s+set|invalid|missing)", "missing API key"),
+    (r"No provider found|provider.*not.*configured", "provider not configured"),
 )
 
 
