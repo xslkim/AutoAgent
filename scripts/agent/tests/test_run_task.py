@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from lib.state_io import StateRoot, TASK_BUCKETS
+from run_task import _prompt_via_arg
 
 AGENT_DIR = Path(__file__).resolve().parent.parent
 RUN_TASK = AGENT_DIR / "run_task.py"
@@ -211,6 +212,21 @@ def test_spawn_metadata_filled(tmp_path):
     assert Path(data["spawn"]["log_path"]).is_file()
     assert data["started_at"]
     assert data["finished_at"]
+
+
+# --- opencode vs claude prompt-delivery detection ------------------------
+
+def test_prompt_via_arg_detects_opencode():
+    """opencode receives the prompt as a positional arg; claude reads stdin."""
+    # opencode → arg mode
+    assert _prompt_via_arg(["opencode", "run"]) is True
+    assert _prompt_via_arg(["opencode"]) is True
+    assert _prompt_via_arg([r"C:\tools\opencode.cmd", "run"]) is True
+    assert _prompt_via_arg(["/usr/local/bin/opencode.exe"]) is True
+    # claude / other commands → stdin mode
+    assert _prompt_via_arg(["claude", "-p"]) is False
+    assert _prompt_via_arg([r"C:\Python\python.exe", "-c", "pass"]) is False
+    assert _prompt_via_arg([]) is False
 
 
 def test_spawn_error_when_executable_missing(tmp_path):
