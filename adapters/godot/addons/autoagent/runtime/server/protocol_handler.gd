@@ -51,6 +51,8 @@ func dispatch(json_text: String) -> String:
 				params.get("id", ""),
 				float(params.get("delta_x", 0.0)),
 				float(params.get("delta_y", 0.0))))
+		"take_screenshot":
+			return _take_screenshot(id, params)
 		_:
 			return _error(id, -32601, "method not found: " + str(method))
 
@@ -81,6 +83,22 @@ func _action(id, ok: bool) -> String:
 	if ok:
 		return _ok(id, null)
 	return _error(id, -32001, "widget not found or action failed")
+
+
+func _take_screenshot(id, params: Dictionary) -> String:
+	var path := str(params.get("path", ""))
+	if path.is_empty():
+		return _error(id, -32602, "missing param: path")
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return _error(id, -32603, "no active viewport")
+	var image := tree.root.get_texture().get_image()
+	if image == null:
+		return _error(id, -32603, "could not capture viewport image")
+	var err := image.save_png(path)
+	if err != OK:
+		return _error(id, -32603, "save_png failed (error %d)" % err)
+	return _ok(id, {"path": path})
 
 
 # --- JSON-RPC envelope -----------------------------------------------------

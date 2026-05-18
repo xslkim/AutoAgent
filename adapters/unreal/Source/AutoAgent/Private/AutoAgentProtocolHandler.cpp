@@ -7,6 +7,7 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
+#include "UnrealClient.h"
 
 namespace
 {
@@ -176,6 +177,21 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		return InputDriver->Scroll(TargetId, static_cast<float>(DeltaX), static_cast<float>(DeltaY))
 			? BuildResult(Id, MakeShared<FJsonValueNull>())
 			: BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
+	}
+
+	if (Method == TEXT("take_screenshot"))
+	{
+		FString Path;
+		Params->TryGetStringField(TEXT("path"), Path);
+		if (Path.IsEmpty())
+		{
+			return BuildError(Id, -32602, TEXT("missing param: path"));
+		}
+		// Fire-and-forget: the PNG is written after the current frame renders.
+		FScreenshotRequest::RequestScreenshot(Path, false, false);
+		TSharedRef<FJsonObject> ResultObj = MakeShared<FJsonObject>();
+		ResultObj->SetStringField(TEXT("path"), Path);
+		return BuildResult(Id, MakeShared<FJsonValueObject>(ResultObj));
 	}
 
 	return BuildError(Id, -32601, FString::Printf(TEXT("method not found: %s"), *Method));

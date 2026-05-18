@@ -43,6 +43,36 @@ namespace AutoAgent
 
         void Update() => _handler?.DrainOnMainThread();
 
+        /// <summary>
+        /// Fire-and-forget screenshot. Captures the rendered frame and writes a
+        /// PNG to <paramref name="path"/>. Called from the protocol handler.
+        /// </summary>
+        public static void RequestScreenshot(string path)
+        {
+            if (_instance != null)
+                _instance.StartCoroutine(_instance.CaptureRoutine(path));
+        }
+
+        System.Collections.IEnumerator CaptureRoutine(string path)
+        {
+            yield return new WaitForEndOfFrame();
+            Texture2D tex = null;
+            try
+            {
+                tex = ScreenCapture.CaptureScreenshotAsTexture();
+                System.IO.File.WriteAllBytes(path, tex.EncodeToPNG());
+                Debug.Log($"[AutoAgent] screenshot written: {path}");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[AutoAgent] screenshot failed: {ex.Message}");
+            }
+            finally
+            {
+                if (tex != null) Destroy(tex);
+            }
+        }
+
         void OnDestroy()
         {
             _server?.Stop();

@@ -172,9 +172,12 @@ namespace AutoAgent
 
         static string HandleTakeScreenshot(object id, string paramsJson)
         {
-            // ScreenCapture requires the 'Screen Capture' built-in package.
-            // Implement via AutoAgentBootstrap.TakeScreenshot() coroutine in Phase 1.
-            return ErrorResponse(id, -32601, "take_screenshot not yet implemented");
+            string path = ExtractStringParam(paramsJson, "path");
+            if (string.IsNullOrEmpty(path))
+                return ErrorResponse(id, -32602, "missing param: path");
+            // Fire-and-forget: a coroutine captures the frame and writes the PNG.
+            AutoAgentBootstrap.RequestScreenshot(path);
+            return OkResponse(id, $"{{\"path\":\"{NodeSerializer.Esc(path)}\"}}");
         }
 
         // ------------------------------------------------------------------ JSON-RPC helpers

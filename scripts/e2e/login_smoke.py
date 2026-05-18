@@ -22,8 +22,10 @@ Exit code 0 = all checks passed; non-zero = a check failed.
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import sys
+import tempfile
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 NODE_SCHEMA_PATH = REPO_ROOT / "protocol" / "schema" / "node.json"
@@ -172,6 +174,39 @@ def run_smoke() -> None:
         if not {"normal", "hover", "pressed", "disabled"} <= sprites.keys():
             raise SmokeFailure(f"login_button_bg state_sprites incomplete: {sprites}")
         _ok(f"login_button_bg state_sprites = {sorted(sprites)}")
+
+        # ---- take_screenshot -------------------------------------------
+        _step("7. take_screenshot")
+        shot_path = os.path.join(tempfile.gettempdir(), "autoagent_smoke_shot.png")
+        shot_result = rpc(ws, "take_screenshot", {"path": shot_path}, req_id=5)
+        if not isinstance(shot_result, dict) or not shot_result.get("path"):
+            raise SmokeFailure(f"take_screenshot returned no path: {shot_result!r}")
+        _ok(f"take_screenshot accepted, path = {shot_result.get('path')}")
+
+    # ---- wrong subprotocol must be rejected ----------------------------
+    _step("8. wrong subprotocol is rejected")
+    accepted_bad = False
+    try:
+        bad_ws = connect(WS_URL, subprotocols=["autoagent.bogus"], open_timeout=5)
+        try:
+            bad_ws.send(json.dumps({
+                "jsonrpc": "2.0", "method": "negotiate_version",
+                "params": {"client_version": "0.1"}, "id": 99,
+            }))
+            bad_ws.recv(timeout=3)
+            accepted_bad = True  # got a response → server did NOT reject
+        except Exception:
+            accepted_bad = False  # connection closed / errored → rejected
+        finally:
+            try:
+                bad_ws.close()
+            except Exception:
+                pass
+    except Exception:
+        accepted_bad = False  # connect() refused at handshake → rejected
+    if accepted_bad:
+        raise SmokeFailure("server accepted a connection with a wrong subprotocol")
+    _ok("connection with subprotocol 'autoagent.bogus' was rejected")
 
 
 def main() -> int:
