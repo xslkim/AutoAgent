@@ -24,8 +24,13 @@ public:
 	bool Scroll(const FString& NodeId, float DeltaX, float DeltaY) const;
 	bool Drag(const FString& FromId, const FString& ToId) const;
 
+	/** Test seam: when set, FindWidget searches this subtree instead of the
+	    on-screen user widgets. */
+	void SetSearchRootOverride(UWidget* Root) { SearchRootOverride = Root; }
+
 private:
 	UWidget* FindWidget(const FString& NodeId) const;
 
 	TSharedRef<FAutoAgentStableIdResolver> Resolver;
+	UWidget* SearchRootOverride = nullptr;
 };

@@ -46,6 +46,10 @@ static UWidget* FindInSubtree(UWidget* Widget, const FString& TargetId,
 
 UWidget* FAutoAgentSlateInputDriver::FindWidget(const FString& NodeId) const
 {
+	if (SearchRootOverride)
+	{
+		return FindInSubtree(SearchRootOverride, NodeId, *Resolver);
+	}
 	for (TObjectIterator<UUserWidget> It; It; ++It)
 	{
 		UUserWidget* UserWidget = *It;
