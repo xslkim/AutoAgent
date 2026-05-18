@@ -83,6 +83,9 @@ fixtures/unreal-test-project/*.sln
 fixtures/unreal-test-project/*.suo
 # autoagent adapter is junctioned in from adapters/unreal/ — tracked there, not here
 fixtures/unreal-test-project/Plugins/
+# UE plugin build artifacts (the adapter source lives in adapters/unreal/Source/)
+adapters/unreal/Binaries/
+adapters/unreal/Intermediate/
 
 # ===== Godot =====
 fixtures/godot-test-project/.godot/
