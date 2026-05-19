@@ -28,6 +28,8 @@ allow:
   # Unity .meta sidecars — must travel with the asset they describe; a new
   # .cs / .asmdef is incomplete without its .meta (stable GUID for refs).
   - "adapters/unity/**/*.meta"
+  # Unity .xml in the adapter — IL2CPP link.xml (anti-strip config).
+  - "adapters/unity/**/*.xml"
   - "adapters/unreal/Source/**/*.h"
   - "adapters/unreal/Source/**/*.cpp"
   - "adapters/unreal/Source/**/*.cs"
@@ -74,6 +76,7 @@ review_required:
   - "docs/runners-inventory.md"
   - "docs/orchestrator-prompt.md"
   - "docs/user-guide-*.md"
+  - "docs/users/**/*.md"
   - "docs/phase*-gate-report.md"
   - "docs/*-report.md"
 

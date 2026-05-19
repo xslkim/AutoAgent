@@ -104,3 +104,61 @@ jobs:
             unity-test-results-*.xml
             unity-*.log
           if-no-files-found: warn
+
+  il2cpp:
+    name: Unity IL2CPP build (Win64)
+    runs-on: [self-hosted, Windows]
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: IL2CPP build
+        shell: powershell
+        run: |
+          $unity = "C:\Program Files\Unity 2023.2.20f1\Editor\Unity.exe"
+          if (-not (Test-Path $unity)) { throw "Unity not found at $unity" }
+
+          $project = Join-Path $PWD "fixtures\unity-test-project"
+          $log = Join-Path $PWD "il2cpp-build.log"
+
+          # CIBuild.BuildIl2cppPlayer flips the backend to IL2CPP, builds a
+          # Win64 player and calls EditorApplication.Exit itself (0 = ok).
+          $arguments = @(
+            '-batchmode', '-nographics', '-accept-apiupdate',
+            '-projectPath', $project,
+            '-executeMethod', 'AutoAgent.Editor.CIBuild.BuildIl2cppPlayer',
+            '-logFile', $log
+          )
+          Write-Host "=== IL2CPP build (Win64) ==="
+          $proc = Start-Process -FilePath $unity -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+          $code = $proc.ExitCode
+          Write-Host "Unity exited with code $code"
+          if (Test-Path $log) {
+            Write-Host "----- il2cpp-build.log -----"
+            Get-Content $log | Out-Host
+          }
+          if ($code -ne 0) {
+            throw "IL2CPP build failed (exit $code). If the editor reported a " +
+                  "missing module, install Unity's Windows IL2CPP Build Support."
+          }
+
+          # Report the produced player's size (review checks the < 5 MB
+          # adapter delta from docs/users/il2cpp-setup.md against this).
+          $exe = Join-Path $project "Build\il2cpp\AutoAgentTest.exe"
+          if (Test-Path $exe) {
+            $dir = Split-Path $exe
+            $bytes = (Get-ChildItem $dir -Recurse -File | Measure-Object Length -Sum).Sum
+            Write-Host ("IL2CPP player size: {0:N1} MB" -f ($bytes / 1MB))
+          } else {
+            throw "IL2CPP build reported success but no player exe was found"
+          }
+          Write-Host "IL2CPP build passed."
+
+      - name: Upload IL2CPP build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-il2cpp-build
+          path: il2cpp-build.log
+          if-no-files-found: warn
