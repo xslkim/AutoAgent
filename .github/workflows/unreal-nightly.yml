@@ -42,7 +42,11 @@ jobs:
           if (-not (Test-Path $build)) { throw "Build.bat not found at $build" }
           $uproject = Join-Path $PWD "fixtures\unreal-test-project\AutoAgentTest.uproject"
 
-          & $build AutoAgentTestEditor Win64 Development -Project="$uproject" -WaitMutex
+          # -MaxParallelActions caps concurrent cl.exe processes. A fresh CI
+          # build compiles UE's large PCHs from scratch; 19-wide exhausts the
+          # commit limit (page file). 4-wide keeps the peak within 64 GB RAM.
+          & $build AutoAgentTestEditor Win64 Development -Project="$uproject" `
+            -WaitMutex -MaxParallelActions=4
           if ($LASTEXITCODE -ne 0) { throw "UE build failed (exit $LASTEXITCODE)" }
 
       - name: Run UE Automation tests
