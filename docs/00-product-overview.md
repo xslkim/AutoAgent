@@ -155,7 +155,7 @@
 | tasks.md | 任务清单索引（按 Phase 拆分） | ✅ |
 | canonical-tasks/login.yaml | Login MVP 任务 DSL（AI 输入的标准化任务描述） | 未来产出（TASK-0132） |
 | canonical-tasks/README.md | 任务 DSL schema 规范（字段定义、校验规则、parser 行为） | 未来产出（TASK-0132 同步创建） |
-| runners-inventory.md | Self-hosted runner 清单 | 未来产出（TASK-0013） |
+| runners-inventory.md | Self-hosted runner 清单 | ✅ |
 | orchestrator-prompt.md | 顶层 Claude /loop 启动 prompt 模板 | 未来产出（TASK-0021） |
 | user-guide-orchestration.md | 用户日常操作指南 | 未来产出（TASK-0021） |
 | phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 未来产出（TASK-0023） |

@@ -1,8 +1,8 @@
 # dry-run-report.md — Orchestration 端到端 Dry Run (TASK-0022)
 
-> 日期：2026-05-15
+> 日期：2026-05-15 本地 mock dry run（§一~§九）；2026-05-19 真 /loop 端到端验证（§十）
 > 环境：Windows 11, Python 3.12.10
-> 仓库：commit `d6af7dd`
+> 仓库：commit `d6af7dd`（§一~§九）/ `721bc6d`（§十）
 > 隔离目录：`state-dryrun/`（dry run 期间临时；跑完已清理）
 
 ## 一、目的
@@ -248,9 +248,53 @@ pytest scripts/orchestrator/tests/ scripts/agent/tests/ -v
 
 | Gate | 本次覆盖 |
 |---|---|
-| Gate 7: Orchestration scaffolding 跑通 1 个 echo 任务 | ✓ (Happy path, 不含真 claude CLI) |
-| Gate 8: 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human | ✓ (Scenario B) |
+| Gate 7: Orchestration scaffolding 跑通 1 个 echo 任务 | ✓ (Happy path；真链路见 §十) |
+| Gate 8: 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human | ✓ (Scenario B；§十 复测) |
 | Gate 9: 故意 kill in_progress agent → 顶层 resume 正确恢复 | ✓ (Scenario C — zombie 路径) |
 | Gate 10: 写 stop_signal → 顶层正确停机 | ✓ (Scenario D) |
 
 Gate 1-6 依赖三引擎 adapter，本次未涉及。
+
+---
+
+## 十、真 /loop 端到端验证（2026-05-19，opencode）
+
+§六 列为「本地 dry run 不能覆盖、需真 /loop」的部分，2026-05-19 已补做。环境变化：
+agent runner 从 claude CLI 换成 **opencode + DeepSeek V4 Pro**（用户无 Claude API
+key）。验证用真 opencode、真 GitHub PR、真 CI，分三 Stage。
+
+### Stage 1 — run_task.py + opencode 隔离测
+
+任务 **TASK-DRY-001**（真任务，非 mock）：让 opencode 建一个 marker 文件并开 PR。
+结果：opencode 读 prompt → 建 `scripts/e2e/dry_run_marker.txt` → commit `16d38dd`
+→ push → 开 **PR #64** → CI 全绿。
+
+隔离测暴露并修掉 3 个 bug（commit `721bc6d`）：
+
+| bug | 现象 | 修复 |
+|---|---|---|
+| 喂 prompt 方式 | 误以为 opencode 用 positional arg 传 prompt | opencode/claude 都走 stdin；默认 `cmd /c opencode`（npm `.cmd` shim 需 shell）；subprocess 强制 UTF-8 |
+| classify 误判 | 路径违规正则匹配裸词 `whitelist`，把日志里读到的文件名 `path_whitelist.yml` 判成 needs_human | 收紧成只匹配 "path violation" 短语 / 中文「路径白名单违规」 |
+| worktree GBK 崩 | `worktree.py` `_git()` 缺 encoding，git 输出非 ASCII 时 `UnicodeDecodeError` | 补 `encoding="utf-8"` |
+
+### Stage 2 — 真 /loop
+
+任务 **TASK-DRY-002** 放进 `queue/`，由顶层 Claude 按 `orchestrator-prompt.md` 驱动
+完整循环：collect TASK-DRY-001 → `awaiting_ci`；PR #64 CI 全绿 → `done`；poll
+TASK-DRY-002 → `ready`；spawn（pid 35912，分离子进程）；opencode 40s 跑完 verdict
+`awaiting_ci` → 开 **PR #65**；collect → `awaiting_ci`；PR #65 CI 全绿 → `done`。
+全程无人工干预（除最初启动）。
+
+### Stage 3 — 故障模式（临时 state-root，不开 PR）
+
+needs_human 路由 + `approve_retry` 裁决回 `ready/` ✓；zombie agent（死 pid 无
+result）→ `collect.py` 退回 `ready/` 且 retries+1 ✓；`stop.py` 写信号 → poll/spawn
+都拒绝 ✓。
+
+### 结论
+
+§六 表格里的「claude CLI 真实调用 / git worktree 真创建 / gh pr create + CI 轮询 /
+自然语言裁决」四项，已全部用真链路（opencode 版）跑通。**TASK-0022 全部
+verification 通过。**
+
+产物清理：dry-run 测试 PR #64 / #65 已关闭并删分支；临时 worktree 已移除。
