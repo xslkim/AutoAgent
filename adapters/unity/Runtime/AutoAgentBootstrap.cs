@@ -53,6 +53,20 @@ namespace AutoAgent
                 _instance.StartCoroutine(_instance.CaptureRoutine(path));
         }
 
+        /// <summary>
+        /// Fire-and-forget drag. Resolves the endpoints synchronously (so a bad
+        /// id surfaces as a WireException now) then plays the multi-frame drag
+        /// coroutine. Called from the protocol handler.
+        /// </summary>
+        public static void RunDrag(string fromId, string toId, int durationMs)
+        {
+            // Synchronous validation — throws WireException on a bad id, which
+            // the protocol handler turns into an error response.
+            EngineInputDriver.ResolveDrag(fromId, toId);
+            if (_instance != null)
+                _instance.StartCoroutine(EngineInputDriver.Drag(fromId, toId, durationMs));
+        }
+
         System.Collections.IEnumerator CaptureRoutine(string path)
         {
             yield return new WaitForEndOfFrame();

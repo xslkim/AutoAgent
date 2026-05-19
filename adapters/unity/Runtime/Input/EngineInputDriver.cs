@@ -67,24 +67,87 @@ namespace AutoAgent
 
         // ------------------------------------------------------------------ drag
 
-        public static bool Drag(string fromId, string toId)
+        /// <summary>Frame budget per OnDrag step (~60 fps). Drag spans
+        /// duration_ms / this many frames.</summary>
+        public const float MillisPerDragStep = 16f;
+
+        /// <summary>Number of OnDrag frames a drag of the given duration spans.</summary>
+        public static int FrameCountFor(int durationMs) =>
+            Mathf.Max(1, Mathf.RoundToInt(durationMs / MillisPerDragStep));
+
+        /// <summary>
+        /// Multi-frame drag coroutine: PointerDown → BeginDrag → N×Drag (one
+        /// per frame) → EndDrag → Drop → PointerUp. Splitting OnDrag across
+        /// frames avoids single-frame IDragHandler implementations misbehaving.
+        /// </summary>
+        /// <exception cref="WireException">
+        /// Code -32001 if either id resolves to no node; code -32002 if the
+        /// source has no drag handler.
+        /// </exception>
+        public static IEnumerator Drag(string fromId, string toId, int durationMs = 100)
+        {
+            var (src, dst) = ResolveDrag(fromId, toId);
+            yield return DragSteps(src, dst, durationMs);
+        }
+
+        // Synchronously resolve + validate the two endpoints, or throw.
+        internal static (GameObject src, GameObject dst) ResolveDrag(string fromId, string toId)
         {
             var src = FindById(fromId);
+            if (src == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"drag source not found: {fromId}");
             var dst = FindById(toId);
-            if (src == null || dst == null) return false;
+            if (dst == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"drag target not found: {toId}");
+            if (!IsDraggable(src))
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no drag handler: {fromId}");
+            return (src, dst);
+        }
 
+        static bool IsDraggable(GameObject go)
+        {
+            foreach (var mb in go.GetComponents<MonoBehaviour>())
+            {
+                if (mb == null) continue;
+                if (mb is IBeginDragHandler || mb is IDragHandler)
+                    return true;
+            }
+            return false;
+        }
+
+        internal static IEnumerator DragSteps(GameObject src, GameObject dst, int durationMs)
+        {
+            int frames = FrameCountFor(durationMs);
             var srcEvent = NewPointerEvent(src);
             var dstEvent = NewPointerEvent(dst);
+            Vector2 startPos = srcEvent.position;
+            Vector2 endPos = dstEvent.position;
 
             ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.beginDragHandler);
-            // single-step move to destination (PoC: no intermediate frames)
-            srcEvent.position = dstEvent.position;
-            ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.dragHandler);
+
+            Vector2 prev = startPos;
+            for (int i = 1; i <= frames; i++)
+            {
+                Vector2 cur = Vector2.Lerp(startPos, endPos, (float)i / frames);
+                srcEvent.position = cur;
+                srcEvent.delta = cur - prev;
+                prev = cur;
+                ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.dragHandler);
+                yield return null; // advance one frame between OnDrag steps
+            }
+
+            srcEvent.position = endPos;
             ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.endDragHandler);
+
+            dstEvent.position = endPos;
+            dstEvent.pointerDrag = src;
             ExecuteEvents.Execute(dst, dstEvent, ExecuteEvents.dropHandler);
+
             ExecuteEvents.Execute(src, srcEvent, ExecuteEvents.pointerUpHandler);
-            return true;
         }
 
         // ------------------------------------------------------------------ send_text
