@@ -161,9 +161,11 @@ namespace AutoAgent
             string toId   = ExtractStringParam(paramsJson, "to_id");
             if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
                 return ErrorResponse(id, -32602, "missing params: from_id / to_id");
-            bool ok = EngineInputDriver.Drag(fromId, toId);
-            return ok ? OkResponse(id, "null")
-                      : ErrorResponse(id, -32001, "source or destination widget not found");
+            int durationMs = (int)ExtractFloatParam(paramsJson, "duration_ms");
+            // Drag is multi-frame: RunDrag validates the endpoints synchronously
+            // (throws WireException on a bad id) then plays out the coroutine.
+            AutoAgentBootstrap.RunDrag(fromId, toId, durationMs);
+            return OkResponse(id, "null");
         }
 
         static string HandleScroll(object id, string paramsJson)
