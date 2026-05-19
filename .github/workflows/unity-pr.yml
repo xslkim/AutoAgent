@@ -36,49 +36,64 @@ jobs:
         run: python scripts/fixtures/validate_static_fixtures.py --engine unity
 
   test:
-    name: Unity Test Runner (PlayMode)
+    name: Unity Test Runner (EditMode + PlayMode)
     runs-on: [self-hosted, Windows]
     needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Unity PlayMode tests
+      - name: Run Unity EditMode + PlayMode tests
         shell: powershell
         run: |
           $unity = "C:\Program Files\Unity 2023.2.20f1\Editor\Unity.exe"
           if (-not (Test-Path $unity)) { throw "Unity not found at $unity" }
 
           $project = Join-Path $PWD "fixtures\unity-test-project"
-          $results = Join-Path $PWD "unity-test-results.xml"
-          $log = Join-Path $PWD "unity.log"
 
-          $arguments = @(
-            '-runTests', '-batchmode', '-accept-apiupdate',
-            '-projectPath', $project,
-            '-testPlatform', 'PlayMode',
-            '-testResults', $results,
-            '-logFile', $log
-          )
-
-          Write-Host "Running Unity PlayMode tests on: $project"
-          # Unity.exe is a GUI app — Start-Process -Wait is required to block
-          # until it finishes and to capture a real exit code.
-          $proc = Start-Process -FilePath $unity -ArgumentList $arguments -Wait -PassThru -NoNewWindow
-          $code = $proc.ExitCode
-          Write-Host "Unity exited with code $code"
-
-          if (Test-Path $log) {
-            Write-Host "----- unity.log -----"
-            Get-Content $log
+          # Unity -runTests handles one platform per invocation, so run both.
+          # EditMode covers the AutoAgent.Editor.Tests assembly (custom
+          # Inspectors etc.); PlayMode covers the runtime adapter tests.
+          #
+          # Each platform's exit code goes into its own script-scope variable.
+          # NB: do NOT wrap this in a function that `return`s the code — any
+          # Get-Content output would leak into the function's pipeline and the
+          # caller would capture an array instead of the int.
+          function Invoke-UnityTests($platform) {
+            $results = Join-Path $PWD "unity-test-results-$platform.xml"
+            $log = Join-Path $PWD "unity-$platform.log"
+            $arguments = @(
+              '-runTests', '-batchmode', '-accept-apiupdate',
+              '-projectPath', $project,
+              '-testPlatform', $platform,
+              '-testResults', $results,
+              '-logFile', $log
+            )
+            Write-Host "=== Running Unity $platform tests ==="
+            # Unity.exe is a GUI app — Start-Process -Wait is required to block
+            # until it finishes and to capture a real exit code.
+            $proc = Start-Process -FilePath $unity -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+            Write-Host "Unity $platform exited with code $($proc.ExitCode)"
+            if (Test-Path $log) {
+              Write-Host "----- unity-$platform.log -----"
+              Get-Content $log | Out-Host
+            }
+            if (Test-Path $results) {
+              Write-Host "----- $platform test results -----"
+              Get-Content $results | Out-Host
+            } else {
+              Write-Host "WARNING: no $platform test-results file was produced"
+            }
+            # Surface the exit code via a script-scope variable, never the
+            # pipeline — keeps Get-Content output from polluting the result.
+            Set-Variable -Name "${platform}ExitCode" -Value $proc.ExitCode -Scope Script
           }
-          if (Test-Path $results) {
-            Write-Host "----- test results -----"
-            Get-Content $results
-          } else {
-            Write-Host "WARNING: no test-results file was produced"
-          }
-          exit $code
+
+          Invoke-UnityTests "EditMode"
+          Invoke-UnityTests "PlayMode"
+          if ($script:EditModeExitCode -ne 0) { throw "EditMode tests failed (exit $($script:EditModeExitCode))" }
+          if ($script:PlayModeExitCode -ne 0) { throw "PlayMode tests failed (exit $($script:PlayModeExitCode))" }
+          Write-Host "All Unity EditMode + PlayMode tests passed."
 
       - name: Upload test results
         if: always()
@@ -86,6 +101,6 @@ jobs:
         with:
           name: unity-test-results
           path: |
-            unity-test-results.xml
-            unity.log
+            unity-test-results-*.xml
+            unity-*.log
           if-no-files-found: warn
