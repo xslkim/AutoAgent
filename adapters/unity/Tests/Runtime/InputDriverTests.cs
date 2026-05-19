@@ -30,29 +30,8 @@ namespace AutoAgent.Tests
             Object.DestroyImmediate(_canvas);
         }
 
-        // ---- click --------------------------------------------------------
-
-        [UnityTest]
-        public IEnumerator Click_ButtonById_InvokesOnClick()
-        {
-            bool clicked = false;
-            var go = MakeButton("btn_login");
-            go.GetComponent<Button>().onClick.AddListener(() => clicked = true);
-
-            yield return null;
-            EngineInputDriver.Click("btn_login");
-            yield return null;
-
-            Assert.IsTrue(clicked, "onClick should have been invoked");
-        }
-
-        [UnityTest]
-        public IEnumerator Click_NonExistentId_ReturnsFalse()
-        {
-            yield return null;
-            bool result = EngineInputDriver.Click("id_does_not_exist");
-            Assert.IsFalse(result);
-        }
+        // Click coverage moved to ClickTests (TASK-0105 — Click now throws
+        // WireException instead of returning a bool).
 
         // ---- send_text ----------------------------------------------------
 
@@ -85,16 +64,6 @@ namespace AutoAgent.Tests
         }
 
         // ---- helpers -------------------------------------------------------
-
-        GameObject MakeButton(string name)
-        {
-            var go = new GameObject(name);
-            go.transform.SetParent(_canvas.transform, false);
-            go.AddComponent<RectTransform>();
-            go.AddComponent<Image>();
-            go.AddComponent<Button>();
-            return go;
-        }
 
         GameObject MakeTmpInputField(string name)
         {
