@@ -15,16 +15,54 @@ namespace AutoAgent
     {
         // ------------------------------------------------------------------ click
 
-        public static bool Click(string nodeId)
+        /// <summary>
+        /// Simulate a complete click on a node: PointerDown → PointerUp →
+        /// PointerClick, the same sequence the EventSystem fires for a real
+        /// mouse click, so every Selectable subclass (Button, Toggle, …) reacts.
+        /// </summary>
+        /// <exception cref="WireException">
+        /// Code -32001 if the id resolves to no node; code -32002 if the node
+        /// exists but has no component able to handle a click.
+        /// </exception>
+        public static void Click(string nodeId)
         {
-            var go = FindById(nodeId);
-            if (go == null) return false;
+            var go = ResolveClickable(nodeId);
 
             var eventData = NewPointerEvent(go);
             ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerClickHandler);
-            return true;
+        }
+
+        // Resolve a node id to a GameObject that can actually receive a click,
+        // or throw the matching WireException.
+        static GameObject ResolveClickable(string nodeId)
+        {
+            var go = FindById(nodeId);
+            if (go == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+            if (!IsClickable(go))
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no clickable component: {nodeId}");
+            return go;
+        }
+
+        // A node is clickable if it carries a Selectable (Button / Toggle / …)
+        // or any MonoBehaviour implementing an EventSystems pointer handler.
+        static bool IsClickable(GameObject go)
+        {
+            if (go.GetComponent<Selectable>() != null)
+                return true;
+            foreach (var mb in go.GetComponents<MonoBehaviour>())
+            {
+                if (mb == null) continue;
+                if (mb is IPointerClickHandler ||
+                    mb is IPointerDownHandler ||
+                    mb is IPointerUpHandler)
+                    return true;
+            }
+            return false;
         }
 
         // ------------------------------------------------------------------ drag

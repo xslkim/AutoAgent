@@ -60,6 +60,12 @@ namespace AutoAgent
                     _                   => ErrorResponse(id, -32601, $"method not found: {method}"),
                 };
             }
+            catch (WireException we)
+            {
+                // A typed wire error (e.g. -32002 WidgetNotInteractable) —
+                // surface its own code rather than a generic internal error.
+                return ErrorResponse(id, we.Code, we.Message);
+            }
             catch (Exception ex)
             {
                 return ErrorResponse(id, -32603, ex.Message);
@@ -130,9 +136,10 @@ namespace AutoAgent
             string nodeId = ExtractStringParam(paramsJson, "id");
             if (string.IsNullOrEmpty(nodeId))
                 return ErrorResponse(id, -32602, "missing param: id");
-            bool ok = EngineInputDriver.Click(nodeId);
-            return ok ? OkResponse(id, "null")
-                      : ErrorResponse(id, -32001, $"widget not found: {nodeId}");
+            // Click throws WireException on failure (widget not found /
+            // not interactable); Dispatch's catch turns it into an error.
+            EngineInputDriver.Click(nodeId);
+            return OkResponse(id, "null");
         }
 
         static string HandleSendText(object id, string paramsJson)
