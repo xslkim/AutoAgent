@@ -125,12 +125,21 @@ namespace AutoAgent
 
         internal static GameObject FindById(string id)
         {
-            // 1. Search StableIdComponent.pinnedId
+            if (string.IsNullOrEmpty(id)) return null;
+
+            // Resolve through the same allocator dump_tree uses, so an id
+            // handed back by dump_tree (pinned or hash) always resolves here.
+            var roots = UnityEngine.SceneManagement.SceneManager
+                .GetActiveScene().GetRootGameObjects();
+            var allocator = IdAllocator.Allocate(roots);
+            var t = allocator.TransformFor(id);
+            if (t != null) return t.gameObject;
+
+            // Fallbacks for callers that pass a raw pinnedId / GameObject name
+            // before a dump has happened.
             var sids = Object.FindObjectsByType<StableIdComponent>(FindObjectsSortMode.None);
             foreach (var s in sids)
                 if (s.pinnedId == id) return s.gameObject;
-
-            // 2. Search by auto-id (GameObject name)
             return GameObject.Find(id);
         }
     }

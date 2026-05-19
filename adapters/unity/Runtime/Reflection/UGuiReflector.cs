@@ -18,18 +18,23 @@ namespace AutoAgent
         {
             var nodes = new List<NodeData>();
             var roots = SceneManager.GetActiveScene().GetRootGameObjects();
+            // One allocator owns id assignment for the whole dump so that
+            // pinned / hash ids and dedup suffixes stay internally consistent.
+            var allocator = IdAllocator.Allocate(roots);
             foreach (var root in roots)
-                DumpTransform(root.transform, null, nodes);
+                DumpTransform(root.transform, null, nodes, allocator);
             return nodes;
         }
 
         // Returns the stable ID assigned to this transform, or null if it has no RectTransform.
-        static string DumpTransform(Transform t, string parentId, List<NodeData> nodes)
+        static string DumpTransform(Transform t, string parentId, List<NodeData> nodes,
+                                    IdAllocator allocator)
         {
             if (!t.TryGetComponent<RectTransform>(out var rt))
                 return null;
 
-            string myId = ResolveId(t, out string idSource);
+            string myId = allocator.IdOf(t);
+            string idSource = allocator.SourceOf(t) ?? "hash";
 
             var node = new NodeData
             {
@@ -47,23 +52,11 @@ namespace AutoAgent
 
             foreach (Transform child in t)
             {
-                string childId = DumpTransform(child, myId, nodes);
+                string childId = DumpTransform(child, myId, nodes, allocator);
                 if (childId != null)
                     node.ChildrenIds.Add(childId);
             }
             return myId;
-        }
-
-        static string ResolveId(Transform t, out string source)
-        {
-            if (t.TryGetComponent<StableIdComponent>(out var sid) &&
-                !string.IsNullOrEmpty(sid.pinnedId))
-            {
-                source = "pinned";
-                return sid.pinnedId;
-            }
-            source = "auto";
-            return t.gameObject.name;
         }
 
         static string ResolveType(GameObject go)
