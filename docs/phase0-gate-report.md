@@ -15,7 +15,7 @@
 | 1 | 三引擎 dump UI 树 parent/children 正确 | ☐ 待核对 |
 | 2 | Unity / Godot screenshot 非空（非黑屏） | ☐ 待核对 |
 | 3 | Self-hosted UE runner online + nightly 跑通 | ☐ 待核对 |
-| 4 | 防护 0.1 + 0.2 拦下故意破坏 | ☐ **待验证**（TASK-0015/0016 未完） |
+| 4 | 防护 0.1 + 0.2 拦下故意破坏 | ☑ 证据齐备（sandbox PR 已验证） |
 | 5 | Subprotocol 握手三引擎返回 `autoagent.v1` | ☐ 待核对 |
 | 6 | `negotiate_version` JSON-RPC 握手符合规范 | ☐ 待核对 |
 | 7 | Orchestration 跑通 1 个 echo 任务（TASK-0022） | ☐ 待核对 |
@@ -68,19 +68,23 @@ unreal-nightly 跑一次确认绿。
 
 ## Gate 4 — 防护 0.1（路径白名单）+ 0.2（源码 diff）拦下故意破坏
 
-**证据（不完整）**
-- CI 防护脚本 + workflow 已就绪；本地 integration 脚本可验证拦截逻辑：
+**证据**
+- 本地 integration 脚本验证拦截逻辑：
   `bash scripts/ci/tests/integration/test_path_violation.sh`、
   `bash scripts/ci/tests/integration/test_visual_audit.sh`。
-- **缺**：TASK-0015 / TASK-0016 要求在一个独立 sandbox repo 上推「故意破坏」演示
-  PR，证明 CI 在真 PR 上拦下违规。此演示 PR 尚未做。
+- TASK-0015 / TASK-0016：在独立 sandbox repo `github.com/xslkim/AuteTest` 装入
+  防护 0.1/0.2 + `source-audit.yml`，推 3 个故意破坏演示 PR，CI 结果与预期完全一致：
 
-**人工核对**：☐　完成 TASK-0015/0016（建 sandbox repo + 推违规 PR + 截图 CI red），
-再回填本 gate。
+  | PR | 故意做的事 | CI 结果 | 日志证据 |
+  |---|---|---|---|
+  | AuteTest#1 | 改 `.unity` / `baselines/` / `.env` | **FAIL** ✓ | 防护 0.1 输出 3 条 DENY（`.env` / `baselines/**` / `fixtures/*/**.unity`） |
+  | AuteTest#2 | C# 写 `errorIcon.color = Color.red` | **FAIL** ✓ | 防护 0.2 输出 `[color_write]` 违规行 |
+  | AuteTest#3 | 同上 + `AUTOAGENT_ALLOW_VISUAL` 豁免注释 | **PASS** ✓ | 防护 0.2 跳过该文件（exempted） |
+- main repo（AutoAgent）全局违规计数不受影响 —— 破坏全发生在 sandbox repo。
 
-**结论**：☐ PASS ☐ **FAIL / 未完成**　备注：__________
+**人工核对**：☐　打开 AuteTest#1/#2/#3，确认 CI 红/红/绿与上表一致。
 
-> ⚠️ 这是当前唯一未就绪的 gate。Phase 1 启动前必须先关闭 TASK-0015/0016。
+**结论**：☐ PASS ☐ FAIL　备注：__________
 
 ---
 
