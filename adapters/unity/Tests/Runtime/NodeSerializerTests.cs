@@ -45,6 +45,8 @@ namespace AutoAgent.Tests
                 Meta = new MetaData
                 {
                     LogicalRole = "button",
+                    Intent = "submit the login form",
+                    Tags = new List<string> { "primary", "auth" },
                     StateSprites = new Dictionary<string, string>
                     {
                         { "normal", "btn_normal" },
@@ -176,6 +178,14 @@ namespace AutoAgent.Tests
             StringAssert.Contains("\"logical_role\":\"button\"", json);
             StringAssert.Contains("\"state_sprites\":{", json);
             StringAssert.Contains("\"normal\":\"btn_normal\"", json);
+        }
+
+        [Test]
+        public void EmitsMetaIntentAndTags()
+        {
+            string json = NodeSerializer.SerializeTree(new List<NodeData> { FullNode() });
+            StringAssert.Contains("\"intent\":\"submit the login form\"", json);
+            StringAssert.Contains("\"tags\":[\"primary\",\"auth\"]", json);
         }
     }
 }

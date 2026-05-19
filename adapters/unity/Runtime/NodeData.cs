@@ -44,6 +44,8 @@ namespace AutoAgent
     internal class MetaData
     {
         public string LogicalRole;  // protocol enum value, e.g. "button"
+        public string Intent;       // free-form purpose, or null
+        public List<string> Tags;   // classification tags, or null
         public Dictionary<string, string> StateSprites;
     }
 }

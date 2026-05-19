@@ -273,6 +273,19 @@ namespace AutoAgent
             if (sid.logicalRole != AutoAgentLogicalRole.None)
                 m.LogicalRole = RoleToString(sid.logicalRole);
 
+            if (!string.IsNullOrEmpty(sid.intent))
+                m.Intent = sid.intent;
+
+            if (sid.tags != null && sid.tags.Count > 0)
+            {
+                var tags = new List<string>();
+                foreach (var tag in sid.tags)
+                    if (!string.IsNullOrEmpty(tag) && !tags.Contains(tag))
+                        tags.Add(tag);
+                if (tags.Count > 0)
+                    m.Tags = tags;
+            }
+
             if (sid.stateSprites != null && sid.stateSprites.Count > 0)
             {
                 m.StateSprites = new Dictionary<string, string>();
@@ -281,7 +294,8 @@ namespace AutoAgent
                         m.StateSprites[p.state] = p.spritePath ?? "";
             }
 
-            return (m.LogicalRole != null || m.StateSprites != null) ? m : null;
+            return (m.LogicalRole != null || m.Intent != null ||
+                    m.Tags != null || m.StateSprites != null) ? m : null;
         }
 
         static string RoleToString(AutoAgentLogicalRole r) => r switch
