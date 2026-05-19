@@ -17,6 +17,12 @@ namespace AutoAgent
         [Tooltip("Semantic role of this widget (maps to protocol logical_role).")]
         public AutoAgentLogicalRole logicalRole = AutoAgentLogicalRole.None;
 
+        [Tooltip("Free-form description of what this widget is for (maps to protocol meta.intent).")]
+        public string intent;
+
+        [Tooltip("Arbitrary classification tags (maps to protocol meta.tags).")]
+        public List<string> tags = new List<string>();
+
         [Tooltip("State → sprite-path pairs (e.g. normal, hover, pressed, focused, disabled).")]
         public List<StateSpritePair> stateSprites = new List<StateSpritePair>();
     }

@@ -1,0 +1,27 @@
+{
+  "name": "AutoAgent.Editor.Tests",
+  "rootNamespace": "AutoAgent.Editor.Tests",
+  "references": [
+    "AutoAgent.Editor",
+    "AutoAgent.Runtime",
+    "UnityEngine.UI",
+    "Unity.TextMeshPro",
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

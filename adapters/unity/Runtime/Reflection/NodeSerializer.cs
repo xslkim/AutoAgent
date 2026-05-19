@@ -118,6 +118,18 @@ namespace AutoAgent
                 AppendStr(sb, "logical_role", m.LogicalRole);
                 first = false;
             }
+            if (m.Intent != null)
+            {
+                if (!first) sb.Append(',');
+                AppendStr(sb, "intent", m.Intent);
+                first = false;
+            }
+            if (m.Tags != null && m.Tags.Count > 0)
+            {
+                if (!first) sb.Append(',');
+                AppendStrArray(sb, "tags", m.Tags);
+                first = false;
+            }
             if (m.StateSprites != null && m.StateSprites.Count > 0)
             {
                 if (!first) sb.Append(',');
