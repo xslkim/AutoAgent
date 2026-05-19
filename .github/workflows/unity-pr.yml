@@ -47,18 +47,29 @@ jobs:
 
           $project = Join-Path $PWD "fixtures\unity-test-project"
           $results = Join-Path $PWD "unity-test-results.xml"
+          $log = Join-Path $PWD "unity.log"
+
+          $arguments = @(
+            '-runTests', '-batchmode', '-accept-apiupdate',
+            '-projectPath', $project,
+            '-testPlatform', 'PlayMode',
+            '-testResults', $results,
+            '-logFile', $log
+          )
 
           Write-Host "Running Unity PlayMode tests on: $project"
-          & $unity -runTests -batchmode -accept-apiupdate `
-            -projectPath $project `
-            -testPlatform PlayMode `
-            -testResults $results `
-            -logFile -
-          $code = $LASTEXITCODE
+          # Unity.exe is a GUI app — Start-Process -Wait is required to block
+          # until it finishes and to capture a real exit code.
+          $proc = Start-Process -FilePath $unity -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+          $code = $proc.ExitCode
           Write-Host "Unity exited with code $code"
 
+          if (Test-Path $log) {
+            Write-Host "----- unity.log -----"
+            Get-Content $log
+          }
           if (Test-Path $results) {
-            Write-Host "--- test results ($results) ---"
+            Write-Host "----- test results -----"
             Get-Content $results
           } else {
             Write-Host "WARNING: no test-results file was produced"
@@ -70,5 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unity-test-results
-          path: unity-test-results.xml
+          path: |
+            unity-test-results.xml
+            unity.log
           if-no-files-found: warn
