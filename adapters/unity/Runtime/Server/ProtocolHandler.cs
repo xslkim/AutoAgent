@@ -148,9 +148,11 @@ namespace AutoAgent
             string text   = ExtractStringParam(paramsJson, "text") ?? "";
             if (string.IsNullOrEmpty(nodeId))
                 return ErrorResponse(id, -32602, "missing param: id");
-            bool ok = EngineInputDriver.SendText(nodeId, text);
-            return ok ? OkResponse(id, "null")
-                      : ErrorResponse(id, -32001, $"widget not found or not an input: {nodeId}");
+            // clear_first defaults to true (replace the field's old value).
+            bool clearFirst = ExtractBoolParam(paramsJson, "clear_first", true);
+            // SendText throws WireException on failure; Dispatch's catch maps it.
+            EngineInputDriver.SendText(nodeId, text, clearFirst);
+            return OkResponse(id, "null");
         }
 
         static string HandleDrag(object id, string paramsJson)
@@ -272,6 +274,13 @@ namespace AutoAgent
             return m.Success && float.TryParse(m.Groups[1].Value,
                 System.Globalization.NumberStyles.Float,
                 System.Globalization.CultureInfo.InvariantCulture, out float v) ? v : 0f;
+        }
+
+        static bool ExtractBoolParam(string paramsJson, string key, bool fallback)
+        {
+            if (paramsJson == null) return fallback;
+            var m = Regex.Match(paramsJson, $"\"{Regex.Escape(key)}\"\\s*:\\s*(true|false)");
+            return m.Success ? m.Groups[1].Value == "true" : fallback;
         }
 
         static string Unescape(string s) =>

@@ -89,28 +89,50 @@ namespace AutoAgent
 
         // ------------------------------------------------------------------ send_text
 
-        public static bool SendText(string nodeId, string text)
+        /// <summary>
+        /// Set text on a TMP_InputField or legacy InputField. When
+        /// <paramref name="clearFirst"/> is true (default) the field's old
+        /// value is replaced; when false the text is appended.
+        ///
+        /// Fires onValueChanged then onEndEdit, matching what a real user
+        /// edit + focus-loss produces. Uses SetTextWithoutNotify so the
+        /// notifications fire exactly once.
+        /// </summary>
+        /// <exception cref="WireException">
+        /// Code -32001 if the id resolves to no node; code -32002 if the node
+        /// is not a text input field.
+        /// </exception>
+        public static void SendText(string nodeId, string text, bool clearFirst = true)
         {
             var go = FindById(nodeId);
-            if (go == null) return false;
+            if (go == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+
+            text ??= "";
 
             var tmpIf = go.GetComponent<TMP_InputField>();
             if (tmpIf != null)
             {
-                tmpIf.text = text;
-                tmpIf.onEndEdit.Invoke(text);
-                return true;
+                string value = clearFirst ? text : (tmpIf.text ?? "") + text;
+                tmpIf.SetTextWithoutNotify(value);
+                tmpIf.onValueChanged.Invoke(value);
+                tmpIf.onEndEdit.Invoke(value);
+                return;
             }
 
             var legacyIf = go.GetComponent<InputField>();
             if (legacyIf != null)
             {
-                legacyIf.text = text;
-                legacyIf.onEndEdit.Invoke(text);
-                return true;
+                string value = clearFirst ? text : (legacyIf.text ?? "") + text;
+                legacyIf.SetTextWithoutNotify(value);
+                legacyIf.onValueChanged.Invoke(value);
+                legacyIf.onEndEdit.Invoke(value);
+                return;
             }
 
-            return false;
+            throw new WireException(WireError.WidgetNotInteractable,
+                $"widget is not a text input field: {nodeId}");
         }
 
         // ------------------------------------------------------------------ scroll
