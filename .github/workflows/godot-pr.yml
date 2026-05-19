@@ -7,12 +7,11 @@ on:
       - "adapters/godot/**"
       - "fixtures/godot-test-project/**"
       - ".github/workflows/godot-pr.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-# Phase 0 scope: fixture static check only. Real Godot headless test (GUT)
-# lands with TASK-0009 (Godot adapter PoC).
 jobs:
   lint:
     name: Lint + fixture validate
@@ -32,16 +31,44 @@ jobs:
       - name: Static fixture validation (Godot slice)
         run: python scripts/fixtures/validate_static_fixtures.py --engine godot
 
-  # Placeholder. Filled in by TASK-0009.
-  # test:
-  #   name: Godot headless (GUT)
-  #   runs-on: ubuntu-latest
-  #   needs: lint
-  #   container:
-  #     image: barichello/godot-ci:4.4
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: |
-  #         cd fixtures/godot-test-project
-  #         godot --headless --import
-  #         godot --headless --quit-after 100 --script res://addons/gut/gut_cmdln.gd -gtest=res://addons/autoagent/tests/unit -gexit
+  test:
+    name: Godot headless input test
+    runs-on: [self-hosted, Windows]
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Link adapter into fixture project
+        shell: powershell
+        run: |
+          # The adapter is a junction locally; a fresh checkout needs it created.
+          $link = Join-Path $PWD "fixtures\godot-test-project\addons\autoagent"
+          $target = Join-Path $PWD "adapters\godot\addons\autoagent"
+          New-Item -ItemType Directory -Force -Path (Split-Path $link) | Out-Null
+          if (Test-Path $link) { Remove-Item $link -Recurse -Force }
+          New-Item -ItemType Junction -Path $link -Target $target | Out-Null
+          Write-Host "Linked $link -> $target"
+
+      - name: Run Godot headless input test
+        shell: powershell
+        run: |
+          $godot = "D:\test\godot\bin\godot.windows.editor.dev.x86_64.mono.exe"
+          if (-not (Test-Path $godot)) { throw "Godot not found at $godot" }
+
+          $project = Join-Path $PWD "fixtures\godot-test-project"
+          $scene = "res://addons/autoagent/tests/headless_input_test.tscn"
+
+          Write-Host "Importing Godot project: $project"
+          $import = Start-Process -FilePath $godot `
+            -ArgumentList @('--headless', '--path', $project, '--import') `
+            -Wait -PassThru -NoNewWindow
+          Write-Host "Import exited with code $($import.ExitCode)"
+
+          Write-Host "Running headless input test: $scene"
+          $proc = Start-Process -FilePath $godot `
+            -ArgumentList @('--headless', '--path', $project, $scene) `
+            -Wait -PassThru -NoNewWindow
+          $code = $proc.ExitCode
+          Write-Host "Godot exited with code $code"
+          exit $code
