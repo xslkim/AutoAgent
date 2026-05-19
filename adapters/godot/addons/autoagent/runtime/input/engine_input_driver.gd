@@ -12,13 +12,21 @@ var search_root: Node = null
 
 func click(node_id) -> bool:
 	var node := _find(node_id)
-	if node == null or not (node is Control):
+	if node == null:
 		return false
-	var center := (node as Control).get_global_rect().get_center()
-	var vp := (node as Control).get_viewport()
-	_mouse_button(vp, center, true)
-	_mouse_button(vp, center, false)
-	return true
+	if node is BaseButton:
+		# Fire the button's action directly — reliable in headless and windowed
+		# runs alike (mirrors the UE adapter's OnClicked broadcast).
+		(node as BaseButton).pressed.emit()
+		return true
+	if node is Control:
+		# Generic controls: synthesise a mouse click through the viewport.
+		var center := (node as Control).get_global_rect().get_center()
+		var vp := (node as Control).get_viewport()
+		_mouse_button(vp, center, true)
+		_mouse_button(vp, center, false)
+		return true
+	return false
 
 
 func send_text(node_id, text: String) -> bool:
