@@ -1,0 +1,13 @@
+{
+  "engine": "godot",
+  "scene": "login_screen",
+  "platform": "windows",
+  "image": "login_screen.png",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "size_bytes": 542890,
+  "captured_at": "2026-05-19T05:20:57.241830+00:00",
+  "wire_protocol": "autoagent.v1"
+}

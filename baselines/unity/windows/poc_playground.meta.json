@@ -1,0 +1,13 @@
+{
+  "engine": "unity",
+  "scene": "poc_playground",
+  "platform": "windows",
+  "image": "poc_playground.png",
+  "resolution": [
+    1237,
+    719
+  ],
+  "size_bytes": 242125,
+  "captured_at": "2026-05-19T05:19:55.021051+00:00",
+  "wire_protocol": "autoagent.v1"
+}

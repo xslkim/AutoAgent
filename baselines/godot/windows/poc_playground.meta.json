@@ -1,0 +1,13 @@
+{
+  "engine": "godot",
+  "scene": "poc_playground",
+  "platform": "windows",
+  "image": "poc_playground.png",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "size_bytes": 125108,
+  "captured_at": "2026-05-19T05:22:57.863702+00:00",
+  "wire_protocol": "autoagent.v1"
+}

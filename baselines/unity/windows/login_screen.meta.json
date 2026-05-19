@@ -1,0 +1,13 @@
+{
+  "engine": "unity",
+  "scene": "login_screen",
+  "platform": "windows",
+  "image": "login_screen.png",
+  "resolution": [
+    1237,
+    719
+  ],
+  "size_bytes": 402000,
+  "captured_at": "2026-05-19T05:17:35.642702+00:00",
+  "wire_protocol": "autoagent.v1"
+}

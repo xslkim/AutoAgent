@@ -1,0 +1,13 @@
+{
+  "engine": "unreal",
+  "scene": "login_screen",
+  "platform": "windows",
+  "image": "login_screen.png",
+  "resolution": [
+    1291,
+    790
+  ],
+  "size_bytes": 276229,
+  "captured_at": "2026-05-19T07:26:08.032523+00:00",
+  "wire_protocol": "autoagent.v1"
+}
