@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Unity PlayMode tests
-        shell: pwsh
+        shell: powershell
         run: |
           $unity = "C:\Program Files\Unity 2023.2.20f1\Editor\Unity.exe"
           if (-not (Test-Path $unity)) { throw "Unity not found at $unity" }
