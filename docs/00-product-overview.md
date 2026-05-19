@@ -158,7 +158,7 @@
 | runners-inventory.md | Self-hosted runner 清单 | ✅ |
 | orchestrator-prompt.md | 顶层 Claude /loop 启动 prompt 模板 | 未来产出（TASK-0021） |
 | user-guide-orchestration.md | 用户日常操作指南 | 未来产出（TASK-0021） |
-| phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 未来产出（TASK-0023） |
+| phase0-gate-report.md | Phase 0 出口 gate 检查结果 | 骨架已建（TASK-0023 待签字） |
 | dry-run-report.md | Orchestration 端到端 dry run 报告 | 未来产出（TASK-0022） |
 | users/il2cpp-setup.md | 用户 IL2CPP link.xml 配置指南 | 未来产出（TASK-0104） |
 | migration/v0.x-to-v1.0.md | v1.0 迁移指南 | 未来产出（TASK-0408） |
