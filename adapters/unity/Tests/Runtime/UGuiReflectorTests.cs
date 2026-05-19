@@ -1,3 +1,6 @@
+// AUTOAGENT_ALLOW_VISUAL: test code constructs throwaway UI objects and sets
+// their .color to exercise the reflector — this is test fixture setup, not a
+// product visual change, so 防护 0.2 (visual-write audit) is exempted here.
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
