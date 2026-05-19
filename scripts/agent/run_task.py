@@ -4,10 +4,9 @@ Lifecycle (docs/09-orchestration.md §九):
   1. Load the task file from state/in_progress/.
   2. (optional) Set up a fresh git worktree.
   3. Build the prompt from the task spec.
-  4. Spawn the agent CLI (default: opencode) with an isolated env.
-     Prompt delivery: opencode takes the prompt as a positional arg ("arg"
-     mode); classic `claude -p` reads from stdin ("stdin" mode).
-     Auto-detection picks "arg" when the command basename is "opencode".
+  4. Spawn the agent CLI (default: opencode via `cmd /c`) with an isolated
+     env, feeding the prompt on stdin, capturing stdout+stderr (UTF-8) to a
+     scrubbed log file.
   5. Classify the outcome (success / awaiting_ci / failed / needs_human).
   6. Write the result back into the task file's `result` field. Atomic.
   7. Exit 0 — the orchestrator inspects the task file, not our exit code.
@@ -67,22 +66,6 @@ def isolated_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     if extra:
         out.update(extra)
     return out
-
-
-def _prompt_via_arg(claude_argv: list[str]) -> bool:
-    """Return True if the agent CLI expects the prompt as a positional arg.
-
-    opencode: `opencode run <message>` — prompt goes on the command line.
-    claude:   `claude -p`             — prompt is read from stdin.
-    Auto-detects by checking the basename of the executable.
-    """
-    if not claude_argv:
-        return False
-    import os as _os
-    name = _os.path.basename(claude_argv[0]).lower()
-    # strip .cmd / .exe suffixes common on Windows
-    name = name.removesuffix(".cmd").removesuffix(".exe")
-    return name == "opencode"
 
 
 def scrub_secrets(text: str, secrets: Iterable[str]) -> str:
@@ -165,33 +148,21 @@ def run_single_task(
     prompt = build_prompt(task, worktree_path=worktree_path, branch=branch)
     secrets = _collect_secrets_for_scrubbing()
 
-    # opencode takes the prompt as a positional arg; claude reads from stdin.
-    use_arg = _prompt_via_arg(claude_argv)
-    final_argv = claude_argv + [prompt] if use_arg else claude_argv
-
     timed_out = False
     spawn_error: str | None = None
     try:
-        if use_arg:
-            proc = subprocess.run(
-                final_argv,
-                cwd=str(worktree_path),
-                stdin=subprocess.DEVNULL,
-                text=True,
-                capture_output=True,
-                env=isolated_env(),
-                timeout=timeout_seconds,
-            )
-        else:
-            proc = subprocess.run(
-                claude_argv,
-                cwd=str(worktree_path),
-                input=prompt,
-                text=True,
-                capture_output=True,
-                env=isolated_env(),
-                timeout=timeout_seconds,
-            )
+        # The agent CLI (opencode / claude) reads the prompt from stdin.
+        # UTF-8 is forced — the locale codec (e.g. GBK) chokes on agent output.
+        proc = subprocess.run(
+            claude_argv,
+            cwd=str(worktree_path),
+            input=prompt,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            env=isolated_env(),
+            timeout=timeout_seconds,
+        )
         stdout = proc.stdout or ""
         stderr = proc.stderr or ""
         exit_code = proc.returncode
@@ -251,9 +222,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo-root", type=Path, default=Path("."))
     parser.add_argument(
         "--claude-cmd",
-        default="opencode run --dangerously-skip-permissions",
+        default="cmd /c opencode run --dangerously-skip-permissions",
         help="Command to invoke (shlex-split if no --claude-arg given). "
-             "Default: opencode in non-interactive mode. "
+             "Default: opencode via `cmd /c` — the npm-shim .cmd needs a "
+             "shell on Windows. The prompt is fed on stdin. "
              "Override for tests: --claude-cmd python --claude-arg=-c ...",
     )
     parser.add_argument(

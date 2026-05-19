@@ -29,12 +29,16 @@ class WorktreePlan:
 
 
 def _git(args: list[str], cwd: Path, *, check: bool = True) -> subprocess.CompletedProcess:
+    # Force UTF-8: on a zh-CN Windows the default codec is GBK, which raises
+    # UnicodeDecodeError when git prints non-ASCII paths/branch names.
     return subprocess.run(
         ["git", *args],
         cwd=str(cwd),
         check=check,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
 
 

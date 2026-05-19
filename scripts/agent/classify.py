@@ -23,7 +23,11 @@ from dataclasses import dataclass
 NEEDS_HUMAN_PATTERNS: tuple[tuple[str, str], ...] = (
     # Path whitelist (防护 0.1)
     (r"-32030\b|PathViolation\b", "path violation"),
-    (r"path[_\s-]?(whitelist|violation)|路径白名单(违规|违反)", "path violation"),
+    # NB: match the *phrase* "path violation" / Chinese "路径白名单违规", not the
+    # bare word "whitelist" — agent logs routinely mention the filename
+    # `path_whitelist.yml`, which must NOT be treated as a violation. The real
+    # MCP error code (-32030 / PathViolation) is covered by the pattern above.
+    (r"\bpath\s+violation\b|路径白名单\s*违[规反]", "path violation"),
     # Source-diff visual write audit (防护 0.2)
     (r"-32003\b|VisualPropertyWrite\b", "visual-property write rejected"),
     (r"visual[_\s-]?write[_\s-]?audit|视觉.*违规", "visual-write audit failed"),

@@ -88,3 +88,17 @@ def test_policy_violation_beats_clean_exit():
     """Even if claude returns 0, a policy violation in stderr should fail safe."""
     v = classify(0, "PR: https://github.com/a/b/pull/1", "PathViolation flagged")
     assert v.status == "needs_human"
+
+
+def test_path_whitelist_filename_is_not_a_violation():
+    """An agent log that merely *reads* `path_whitelist.yml` must not be
+    misclassified as a path violation — only the real error phrasing counts.
+    Regression: classify.py used to match the bare word 'whitelist'.
+    """
+    stdout = (
+        "Read scripts\\ci\\path_whitelist.yml\n"
+        "Created PR: https://github.com/xslkim/AutoAgent/pull/64\n"
+    )
+    v = classify(0, stdout, "")
+    assert v.status == "awaiting_ci"
+    assert "pull/64" in v.pr_url
