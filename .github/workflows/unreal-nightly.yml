@@ -9,58 +9,80 @@ on:
 permissions:
   contents: read
 
-# Runs on a single self-hosted Windows GPU runner (provisioned per TASK-0013).
-# Roster: docs/runners-inventory.md.
+env:
+  UE_ROOT: C:\Program Files\Epic Games\UE_5.7
+  # Run Node.js-based actions on Node 24 (Node 20 is deprecated).
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+# Runs on the self-hosted Windows runner provisioned per TASK-0013.
 jobs:
   build-and-test:
     name: UE build + automation tests (Win64)
-    runs-on: [self-hosted, windows, ue]
+    runs-on: [self-hosted, Windows]
     timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show runner info
-        shell: pwsh
+      - name: Link adapter plugin into fixture project
+        shell: powershell
         run: |
-          Write-Host "Runner: $env:RUNNER_NAME"
-          Write-Host "OS: $(Get-CimInstance Win32_OperatingSystem | Select-Object -ExpandProperty Caption)"
-          Write-Host "UE_ROOT: $env:UE_ROOT"
-
-      - name: Generate project files
-        shell: pwsh
-        working-directory: fixtures/unreal-test-project
-        run: |
-          & "$env:UE_ROOT\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" `
-            -projectfiles `
-            -project="$PWD\AutoAgentTest.uproject" `
-            -game -engine -rocket
+          # The adapter is a junction locally; a fresh checkout needs it created.
+          $link = Join-Path $PWD "fixtures\unreal-test-project\Plugins\AutoAgent"
+          $target = Join-Path $PWD "adapters\unreal"
+          New-Item -ItemType Directory -Force -Path (Split-Path $link) | Out-Null
+          if (Test-Path $link) { Remove-Item $link -Recurse -Force }
+          New-Item -ItemType Junction -Path $link -Target $target | Out-Null
+          Write-Host "Linked $link -> $target"
 
       - name: Build Development Editor
-        shell: pwsh
-        working-directory: fixtures/unreal-test-project
+        shell: powershell
         run: |
-          & "$env:UE_ROOT\Engine\Build\BatchFiles\Build.bat" `
-            AutoAgentTestEditor Win64 Development `
-            -Project="$PWD\AutoAgentTest.uproject" `
-            -WaitMutex -FromMsBuild
+          $build = Join-Path $env:UE_ROOT "Engine\Build\BatchFiles\Build.bat"
+          if (-not (Test-Path $build)) { throw "Build.bat not found at $build" }
+          $uproject = Join-Path $PWD "fixtures\unreal-test-project\AutoAgentTest.uproject"
+
+          & $build AutoAgentTestEditor Win64 Development -Project="$uproject" -WaitMutex
+          if ($LASTEXITCODE -ne 0) { throw "UE build failed (exit $LASTEXITCODE)" }
 
       - name: Run UE Automation tests
-        shell: pwsh
-        working-directory: fixtures/unreal-test-project
+        shell: powershell
         run: |
-          & "$env:UE_ROOT\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" `
-            "$PWD\AutoAgentTest.uproject" `
-            -ExecCmds="Automation RunTests AutoAgent" `
-            -TestExit="Automation Test Queue Empty" `
-            -Log -NoSplash -Unattended
+          $cmd = Join-Path $env:UE_ROOT "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"
+          if (-not (Test-Path $cmd)) { throw "UnrealEditor-Cmd not found at $cmd" }
 
-      - name: Upload artifacts on failure
-        if: failure()
+          $uproject = Join-Path $PWD "fixtures\unreal-test-project\AutoAgentTest.uproject"
+          $report = Join-Path $PWD "ue-automation-report"
+
+          $arguments = @(
+            "$uproject",
+            "-ExecCmds=Automation RunTests AutoAgent",
+            "-TestExit=Automation Test Queue Empty",
+            "-ReportExportPath=$report",
+            "-nullrhi", "-unattended", "-nosplash", "-nopause", "-log"
+          )
+          & $cmd $arguments
+          Write-Host "UnrealEditor-Cmd exited with code $LASTEXITCODE"
+
+          $index = Join-Path $report "index.json"
+          if (-not (Test-Path $index)) {
+            throw "no automation report at $index — tests did not run"
+          }
+          Write-Host "----- automation report (index.json) -----"
+          Get-Content $index
+          $json = Get-Content $index -Raw | ConvertFrom-Json
+          Write-Host "succeeded=$($json.succeeded) failed=$($json.failed)"
+          if ($json.failed -gt 0) { throw "$($json.failed) automation test(s) failed" }
+          if ($json.succeeded -lt 1) { throw "no automation tests succeeded" }
+          Write-Host "All AutoAgent automation tests passed."
+
+      - name: Upload logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ue-nightly-logs
           path: |
             fixtures/unreal-test-project/Saved/Logs/**
-            fixtures/unreal-test-project/Saved/Automation/**
+            ue-automation-report/**
           retention-days: 7
+          if-no-files-found: warn
