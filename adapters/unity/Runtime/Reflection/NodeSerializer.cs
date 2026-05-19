@@ -41,23 +41,28 @@ namespace AutoAgent
 
         static void AppendVisual(StringBuilder sb, VisualData v)
         {
-            sb.Append("{\"position\":[").Append(v.Position[0].ToString("F2")).Append(',')
-              .Append(v.Position[1].ToString("F2")).Append("],");
-            sb.Append("\"size\":[").Append(v.Size[0].ToString("F2")).Append(',')
-              .Append(v.Size[1].ToString("F2")).Append("],");
+            sb.Append("{\"position\":[").Append(Num(v.Position[0])).Append(',')
+              .Append(Num(v.Position[1])).Append("],");
+            sb.Append("\"size\":[").Append(Num(v.Size[0])).Append(',')
+              .Append(Num(v.Size[1])).Append("],");
+            if (v.Anchor != null)
+                sb.Append("\"anchor\":[").Append(Num(v.Anchor[0])).Append(',')
+                  .Append(Num(v.Anchor[1])).Append("],");
             sb.Append("\"visible\":").Append(v.Visible ? "true" : "false");
             if (v.Alpha.HasValue)
-                sb.Append(",\"alpha\":").Append(v.Alpha.Value.ToString("F3"));
+                sb.Append(",\"alpha\":").Append(Num(v.Alpha.Value));
             if (v.Color != null)
             { sb.Append(','); AppendStr(sb, "color", v.Color); }
             if (v.SpriteRef != null)
             { sb.Append(','); AppendStr(sb, "sprite_ref", v.SpriteRef); }
             if (v.WorldBounds != null)
                 sb.Append(",\"world_bounds\":[")
-                  .Append(v.WorldBounds[0].ToString("F2")).Append(',')
-                  .Append(v.WorldBounds[1].ToString("F2")).Append(',')
-                  .Append(v.WorldBounds[2].ToString("F2")).Append(',')
-                  .Append(v.WorldBounds[3].ToString("F2")).Append(']');
+                  .Append(Num(v.WorldBounds[0])).Append(',')
+                  .Append(Num(v.WorldBounds[1])).Append(',')
+                  .Append(Num(v.WorldBounds[2])).Append(',')
+                  .Append(Num(v.WorldBounds[3])).Append(']');
+            if (v.ZOrder.HasValue)
+                sb.Append(",\"z_order\":").Append(Num(v.ZOrder.Value));
             sb.Append('}');
         }
 
@@ -74,8 +79,34 @@ namespace AutoAgent
             {
                 if (!first) sb.Append(',');
                 sb.Append("\"raycast_target\":").Append(b.RaycastTarget.Value ? "true" : "false");
+                first = false;
             }
+            if (!first) sb.Append(',');
+            AppendStrArray(sb, "event_handlers", b.EventHandlers); sb.Append(',');
+            AppendStrArray(sb, "custom_scripts", b.CustomScripts); sb.Append(',');
+            AppendStrArray(sb, "attached_components", b.AttachedComponents);
             sb.Append('}');
+        }
+
+        static void AppendStrArray(StringBuilder sb, string key, System.Collections.Generic.List<string> values)
+        {
+            sb.Append('"').Append(Esc(key)).Append("\":[");
+            if (values != null)
+            {
+                for (int i = 0; i < values.Count; i++)
+                {
+                    if (i > 0) sb.Append(',');
+                    sb.Append('"').Append(Esc(values[i])).Append('"');
+                }
+            }
+            sb.Append(']');
+        }
+
+        // JSON-safe number: invariant culture, no exponent, finite values only.
+        static string Num(float f)
+        {
+            if (float.IsNaN(f) || float.IsInfinity(f)) return "0";
+            return f.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         static void AppendMeta(StringBuilder sb, MetaData m)

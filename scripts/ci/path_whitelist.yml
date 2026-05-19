@@ -25,6 +25,9 @@ allow:
   - "adapters/unity/Tests/**/*.cs"
   - "adapters/unity/package.json"
   - "adapters/unity/**/*.asmdef"
+  # Unity .meta sidecars — must travel with the asset they describe; a new
+  # .cs / .asmdef is incomplete without its .meta (stable GUID for refs).
+  - "adapters/unity/**/*.meta"
   - "adapters/unreal/Source/**/*.h"
   - "adapters/unreal/Source/**/*.cpp"
   - "adapters/unreal/Source/**/*.cs"
