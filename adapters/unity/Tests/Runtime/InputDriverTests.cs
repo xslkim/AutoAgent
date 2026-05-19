@@ -3,7 +3,6 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
-using TMPro;
 
 namespace AutoAgent.Tests
 {
@@ -30,22 +29,9 @@ namespace AutoAgent.Tests
             Object.DestroyImmediate(_canvas);
         }
 
-        // Click coverage moved to ClickTests (TASK-0105 — Click now throws
-        // WireException instead of returning a bool).
-
-        // ---- send_text ----------------------------------------------------
-
-        [UnityTest]
-        public IEnumerator SendText_TmpInputField_SetsText()
-        {
-            var go = MakeTmpInputField("input_account");
-
-            yield return null;
-            EngineInputDriver.SendText("input_account", "hello@test.com");
-            yield return null;
-
-            Assert.AreEqual("hello@test.com", go.GetComponent<TMP_InputField>().text);
-        }
+        // Click coverage moved to ClickTests (TASK-0105); send_text coverage
+        // moved to SendTextTests (TASK-0106) — both now throw WireException
+        // instead of returning a bool.
 
         // ---- scroll -------------------------------------------------------
 
@@ -64,23 +50,6 @@ namespace AutoAgent.Tests
         }
 
         // ---- helpers -------------------------------------------------------
-
-        GameObject MakeTmpInputField(string name)
-        {
-            // TMP_InputField requires a child Text area
-            var go = new GameObject(name);
-            go.transform.SetParent(_canvas.transform, false);
-            go.AddComponent<RectTransform>();
-            go.AddComponent<Image>();
-            var inf = go.AddComponent<TMP_InputField>();
-
-            var textArea = new GameObject("Text Area");
-            textArea.transform.SetParent(go.transform, false);
-            textArea.AddComponent<RectTransform>();
-            var tmp = textArea.AddComponent<TextMeshProUGUI>();
-            inf.textComponent = tmp;
-            return go;
-        }
 
         GameObject MakeScrollRect(string name)
         {
