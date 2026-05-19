@@ -22,6 +22,8 @@ public class AutoAgent : ModuleRules
 			"Sockets",
 			"Networking",
 			"Json",
+			"ImageCore",
+			"ImageWrapper",
 		});
 	}
 }

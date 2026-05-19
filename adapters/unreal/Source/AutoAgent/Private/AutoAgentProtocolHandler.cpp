@@ -8,6 +8,9 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
 #include "UnrealClient.h"
+#include "Engine/Engine.h"
+#include "Engine/GameViewportClient.h"
+#include "ImageUtils.h"
 
 namespace
 {
@@ -49,6 +52,39 @@ FAutoAgentProtocolHandler::FAutoAgentProtocolHandler()
 	, InputDriver(MakeShared<FAutoAgentSlateInputDriver>(Resolver))
 {
 	Resolver->Load();
+}
+
+FAutoAgentProtocolHandler::~FAutoAgentProtocolHandler()
+{
+	if (ScreenshotViewport.IsValid() && ScreenshotHandle.IsValid())
+	{
+		ScreenshotViewport->OnScreenshotCaptured().Remove(ScreenshotHandle);
+	}
+}
+
+void FAutoAgentProtocolHandler::OnScreenshotCaptured(
+	int32 Width, int32 Height, const TArray<FColor>& Bitmap)
+{
+	if (PendingScreenshotPath.IsEmpty() || Bitmap.Num() < Width * Height)
+	{
+		return;
+	}
+	const FString Path = PendingScreenshotPath;
+	PendingScreenshotPath.Empty();
+
+	// The captured backbuffer alpha is typically 0 — force opaque so the PNG
+	// is not saved fully transparent.
+	TArray<FColor> Pixels = Bitmap;
+	for (FColor& Pixel : Pixels)
+	{
+		Pixel.A = 255;
+	}
+
+	const FImageView Image(Pixels.GetData(), Width, Height, ERawImageFormat::BGRA8);
+	if (!FImageUtils::SaveImageByExtension(*Path, Image))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[AutoAgent] screenshot save failed: %s"), *Path);
+	}
 }
 
 FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
@@ -187,8 +223,29 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		{
 			return BuildError(Id, -32602, TEXT("missing param: path"));
 		}
-		// Fire-and-forget: the PNG is written after the current frame renders.
-		FScreenshotRequest::RequestScreenshot(Path, false, false);
+
+		UGameViewportClient* GameViewport = GEngine ? GEngine->GameViewport : nullptr;
+		if (!GameViewport)
+		{
+			return BuildError(Id, -32603, TEXT("no active game viewport"));
+		}
+
+		// Capture via the game viewport's OnScreenshotCaptured delegate: it
+		// delivers the scoped game-viewport pixels at the correct post-frame
+		// time. We write the file ourselves; fire-and-forget reply.
+		PendingScreenshotPath = Path;
+		if (ScreenshotViewport.Get() != GameViewport)
+		{
+			if (ScreenshotViewport.IsValid() && ScreenshotHandle.IsValid())
+			{
+				ScreenshotViewport->OnScreenshotCaptured().Remove(ScreenshotHandle);
+			}
+			ScreenshotHandle = GameViewport->OnScreenshotCaptured().AddRaw(
+				this, &FAutoAgentProtocolHandler::OnScreenshotCaptured);
+			ScreenshotViewport = GameViewport;
+		}
+		FScreenshotRequest::RequestScreenshot(/*bShowUI=*/true);
+
 		TSharedRef<FJsonObject> ResultObj = MakeShared<FJsonObject>();
 		ResultObj->SetStringField(TEXT("path"), Path);
 		return BuildResult(Id, MakeShared<FJsonValueObject>(ResultObj));
