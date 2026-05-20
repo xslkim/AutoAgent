@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
@@ -114,7 +114,13 @@ namespace AutoAgent.Tests
             d.Post(() => throw new InvalidOperationException("boom"));
             d.Post(() => ran++);
 
-            // Flush should not propagate the exception to the caller
+            // FlushOnMainThread catches exceptions and calls Debug.LogException.
+            // Unity's test runner treats any [Exception] log as a failure unless
+            // we register it with LogAssert.Expect first.
+            LogAssert.Expect(LogType.Exception,
+                new Regex("InvalidOperationException.*boom"));
+
+            // Flush must not propagate the exception to the caller.
             Assert.DoesNotThrow(() => d.FlushOnMainThread(),
                 "Flush must swallow action exceptions");
             Assert.AreEqual(1, ran, "second action must still run after the first throws");
