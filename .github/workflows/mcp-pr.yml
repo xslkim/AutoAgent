@@ -42,4 +42,4 @@ jobs:
       - name: Verify CLI entry
         run: |
           autoagent-mcp --help
-          autoagent-mcp --list-tools | wc -l | grep -q '^17$'
+          autoagent-mcp --list-tools | wc -l | grep -q '^23$'
