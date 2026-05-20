@@ -7,12 +7,14 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import get_client
+from autoagent_mcp.connector.error_handler import handle_tool_errors
 
 
 def register(mcp: FastMCP) -> None:
     """Register pin_id and list_orphan_ids on *mcp*."""
 
     @mcp.tool()
+    @handle_tool_errors
     async def pin_id(current_id: str, new_id: str) -> dict[str, Any]:
         """Attach a stable, human-chosen id to a widget.
 
@@ -27,6 +29,7 @@ def register(mcp: FastMCP) -> None:
         return {"success": True, "pinned_id": new_id}
 
     @mcp.tool()
+    @handle_tool_errors
     async def list_orphan_ids() -> dict[str, Any]:
         """Return ids that were present in the last dump but are now missing.
 

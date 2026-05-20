@@ -42,6 +42,28 @@ class AdapterError(Exception):
         return f"AdapterError(code={self.code!r}, message={self.message!r})"
 
 
+class EngineDisconnectedError(Exception):
+    """Raised when the WebSocket transport fails mid-operation.
+
+    Covers adapter process crashes, network drops, and OS-level socket errors.
+    MCP tools catch this and return a structured ``EngineDisconnected`` error
+    to the AI so it knows to call ``connect_engine`` again.
+
+    Attributes:
+        code: Fixed JSON-RPC error code ``-32099`` (not in the standard table;
+              reserved for this adapter-level transport error).
+    """
+
+    code: int = -32099
+
+    def __init__(self, message: str = "Engine disconnected. Call connect_engine to reconnect.") -> None:
+        super().__init__(message)
+        self.message = message
+
+    def __repr__(self) -> str:
+        return f"EngineDisconnectedError({self.message!r})"
+
+
 class WebSocketClient:
     """Asyncio WebSocket client for the AutoAgent wire protocol.
 
@@ -128,8 +150,13 @@ class WebSocketClient:
             "method": method,
             "params": params,
         }
-        await self._ws.send(json.dumps(request))
-        raw = await self._ws.recv()
+        try:
+            await self._ws.send(json.dumps(request))
+            raw = await self._ws.recv()
+        except (websockets.exceptions.WebSocketException, OSError, EOFError) as exc:
+            raise EngineDisconnectedError(
+                f"Adapter connection lost during '{method}': {exc}"
+            ) from exc
         response: dict[str, Any] = json.loads(raw)
 
         if "error" in response:

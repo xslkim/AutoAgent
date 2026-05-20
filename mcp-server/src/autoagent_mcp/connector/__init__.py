@@ -10,7 +10,11 @@ starting a WebSocket server.
 
 from __future__ import annotations
 
-from autoagent_mcp.connector.websocket_client import AdapterError, WebSocketClient
+from autoagent_mcp.connector.websocket_client import (
+    AdapterError,
+    EngineDisconnectedError,
+    WebSocketClient,
+)
 
 # Module-level singleton — None means "not connected".
 _active_client: WebSocketClient | None = None
@@ -39,4 +43,4 @@ def set_client(client: WebSocketClient | None) -> None:
     _active_client = client
 
 
-__all__ = ["AdapterError", "WebSocketClient", "get_client", "set_client"]
+__all__ = ["AdapterError", "EngineDisconnectedError", "WebSocketClient", "get_client", "set_client"]

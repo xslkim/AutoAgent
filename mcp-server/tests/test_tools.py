@@ -383,19 +383,25 @@ class TestListOrphanIds:
 
 class TestErrorPropagation:
     @pytest.mark.asyncio
-    async def test_adapter_error_propagates_from_click(self, mcp, mock_client):
+    async def test_adapter_error_returns_structured_dict(self, mcp, mock_client):
+        """AdapterError is now caught by @handle_tool_errors → structured dict."""
         mock_client.call.side_effect = AdapterError(-32001, "widget not found")
-        with pytest.raises(Exception, match="-32001"):
-            await mcp.call_tool("click", {"id": "missing_btn"})
+        raw = await mcp.call_tool("click", {"id": "missing_btn"})
+        result = _result(raw)
+        assert result["success"] is False
+        assert result["error"]["code"] == -32001
+        assert result["error"]["error_type"] == "WidgetNotFound"
 
     @pytest.mark.asyncio
-    async def test_not_connected_raises_on_call(self):
-        """Tools raise when no client is set."""
+    async def test_not_connected_returns_engine_disconnected(self):
+        """No client set → @handle_tool_errors returns EngineDisconnected dict."""
         set_client(None)
         try:
             server = build_server()
-            with pytest.raises(Exception, match="No engine connected"):
-                await server.call_tool("dump_tree", {})
+            raw = await server.call_tool("dump_tree", {})
+            result = _result(raw)
+            assert result["success"] is False
+            assert result["error"]["error_type"] == "EngineDisconnected"
         finally:
             set_client(None)
 

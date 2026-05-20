@@ -8,12 +8,14 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import get_client
+from autoagent_mcp.connector.error_handler import handle_tool_errors
 
 
 def register(mcp: FastMCP) -> None:
     """Register send_text on *mcp*."""
 
     @mcp.tool()
+    @handle_tool_errors
     async def send_text(
         id: str,
         text: str,
