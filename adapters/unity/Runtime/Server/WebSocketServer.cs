@@ -25,8 +25,23 @@ namespace AutoAgent
         TcpListener _listener;
         Thread _acceptThread;
         volatile bool _running;
+        // Track the current connected client's stream for Broadcast().
+        // Null when no client is connected; assigned in ServeClient.
+        volatile NetworkStream _clientStream;
 
         public WebSocketServer(ProtocolHandler handler) => _handler = handler;
+
+        /// <summary>
+        /// Push a JSON-RPC notification frame to the currently connected client.
+        /// Thread-safe. No-op if no client is connected.
+        /// </summary>
+        public void Broadcast(string json)
+        {
+            var stream = _clientStream;
+            if (stream == null) return;
+            try   { SendFrame(stream, json); }
+            catch { _clientStream = null; } // mark disconnected
+        }
 
         public void Start()
         {
@@ -69,6 +84,7 @@ namespace AutoAgent
             using (client)
             using (var stream = client.GetStream())
             {
+                _clientStream = stream;
                 try
                 {
                     if (!Handshake(stream)) return;
@@ -82,6 +98,7 @@ namespace AutoAgent
                 {
                     Debug.LogWarning($"[AutoAgent] Client error: {ex.Message}");
                 }
+                finally { _clientStream = null; }
             }
         }
 

@@ -17,6 +17,12 @@ namespace AutoAgent
         ProtocolHandler _handler;
         WebSocketServer _server;
 
+        /// <summary>
+        /// The global event emitter. Null until <see cref="Awake"/> runs.
+        /// Publish lifecycle / scene notifications through this.
+        /// </summary>
+        public static EventEmitter Events { get; private set; }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void AutoStart()
         {
@@ -40,6 +46,11 @@ namespace AutoAgent
             Application.runInBackground = true;
             _handler = new ProtocolHandler();
             _server  = new WebSocketServer(_handler);
+            // Event emitter broadcasts JSON-RPC notifications to the connected client.
+            Events   = new EventEmitter(_server.Broadcast);
+            // Watchers run on the same DontDestroyOnLoad object.
+            gameObject.AddComponent<SceneChangeWatcher>().Init(Events);
+            gameObject.AddComponent<WidgetLifecycleWatcher>().Init(Events);
             _server.Start();
         }
 
@@ -150,7 +161,7 @@ namespace AutoAgent
         void OnDestroy()
         {
             _server?.Stop();
-            if (_instance == this) _instance = null;
+            if (_instance == this) { _instance = null; Events = null; }
         }
 
         void OnApplicationQuit() => _server?.Stop();
