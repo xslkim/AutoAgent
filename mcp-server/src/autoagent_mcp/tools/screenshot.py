@@ -7,12 +7,14 @@ from typing import Any, Literal
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import get_client
+from autoagent_mcp.connector.error_handler import handle_tool_errors
 
 
 def register(mcp: FastMCP) -> None:
     """Register take_screenshot and wait_for on *mcp*."""
 
     @mcp.tool()
+    @handle_tool_errors
     async def take_screenshot(
         save_path: str,
         scope: Literal["fullscreen", "node", "rect"] = "fullscreen",
@@ -50,6 +52,7 @@ def register(mcp: FastMCP) -> None:
         return {"saved_path": path}
 
     @mcp.tool()
+    @handle_tool_errors
     async def wait_for(
         condition: Literal[
             "widget_appeared",

@@ -8,6 +8,7 @@ from typing import Any, Literal
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import get_client
+from autoagent_mcp.connector.error_handler import handle_tool_errors
 
 # Scroll direction → (delta_x, delta_y) multipliers
 _SCROLL_DELTA: dict[str, tuple[float, float]] = {
@@ -22,6 +23,7 @@ def register(mcp: FastMCP) -> None:
     """Register click, drag, scroll, and key_press on *mcp*."""
 
     @mcp.tool()
+    @handle_tool_errors
     async def click(
         id: str,
         button: Literal["left", "right", "middle"] = "left",
@@ -36,6 +38,7 @@ def register(mcp: FastMCP) -> None:
         return {"success": True, "captured_at": time.time()}
 
     @mcp.tool()
+    @handle_tool_errors
     async def drag(
         from_id: str,
         to_id: str,
@@ -49,6 +52,7 @@ def register(mcp: FastMCP) -> None:
         return {"success": True, "captured_at": time.time()}
 
     @mcp.tool()
+    @handle_tool_errors
     async def scroll(
         id: str,
         direction: Literal["up", "down", "left", "right"] = "down",
@@ -67,6 +71,7 @@ def register(mcp: FastMCP) -> None:
         return {"success": True, "captured_at": time.time()}
 
     @mcp.tool()
+    @handle_tool_errors
     async def key_press(
         id: str,
         key: str,

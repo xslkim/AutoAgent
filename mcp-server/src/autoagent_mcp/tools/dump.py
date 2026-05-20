@@ -8,12 +8,14 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import get_client
+from autoagent_mcp.connector.error_handler import handle_tool_errors
 
 
 def register(mcp: FastMCP) -> None:
     """Register dump_tree, find_widget, and get_widget on *mcp*."""
 
     @mcp.tool()
+    @handle_tool_errors
     async def dump_tree(
         include_invisible: bool = False,
         max_depth: int = -1,
@@ -52,6 +54,7 @@ def register(mcp: FastMCP) -> None:
         return {"nodes": nodes, "captured_at": time.time()}
 
     @mcp.tool()
+    @handle_tool_errors
     async def find_widget(
         logical_role: str | None = None,
         text: str | None = None,
@@ -72,6 +75,7 @@ def register(mcp: FastMCP) -> None:
         return {"ids": ids}
 
     @mcp.tool()
+    @handle_tool_errors
     async def get_widget(id: str) -> dict[str, Any]:
         """Get the current state of a single UI node by its stable id."""
         node = await get_client().call("get_widget", {"id": id})
