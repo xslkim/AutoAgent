@@ -176,9 +176,9 @@ namespace AutoAgent
 
             float dx = ExtractFloatParam(paramsJson, "delta_x");
             float dy = ExtractFloatParam(paramsJson, "delta_y");
-            bool ok = EngineInputDriver.Scroll(nodeId, dx, dy);
-            return ok ? OkResponse(id, "null")
-                      : ErrorResponse(id, -32001, $"widget not found: {nodeId}");
+            // Scroll throws WireException on failure; Dispatch's catch maps it.
+            EngineInputDriver.Scroll(nodeId, dx, dy);
+            return OkResponse(id, "null");
         }
 
         static string HandleTakeScreenshot(object id, string paramsJson)

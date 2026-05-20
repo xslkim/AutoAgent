@@ -200,25 +200,33 @@ namespace AutoAgent
 
         // ------------------------------------------------------------------ scroll
 
-        public static bool Scroll(string nodeId, float deltaX, float deltaY)
+        /// <summary>
+        /// Scroll the node's enclosing ScrollRect by (deltaX, deltaY) in
+        /// normalized-position units. Looks up the ScrollRect on the node
+        /// itself first, then walks up to a parent — addressing either the
+        /// viewport / content child or the ScrollRect root works.
+        ///
+        /// Setting <c>normalizedPosition</c> triggers
+        /// <c>ScrollRect.onValueChanged</c>; Unity clamps the value to [0,1].
+        /// </summary>
+        /// <exception cref="WireException">
+        /// Code -32001 if the id resolves to no node; code -32002 if the node
+        /// (and no ancestor) carries a ScrollRect.
+        /// </exception>
+        public static void Scroll(string nodeId, float deltaX, float deltaY)
         {
             var go = FindById(nodeId);
-            if (go == null) return false;
+            if (go == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
 
-            // Try direct ScrollRect manipulation first (most reliable in PoC)
             var sr = go.GetComponent<ScrollRect>();
             if (sr == null) sr = go.GetComponentInParent<ScrollRect>();
-            if (sr != null)
-            {
-                sr.normalizedPosition += new Vector2(deltaX, deltaY);
-                return true;
-            }
+            if (sr == null)
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no ScrollRect (self or ancestor): {nodeId}");
 
-            // Fallback: synthetic scroll event
-            var eventData = NewPointerEvent(go);
-            eventData.scrollDelta = new Vector2(deltaX, deltaY);
-            ExecuteEvents.Execute(go, eventData, ExecuteEvents.scrollHandler);
-            return true;
+            sr.normalizedPosition += new Vector2(deltaX, deltaY);
         }
 
         // ------------------------------------------------------------------ helpers
