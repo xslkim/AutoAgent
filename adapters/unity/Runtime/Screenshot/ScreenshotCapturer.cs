@@ -128,8 +128,15 @@ namespace AutoAgent
         }
 
         // ---- helpers -------------------------------------------------------
+        //
+        // CropTexture / WriteToFile are exposed `internal` so unit tests can
+        // exercise the pure pixel-and-IO logic directly. The capture coroutines
+        // can't run in CI batchmode — Unity's WaitForEndOfFrame never returns
+        // in -batchmode unless rendering finishes per frame, which the test
+        // runner doesn't guarantee. Tests build a Texture2D in-memory and
+        // call these helpers to verify cropping + PNG/JPG encoding.
 
-        static Texture2D CropTexture(Texture2D source, RectInt r)
+        internal static Texture2D CropTexture(Texture2D source, RectInt r)
         {
             var pixels = source.GetPixels(r.x, r.y, r.width, r.height);
             var tex = new Texture2D(r.width, r.height, TextureFormat.RGBA32, false);
@@ -138,7 +145,7 @@ namespace AutoAgent
             return tex;
         }
 
-        static void WriteToFile(Texture2D tex, string path)
+        internal static void WriteToFile(Texture2D tex, string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new WireException(WireError.InvalidParams, "screenshot path is empty");

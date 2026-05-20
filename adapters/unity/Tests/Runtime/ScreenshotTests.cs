@@ -116,84 +116,114 @@ namespace AutoAgent.Tests
             Assert.AreEqual(40, r.height, "height should match sizeDelta.y");
         }
 
-        // ---- capture (fullscreen) -----------------------------------------
+        // ---- WriteToFile / CropTexture (sync, no WaitForEndOfFrame) -------
+        //
+        // The capture COROUTINES (CaptureFullscreen / CaptureNode / CaptureRect)
+        // can't be tested in -batchmode CI: they yield WaitForEndOfFrame, which
+        // doesn't return reliably without the editor's render loop. We instead
+        // test the pure pixel + IO logic — build a Texture2D in-memory, call
+        // CropTexture / WriteToFile directly, assert dimensions + headers.
 
-        [UnityTest]
-        public IEnumerator FullscreenCaptureWritesPngFile()
+        [Test]
+        public void WriteToFileEmitsPngWithMatchingDimensions()
         {
-            var path = TempPath(".png");
-            yield return ScreenshotCapturer.CaptureFullscreen(path);
+            var tex = MakeSolidTexture(20, 15, Color.white);
+            try
+            {
+                var path = TempPath(".png");
+                ScreenshotCapturer.WriteToFile(tex, path);
 
-            Assert.IsTrue(File.Exists(path), "PNG file must be written");
-            AssertPngHeader(path);
+                Assert.IsTrue(File.Exists(path), "PNG file must be written");
+                AssertPngHeader(path);
+                Assert.AreEqual(20, ReadPngWidth(path),
+                    "PNG width must match the source texture");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(tex); }
         }
 
-        [UnityTest]
-        public IEnumerator FullscreenCaptureWritesJpgWhenExtensionIsJpg()
+        [Test]
+        public void WriteToFileEmitsJpgWhenExtensionIsJpg()
         {
-            var path = TempPath(".jpg");
-            yield return ScreenshotCapturer.CaptureFullscreen(path);
+            var tex = MakeSolidTexture(16, 16, Color.red);
+            try
+            {
+                var path = TempPath(".jpg");
+                ScreenshotCapturer.WriteToFile(tex, path);
 
-            Assert.IsTrue(File.Exists(path), "JPG file must be written");
-            AssertJpegHeader(path);
+                Assert.IsTrue(File.Exists(path), "JPG file must be written");
+                AssertJpegHeader(path);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(tex); }
         }
 
-        // ---- capture (rect) -----------------------------------------------
-
-        [UnityTest]
-        public IEnumerator RectCaptureWritesPngFile()
+        [Test]
+        public void WriteToFileWithEmptyPathThrowsInvalidParams()
         {
-            if (Screen.width < 4 || Screen.height < 4)
-                Assert.Ignore($"Screen too small in this environment ({Screen.width}x{Screen.height})");
-
-            var path = TempPath(".png");
-            int w = Mathf.Min(32, Screen.width);
-            int h = Mathf.Min(32, Screen.height);
-            yield return ScreenshotCapturer.CaptureRect(new RectInt(0, 0, w, h), path);
-
-            Assert.IsTrue(File.Exists(path));
-            AssertPngHeader(path);
-            int pw = ReadPngWidth(path);
-            Assert.AreEqual(w, pw, "PNG width must match the requested crop width");
+            var tex = MakeSolidTexture(4, 4, Color.green);
+            try
+            {
+                var ex = Assert.Throws<WireException>(
+                    () => ScreenshotCapturer.WriteToFile(tex, ""));
+                Assert.AreEqual(WireError.InvalidParams, ex.Code);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(tex); }
         }
 
-        // ---- capture (node) -----------------------------------------------
-
-        [UnityTest]
-        public IEnumerator NodeCaptureWritesFileWithExpectedDimensions()
+        [Test]
+        public void CropTextureProducesRequestedDimensions()
         {
-            if (Screen.width < 4 || Screen.height < 4)
-                Assert.Ignore($"Screen too small in this environment ({Screen.width}x{Screen.height})");
+            // 40×30 source, crop a known interior rect.
+            var src = MakeSolidTexture(40, 30, Color.gray);
+            Texture2D cropped = null;
+            try
+            {
+                cropped = ScreenshotCapturer.CropTexture(src, new RectInt(5, 5, 10, 8));
+                Assert.AreEqual(10, cropped.width, "crop width");
+                Assert.AreEqual(8, cropped.height, "crop height");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(src);
+                if (cropped != null) UnityEngine.Object.DestroyImmediate(cropped);
+            }
+        }
 
-            var canvasGO = Spawn("C", typeof(Canvas), typeof(GraphicRaycaster));
-            var canvas = canvasGO.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        [Test]
+        public void CropPipelineWritesFileWithCroppedDimensions()
+        {
+            // End-to-end synchronous path: crop a source texture then write
+            // it — mirrors what CaptureRect would do once the frame is ready.
+            var src = MakeSolidTexture(40, 30, Color.white);
+            Texture2D cropped = null;
+            try
+            {
+                cropped = ScreenshotCapturer.CropTexture(src, new RectInt(0, 0, 24, 16));
+                var path = TempPath(".png");
+                ScreenshotCapturer.WriteToFile(cropped, path);
 
-            var nodeGO = new GameObject("ScreenshotTarget", typeof(RectTransform));
-            _spawned.Add(nodeGO);
-            nodeGO.transform.SetParent(canvasGO.transform, false);
-            var rt = nodeGO.GetComponent<RectTransform>();
-            rt.anchorMin = rt.anchorMax = Vector2.zero;
-            rt.pivot = Vector2.zero;
-            rt.anchoredPosition = new Vector2(10, 10);
-            rt.sizeDelta = new Vector2(Mathf.Min(40, Screen.width - 12),
-                                       Mathf.Min(30, Screen.height - 12));
-            yield return null;
-            Canvas.ForceUpdateCanvases();
-            yield return null;
-
-            var expected = ScreenshotCapturer.ComputeNodeScreenRect(nodeGO);
-            var path = TempPath(".png");
-            yield return ScreenshotCapturer.CaptureNode(nodeGO, path);
-
-            Assert.IsTrue(File.Exists(path));
-            AssertPngHeader(path);
-            int pw = ReadPngWidth(path);
-            Assert.AreEqual(expected.width, pw,
-                "PNG width must match ComputeNodeScreenRect's width");
+                Assert.IsTrue(File.Exists(path));
+                AssertPngHeader(path);
+                Assert.AreEqual(24, ReadPngWidth(path));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(src);
+                if (cropped != null) UnityEngine.Object.DestroyImmediate(cropped);
+            }
         }
 
         // ---- helpers -------------------------------------------------------
+
+        static Texture2D MakeSolidTexture(int w, int h, Color c)
+        {
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            var pixels = new Color[w * h];
+            for (int i = 0; i < pixels.Length; i++) pixels[i] = c;
+            tex.SetPixels(pixels);
+            tex.Apply();
+            return tex;
+        }
+
 
         static void AssertPngHeader(string path)
         {
