@@ -7,49 +7,53 @@ using UnityEngine;
 namespace AutoAgent
 {
     /// <summary>
-    /// JSON-RPC 2.0 dispatcher. Thread-safe: background WS thread enqueues work;
-    /// Unity main thread (<see cref="AutoAgentBootstrap.Update"/>) drains the queue.
+    /// JSON-RPC 2.0 dispatcher. Thread-safe: background WS thread enqueues work
+    /// via <see cref="Enqueue"/>; Unity main thread (<see cref="AutoAgentBootstrap.Update"/>)
+    /// drains the queue via <see cref="DrainOnMainThread"/>.
     ///
-    /// Most handlers are synchronous and return a response string immediately.
-    /// <c>wait_for</c> is the one exception: it starts a coroutine via
-    /// <see cref="AutoAgentBootstrap.RunWaitFor"/> and returns <c>null</c> to
-    /// signal that the reply will be sent asynchronously when the coroutine
-    /// resolves.  <see cref="DrainOnMainThread"/> skips <c>job.Reply</c> for
-    /// null responses.
+    /// Internally uses <see cref="MainThreadDispatcher"/> to marshal every
+    /// request action to the Unity main thread before execution.
     ///
-    /// Pure JSON-RPC plumbing (parsing, response formatting) lives in
-    /// <see cref="JsonRpcDispatcher"/>; this class owns only the business logic.
+    /// Most handlers are synchronous and call <c>reply</c> immediately.
+    /// <c>wait_for</c> is the exception: it starts a coroutine via
+    /// <see cref="AutoAgentBootstrap.RunWaitFor"/> and defers the reply until
+    /// the condition is met or the timeout expires.
+    ///
+    /// Pure JSON-RPC plumbing lives in <see cref="JsonRpcDispatcher"/>;
+    /// error codes are defined in <see cref="WireErrorCode"/>.
     /// </summary>
     internal class ProtocolHandler
     {
-        internal struct MainThreadJob
-        {
-            public string RequestJson;
-            public Action<string> Reply;
-        }
+        readonly MainThreadDispatcher _dispatcher;
 
-        readonly ConcurrentQueue<MainThreadJob> _queue = new ConcurrentQueue<MainThreadJob>();
+        public ProtocolHandler() : this(new MainThreadDispatcher()) { }
+
+        /// <summary>Injection constructor for tests that supply a custom dispatcher.</summary>
+        internal ProtocolHandler(MainThreadDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
 
         // Called by WebSocketServer on its background thread.
-        public void Enqueue(string requestJson, Action<string> reply) =>
-            _queue.Enqueue(new MainThreadJob { RequestJson = requestJson, Reply = reply });
-
-        // Called by AutoAgentBootstrap.Update() on the Unity main thread.
-        public void DrainOnMainThread()
+        // The work is wrapped in an action and posted to the main-thread queue.
+        public void Enqueue(string requestJson, Action<string> reply)
         {
-            while (_queue.TryDequeue(out var job))
+            _dispatcher.Post(() =>
             {
                 string response;
-                try { response = Dispatch(job.RequestJson, job.Reply); }
+                try { response = Dispatch(requestJson, reply); }
                 catch (Exception ex)
                 {
-                    response = JsonRpcDispatcher.ErrorResponse(null, -32603, ex.Message);
+                    response = JsonRpcDispatcher.ErrorResponse(
+                        null, WireError.InternalError, ex.Message);
                 }
-                // null response → deferred async reply; coroutine will call job.Reply later
-                if (response != null)
-                    job.Reply(response);
-            }
+                // null → deferred (wait_for coroutine will call reply later)
+                if (response != null) reply(response);
+            });
         }
+
+        // Called by AutoAgentBootstrap.Update() on the Unity main thread.
+        public void DrainOnMainThread() => _dispatcher.FlushOnMainThread();
 
         // ------------------------------------------------------------------ dispatch
 
@@ -59,7 +63,7 @@ namespace AutoAgent
         {
             if (!JsonRpcDispatcher.TryParseRequest(json,
                     out string method, out object id, out string paramsJson))
-                return JsonRpcDispatcher.ErrorResponse(null, -32700, "parse error");
+                return JsonRpcDispatcher.ErrorResponse(null, WireError.ParseError, "parse error");
 
             try
             {
@@ -78,7 +82,8 @@ namespace AutoAgent
                     // Async: starts a coroutine, reply is sent by the coroutine.
                     "wait_for"          => HandleWaitFor(id, paramsJson, reply),
                     _                   => JsonRpcDispatcher.ErrorResponse(
-                                              id, -32601, $"method not found: {method}"),
+                                              id, WireError.MethodNotFound,
+                                              $"method not found: {method}"),
                 };
             }
             catch (WireException we)
@@ -89,7 +94,7 @@ namespace AutoAgent
             }
             catch (Exception ex)
             {
-                return JsonRpcDispatcher.ErrorResponse(id, -32603, ex.Message);
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InternalError, ex.Message);
             }
         }
 
@@ -143,7 +148,7 @@ namespace AutoAgent
         {
             string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
             if (string.IsNullOrEmpty(nodeId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: id");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
 
             var nodes = UGuiReflector.DumpActiveScene();
             foreach (var n in nodes)
@@ -151,14 +156,14 @@ namespace AutoAgent
                     return JsonRpcDispatcher.OkResponse(id,
                         NodeSerializer.SerializeTree(new List<NodeData> { n })
                                        .TrimStart('[').TrimEnd(']'));
-            return JsonRpcDispatcher.ErrorResponse(id, -32001, $"widget not found: {nodeId}");
+            return JsonRpcDispatcher.ErrorResponse(id, WireError.WidgetNotFound, $"widget not found: {nodeId}");
         }
 
         static string HandleClick(object id, string paramsJson)
         {
             string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
             if (string.IsNullOrEmpty(nodeId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: id");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             // Click throws WireException on failure; Dispatch's catch maps it.
             EngineInputDriver.Click(nodeId);
             return JsonRpcDispatcher.OkResponse(id, "null");
@@ -169,7 +174,7 @@ namespace AutoAgent
             string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
             string text   = JsonRpcDispatcher.ExtractStringParam(paramsJson, "text") ?? "";
             if (string.IsNullOrEmpty(nodeId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: id");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             bool clearFirst = JsonRpcDispatcher.ExtractBoolParam(paramsJson, "clear_first", true);
             EngineInputDriver.SendText(nodeId, text, clearFirst);
             return JsonRpcDispatcher.OkResponse(id, "null");
@@ -180,7 +185,7 @@ namespace AutoAgent
             string fromId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "from_id");
             string toId   = JsonRpcDispatcher.ExtractStringParam(paramsJson, "to_id");
             if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602,
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
                     "missing params: from_id / to_id");
             int durationMs = (int)JsonRpcDispatcher.ExtractFloatParam(paramsJson, "duration_ms");
             AutoAgentBootstrap.RunDrag(fromId, toId, durationMs);
@@ -191,7 +196,7 @@ namespace AutoAgent
         {
             string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
             if (string.IsNullOrEmpty(nodeId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: id");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             float dx = JsonRpcDispatcher.ExtractFloatParam(paramsJson, "delta_x");
             float dy = JsonRpcDispatcher.ExtractFloatParam(paramsJson, "delta_y");
             EngineInputDriver.Scroll(nodeId, dx, dy);
@@ -203,9 +208,9 @@ namespace AutoAgent
             string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
             string key    = JsonRpcDispatcher.ExtractStringParam(paramsJson, "key");
             if (string.IsNullOrEmpty(nodeId))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: id");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             if (string.IsNullOrEmpty(key))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: key");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: key");
             EngineInputDriver.KeyPress(nodeId, key);
             return JsonRpcDispatcher.OkResponse(id, "null");
         }
@@ -214,7 +219,7 @@ namespace AutoAgent
         {
             string path = JsonRpcDispatcher.ExtractStringParam(paramsJson, "path");
             if (string.IsNullOrEmpty(path))
-                return JsonRpcDispatcher.ErrorResponse(id, -32602, "missing param: path");
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: path");
             string mode = (JsonRpcDispatcher.ExtractStringParam(paramsJson, "mode") ?? "fullscreen")
                 .Trim().ToLowerInvariant();
             switch (mode)
@@ -225,7 +230,7 @@ namespace AutoAgent
                 case "node":
                     string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
                     if (string.IsNullOrEmpty(nodeId))
-                        return JsonRpcDispatcher.ErrorResponse(id, -32602,
+                        return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
                             "missing param: id (node mode)");
                     AutoAgentBootstrap.RequestScreenshotNode(nodeId, path);
                     break;
@@ -237,7 +242,7 @@ namespace AutoAgent
                     AutoAgentBootstrap.RequestScreenshotRect(rx, ry, rw, rh, path);
                     break;
                 default:
-                    return JsonRpcDispatcher.ErrorResponse(id, -32602,
+                    return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
                         $"unsupported mode: {mode}");
             }
             return JsonRpcDispatcher.OkResponse(id,

@@ -133,7 +133,7 @@ namespace AutoAgent
                 }
                 catch (Exception ex)
                 {
-                    reply(JsonRpcDispatcher.ErrorResponse(rpcId, -32603, ex.Message));
+                    reply(JsonRpcDispatcher.ErrorResponse(rpcId, WireError.InternalError, ex.Message));
                     yield break;
                 }
 

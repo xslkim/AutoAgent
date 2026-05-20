@@ -5,8 +5,8 @@ namespace AutoAgent
     /// input-driver / protocol code; <see cref="ProtocolHandler"/> turns it
     /// into <c>{"error":{"code":...,"message":...}}</c>.
     ///
-    /// The full error-code table is formalized in TASK-0113; for now the codes
-    /// the input driver needs live in <see cref="WireError"/>.
+    /// Use <see cref="WireError"/> constants (or cast <see cref="WireErrorCode"/>
+    /// to <c>int</c>) for the <paramref name="code"/> argument.
     /// </summary>
     internal sealed class WireException : System.Exception
     {
@@ -16,19 +16,38 @@ namespace AutoAgent
         {
             Code = code;
         }
+
+        public WireException(WireErrorCode code, string message)
+            : this((int)code, message) { }
     }
 
     /// <summary>
-    /// Wire-protocol error codes (subset; authoritative table in
-    /// docs/01-protocol-spec.md, consolidated by TASK-0113).
+    /// Convenience int aliases for the most-used <see cref="WireErrorCode"/>
+    /// values. Kept as <c>int</c> so call-sites that pass them directly to
+    /// <see cref="WireException"/> or <see cref="JsonRpcDispatcher"/> don't
+    /// need a cast.
     /// </summary>
     internal static class WireError
     {
-        public const int WidgetNotFound        = -32001;
-        public const int WidgetNotInteractable = -32002;
-        // wait_for / async operation never satisfied within its budget.
-        public const int Timeout               = -32005;
-        // JSON-RPC 2.0 standard code: malformed params (e.g. unsupported key).
-        public const int InvalidParams         = -32602;
+        public const int WidgetNotFound        = (int)WireErrorCode.WidgetNotFound;
+        public const int WidgetNotInteractable = (int)WireErrorCode.WidgetNotInteractable;
+        public const int VisualPropertyWrite   = (int)WireErrorCode.VisualPropertyWrite;
+        public const int StructuralChange      = (int)WireErrorCode.StructuralChange;
+        public const int Timeout               = (int)WireErrorCode.TimeoutError;
+        public const int InputInjectionFailed  = (int)WireErrorCode.InputInjectionFailed;
+        public const int EngineThreadViolation = (int)WireErrorCode.EngineThreadViolation;
+        public const int ScreenshotFailed      = (int)WireErrorCode.ScreenshotFailed;
+        public const int VersionMismatch       = (int)WireErrorCode.VersionMismatch;
+        public const int NegotiationTimeout    = (int)WireErrorCode.NegotiationTimeout;
+        public const int SubprotocolMismatch   = (int)WireErrorCode.SubprotocolMismatch;
+        public const int NotNegotiated         = (int)WireErrorCode.NotNegotiated;
+        public const int PathViolation         = (int)WireErrorCode.PathViolation;
+
+        // JSON-RPC 2.0 standard codes
+        public const int ParseError     = (int)WireErrorCode.ParseError;
+        public const int InvalidRequest = (int)WireErrorCode.InvalidRequest;
+        public const int MethodNotFound = (int)WireErrorCode.MethodNotFound;
+        public const int InvalidParams  = (int)WireErrorCode.InvalidParams;
+        public const int InternalError  = (int)WireErrorCode.InternalError;
     }
 }
