@@ -43,14 +43,47 @@ namespace AutoAgent
 
         void Update() => _handler?.DrainOnMainThread();
 
+        // ---- fire-and-forget screenshot ------------------------------------
+
         /// <summary>
-        /// Fire-and-forget screenshot. Captures the rendered frame and writes a
-        /// PNG to <paramref name="path"/>. Called from the protocol handler.
+        /// Fullscreen screenshot. Writes the file at <paramref name="path"/>;
+        /// format inferred from the extension (.png / .jpg).
         /// </summary>
         public static void RequestScreenshot(string path)
         {
             if (_instance != null)
-                _instance.StartCoroutine(_instance.CaptureRoutine(path));
+                _instance.StartCoroutine(ScreenshotCapturer.CaptureFullscreen(path));
+        }
+
+        /// <summary>
+        /// Node screenshot — crops the frame to a single RectTransform's
+        /// world bounds. Resolves the node synchronously so a bad id surfaces
+        /// as a WireException immediately.
+        /// </summary>
+        public static void RequestScreenshotNode(string nodeId, string path)
+        {
+            var go = EngineInputDriver.FindById(nodeId);
+            if (go == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+            if (go.GetComponent<RectTransform>() == null)
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"node has no RectTransform: {nodeId}");
+            if (_instance != null)
+                _instance.StartCoroutine(ScreenshotCapturer.CaptureNode(go, path));
+        }
+
+        /// <summary>
+        /// Rect screenshot — crops to an explicit screen-space rect.
+        /// </summary>
+        public static void RequestScreenshotRect(int x, int y, int w, int h, string path)
+        {
+            if (w <= 0 || h <= 0)
+                throw new WireException(WireError.InvalidParams,
+                    $"rect width / height must be positive (got {w}x{h})");
+            if (_instance != null)
+                _instance.StartCoroutine(
+                    ScreenshotCapturer.CaptureRect(new RectInt(x, y, w, h), path));
         }
 
         /// <summary>
@@ -65,26 +98,6 @@ namespace AutoAgent
             EngineInputDriver.ResolveDrag(fromId, toId);
             if (_instance != null)
                 _instance.StartCoroutine(EngineInputDriver.Drag(fromId, toId, durationMs));
-        }
-
-        System.Collections.IEnumerator CaptureRoutine(string path)
-        {
-            yield return new WaitForEndOfFrame();
-            Texture2D tex = null;
-            try
-            {
-                tex = ScreenCapture.CaptureScreenshotAsTexture();
-                System.IO.File.WriteAllBytes(path, tex.EncodeToPNG());
-                Debug.Log($"[AutoAgent] screenshot written: {path}");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogWarning($"[AutoAgent] screenshot failed: {ex.Message}");
-            }
-            finally
-            {
-                if (tex != null) Destroy(tex);
-            }
         }
 
         void OnDestroy()

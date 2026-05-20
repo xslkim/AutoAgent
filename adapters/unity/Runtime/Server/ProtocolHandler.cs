@@ -200,8 +200,33 @@ namespace AutoAgent
             string path = ExtractStringParam(paramsJson, "path");
             if (string.IsNullOrEmpty(path))
                 return ErrorResponse(id, -32602, "missing param: path");
-            // Fire-and-forget: a coroutine captures the frame and writes the PNG.
-            AutoAgentBootstrap.RequestScreenshot(path);
+            // mode: "fullscreen" (default) | "node" | "rect"
+            string mode = (ExtractStringParam(paramsJson, "mode") ?? "fullscreen")
+                .Trim().ToLowerInvariant();
+            // Each path is fire-and-forget: sync-validate the params, throw
+            // WireException on bad input (Dispatch turns it into an error),
+            // then start the capture coroutine.
+            switch (mode)
+            {
+                case "fullscreen":
+                    AutoAgentBootstrap.RequestScreenshot(path);
+                    break;
+                case "node":
+                    string nodeId = ExtractStringParam(paramsJson, "id");
+                    if (string.IsNullOrEmpty(nodeId))
+                        return ErrorResponse(id, -32602, "missing param: id (node mode)");
+                    AutoAgentBootstrap.RequestScreenshotNode(nodeId, path);
+                    break;
+                case "rect":
+                    int rx = (int)ExtractFloatParam(paramsJson, "x");
+                    int ry = (int)ExtractFloatParam(paramsJson, "y");
+                    int rw = (int)ExtractFloatParam(paramsJson, "w");
+                    int rh = (int)ExtractFloatParam(paramsJson, "h");
+                    AutoAgentBootstrap.RequestScreenshotRect(rx, ry, rw, rh, path);
+                    break;
+                default:
+                    return ErrorResponse(id, -32602, $"unsupported mode: {mode}");
+            }
             return OkResponse(id, $"{{\"path\":\"{NodeSerializer.Esc(path)}\"}}");
         }
 
