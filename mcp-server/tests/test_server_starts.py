@@ -12,12 +12,25 @@ import io
 import subprocess
 import sys
 from contextlib import redirect_stdout
+from unittest.mock import AsyncMock
 
 import pytest
 
+from autoagent_mcp.connector import WebSocketClient, set_client
 from autoagent_mcp.server import build_server
 from autoagent_mcp.tools import TOOL_NAMES
 from autoagent_mcp.cli import cli
+
+
+@pytest.fixture(autouse=False)
+def mock_connected_client():
+    """Set a mock WebSocketClient as the active client for tool-invocation tests."""
+    client = AsyncMock(spec=WebSocketClient)
+    client.connected = True
+    client.call = AsyncMock(return_value=None)
+    set_client(client)
+    yield client
+    set_client(None)
 
 
 EXPECTED_COUNT = 17
@@ -59,19 +72,22 @@ async def test_tool_has_description():
 
 
 @pytest.mark.asyncio
-async def test_dump_tree_stub_returns_protocol_shape():
+async def test_dump_tree_returns_protocol_shape(mock_connected_client):
+    mock_connected_client.call.return_value = []
     mcp = build_server()
     result = await mcp.call_tool("dump_tree", {})
-    # FastMCP returns a tuple (content_blocks, structured_output) or similar
-    # Just verify the call doesn't raise.
+    # FastMCP wraps the return value; just verify the call doesn't raise.
     assert result is not None
+    mock_connected_client.call.assert_called_once_with("dump_tree", {})
 
 
 @pytest.mark.asyncio
-async def test_click_stub_accepts_minimal_params():
+async def test_click_accepts_minimal_params(mock_connected_client):
+    mock_connected_client.call.return_value = None
     mcp = build_server()
     result = await mcp.call_tool("click", {"id": "some_button"})
     assert result is not None
+    mock_connected_client.call.assert_called_once_with("click", {"id": "some_button"})
 
 
 def test_cli_list_tools(capsys):
