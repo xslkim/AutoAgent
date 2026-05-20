@@ -25,13 +25,16 @@ namespace AutoAgent
     internal class ProtocolHandler
     {
         readonly MainThreadDispatcher _dispatcher;
+        readonly OrphanTracker _orphanTracker;
 
-        public ProtocolHandler() : this(new MainThreadDispatcher()) { }
+        public ProtocolHandler() : this(new MainThreadDispatcher(), OrphanTracker.ForProject()) { }
 
-        /// <summary>Injection constructor for tests that supply a custom dispatcher.</summary>
-        internal ProtocolHandler(MainThreadDispatcher dispatcher)
+        /// <summary>Injection constructor for tests. Pass <c>null</c> for tracker to disable
+        /// orphan tracking (list_orphan_ids will return []).</summary>
+        internal ProtocolHandler(MainThreadDispatcher dispatcher, OrphanTracker tracker = null)
         {
-            _dispatcher = dispatcher;
+            _dispatcher    = dispatcher;
+            _orphanTracker = tracker;
         }
 
         // Called by WebSocketServer on its background thread.
@@ -70,7 +73,9 @@ namespace AutoAgent
                 return method switch
                 {
                     "negotiate_version" => HandleNegotiateVersion(id, paramsJson),
-                    "dump_tree"         => HandleDumpTree(id),
+                    "dump_tree"         => HandleDumpTree(id, _orphanTracker),
+                    "pin_id"            => PinIdHandler.HandlePinId(id, paramsJson),
+                    "list_orphan_ids"   => PinIdHandler.HandleListOrphanIds(id, _orphanTracker),
                     "find_widget"       => HandleFindWidget(id, paramsJson),
                     "get_widget"        => HandleGetWidget(id, paramsJson),
                     "click"             => HandleClick(id, paramsJson),
@@ -108,9 +113,11 @@ namespace AutoAgent
                 "{\"server_version\":\"0.1\",\"accepted\":true}");
         }
 
-        static string HandleDumpTree(object id)
+        static string HandleDumpTree(object id, OrphanTracker tracker = null)
         {
             var nodes = UGuiReflector.DumpActiveScene();
+            // Persist the current id set so that list_orphan_ids can diff against it.
+            tracker?.Save(nodes.ConvertAll(n => n.Id));
             var json  = NodeSerializer.SerializeTree(nodes);
             return JsonRpcDispatcher.OkResponse(id, json);
         }
