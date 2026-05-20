@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace AutoAgent
@@ -98,6 +100,51 @@ namespace AutoAgent
             EngineInputDriver.ResolveDrag(fromId, toId);
             if (_instance != null)
                 _instance.StartCoroutine(EngineInputDriver.Drag(fromId, toId, durationMs));
+        }
+
+        /// <summary>
+        /// Start a <see cref="WaitConditions.WaitFor"/> coroutine. When the
+        /// condition is satisfied the coroutine calls <paramref name="reply"/>
+        /// with <c>{"success":true,"elapsed_ms":N}</c>; on timeout it calls
+        /// <paramref name="reply"/> with a JSON-RPC error (-32005 Timeout).
+        /// </summary>
+        public static void RunWaitFor(string condition, string nodeId,
+            string baseline, int timeoutMs, object rpcId, Action<string> reply)
+        {
+            if (_instance != null)
+                _instance.StartCoroutine(
+                    WaitForCoroutine(condition, nodeId, baseline, timeoutMs, rpcId, reply));
+        }
+
+        static IEnumerator WaitForCoroutine(string condition, string nodeId,
+            string baseline, int timeoutMs, object rpcId, Action<string> reply)
+        {
+            float start     = Time.realtimeSinceStartup;
+            var   waitEnum  = WaitConditions.WaitFor(condition, nodeId, baseline, timeoutMs);
+
+            while (true)
+            {
+                bool more;
+                try { more = waitEnum.MoveNext(); }
+                catch (WireException we)
+                {
+                    reply(JsonRpcDispatcher.ErrorResponse(rpcId, we.Code, we.Message));
+                    yield break;
+                }
+                catch (Exception ex)
+                {
+                    reply(JsonRpcDispatcher.ErrorResponse(rpcId, -32603, ex.Message));
+                    yield break;
+                }
+
+                if (!more) break;
+                yield return waitEnum.Current;
+            }
+
+            int elapsedMs = Mathf.RoundToInt(
+                (Time.realtimeSinceStartup - start) * 1000f);
+            reply(JsonRpcDispatcher.OkResponse(rpcId,
+                $"{{\"success\":true,\"elapsed_ms\":{elapsedMs}}}"));
         }
 
         void OnDestroy()
