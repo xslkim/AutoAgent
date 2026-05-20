@@ -59,7 +59,9 @@ TOOL_NAMES: tuple[str, ...] = (
     # ID management
     "pin_id",
     "list_orphan_ids",
-    # Session
+    # Session (TASK-0118)
+    "connect_engine",
+    "disconnect",
     "ping",
     "get_engine_info",
     # Phase-4 reflection stubs
@@ -67,4 +69,9 @@ TOOL_NAMES: tuple[str, ...] = (
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 17 tools registered by :func:`register_all`."""
+"""Canonical ordered list of the 19 tools registered by :func:`register_all`.
+
+17 Phase-1 tools (12 core + 5 auxiliary per spec) plus ``ping`` and the three
+Phase-4 stubs (``invoke_method``, ``get_property``, ``set_property``) that are
+registered early as stubs.
+"""
