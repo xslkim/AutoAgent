@@ -15,6 +15,7 @@ session.py   — connect_engine, disconnect, ping, get_engine_info
 visual.py    — save_baseline, compare_to_baseline, list_baselines_tool,
                delete_baseline_tool  (TASK-0123)
 audit.py     — audit_visual_changes  (TASK-0125)
+judge.py     — judge_visual_diff     (TASK-0126)
 reflect.py   — invoke_method, get_property, set_property  (Phase-4 stubs)
 """
 
@@ -26,6 +27,7 @@ from autoagent_mcp.tools import (
     audit,
     click,
     dump,
+    judge,
     meta,
     reflect,
     screenshot,
@@ -45,6 +47,7 @@ def register_all(mcp: FastMCP) -> None:
     session.register(mcp)
     visual.register(mcp)
     audit.register(mcp)
+    judge.register(mcp)
     reflect.register(mcp)
 
 
@@ -78,9 +81,11 @@ TOOL_NAMES: tuple[str, ...] = (
     "delete_baseline_tool",
     # Visual audit (TASK-0125)
     "audit_visual_changes",
+    # Claude Vision judge (TASK-0126)
+    "judge_visual_diff",
     # Phase-4 reflection stubs
     "invoke_method",
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 24 tools registered by :func:`register_all`."""
+"""Canonical ordered list of the 25 tools registered by :func:`register_all`."""
