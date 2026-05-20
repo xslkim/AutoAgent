@@ -24,11 +24,18 @@ languages:
     line_comment: "//"
     rules:
       - name: transform_visual
-        pattern: '\.transform\.(position|localPosition|rotation|localRotation|localScale)\s*='
+        # \b catches both bare `transform.position =` (inside MonoBehaviour) and
+        # `obj.transform.position =` — the word boundary fires on the `.` before `t`.
+        pattern: '\btransform\.(position|localPosition|rotation|localRotation|localScale)\s*='
         reason: "Transform position / rotation / scale are visual — let the engine drive them, not source code."
-      - name: rect_transform_visual
-        pattern: '\.rectTransform\.(anchoredPosition|sizeDelta|anchorMin|anchorMax|pivot)\s*='
-        reason: "RectTransform layout fields are visual."
+      - name: rect_transform_via_component
+        pattern: '\brectTransform\.(anchoredPosition|sizeDelta|anchorMin|anchorMax|pivot)\s*='
+        reason: "RectTransform layout fields accessed via .rectTransform are visual."
+      - name: rect_transform_field_direct
+        # Catches direct variable access: `rt.anchoredPosition =`, `myRect.sizeDelta =`, etc.
+        # anchoredPosition and sizeDelta are Unity-specific enough to be unambiguous.
+        pattern: '\.(anchoredPosition|sizeDelta)\s*='
+        reason: "RectTransform anchoredPosition / sizeDelta written directly (variable assignment) are visual."
       - name: color_write
         pattern: '\.color\s*='
         reason: "Image/Text/Graphic .color is visual."
@@ -84,31 +91,34 @@ languages:
     line_comment: "#"
     rules:
       - name: position_write
-        pattern: '\.position\s*='
+        # \b catches both dotted (`node.position =`) and bare (`position =` inside a Node2D subclass).
+        # In GDScript, bare `position = ...` is the canonical implicit-self form.
+        pattern: '\bposition\s*='
         reason: "Node2D/Control .position is visual."
       - name: global_position_write
-        pattern: '\.global_position\s*='
+        pattern: '\bglobal_position\s*='
         reason: "Node2D .global_position is visual."
       - name: size_write
-        pattern: '\.size\s*='
+        pattern: '\bsize\s*='
         reason: "Control .size is visual."
       - name: modulate_write
-        pattern: '\.modulate\s*='
+        pattern: '\bmodulate\s*='
         reason: "CanvasItem .modulate is visual color tint."
       - name: self_modulate_write
-        pattern: '\.self_modulate\s*='
+        pattern: '\bself_modulate\s*='
         reason: "CanvasItem .self_modulate is visual."
       - name: texture_write
-        pattern: '\.texture\s*='
+        pattern: '\btexture\s*='
         reason: "TextureRect/Sprite .texture is visual; state_sprites switching must go through helper."
         allow_if_line_contains: ["get_state_texture", "state_sprites["]
       - name: icon_write
-        pattern: '\.icon\s*='
+        pattern: '\bicon\s*='
         reason: "Button/TextureButton .icon is visual."
       - name: visible_write
-        pattern: '\.visible\s*='
+        pattern: '\bvisible\s*='
         reason: "CanvasItem .visible is visual."
       - name: show_call
+        # show() is always called on an object; the dot is required.
         pattern: '\.show\s*\(\s*\)'
         reason: ".show() toggles visual visibility."
       - name: hide_call

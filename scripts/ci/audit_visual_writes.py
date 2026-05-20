@@ -32,6 +32,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -214,6 +215,42 @@ def render_exemptions(exemptions: list[Exemption]) -> str:
     )
 
 
+def render_json(
+    violations: list[Violation],
+    exemptions: list[Exemption],
+    exit_code: int,
+) -> str:
+    """Return a JSON-formatted audit report (machine-readable for CI tools)."""
+    return json.dumps(
+        {
+            "violations": [
+                {
+                    "path": str(v.path),
+                    "line": v.line_no,
+                    "rule": v.rule_name,
+                    "text": v.line_text,
+                    "reason": v.reason,
+                }
+                for v in violations
+            ],
+            "exemptions": [
+                {
+                    "path": str(e.path),
+                    "marker_line": e.marker_line_no,
+                }
+                for e in exemptions
+            ],
+            "summary": {
+                "violation_count": len(violations),
+                "exemption_count": len(exemptions),
+                "exit_code": exit_code,
+            },
+        },
+        indent=2,
+        ensure_ascii=False,
+    )
+
+
 def run(
     paths: list[Path],
     rules_path: Path,
@@ -274,6 +311,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Resolve relative paths against this root (default: cwd).",
     )
     parser.add_argument("--quiet", action="store_true", help="Only print on violation.")
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit a single JSON object to stdout instead of human-readable text.",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -292,6 +334,10 @@ def main(argv: list[str] | None = None) -> int:
     except (FileNotFoundError, yaml.YAMLError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
+
+    if args.json:
+        print(render_json(violations, exemptions, exit_code))
+        return exit_code
 
     if exemptions and not args.quiet:
         print(f"{len(exemptions)} file(s) exempted via AUTOAGENT_ALLOW_VISUAL:", file=sys.stderr)
