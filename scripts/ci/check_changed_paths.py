@@ -135,6 +135,66 @@ def load_whitelist(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
+def parse_pr_body_exceptions(body: str) -> set[str]:
+    """Extract ``path_exception`` paths from a PR body string.
+
+    Recognises two formats:
+
+    1. **YAML fenced code block** — a triple-backtick block tagged ``yaml``
+       or ``yml`` that contains a ``path_exception`` key::
+
+           ```yaml
+           path_exception:
+             - baselines/unity/windows/login.png
+           ```
+
+    2. **Bare inline YAML** — a ``path_exception:`` key at the start of a
+       line followed by one or more ``  - value`` items (no fences)::
+
+           path_exception:
+             - baselines/unity/windows/login.png
+
+    Both forms may coexist in the same body; all found paths are merged.
+
+    Returns:
+        A (possibly empty) :class:`set` of path strings.  Never raises —
+        malformed YAML blocks are silently skipped.
+    """
+    exceptions: set[str] = set()
+
+    # 1. Fenced YAML / yml blocks
+    for block in re.findall(
+        r"```(?:yaml|yml)\s*\n(.*?)\n```", body, re.DOTALL | re.IGNORECASE
+    ):
+        try:
+            doc = yaml.safe_load(block)
+            if isinstance(doc, dict):
+                vals = doc.get("path_exception")
+                if isinstance(vals, list):
+                    exceptions.update(str(v) for v in vals if v)
+        except yaml.YAMLError:
+            pass
+
+    # 2. Bare path_exception: block (no fences)
+    #    Match the key at the start of a line, followed by ≥1 YAML list items.
+    match = re.search(
+        r"^path_exception:\s*\n((?:[ \t]+-[^\n]+\n?)+)",
+        body,
+        re.MULTILINE,
+    )
+    if match:
+        try:
+            doc = yaml.safe_load("path_exception:\n" + match.group(1))
+            if isinstance(doc, dict):
+                vals = doc.get("path_exception")
+                if isinstance(vals, list):
+                    exceptions.update(str(v) for v in vals if v)
+        except yaml.YAMLError:
+            pass
+
+    return exceptions
+
+
 def collect_paths(args: argparse.Namespace) -> list[str]:
     if args.path:
         return [p.strip() for p in args.path if p.strip()]
@@ -209,11 +269,43 @@ def main(argv: list[str] | None = None) -> int:
         help="A path explicitly allowed by task path_exception (repeatable).",
     )
     parser.add_argument(
+        "--pr-body",
+        default="",
+        metavar="TEXT",
+        help=(
+            "PR body text to scan for a path_exception YAML list. "
+            "Parsed exceptions are merged with --exception flags."
+        ),
+    )
+    parser.add_argument(
+        "--pr-body-file",
+        type=Path,
+        metavar="FILE",
+        help=(
+            "File containing the PR body to scan for path_exception YAML. "
+            "Takes precedence over --pr-body."
+        ),
+    )
+    parser.add_argument(
         "--quiet",
         action="store_true",
         help="Only print on violation.",
     )
     args = parser.parse_args(argv)
+
+    # Resolve PR-body exceptions ------------------------------------------
+    pr_body = ""
+    if args.pr_body_file:
+        try:
+            pr_body = Path(args.pr_body_file).read_text(encoding="utf-8")
+        except OSError as e:
+            print(f"error reading --pr-body-file: {e}", file=sys.stderr)
+            return 2
+    elif args.pr_body:
+        pr_body = args.pr_body
+
+    pr_exceptions = parse_pr_body_exceptions(pr_body) if pr_body else set()
+    all_exceptions = set(args.exception) | pr_exceptions
 
     try:
         paths = collect_paths(args)
@@ -226,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        exit_code, verdicts = run(paths, set(args.exception), args.whitelist)
+        exit_code, verdicts = run(paths, all_exceptions, args.whitelist)
     except (FileNotFoundError, yaml.YAMLError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2

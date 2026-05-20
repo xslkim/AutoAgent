@@ -63,9 +63,13 @@ allow:
   - "fixtures/*/Scripts/**/*.gd"
   - "fixtures/unreal-test-project/Source/**/*.h"
   - "fixtures/unreal-test-project/Source/**/*.cpp"
+  # UE fixture module build / target descriptors (.Build.cs, .Target.cs)
+  - "fixtures/unreal-test-project/Source/**/*.cs"
 
   # Task status (AI updates status field only; new tasks / reordering require human)
   - "docs/tasks.md"
+  # Per-phase task sub-lists follow the same rule as docs/tasks.md
+  - "docs/tasks-phase*.md"
 
 review_required:
   # CI workflow — auto-add needs-human-review label
