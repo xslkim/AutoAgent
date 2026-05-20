@@ -1,0 +1,19 @@
+<!--
+  AutoAgent IL2CPP link.xml — guards against managed-code stripping.
+
+  When a Unity project is built with the IL2CPP scripting backend, the
+  managed bytecode stripper removes types and methods it cannot statically
+  prove are used. The AutoAgent adapter is driven indirectly — Unity
+  lifecycle hooks start it, and a WebSocket JSON-RPC loop dispatches wire
+  methods at runtime — so the stripper can wrongly drop reflection / dispatch
+  targets. Preserving the whole runtime assembly keeps the adapter intact in
+  IL2CPP players.
+
+  This protects the ADAPTER only. If YOUR game code relies on reflection,
+  see docs/users/il2cpp-setup.md for how to add your own link.xml.
+
+  Unity automatically picks up any .xml asset whose root element is <linker>.
+-->
+<linker>
+  <assembly fullname="AutoAgent.Runtime" preserve="all" />
+</linker>
