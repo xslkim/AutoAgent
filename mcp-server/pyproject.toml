@@ -11,6 +11,7 @@ dependencies = [
     "websockets>=13.0",
     "scikit-image>=0.24.0",
     "pydantic>=2.8.0",
+    "anthropic>=0.40.0",
 ]
 
 [project.optional-dependencies]
