@@ -14,6 +14,7 @@ meta.py      — pin_id, list_orphan_ids
 session.py   — connect_engine, disconnect, ping, get_engine_info
 visual.py    — save_baseline, compare_to_baseline, list_baselines_tool,
                delete_baseline_tool  (TASK-0123)
+audit.py     — audit_visual_changes  (TASK-0125)
 reflect.py   — invoke_method, get_property, set_property  (Phase-4 stubs)
 """
 
@@ -22,6 +23,7 @@ from __future__ import annotations
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.tools import (
+    audit,
     click,
     dump,
     meta,
@@ -42,6 +44,7 @@ def register_all(mcp: FastMCP) -> None:
     meta.register(mcp)
     session.register(mcp)
     visual.register(mcp)
+    audit.register(mcp)
     reflect.register(mcp)
 
 
@@ -73,9 +76,11 @@ TOOL_NAMES: tuple[str, ...] = (
     "compare_to_baseline",
     "list_baselines_tool",
     "delete_baseline_tool",
+    # Visual audit (TASK-0125)
+    "audit_visual_changes",
     # Phase-4 reflection stubs
     "invoke_method",
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 23 tools registered by :func:`register_all`."""
+"""Canonical ordered list of the 24 tools registered by :func:`register_all`."""

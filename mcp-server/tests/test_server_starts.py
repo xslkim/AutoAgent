@@ -33,7 +33,7 @@ def mock_connected_client():
     set_client(None)
 
 
-EXPECTED_COUNT = 23  # 19 (TASK-0118) + 4 visual tools added in TASK-0123
+EXPECTED_COUNT = 24  # 23 (TASK-0123) + audit_visual_changes (TASK-0125)
 
 
 def test_tool_names_count():
