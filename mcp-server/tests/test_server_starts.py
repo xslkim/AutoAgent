@@ -33,7 +33,7 @@ def mock_connected_client():
     set_client(None)
 
 
-EXPECTED_COUNT = 19  # 17 Phase-1 + ping + 3 Phase-4 stubs; connect_engine/disconnect added in TASK-0118
+EXPECTED_COUNT = 23  # 19 (TASK-0118) + 4 visual tools added in TASK-0123
 
 
 def test_tool_names_count():
