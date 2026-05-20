@@ -26,5 +26,7 @@ namespace AutoAgent
     {
         public const int WidgetNotFound        = -32001;
         public const int WidgetNotInteractable = -32002;
+        // JSON-RPC 2.0 standard code: malformed params (e.g. unsupported key).
+        public const int InvalidParams         = -32602;
     }
 }

@@ -198,6 +198,104 @@ namespace AutoAgent
                 $"widget is not a text input field: {nodeId}");
         }
 
+        // ------------------------------------------------------------------ key_press
+
+        /// <summary>
+        /// Send a synthetic key event to a node. Supported keys (case-insensitive):
+        ///   <c>Enter</c> / <c>Return</c> / <c>Submit</c> → ISubmitHandler.OnSubmit
+        ///     (InputField.onSubmit, Button.onClick, …)
+        ///   <c>Escape</c> / <c>Cancel</c>                → ICancelHandler.OnCancel
+        ///   <c>Tab</c>                                   → focus the next Selectable
+        ///   <c>Shift+Tab</c> / <c>ShiftTab</c>           → focus the previous Selectable
+        /// </summary>
+        /// <exception cref="WireException">
+        /// Code -32001 if the id resolves to no node;
+        /// code -32002 if the node has no component able to handle the key;
+        /// code -32602 if <paramref name="key"/> is not a supported value.
+        /// </exception>
+        public static void KeyPress(string nodeId, string key)
+        {
+            var go = FindById(nodeId);
+            if (go == null)
+                throw new WireException(WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+            if (string.IsNullOrEmpty(key))
+                throw new WireException(WireError.InvalidParams,
+                    "key is required");
+
+            switch (key.Trim().ToLowerInvariant())
+            {
+                case "enter":
+                case "return":
+                case "submit":
+                    DispatchSubmit(go);
+                    break;
+                case "escape":
+                case "esc":
+                case "cancel":
+                    DispatchCancel(go);
+                    break;
+                case "tab":
+                    FocusNeighbor(go, reverse: false);
+                    break;
+                case "shifttab":
+                case "shift+tab":
+                    FocusNeighbor(go, reverse: true);
+                    break;
+                default:
+                    throw new WireException(WireError.InvalidParams,
+                        $"unsupported key: {key}");
+            }
+        }
+
+        static void DispatchSubmit(GameObject go)
+        {
+            if (!HasInterface<ISubmitHandler>(go))
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no ISubmitHandler (cannot accept Enter): {go.name}");
+            var data = new BaseEventData(EventSystem.current);
+            ExecuteEvents.Execute(go, data, ExecuteEvents.submitHandler);
+        }
+
+        static void DispatchCancel(GameObject go)
+        {
+            if (!HasInterface<ICancelHandler>(go))
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no ICancelHandler (cannot accept Escape): {go.name}");
+            var data = new BaseEventData(EventSystem.current);
+            ExecuteEvents.Execute(go, data, ExecuteEvents.cancelHandler);
+        }
+
+        // Tab navigation: pick the next/previous Selectable from the global
+        // Selectable registry and tell the EventSystem to focus it.
+        static void FocusNeighbor(GameObject go, bool reverse)
+        {
+            var sel = go.GetComponent<Selectable>();
+            if (sel == null)
+                throw new WireException(WireError.WidgetNotInteractable,
+                    $"widget has no Selectable (cannot Tab from): {go.name}");
+
+            int count = Selectable.allSelectableCount;
+            if (count <= 1) return; // nothing else to move to — no-op
+            var all = new Selectable[count];
+            Selectable.AllSelectablesNoAlloc(all);
+            int idx = System.Array.IndexOf(all, sel);
+            if (idx < 0) return;
+            int nextIdx = reverse ? (idx - 1 + count) % count : (idx + 1) % count;
+            var next = all[nextIdx];
+            if (next == null) return;
+
+            var es = EventSystem.current;
+            if (es != null) es.SetSelectedGameObject(next.gameObject);
+        }
+
+        static bool HasInterface<T>(GameObject go) where T : class
+        {
+            foreach (var mb in go.GetComponents<MonoBehaviour>())
+                if (mb is T) return true;
+            return false;
+        }
+
         // ------------------------------------------------------------------ scroll
 
         /// <summary>

@@ -56,6 +56,7 @@ namespace AutoAgent
                     "send_text"         => HandleSendText(id, paramsJson),
                     "drag"              => HandleDrag(id, paramsJson),
                     "scroll"            => HandleScroll(id, paramsJson),
+                    "key_press"         => HandleKeyPress(id, paramsJson),
                     "take_screenshot"   => HandleTakeScreenshot(id, paramsJson),
                     _                   => ErrorResponse(id, -32601, $"method not found: {method}"),
                 };
@@ -178,6 +179,19 @@ namespace AutoAgent
             float dy = ExtractFloatParam(paramsJson, "delta_y");
             // Scroll throws WireException on failure; Dispatch's catch maps it.
             EngineInputDriver.Scroll(nodeId, dx, dy);
+            return OkResponse(id, "null");
+        }
+
+        static string HandleKeyPress(object id, string paramsJson)
+        {
+            string nodeId = ExtractStringParam(paramsJson, "id");
+            string key    = ExtractStringParam(paramsJson, "key");
+            if (string.IsNullOrEmpty(nodeId))
+                return ErrorResponse(id, -32602, "missing param: id");
+            if (string.IsNullOrEmpty(key))
+                return ErrorResponse(id, -32602, "missing param: key");
+            // KeyPress throws WireException on failure; Dispatch's catch maps it.
+            EngineInputDriver.KeyPress(nodeId, key);
             return OkResponse(id, "null");
         }
 
