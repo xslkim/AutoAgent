@@ -1,30 +1,70 @@
-"""Session tools: ping, get_engine_info.
+"""Session tools: connect_engine, disconnect, ping, get_engine_info.
 
-Full session management (connect_engine / disconnect / heartbeat / retry)
-is implemented in TASK-0118.  These two tools are thin stubs whose real
-wire equivalents are not yet in the adapter.
+``connect_engine`` and ``disconnect`` manage the WebSocket session lifecycle
+via :mod:`autoagent_mcp.connector.session`.  ``ping`` is a fast liveness check
+and ``get_engine_info`` returns adapter metadata (stub until the wire method
+is implemented in the adapter).
 """
 
 from __future__ import annotations
 
 import time
-from typing import Any
+from typing import Any, Literal
 
 from mcp.server.fastmcp import FastMCP
 
 from autoagent_mcp.connector import AdapterError, get_client
+from autoagent_mcp.connector import session as _session_module
 
 
 def register(mcp: FastMCP) -> None:
-    """Register ping and get_engine_info on *mcp*."""
+    """Register connect_engine, disconnect, ping, and get_engine_info on *mcp*."""
+
+    @mcp.tool()
+    async def connect_engine(
+        host: str = "127.0.0.1",
+        port: int = 27842,
+        engine: Literal["unity", "unreal", "godot"] = "unity",
+    ) -> dict[str, Any]:
+        """Connect to a running engine adapter.
+
+        Must be called before any other tool that communicates with the
+        engine.  Replaces any existing connection.  The adapter must already
+        be running (e.g. Unity Editor with the AutoAgent package loaded).
+
+        Args:
+            host:   Adapter host (default ``127.0.0.1``).
+            port:   Adapter port (default ``27842``).
+            engine: Engine type hint for display purposes only.
+
+        Returns:
+            ``{"connected": True, "server_version": "...", "engine": "..."}``
+        """
+        result = await _session_module.connect(host, port)
+        return {
+            "connected": True,
+            "server_version": result.get("server_version", "?"),
+            "engine": engine,
+            "host": host,
+            "port": port,
+        }
+
+    @mcp.tool()
+    async def disconnect() -> dict[str, Any]:
+        """Disconnect from the engine adapter.
+
+        Stops the heartbeat and closes the WebSocket.  Subsequent tool calls
+        will fail until ``connect_engine`` is called again.
+        """
+        await _session_module.disconnect()
+        return {"disconnected": True}
 
     @mcp.tool()
     async def ping() -> dict[str, Any]:
         """Liveness check — confirms the adapter is reachable and responsive.
 
-        Attempts a ``negotiate_version`` round-trip and returns
-        ``{"pong": True, "latency_ms": N}`` on success.
-        Falls back to ``{"pong": False, "error": "..."}`` if not connected.
+        Returns ``{"pong": True, "latency_ms": N}`` on success or
+        ``{"pong": False, "error": "..."}`` if not connected / unreachable.
         """
         t0 = time.monotonic()
         try:
@@ -40,8 +80,7 @@ def register(mcp: FastMCP) -> None:
         """Return engine / adapter / protocol version metadata.
 
         The wire method ``get_engine_info`` is not yet implemented in the
-        adapter, so this tool returns a stub response.  TASK-0118 will wire
-        this to a real adapter call once the method is available.
+        adapter, so this tool returns a stub response.
         """
         return {
             "engine": "Unity",
