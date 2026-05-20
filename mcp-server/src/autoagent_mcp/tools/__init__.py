@@ -11,7 +11,9 @@ click.py     — click, drag, scroll, key_press
 text.py      — send_text
 screenshot.py — take_screenshot, wait_for
 meta.py      — pin_id, list_orphan_ids
-session.py   — ping, get_engine_info   (stubs; real session in TASK-0118)
+session.py   — connect_engine, disconnect, ping, get_engine_info
+visual.py    — save_baseline, compare_to_baseline, list_baselines_tool,
+               delete_baseline_tool  (TASK-0123)
 reflect.py   — invoke_method, get_property, set_property  (Phase-4 stubs)
 """
 
@@ -27,17 +29,19 @@ from autoagent_mcp.tools import (
     screenshot,
     session,
     text,
+    visual,
 )
 
 
 def register_all(mcp: FastMCP) -> None:
-    """Register all 17 tools on the given FastMCP instance."""
+    """Register all tools on the given FastMCP instance."""
     dump.register(mcp)
     click.register(mcp)
     text.register(mcp)
     screenshot.register(mcp)
     meta.register(mcp)
     session.register(mcp)
+    visual.register(mcp)
     reflect.register(mcp)
 
 
@@ -64,14 +68,14 @@ TOOL_NAMES: tuple[str, ...] = (
     "disconnect",
     "ping",
     "get_engine_info",
+    # Visual comparison (TASK-0123)
+    "save_baseline",
+    "compare_to_baseline",
+    "list_baselines_tool",
+    "delete_baseline_tool",
     # Phase-4 reflection stubs
     "invoke_method",
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 19 tools registered by :func:`register_all`.
-
-17 Phase-1 tools (12 core + 5 auxiliary per spec) plus ``ping`` and the three
-Phase-4 stubs (``invoke_method``, ``get_property``, ``set_property``) that are
-registered early as stubs.
-"""
+"""Canonical ordered list of the 23 tools registered by :func:`register_all`."""
