@@ -21,7 +21,9 @@ dev = [
 ]
 
 [project.scripts]
-autoagent-mcp = "autoagent_mcp.cli:cli"
+autoagent-mcp    = "autoagent_mcp.cli:cli"
+autoagent-stop   = "autoagent_mcp.agent_cli:main_stop"
+autoagent-status = "autoagent_mcp.agent_cli:main_status"
 
 [build-system]
 requires = ["hatchling"]
