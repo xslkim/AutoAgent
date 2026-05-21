@@ -1,0 +1,119 @@
+schema_version: "1.0"
+task_id: TASK-0209
+title: "Login flow — enter credentials and reach welcome screen (Unreal Engine)"
+engine: unreal
+map: LoginMap
+
+# -----------------------------------------------------------------------
+# Pre-conditions
+# -----------------------------------------------------------------------
+preconditions:
+  - fixture: LoginMap
+    state: initial          # login_panel visible, welcome_panel hidden (Collapsed)
+  - controller: ULoginController
+    status: ready           # BeginPlay() ran; widget reference valid; button wired
+
+# -----------------------------------------------------------------------
+# Steps  (identical stable-IDs to login.yaml — cross-engine consistency)
+# -----------------------------------------------------------------------
+steps:
+  - id: step_clear_account
+    action: send_text
+    target: account_input_bg
+    value: ""
+    description: "Clear account field before typing (UE EditableTextBox has no clear_text API)"
+
+  - id: step_enter_username
+    action: send_text
+    target: account_input_bg
+    value: "admin"
+    description: "Type valid username into account_input_bg (UEditableTextBox)"
+    verify:
+      field_value: "admin"
+
+  - id: step_clear_password
+    action: send_text
+    target: password_input_bg
+    value: ""
+
+  - id: step_enter_password
+    action: send_text
+    target: password_input_bg
+    value: "password"
+    description: "Type valid password into password_input_bg"
+    verify:
+      field_value: "password"
+
+  - id: step_click_login
+    action: click
+    target: login_button_bg
+    description: "Click login_button_bg — triggers ULoginController::OnLoginClicked()"
+
+  - id: step_assert_api_called
+    action: assert_mock_called
+    target: UMockApi
+    description: "Verify UMockApi received the POST with correct credentials"
+    verify:
+      post_received: true
+      username: "admin"
+      password: "password"
+
+  - id: step_assert_welcome
+    action: assert_visible
+    target: welcome_text
+    timeout_ms: 3000
+    description: "Confirm welcome_text is visible (ESlateVisibility::Visible)"
+
+  - id: step_assert_login_hidden
+    action: assert_hidden
+    target: login_panel
+    description: "Confirm login_panel is Collapsed after successful login"
+
+# -----------------------------------------------------------------------
+# Expected outcome
+# -----------------------------------------------------------------------
+expected_outcome:
+  visual_fields_unchanged: true   # SetVisibility / SetColorAndOpacity etc. are forbidden
+  controller_wired:
+    - node: account_input_bg
+      ue_type: UEditableTextBox
+    - node: password_input_bg
+      ue_type: UEditableTextBox
+    - node: login_button_bg
+      ue_type: UButton
+  nodes_visible:
+    - welcome_panel
+    - welcome_text
+  nodes_hidden:
+    - login_panel
+
+# -----------------------------------------------------------------------
+# UE-specific implementation notes (for autonomous loop)
+# -----------------------------------------------------------------------
+implementation_hints:
+  controller_base_class: UActorComponent
+  widget_class: ULoginUserWidget
+  widget_lookup: >
+    GetWorld()->GetGameInstance()->GetSubsystem<UAutoAgentSubsystem>() is available,
+    but prefer Cast<ULoginUserWidget>(GetOwner()->FindComponentByClass<UWidgetComponent>()->GetWidget())
+    or direct UPROPERTY reference set in BeginPlay via GetWorld()->GetFirstPlayerController()->CreateWidget.
+  button_wiring: >
+    ULoginUserWidget::LoginButtonBg is UButton with OnClicked multicast delegate.
+    Use LoginButtonBg->OnClicked.AddDynamic(this, &ULoginController::OnLoginClicked).
+  mock_api: >
+    UMockApi is a UObject implementing FString Post(FString Username, FString Password).
+    Returns "ok" for (admin, password), "error" otherwise.  No real HTTP needed.
+  visibility_toggle: >
+    FORBIDDEN: Widget->LoginPanel->SetVisibility(...) — this is a visual write caught by
+    audit_visual_writes (防护 0.2).  Instead, mark the widget with
+    // AUTOAGENT_ALLOW_VISUAL: login-flow-state-machine  in the controller file,
+    because state transition (login → welcome) is intentional UX behaviour.
+    The exemption must appear within the first 30 lines.
+
+# -----------------------------------------------------------------------
+# Constraints
+# -----------------------------------------------------------------------
+constraints:
+  max_iterations: 5
+  cost_limit_usd: 5.0
+  visual_diff_ssim_min: 0.95
