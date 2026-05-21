@@ -3,7 +3,7 @@
 // reflector (read-only); no production visual mutations occur here.
 //
 // Automation tests for:
-//   FAutoAgentStableIdResolver  — AutoAgent.StableIdResolver
+//   FAutoAgentStableIdResolver  — AutoAgent.StableIdResolver.*
 //   FAutoAgentSlateInputDriver  — AutoAgent.InputDriver
 //   FAutoAgentUmgReflector      — AutoAgent.UmgReflector.*
 
@@ -35,10 +35,10 @@ static T* MakeWidget(const TCHAR* Name)
 }
 
 // ===========================================================================
-// StableIdResolver — parses Config/AutoAgentIds.ini
+// StableIdResolver — Ini source (existing baseline)
 // ===========================================================================
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolverTest,
-								 "AutoAgent.StableIdResolver",
+								 "AutoAgent.StableIdResolver.IniSource",
 								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
@@ -46,11 +46,17 @@ bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
 	FAutoAgentStableIdResolver Resolver;
 	Resolver.Load();
 
+	// Ini-pinned entry
 	const FAutoAgentResolvedId Button = Resolver.Resolve(TEXT("LoginButtonBg"));
 	TestEqual(TEXT("LoginButtonBg -> pinned id"), Button.PinnedId, FString(TEXT("login_button_bg")));
 	TestEqual(TEXT("LoginButtonBg -> logical role"), Button.LogicalRole, FString(TEXT("button")));
 	TestTrue(TEXT("LoginButtonBg is pinned"), Button.bPinned);
+	TestEqual(TEXT("LoginButtonBg source is Ini"),
+			  Button.Source == EAutoAgentIdSource::Ini ||
+				  Button.Source == EAutoAgentIdSource::PropertyMeta,
+			  true); // ini OR meta — both are valid since ini mirrors meta
 
+	// Sprites
 	const TMap<FString, FString> Sprites = Resolver.GetStateSprites(TEXT("LoginButtonBg"));
 	TestEqual(TEXT("button has 4 state sprites"), Sprites.Num(), 4);
 	TestTrue(TEXT("state sprites contain normal"), Sprites.Contains(TEXT("normal")));
@@ -58,9 +64,132 @@ bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
 	TestTrue(TEXT("state sprites contain pressed"), Sprites.Contains(TEXT("pressed")));
 	TestTrue(TEXT("state sprites contain disabled"), Sprites.Contains(TEXT("disabled")));
 
+	// Auto fallback
 	const FAutoAgentResolvedId Unknown = Resolver.Resolve(TEXT("NotARegisteredWidget"));
 	TestFalse(TEXT("unregistered widget is not pinned"), Unknown.bPinned);
+	TestEqual(TEXT("auto source"), Unknown.Source, EAutoAgentIdSource::Auto);
+	TestEqual(TEXT("auto id == widget name"), Unknown.PinnedId, FString(TEXT("NotARegisteredWidget")));
 
+	return true;
+}
+
+// ===========================================================================
+// StableIdResolver — RegisterRuntime priority
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolver_RuntimePriority,
+								 "AutoAgent.StableIdResolver.RuntimePriority",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentResolver_RuntimePriority::RunTest(const FString& /*Parameters*/)
+{
+	FAutoAgentStableIdResolver Resolver;
+	// Start with empty state (don't call Load() to avoid ini dependency)
+
+	// 1. RegisterRuntime adds an entry for an unknown widget
+	Resolver.RegisterRuntime(TEXT("DynamicButton"), TEXT("dynamic_btn"), TEXT("button"));
+	const FAutoAgentResolvedId Dyn = Resolver.Resolve(TEXT("DynamicButton"));
+	TestTrue(TEXT("runtime entry is pinned"), Dyn.bPinned);
+	TestEqual(TEXT("runtime id"), Dyn.PinnedId, FString(TEXT("dynamic_btn")));
+	TestEqual(TEXT("runtime role"), Dyn.LogicalRole, FString(TEXT("button")));
+	TestEqual(TEXT("runtime source"), Dyn.Source, EAutoAgentIdSource::Runtime);
+
+	// 2. RegisterRuntime does NOT override an existing entry
+	Resolver.RegisterRuntime(TEXT("DynamicButton"), TEXT("should_not_override"), TEXT(""));
+	const FAutoAgentResolvedId Still = Resolver.Resolve(TEXT("DynamicButton"));
+	TestEqual(TEXT("second RegisterRuntime ignored"), Still.PinnedId, FString(TEXT("dynamic_btn")));
+
+	// 3. Auto fallback for a name that was never registered
+	const FAutoAgentResolvedId AutoFallback = Resolver.Resolve(TEXT("Unregistered_XYZ"));
+	TestFalse(TEXT("fallback not pinned"), AutoFallback.bPinned);
+	TestEqual(TEXT("fallback source is Auto"), AutoFallback.Source, EAutoAgentIdSource::Auto);
+
+	return true;
+}
+
+// ===========================================================================
+// StableIdResolver — Ini overrides Runtime (priority: Ini > Runtime)
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolver_IniOverridesRuntime,
+								 "AutoAgent.StableIdResolver.IniOverridesRuntime",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentResolver_IniOverridesRuntime::RunTest(const FString& /*Parameters*/)
+{
+	FAutoAgentStableIdResolver Resolver;
+
+	// Register a runtime entry for a name that IS in the ini file
+	// ("LoginButtonBg" → "login_button_bg" in Config/AutoAgentIds.ini).
+	Resolver.RegisterRuntime(TEXT("LoginButtonBg"), TEXT("runtime_btn_id"), TEXT("runtime_role"));
+
+	// After Load(), the ini entry should win.
+	Resolver.Load();
+
+	const FAutoAgentResolvedId Result = Resolver.Resolve(TEXT("LoginButtonBg"));
+	TestEqual(TEXT("ini overrides runtime id"),
+			  Result.PinnedId,
+			  FString(TEXT("login_button_bg")));
+	// Source is Ini (or PropertyMeta if ini mirrors meta and meta loaded first)
+	TestTrue(TEXT("source is not Runtime"),
+			 Result.Source != EAutoAgentIdSource::Runtime);
+
+	return true;
+}
+
+// ===========================================================================
+// StableIdResolver — ComputeHashId is stable and formatted correctly
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolver_HashId,
+								 "AutoAgent.StableIdResolver.ComputeHashId",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentResolver_HashId::RunTest(const FString& /*Parameters*/)
+{
+	const FString IdA = FAutoAgentStableIdResolver::ComputeHashId(TEXT("SomeWidget"));
+	const FString IdB = FAutoAgentStableIdResolver::ComputeHashId(TEXT("SomeWidget"));
+	const FString IdC = FAutoAgentStableIdResolver::ComputeHashId(TEXT("OtherWidget"));
+
+	// Format: "auto_XXXXXXXX" (prefix + 8 hex chars)
+	TestTrue(TEXT("hash id starts with auto_"), IdA.StartsWith(TEXT("auto_")));
+	TestEqual(TEXT("hash id length is 13"), IdA.Len(), 13);
+
+	// Stable: same input → same output
+	TestEqual(TEXT("hash is deterministic"), IdA, IdB);
+
+	// Distinct inputs produce distinct hashes (with very high probability)
+	TestNotEqual(TEXT("different names hash differently"), IdA, IdC);
+
+	return true;
+}
+
+// ===========================================================================
+// StableIdResolver — PropertyMeta source (requires WITH_METADATA)
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolver_PropertyMeta,
+								 "AutoAgent.StableIdResolver.PropertyMetaSource",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentResolver_PropertyMeta::RunTest(const FString& /*Parameters*/)
+{
+#if WITH_METADATA
+	// LoadFromPropertyMeta should find ULoginUserWidget and UPocPlaygroundUserWidget
+	// UPROPERTY annotations in the fixture project.
+	FAutoAgentStableIdResolver Resolver;
+	Resolver.Load(); // calls LoadFromPropertyMeta then LoadFromIniRegistry
+
+	// "LoginButtonBg" has AutoAgentId="login_button_bg" in both ini AND
+	// UPROPERTY meta — after Load(), it should be resolved correctly regardless
+	// of which source won.
+	const FAutoAgentResolvedId Result = Resolver.Resolve(TEXT("LoginButtonBg"));
+	TestTrue(TEXT("LoginButtonBg is pinned after Load()"), Result.bPinned);
+	TestEqual(TEXT("id is login_button_bg"), Result.PinnedId, FString(TEXT("login_button_bg")));
+
+	// The source is Ini (ini wins over meta) OR PropertyMeta (if ini is absent).
+	TestTrue(TEXT("source is Ini or PropertyMeta"),
+			 Result.Source == EAutoAgentIdSource::Ini ||
+				 Result.Source == EAutoAgentIdSource::PropertyMeta);
+#else
+	AddWarning(TEXT("PropertyMeta test skipped: WITH_METADATA not defined (Shipping build)"));
+#endif
 	return true;
 }
 
