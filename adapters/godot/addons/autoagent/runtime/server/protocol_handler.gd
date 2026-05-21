@@ -53,6 +53,8 @@ func dispatch(json_text: String) -> String:
 				float(params.get("delta_y", 0.0))))
 		"take_screenshot":
 			return _take_screenshot(id, params)
+		"compare_screenshot":
+			return _compare_screenshot(id, params)
 		_:
 			return _error(id, -32601, "method not found: " + str(method))
 
@@ -99,6 +101,43 @@ func _take_screenshot(id, params: Dictionary) -> String:
 	if err != OK:
 		return _error(id, -32603, "save_png failed (error %d)" % err)
 	return _ok(id, {"path": path})
+
+
+func _compare_screenshot(id, params: Dictionary) -> String:
+	## Capture the current viewport and save it for SSIM comparison.
+	## Mirrors the UE compare_screenshot handler (TASK-0206):
+	##   • "name"      — logical screenshot name (used as filename stem)
+	##   • "threshold" — SSIM threshold (default 0.95, stored in result for CI)
+	##   • Result: {"name": ..., "saved_path": ..., "threshold": ..., "status": "captured"}
+	var name := str(params.get("name", ""))
+	if name.is_empty():
+		return _error(id, -32602, "missing param: name")
+	var threshold := float(params.get("threshold", 0.95))
+
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return _error(id, -32603, "no active viewport")
+
+	# Save to user:// so the path is writable in both editor and export builds.
+	var save_dir := "user://AutoAgent/Comparisons"
+	DirAccess.make_dir_recursive_absolute(save_dir)
+	var save_path := save_dir.path_join(name + ".png")
+
+	var image := tree.root.get_texture().get_image()
+	if image == null:
+		return _error(id, -32603, "could not capture viewport image")
+	var err := image.save_png(save_path)
+	if err != OK:
+		return _error(id, -32603, "save_png failed (error %d)" % err)
+
+	# Resolve to an absolute OS path so CI scripts can locate the file.
+	var abs_path := ProjectSettings.globalize_path(save_path)
+	return _ok(id, {
+		"name": name,
+		"saved_path": abs_path,
+		"threshold": threshold,
+		"status": "captured",
+	})
 
 
 # --- JSON-RPC envelope -----------------------------------------------------
