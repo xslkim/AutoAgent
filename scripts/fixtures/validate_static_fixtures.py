@@ -157,13 +157,21 @@ def unreal_checks() -> list[CheckResult]:
             ["AutoAgentId", "AutoAgentLogicalRole", "UImage"],
         )
     )
-    results.extend(
-        check_text_absent(
-            "fixtures/unreal-test-project/Source/AutoAgentTest/**/*",
-            r"\b(UButton|UEditableTextBox|USlider|UScrollBox|UCheckBox|UComboBoxString)\b",
-            "UE fixture C++ declarations must bind only visual skeleton widgets",
+    # Only scan widget skeleton headers/impls, not AI-written controllers.
+    # The rule applies to UPROPERTY BindWidget declarations in *Widget*.h files;
+    # controller files (LoginController, MockApi, etc.) are authored by the
+    # autonomous loop and may legitimately reference interactive widget types.
+    for widget_glob in (
+        "fixtures/unreal-test-project/Source/AutoAgentTest/*Widget*.h",
+        "fixtures/unreal-test-project/Source/AutoAgentTest/*Widget*.cpp",
+    ):
+        results.extend(
+            check_text_absent(
+                widget_glob,
+                r"\b(UButton|UEditableTextBox|USlider|UScrollBox|UCheckBox|UComboBoxString)\b",
+                "UE fixture C++ declarations must bind only visual skeleton widgets",
+            )
         )
-    )
     results.extend(
         check_required_assets(
             "Unreal",
