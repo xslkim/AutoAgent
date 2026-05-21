@@ -16,8 +16,7 @@ FAutoAgentSlateInputDriver::FAutoAgentSlateInputDriver(
 }
 
 // Recursively searches a widget subtree for one whose resolved id matches.
-static UWidget* FindInSubtree(UWidget* Widget, const FString& TargetId,
-	const FAutoAgentStableIdResolver& Resolver)
+static UWidget* FindInSubtree(UWidget* Widget, const FString& TargetId, const FAutoAgentStableIdResolver& Resolver)
 {
 	if (!Widget)
 	{

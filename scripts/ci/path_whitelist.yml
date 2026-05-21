@@ -98,6 +98,7 @@ review_required:
 
   # Repo root common files
   - ".gitignore"
+  - ".clang-format"
   - "LICENSE"
   - "README.md"
 

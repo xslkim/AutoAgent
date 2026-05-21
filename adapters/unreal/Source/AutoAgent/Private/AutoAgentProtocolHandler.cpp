@@ -14,42 +14,40 @@
 
 namespace
 {
-	FString SerializeObject(const TSharedRef<FJsonObject>& Obj)
-	{
-		FString Out;
-		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer =
-			TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Out);
-		FJsonSerializer::Serialize(Obj, Writer);
-		return Out;
-	}
-
-	FString BuildResult(const TSharedPtr<FJsonValue>& Id, const TSharedPtr<FJsonValue>& Result)
-	{
-		TSharedRef<FJsonObject> Resp = MakeShared<FJsonObject>();
-		Resp->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
-		Resp->SetField(TEXT("id"), Id.IsValid() ? Id : MakeShared<FJsonValueNull>());
-		Resp->SetField(TEXT("result"), Result.IsValid() ? Result : MakeShared<FJsonValueNull>());
-		return SerializeObject(Resp);
-	}
-
-	FString BuildError(const TSharedPtr<FJsonValue>& Id, int32 Code, const FString& Message)
-	{
-		TSharedRef<FJsonObject> ErrObj = MakeShared<FJsonObject>();
-		ErrObj->SetNumberField(TEXT("code"), Code);
-		ErrObj->SetStringField(TEXT("message"), Message);
-
-		TSharedRef<FJsonObject> Resp = MakeShared<FJsonObject>();
-		Resp->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
-		Resp->SetField(TEXT("id"), Id.IsValid() ? Id : MakeShared<FJsonValueNull>());
-		Resp->SetObjectField(TEXT("error"), ErrObj);
-		return SerializeObject(Resp);
-	}
+FString SerializeObject(const TSharedRef<FJsonObject>& Obj)
+{
+	FString Out;
+	TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer =
+		TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Out);
+	FJsonSerializer::Serialize(Obj, Writer);
+	return Out;
 }
 
+FString BuildResult(const TSharedPtr<FJsonValue>& Id, const TSharedPtr<FJsonValue>& Result)
+{
+	TSharedRef<FJsonObject> Resp = MakeShared<FJsonObject>();
+	Resp->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
+	Resp->SetField(TEXT("id"), Id.IsValid() ? Id : MakeShared<FJsonValueNull>());
+	Resp->SetField(TEXT("result"), Result.IsValid() ? Result : MakeShared<FJsonValueNull>());
+	return SerializeObject(Resp);
+}
+
+FString BuildError(const TSharedPtr<FJsonValue>& Id, int32 Code, const FString& Message)
+{
+	TSharedRef<FJsonObject> ErrObj = MakeShared<FJsonObject>();
+	ErrObj->SetNumberField(TEXT("code"), Code);
+	ErrObj->SetStringField(TEXT("message"), Message);
+
+	TSharedRef<FJsonObject> Resp = MakeShared<FJsonObject>();
+	Resp->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
+	Resp->SetField(TEXT("id"), Id.IsValid() ? Id : MakeShared<FJsonValueNull>());
+	Resp->SetObjectField(TEXT("error"), ErrObj);
+	return SerializeObject(Resp);
+}
+} // namespace
+
 FAutoAgentProtocolHandler::FAutoAgentProtocolHandler()
-	: Resolver(MakeShared<FAutoAgentStableIdResolver>())
-	, Reflector(MakeShared<FAutoAgentUmgReflector>(Resolver))
-	, InputDriver(MakeShared<FAutoAgentSlateInputDriver>(Resolver))
+	: Resolver(MakeShared<FAutoAgentStableIdResolver>()), Reflector(MakeShared<FAutoAgentUmgReflector>(Resolver)), InputDriver(MakeShared<FAutoAgentSlateInputDriver>(Resolver))
 {
 	Resolver->Load();
 }
@@ -179,8 +177,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		FString TargetId;
 		Params->TryGetStringField(TEXT("id"), TargetId);
 		return InputDriver->Click(TargetId)
-			? BuildResult(Id, MakeShared<FJsonValueNull>())
-			: BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
+				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
+				   : BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
 	}
 
 	if (Method == TEXT("send_text"))
@@ -189,8 +187,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetStringField(TEXT("id"), TargetId);
 		Params->TryGetStringField(TEXT("text"), Text);
 		return InputDriver->SendText(TargetId, Text)
-			? BuildResult(Id, MakeShared<FJsonValueNull>())
-			: BuildError(Id, -32001, FString::Printf(TEXT("widget not found or not editable: %s"), *TargetId));
+				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
+				   : BuildError(Id, -32001, FString::Printf(TEXT("widget not found or not editable: %s"), *TargetId));
 	}
 
 	if (Method == TEXT("drag"))
@@ -199,8 +197,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetStringField(TEXT("from_id"), FromId);
 		Params->TryGetStringField(TEXT("to_id"), ToId);
 		return InputDriver->Drag(FromId, ToId)
-			? BuildResult(Id, MakeShared<FJsonValueNull>())
-			: BuildError(Id, -32001, TEXT("source or destination widget not found"));
+				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
+				   : BuildError(Id, -32001, TEXT("source or destination widget not found"));
 	}
 
 	if (Method == TEXT("scroll"))
@@ -211,8 +209,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetNumberField(TEXT("delta_x"), DeltaX);
 		Params->TryGetNumberField(TEXT("delta_y"), DeltaY);
 		return InputDriver->Scroll(TargetId, static_cast<float>(DeltaX), static_cast<float>(DeltaY))
-			? BuildResult(Id, MakeShared<FJsonValueNull>())
-			: BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
+				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
+				   : BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
 	}
 
 	if (Method == TEXT("take_screenshot"))

@@ -11,87 +11,87 @@
 
 namespace
 {
-	const int32 AutoAgentPort = 27842;
-	const TCHAR* AutoAgentSubprotocol = TEXT("autoagent.v1");
-	const TCHAR* WebSocketGuid = TEXT("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+const int32 AutoAgentPort = 27842;
+const TCHAR* AutoAgentSubprotocol = TEXT("autoagent.v1");
+const TCHAR* WebSocketGuid = TEXT("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 
-	void SendRaw(FSocket* Socket, const TArray<uint8>& Bytes)
+void SendRaw(FSocket* Socket, const TArray<uint8>& Bytes)
+{
+	if (!Socket || Bytes.Num() == 0)
 	{
-		if (!Socket || Bytes.Num() == 0)
-		{
-			return;
-		}
-		int32 Sent = 0;
-		Socket->Send(Bytes.GetData(), Bytes.Num(), Sent);
+		return;
 	}
-
-	void SendRawString(FSocket* Socket, const FString& Text)
-	{
-		FTCHARToUTF8 Utf8(*Text);
-		TArray<uint8> Bytes;
-		Bytes.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Utf8.Length());
-		SendRaw(Socket, Bytes);
-	}
-
-	void SendTextFrame(FSocket* Socket, const FString& Text)
-	{
-		FTCHARToUTF8 Utf8(*Text);
-		const int32 Len = Utf8.Length();
-		TArray<uint8> Frame;
-		Frame.Add(0x81); // FIN + text opcode
-		if (Len <= 125)
-		{
-			Frame.Add(static_cast<uint8>(Len));
-		}
-		else if (Len <= 65535)
-		{
-			Frame.Add(126);
-			Frame.Add(static_cast<uint8>((Len >> 8) & 0xFF));
-			Frame.Add(static_cast<uint8>(Len & 0xFF));
-		}
-		else
-		{
-			Frame.Add(127);
-			for (int32 i = 7; i >= 0; --i)
-			{
-				Frame.Add(static_cast<uint8>((static_cast<uint64>(Len) >> (i * 8)) & 0xFF));
-			}
-		}
-		Frame.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Len);
-		SendRaw(Socket, Frame);
-	}
-
-	void SendControlFrame(FSocket* Socket, uint8 Opcode, const TArray<uint8>& Payload)
-	{
-		const int32 Len = FMath::Min(Payload.Num(), 125);
-		TArray<uint8> Frame;
-		Frame.Add(0x80 | Opcode);
-		Frame.Add(static_cast<uint8>(Len));
-		if (Len > 0)
-		{
-			Frame.Append(Payload.GetData(), Len);
-		}
-		SendRaw(Socket, Frame);
-	}
-
-	FString PayloadToString(const TArray<uint8>& Bytes)
-	{
-		FUTF8ToTCHAR Conv(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
-		return FString(Conv.Length(), Conv.Get());
-	}
-
-	int32 FindHeaderEnd(const TArray<uint8>& Buf)
-	{
-		for (int32 i = 0; i + 3 < Buf.Num(); ++i)
-		{
-			if (Buf[i] == 13 && Buf[i + 1] == 10 && Buf[i + 2] == 13 && Buf[i + 3] == 10)
-			{
-				return i;
-			}
-		}
-		return INDEX_NONE;
-	}
+	int32 Sent = 0;
+	Socket->Send(Bytes.GetData(), Bytes.Num(), Sent);
 }
+
+void SendRawString(FSocket* Socket, const FString& Text)
+{
+	FTCHARToUTF8 Utf8(*Text);
+	TArray<uint8> Bytes;
+	Bytes.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Utf8.Length());
+	SendRaw(Socket, Bytes);
+}
+
+void SendTextFrame(FSocket* Socket, const FString& Text)
+{
+	FTCHARToUTF8 Utf8(*Text);
+	const int32 Len = Utf8.Length();
+	TArray<uint8> Frame;
+	Frame.Add(0x81); // FIN + text opcode
+	if (Len <= 125)
+	{
+		Frame.Add(static_cast<uint8>(Len));
+	}
+	else if (Len <= 65535)
+	{
+		Frame.Add(126);
+		Frame.Add(static_cast<uint8>((Len >> 8) & 0xFF));
+		Frame.Add(static_cast<uint8>(Len & 0xFF));
+	}
+	else
+	{
+		Frame.Add(127);
+		for (int32 i = 7; i >= 0; --i)
+		{
+			Frame.Add(static_cast<uint8>((static_cast<uint64>(Len) >> (i * 8)) & 0xFF));
+		}
+	}
+	Frame.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Len);
+	SendRaw(Socket, Frame);
+}
+
+void SendControlFrame(FSocket* Socket, uint8 Opcode, const TArray<uint8>& Payload)
+{
+	const int32 Len = FMath::Min(Payload.Num(), 125);
+	TArray<uint8> Frame;
+	Frame.Add(0x80 | Opcode);
+	Frame.Add(static_cast<uint8>(Len));
+	if (Len > 0)
+	{
+		Frame.Append(Payload.GetData(), Len);
+	}
+	SendRaw(Socket, Frame);
+}
+
+FString PayloadToString(const TArray<uint8>& Bytes)
+{
+	FUTF8ToTCHAR Conv(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
+	return FString(Conv.Length(), Conv.Get());
+}
+
+int32 FindHeaderEnd(const TArray<uint8>& Buf)
+{
+	for (int32 i = 0; i + 3 < Buf.Num(); ++i)
+	{
+		if (Buf[i] == 13 && Buf[i + 1] == 10 && Buf[i + 2] == 13 && Buf[i + 3] == 10)
+		{
+			return i;
+		}
+	}
+	return INDEX_NONE;
+}
+} // namespace
 
 FAutoAgentWebSocketServer::FAutoAgentWebSocketServer()
 {
@@ -111,8 +111,7 @@ void FAutoAgentWebSocketServer::Start()
 	Listener->OnConnectionAccepted().BindRaw(
 		this, &FAutoAgentWebSocketServer::HandleConnectionAccepted);
 
-	UE_LOG(LogTemp, Log,
-		TEXT("[AutoAgent] WebSocket server listening on ws://127.0.0.1:%d"), AutoAgentPort);
+	UE_LOG(LogTemp, Log, TEXT("[AutoAgent] WebSocket server listening on ws://127.0.0.1:%d"), AutoAgentPort);
 }
 
 void FAutoAgentWebSocketServer::Stop()
@@ -284,7 +283,7 @@ bool FAutoAgentWebSocketServer::TryHandshake(FClientConn& Client, bool& bOutShou
 	if (Key.IsEmpty() || !Protocols.Contains(AutoAgentSubprotocol))
 	{
 		SendRawString(Client.Socket,
-			TEXT("HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"));
+					  TEXT("HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"));
 		bOutShouldClose = true;
 		return true;
 	}
@@ -297,10 +296,9 @@ bool FAutoAgentWebSocketServer::TryHandshake(FClientConn& Client, bool& bOutShou
 
 	const FString Response =
 		TEXT("HTTP/1.1 101 Switching Protocols\r\n")
-		TEXT("Upgrade: websocket\r\n")
-		TEXT("Connection: Upgrade\r\n")
-		+ FString::Printf(TEXT("Sec-WebSocket-Accept: %s\r\n"), *Accept)
-		+ FString::Printf(TEXT("Sec-WebSocket-Protocol: %s\r\n\r\n"), AutoAgentSubprotocol);
+			TEXT("Upgrade: websocket\r\n")
+				TEXT("Connection: Upgrade\r\n") +
+		FString::Printf(TEXT("Sec-WebSocket-Accept: %s\r\n"), *Accept) + FString::Printf(TEXT("Sec-WebSocket-Protocol: %s\r\n\r\n"), AutoAgentSubprotocol);
 	SendRawString(Client.Socket, Response);
 
 	Client.bHandshakeDone = true;
@@ -348,7 +346,7 @@ bool FAutoAgentWebSocketServer::TryExtractFrame(FClientConn& Client, FString& Ou
 		Offset = 10;
 	}
 
-	uint8 Mask[4] = { 0, 0, 0, 0 };
+	uint8 Mask[4] = {0, 0, 0, 0};
 	if (bMasked)
 	{
 		if (Buf.Num() < Offset + 4)
