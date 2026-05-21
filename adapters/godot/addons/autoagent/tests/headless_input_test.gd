@@ -1,3 +1,4 @@
+# AUTOAGENT_ALLOW_VISUAL
 extends Node
 ## GUT-free headless self-test for engine_input_driver.gd.
 ##
@@ -40,6 +41,7 @@ func _run_tests() -> void:
 	await get_tree().process_frame
 
 	await _test_click(root, driver)
+	await _test_click_mouse_filter(root, driver)
 	await _test_send_text(root, driver)
 	await _test_scroll(root, driver)
 	await _test_drag(root, driver)
@@ -61,6 +63,19 @@ func _test_click(root: Control, driver) -> void:
 	_check("click returns true", ok)
 	_check("click triggers pressed signal", fired[0])
 	_check("click on missing node returns false", not driver.click("no_such_node"))
+
+
+func _test_click_mouse_filter(root: Control, driver) -> void:
+	# MOUSE_FILTER_IGNORE nodes must not receive click actions.
+	var ignore_ctrl := Control.new()
+	ignore_ctrl.name = "ignore_ctrl"
+	ignore_ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ignore_ctrl.size = Vector2(100, 40)
+	root.add_child(ignore_ctrl)
+	await get_tree().process_frame
+
+	var ok: bool = driver.click("ignore_ctrl")
+	_check("click on MOUSE_FILTER_IGNORE returns false", not ok)
 
 
 func _test_send_text(_root: Control, driver) -> void:

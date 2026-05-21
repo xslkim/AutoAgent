@@ -9,6 +9,10 @@ const ProtocolHandler := preload("protocol_handler.gd")
 const PORT := 27842
 const BIND_ADDRESS := "127.0.0.1"
 const SUBPROTOCOL := "autoagent.v1"
+## Maximum simultaneous WebSocket clients. Additional connections are
+## refused with close code 1008 (Policy Violation) to prevent unbounded
+## memory growth if a test runner leaks connections.
+const MAX_CLIENTS := 4
 
 var _tcp: TCPServer
 var _peers: Array[WebSocketPeer] = []
@@ -40,8 +44,18 @@ func poll() -> void:
 		return
 
 	# Accept any pending TCP connections and start their WebSocket handshake.
+	# Refuse new connections when the server is at capacity.
 	while _tcp.is_connection_available():
 		var conn := _tcp.take_connection()
+		if _peers.size() >= MAX_CLIENTS:
+			# Perform the WebSocket handshake so we can send a close frame.
+			var ws_reject := WebSocketPeer.new()
+			ws_reject.supported_protocols = PackedStringArray([SUBPROTOCOL])
+			ws_reject.accept_stream(conn)
+			ws_reject.poll()
+			ws_reject.close(1008, "server full: max %d clients" % MAX_CLIENTS)
+			push_warning("[AutoAgent] connection refused — at capacity (%d)" % MAX_CLIENTS)
+			continue
 		var ws := WebSocketPeer.new()
 		ws.supported_protocols = PackedStringArray([SUBPROTOCOL])
 		ws.accept_stream(conn)
