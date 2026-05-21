@@ -52,8 +52,7 @@ void FAutoAgentStableIdResolver::Load()
 		}
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("[AutoAgent] loaded %d ids, %d sprite owners from AutoAgentIds.ini"),
-		IdsByName.Num(), SpritesByOwner.Num());
+	UE_LOG(LogTemp, Log, TEXT("[AutoAgent] loaded %d ids, %d sprite owners from AutoAgentIds.ini"), IdsByName.Num(), SpritesByOwner.Num());
 }
 
 FAutoAgentResolvedId FAutoAgentStableIdResolver::Resolve(const FString& WidgetName) const

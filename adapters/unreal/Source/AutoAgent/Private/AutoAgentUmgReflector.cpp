@@ -102,9 +102,7 @@ static TSharedPtr<FJsonValue> MakeStr(const FString& S)
 // WalkWidget — recursive core
 // ---------------------------------------------------------------------------
 
-FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& ParentId,
-	TArray<TSharedPtr<FJsonValue>>& Out,
-	TSet<FString>& Visited) const
+FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& ParentId, TArray<TSharedPtr<FJsonValue>>& Out, TSet<FString>& Visited) const
 {
 	if (!Widget)
 	{
@@ -139,7 +137,7 @@ FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& Paren
 		Node->SetStringField(TEXT("parent_id"), ParentId);
 	}
 	Node->SetStringField(TEXT("stable_id_source"),
-		Resolved.bPinned ? TEXT("pinned") : TEXT("auto"));
+						 Resolved.bPinned ? TEXT("pinned") : TEXT("auto"));
 
 	// --- visual ----------------------------------------------------------------
 	const FGeometry& Geo = Widget->GetCachedGeometry();
@@ -147,12 +145,11 @@ FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& Paren
 	const FVector2D AbsPos = Geo.GetAbsolutePosition();
 
 	TSharedPtr<FJsonObject> Visual = MakeShared<FJsonObject>();
-	Visual->SetArrayField(TEXT("position"), { MakeNum(AbsPos.X), MakeNum(AbsPos.Y) });
-	Visual->SetArrayField(TEXT("size"), { MakeNum(Size.X), MakeNum(Size.Y) });
+	Visual->SetArrayField(TEXT("position"), {MakeNum(AbsPos.X), MakeNum(AbsPos.Y)});
+	Visual->SetArrayField(TEXT("size"), {MakeNum(Size.X), MakeNum(Size.Y)});
 	Visual->SetBoolField(TEXT("visible"), Widget->IsVisible());
 	Visual->SetArrayField(TEXT("world_bounds"),
-		{ MakeNum(AbsPos.X), MakeNum(AbsPos.Y),
-		  MakeNum(AbsPos.X + Size.X), MakeNum(AbsPos.Y + Size.Y) });
+						  {MakeNum(AbsPos.X), MakeNum(AbsPos.Y), MakeNum(AbsPos.X + Size.X), MakeNum(AbsPos.Y + Size.Y)});
 
 	// color + alpha: read from UImage if widget is a UImage;
 	// fall back to the widget's own render opacity.
@@ -160,7 +157,7 @@ FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& Paren
 	{
 		const FLinearColor& C = Img->GetColorAndOpacity();
 		Visual->SetArrayField(TEXT("color"),
-			{ MakeNum(C.R), MakeNum(C.G), MakeNum(C.B), MakeNum(C.A) });
+							  {MakeNum(C.R), MakeNum(C.G), MakeNum(C.B), MakeNum(C.A)});
 		Visual->SetNumberField(TEXT("alpha"), static_cast<double>(C.A));
 
 		// sprite_ref: the texture asset path (empty if no texture)
@@ -179,7 +176,7 @@ FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& Paren
 		// Non-image widget: no color/sprite_ref; alpha from render opacity
 		const float Opacity = Widget->GetRenderOpacity();
 		Visual->SetArrayField(TEXT("color"),
-			{ MakeNum(1.0), MakeNum(1.0), MakeNum(1.0), MakeNum(Opacity) });
+							  {MakeNum(1.0), MakeNum(1.0), MakeNum(1.0), MakeNum(Opacity)});
 		Visual->SetNumberField(TEXT("alpha"), static_cast<double>(Opacity));
 		Visual->SetField(TEXT("sprite_ref"), MakeShared<FJsonValueNull>());
 	}
@@ -190,23 +187,32 @@ FString FAutoAgentUmgReflector::WalkWidget(UWidget* Widget, const FString& Paren
 	TSharedPtr<FJsonObject> Behavior = MakeShared<FJsonObject>();
 	// interactable: widget is enabled (user-interaction enabled) and visible
 	Behavior->SetBoolField(TEXT("interactable"),
-		Widget->GetIsEnabled() && Widget->IsVisible());
+						   Widget->GetIsEnabled() && Widget->IsVisible());
 	// attached_components: AI-added child widgets of "behavior" types
 	// (e.g. UButton, UEditableTextBox) are listed by their class names.
 	// We collect direct children that are interactive widget types.
 	TArray<TSharedPtr<FJsonValue>> AttachedComponents;
 	{
 		static const TArray<FName> BehaviorClasses = {
-			TEXT("Button"), TEXT("EditableTextBox"), TEXT("EditableText"),
-			TEXT("CheckBox"), TEXT("Slider"), TEXT("ComboBoxString"),
-			TEXT("ScrollBox"), TEXT("ListView"), TEXT("SpinBox"),
+			TEXT("Button"),
+			TEXT("EditableTextBox"),
+			TEXT("EditableText"),
+			TEXT("CheckBox"),
+			TEXT("Slider"),
+			TEXT("ComboBoxString"),
+			TEXT("ScrollBox"),
+			TEXT("ListView"),
+			TEXT("SpinBox"),
 		};
-		auto IsInteractiveClass = [&](UWidget* Child) -> bool {
-			if (!Child) return false;
+		auto IsInteractiveClass = [&](UWidget* Child) -> bool
+		{
+			if (!Child)
+				return false;
 			const FName ClassName = Child->GetClass()->GetFName();
 			for (const FName& BName : BehaviorClasses)
 			{
-				if (ClassName == BName) return true;
+				if (ClassName == BName)
+					return true;
 			}
 			return false;
 		};

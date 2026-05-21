@@ -34,9 +34,7 @@ private:
 	 * Visited tracks IDs already emitted — callers must pass a mutable reference.
 	 * Returns this widget's resolved id (empty string on skip/null).
 	 */
-	FString WalkWidget(UWidget* Widget, const FString& ParentId,
-		TArray<TSharedPtr<FJsonValue>>& Out,
-		TSet<FString>& Visited) const;
+	FString WalkWidget(UWidget* Widget, const FString& ParentId, TArray<TSharedPtr<FJsonValue>>& Out, TSet<FString>& Visited) const;
 
 	TSharedRef<FAutoAgentStableIdResolver> Resolver;
 };

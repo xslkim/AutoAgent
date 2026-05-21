@@ -23,7 +23,7 @@ public:
 
 	void Start();
 	void Stop();
-	void Poll();   // called every frame on the game thread
+	void Poll(); // called every frame on the game thread
 
 private:
 	struct FClientConn

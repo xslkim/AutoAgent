@@ -1,0 +1,39 @@
+---
+Language: Cpp
+# UE-compatible clang-format config.
+# Matches the tab-indented Allman-brace style used in the AutoAgent UE adapter
+# and fixture source files.
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignOperands: Align
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Allman
+ColumnLimit: 0
+ContinuationIndentWidth: 4
+IndentWidth: 4
+IndentCaseLabels: false
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 2
+PointerAlignment: Left
+ReflowComments: false
+SortIncludes: false
+SpaceBeforeParens: ControlStatements
+SpacesInAngles: Never
+TabWidth: 4
+UseTab: Always
+# Treat UE reflection macros as statement-level so their arguments are
+# not reflowed / reformatted as function call arguments.
+StatementMacros:
+  - GENERATED_BODY
+  - GENERATED_UCLASS_BODY
+  - GENERATED_UINTERFACE_BODY
+  - GENERATED_USTRUCT_BODY
+  - UCLASS
+  - USTRUCT
+  - UENUM
+  - UFUNCTION
+  - UPROPERTY
+  - UINTERFACE

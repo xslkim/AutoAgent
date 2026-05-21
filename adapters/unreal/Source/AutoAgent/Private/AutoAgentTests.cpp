@@ -38,8 +38,8 @@ static T* MakeWidget(const TCHAR* Name)
 // StableIdResolver — parses Config/AutoAgentIds.ini
 // ===========================================================================
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentResolverTest,
-	"AutoAgent.StableIdResolver",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+								 "AutoAgent.StableIdResolver",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
 {
@@ -47,16 +47,16 @@ bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
 	Resolver.Load();
 
 	const FAutoAgentResolvedId Button = Resolver.Resolve(TEXT("LoginButtonBg"));
-	TestEqual(TEXT("LoginButtonBg -> pinned id"),    Button.PinnedId,     FString(TEXT("login_button_bg")));
-	TestEqual(TEXT("LoginButtonBg -> logical role"), Button.LogicalRole,  FString(TEXT("button")));
-	TestTrue (TEXT("LoginButtonBg is pinned"),        Button.bPinned);
+	TestEqual(TEXT("LoginButtonBg -> pinned id"), Button.PinnedId, FString(TEXT("login_button_bg")));
+	TestEqual(TEXT("LoginButtonBg -> logical role"), Button.LogicalRole, FString(TEXT("button")));
+	TestTrue(TEXT("LoginButtonBg is pinned"), Button.bPinned);
 
 	const TMap<FString, FString> Sprites = Resolver.GetStateSprites(TEXT("LoginButtonBg"));
 	TestEqual(TEXT("button has 4 state sprites"), Sprites.Num(), 4);
-	TestTrue (TEXT("state sprites contain normal"),   Sprites.Contains(TEXT("normal")));
-	TestTrue (TEXT("state sprites contain hover"),    Sprites.Contains(TEXT("hover")));
-	TestTrue (TEXT("state sprites contain pressed"),  Sprites.Contains(TEXT("pressed")));
-	TestTrue (TEXT("state sprites contain disabled"), Sprites.Contains(TEXT("disabled")));
+	TestTrue(TEXT("state sprites contain normal"), Sprites.Contains(TEXT("normal")));
+	TestTrue(TEXT("state sprites contain hover"), Sprites.Contains(TEXT("hover")));
+	TestTrue(TEXT("state sprites contain pressed"), Sprites.Contains(TEXT("pressed")));
+	TestTrue(TEXT("state sprites contain disabled"), Sprites.Contains(TEXT("disabled")));
 
 	const FAutoAgentResolvedId Unknown = Resolver.Resolve(TEXT("NotARegisteredWidget"));
 	TestFalse(TEXT("unregistered widget is not pinned"), Unknown.bPinned);
@@ -68,15 +68,15 @@ bool FAutoAgentResolverTest::RunTest(const FString& /*Parameters*/)
 // SlateInputDriver — four wire-protocol actions against real UMG widgets
 // ===========================================================================
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentInputDriverTest,
-	"AutoAgent.InputDriver",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+								 "AutoAgent.InputDriver",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentInputDriverTest::RunTest(const FString& /*Parameters*/)
 {
-	UCanvasPanel*     Root      = MakeWidget<UCanvasPanel>(TEXT("test_root"));
-	UButton*          Button    = MakeWidget<UButton>(TEXT("test_button"));
-	UEditableTextBox* TextBox   = MakeWidget<UEditableTextBox>(TEXT("test_input"));
-	UScrollBox*       ScrollBox = MakeWidget<UScrollBox>(TEXT("test_scroller"));
+	UCanvasPanel* Root = MakeWidget<UCanvasPanel>(TEXT("test_root"));
+	UButton* Button = MakeWidget<UButton>(TEXT("test_button"));
+	UEditableTextBox* TextBox = MakeWidget<UEditableTextBox>(TEXT("test_input"));
+	UScrollBox* ScrollBox = MakeWidget<UScrollBox>(TEXT("test_scroller"));
 	Root->AddChild(Button);
 	Root->AddChild(TextBox);
 	Root->AddChild(ScrollBox);
@@ -87,20 +87,21 @@ bool FAutoAgentInputDriverTest::RunTest(const FString& /*Parameters*/)
 	FAutoAgentSlateInputDriver Driver(Resolver);
 	Driver.SetSearchRootOverride(Root);
 
-	TestTrue (TEXT("click locates the button"),           Driver.Click(TEXT("test_button")));
+	TestTrue(TEXT("click locates the button"), Driver.Click(TEXT("test_button")));
 	TestFalse(TEXT("click on missing node returns false"), Driver.Click(TEXT("no_such_node")));
 
-	TestTrue (TEXT("send_text succeeds"),
-		Driver.SendText(TEXT("test_input"), TEXT("hello@test.com")));
+	TestTrue(TEXT("send_text succeeds"),
+			 Driver.SendText(TEXT("test_input"), TEXT("hello@test.com")));
 	TestEqual(TEXT("send_text sets the text box content"),
-		TextBox->GetText().ToString(), FString(TEXT("hello@test.com")));
+			  TextBox->GetText().ToString(),
+			  FString(TEXT("hello@test.com")));
 
-	TestTrue (TEXT("scroll succeeds"), Driver.Scroll(TEXT("test_scroller"), 0.0f, 50.0f));
+	TestTrue(TEXT("scroll succeeds"), Driver.Scroll(TEXT("test_scroller"), 0.0f, 50.0f));
 
-	TestTrue (TEXT("drag between two widgets succeeds"),
-		Driver.Drag(TEXT("test_button"), TEXT("test_input")));
+	TestTrue(TEXT("drag between two widgets succeeds"),
+			 Driver.Drag(TEXT("test_button"), TEXT("test_input")));
 	TestFalse(TEXT("drag with a missing target returns false"),
-		Driver.Drag(TEXT("test_button"), TEXT("no_such_node")));
+			  Driver.Drag(TEXT("test_button"), TEXT("no_such_node")));
 
 	Root->RemoveFromRoot();
 	return true;
@@ -120,7 +121,8 @@ static TMap<FString, TSharedPtr<FJsonObject>> IndexNodes(
 	for (const TSharedPtr<FJsonValue>& Val : Nodes)
 	{
 		const TSharedPtr<FJsonObject>& Node = Val->AsObject();
-		if (!Node.IsValid()) continue;
+		if (!Node.IsValid())
+			continue;
 		FString Id;
 		Node->TryGetStringField(TEXT("id"), Id);
 		if (!Id.IsEmpty())
@@ -156,17 +158,17 @@ static TMap<FString, TSharedPtr<FJsonObject>> IndexNodes(
 // tree manually and comparing:
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentReflector_NoDuplicateNodes,
-	"AutoAgent.UmgReflector.NoDuplicateNodes",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+								 "AutoAgent.UmgReflector.NoDuplicateNodes",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentReflector_NoDuplicateNodes::RunTest(const FString& /*Parameters*/)
 {
 	// Build: CanvasPanel (root)
 	//          └─ Image  (child_a)
 	//          └─ Button (child_b)
-	UCanvasPanel* Root    = MakeWidget<UCanvasPanel>(TEXT("refl_root"));
-	UImage*       ChildA  = MakeWidget<UImage>(TEXT("refl_child_a"));
-	UButton*      ChildB  = MakeWidget<UButton>(TEXT("refl_child_b"));
+	UCanvasPanel* Root = MakeWidget<UCanvasPanel>(TEXT("refl_root"));
+	UImage* ChildA = MakeWidget<UImage>(TEXT("refl_child_a"));
+	UButton* ChildB = MakeWidget<UButton>(TEXT("refl_child_b"));
 	Root->AddChild(ChildA);
 	Root->AddChild(ChildB);
 	Root->AddToRoot();
@@ -179,7 +181,7 @@ bool FAutoAgentReflector_NoDuplicateNodes::RunTest(const FString& /*Parameters*/
 	// the real invariant is: for a known tree, children_ids match parent_ids.
 
 	// Simulate what WalkWidget emits by building expected IDs:
-	const FString RootId  = Resolver->Resolve(TEXT("refl_root")).PinnedId;    // "refl_root" (auto)
+	const FString RootId = Resolver->Resolve(TEXT("refl_root")).PinnedId;	   // "refl_root" (auto)
 	const FString ChildAId = Resolver->Resolve(TEXT("refl_child_a")).PinnedId; // "refl_child_a"
 	const FString ChildBId = Resolver->Resolve(TEXT("refl_child_b")).PinnedId; // "refl_child_b"
 
@@ -189,7 +191,7 @@ bool FAutoAgentReflector_NoDuplicateNodes::RunTest(const FString& /*Parameters*/
 
 	// Verify no stable_id collision for unregistered names
 	TSet<FString> Seen;
-	for (const FString& Id : { RootId, ChildAId, ChildBId })
+	for (const FString& Id : {RootId, ChildAId, ChildBId})
 	{
 		TestFalse(FString::Printf(TEXT("ID '%s' must not be duplicated"), *Id), Seen.Contains(Id));
 		Seen.Add(Id);
@@ -201,8 +203,8 @@ bool FAutoAgentReflector_NoDuplicateNodes::RunTest(const FString& /*Parameters*/
 
 // ---------------------------------------------------------------------------
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentReflector_ParentChildConsistent,
-	"AutoAgent.UmgReflector.ParentChildConsistent",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+								 "AutoAgent.UmgReflector.ParentChildConsistent",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentReflector_ParentChildConsistent::RunTest(const FString& /*Parameters*/)
 {
@@ -215,20 +217,20 @@ bool FAutoAgentReflector_ParentChildConsistent::RunTest(const FString& /*Paramet
 	Resolver->Load();
 
 	const FString ParentId = Resolver->Resolve(TEXT("pc_parent")).PinnedId;
-	const FString ChildId  = Resolver->Resolve(TEXT("pc_child")).PinnedId;
+	const FString ChildId = Resolver->Resolve(TEXT("pc_child")).PinnedId;
 
 	// Unregistered names fall back to the raw name, so they are always distinct
 	TestNotEqual(TEXT("parent_id != child_id for unique names"), ParentId, ChildId);
 	TestEqual(TEXT("auto-resolved id == widget name (stable)"), ParentId, FString(TEXT("pc_parent")));
-	TestEqual(TEXT("auto-resolved id == widget name (stable)"), ChildId,  FString(TEXT("pc_child")));
+	TestEqual(TEXT("auto-resolved id == widget name (stable)"), ChildId, FString(TEXT("pc_child")));
 
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentReflector_VisualFields,
-	"AutoAgent.UmgReflector.VisualFieldsPresent",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+								 "AutoAgent.UmgReflector.VisualFieldsPresent",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FAutoAgentReflector_VisualFields::RunTest(const FString& /*Parameters*/)
 {
