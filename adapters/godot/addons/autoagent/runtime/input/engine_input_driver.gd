@@ -14,6 +14,12 @@ func click(node_id) -> bool:
 	var node := _find(node_id)
 	if node == null:
 		return false
+	# Respect mouse_filter: MOUSE_FILTER_IGNORE nodes are visually present but
+	# intentionally transparent to input — do not synthesise clicks on them.
+	if node is Control:
+		var ctrl := node as Control
+		if ctrl.mouse_filter == Control.MOUSE_FILTER_IGNORE:
+			return false
 	if node is BaseButton:
 		# Fire the button's action directly — reliable in headless and windowed
 		# runs alike (mirrors the UE adapter's OnClicked broadcast).
