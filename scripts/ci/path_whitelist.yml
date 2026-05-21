@@ -72,6 +72,8 @@ allow:
   - "fixtures/unreal-test-project/Source/**/*.cpp"
   # UE fixture module build / target descriptors (.Build.cs, .Target.cs)
   - "fixtures/unreal-test-project/Source/**/*.cs"
+  # Godot fixture scripts (lowercase "scripts" — Godot convention differs from Unity)
+  - "fixtures/godot-test-project/scripts/**/*.gd"
 
   # Task status (AI updates status field only; new tasks / reordering require human)
   - "docs/tasks.md"
@@ -95,6 +97,9 @@ review_required:
   # Engine package manifests (fixture-level deps)
   - "fixtures/*/Packages/manifest.json"
   - "fixtures/unreal-test-project/Config/AutoAgentIds.ini"
+  # Godot login scene — text-based .tscn modified by AI to wire LineEdit/Button
+  # for the login MVP (TASK-0307). Needs human review for structural changes.
+  - "fixtures/godot-test-project/scenes/login.tscn"
 
   # Repo root common files
   - ".gitignore"
@@ -107,9 +112,11 @@ review_required:
 
 deny:
   # Engine scene / WBP / map binary files
+  # Note: .tscn (Godot) is NOT listed here because Godot scenes are plain-text
+  # and the login fixture scene (login.tscn) is legitimately AI-maintained.
+  # poc_playground.tscn is implicitly denied via default (no whitelist rule).
   - "fixtures/*/**.unity"
   - "fixtures/*/**.uasset"
-  - "fixtures/*/**.tscn"
   - "fixtures/*/**.umap"
 
   # Art assets

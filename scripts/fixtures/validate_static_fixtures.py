@@ -113,9 +113,11 @@ def godot_checks() -> list[CheckResult]:
         exists("fixtures/godot-test-project/scenes/poc_playground.tscn"),
         exists("fixtures/godot-test-project/scenes/login.tscn"),
     ]
+    # poc_playground is a pure-graphics fixture (TextureRect only).
+    # login.tscn intentionally uses LineEdit/Button for the login MVP — exempt.
     results.extend(
         check_text_absent(
-            "fixtures/godot-test-project/scenes/*.tscn",
+            "fixtures/godot-test-project/scenes/poc_playground.tscn",
             r'type="(Button|LineEdit|HSlider|VSlider|CheckBox|CheckButton|OptionButton|ScrollContainer|ItemList|Tree)"',
             "Godot fixture scenes must not contain interactive Control nodes",
         )

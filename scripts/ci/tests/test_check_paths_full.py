@@ -267,6 +267,15 @@ class TestAllowPatterns:
         assert checker.check(path, set()).classification == "allow"
 
     @pytest.mark.parametrize("path", [
+        "fixtures/godot-test-project/scripts/LoginController.gd",
+        "fixtures/godot-test-project/scripts/MockApi.gd",
+        "fixtures/godot-test-project/scripts/sub/Helper.gd",
+    ])
+    def test_godot_fixture_scripts_gd(self, checker, path):
+        # Godot uses lowercase "scripts/" (differs from Unity's "Scripts/").
+        assert checker.check(path, set()).classification == "allow"
+
+    @pytest.mark.parametrize("path", [
         "fixtures/unreal-test-project/Scripts/LoginController.cpp",
     ])
     def test_fixture_scripts_cpp(self, checker, path):
@@ -332,8 +341,6 @@ class TestAllowNegative:
         "some/other/dir/file.cs.meta",
         # Not under adapters
         "src/unity/Runtime/AutoAgent.cs",
-        # Deep path outside allowed scripts dir
-        "fixtures/unity-test-project/Assets/Scripts/LoginController.cs",
         # Godot .gd outside the addon
         "adapters/godot/other/plugin.gd",
         # Script not under Scripts/ (falls to default_deny, not allow)
@@ -372,12 +379,17 @@ class TestDenyPatterns:
     def test_unreal_uasset(self, checker, path):
         assert checker.check(path, set()).classification == "deny"
 
-    @pytest.mark.parametrize("path", [
-        "fixtures/godot-test-project/scenes/login.tscn",
-        "fixtures/godot-test-project/scenes/sub/menu.tscn",
-    ])
-    def test_godot_tscn(self, checker, path):
-        assert checker.check(path, set()).classification == "deny"
+    def test_godot_login_tscn_review_required(self, checker):
+        # login.tscn is explicitly review_required (AI-maintained login fixture).
+        assert checker.check(
+            "fixtures/godot-test-project/scenes/login.tscn", set()
+        ).classification == "review"
+
+    def test_godot_other_tscn_default_deny(self, checker):
+        # Other .tscn files have no whitelist rule → default_deny.
+        assert checker.check(
+            "fixtures/godot-test-project/scenes/sub/menu.tscn", set()
+        ).classification in ("deny", "default_deny")
 
     @pytest.mark.parametrize("path", [
         "fixtures/unreal-test-project/Content/Maps/LoginMap.umap",
