@@ -57,10 +57,17 @@ allow:
   - "scripts/fixtures/**/*.py"
 
   # Fixture user scripts (AI implements interactivity)
+  # Patterns cover both  fixtures/<engine>/Scripts/**  and
+  # fixtures/<engine>/Assets/Scripts/**  (Unity keeps scripts under Assets/).
   - "fixtures/*/Scripts/**/*.cs"
   - "fixtures/*/Scripts/**/*.cpp"
   - "fixtures/*/Scripts/**/*.h"
   - "fixtures/*/Scripts/**/*.gd"
+  - "fixtures/*/Scripts/**/*.asmdef"
+  - "fixtures/*/Scripts/**/*.meta"
+  - "fixtures/*/Assets/Scripts/**/*.cs"
+  - "fixtures/*/Assets/Scripts/**/*.asmdef"
+  - "fixtures/*/Assets/Scripts/**/*.meta"
   - "fixtures/unreal-test-project/Source/**/*.h"
   - "fixtures/unreal-test-project/Source/**/*.cpp"
   # UE fixture module build / target descriptors (.Build.cs, .Target.cs)
@@ -77,6 +84,7 @@ review_required:
 
   # Task DSL / runner config / orchestrator prompt / user guides
   - "docs/canonical-tasks/**/*.yaml"
+  - "docs/canonical-tasks/**/*.md"
   - "docs/runners-inventory.md"
   - "docs/orchestrator-prompt.md"
   - "docs/user-guide-*.md"
