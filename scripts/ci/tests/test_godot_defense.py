@@ -107,7 +107,8 @@ class TestPathWhitelistGodotDeny:
     """Scene, import, project.godot, and art asset paths must be denied."""
 
     @pytest.mark.parametrize("path", [
-        "fixtures/godot-test-project/scenes/login.tscn",
+        # poc_playground.tscn has no explicit allow/deny rule → default_deny.
+        # login.tscn is review_required (AI-maintained login fixture) — tested separately.
         "fixtures/godot-test-project/scenes/poc_playground.tscn",
         "fixtures/godot-test-project/assets/ui/btn_login_normal.png",
         "fixtures/godot-test-project/assets/ui/input_bg_normal.png",
@@ -120,9 +121,14 @@ class TestPathWhitelistGodotDeny:
             f"Expected deny/default_deny for {path!r}, got {result.classification!r}"
         )
 
-    def test_tscn_via_main_exit1(self) -> None:
+    def test_login_tscn_review_required(self) -> None:
+        # login.tscn is the AI-maintained login fixture — review_required, not denied.
         rc = _run_ccp("fixtures/godot-test-project/scenes/login.tscn")
-        assert rc == 1, "login.tscn must exit 1"
+        assert rc == 0, "login.tscn must exit 0 (review_required)"
+
+    def test_tscn_no_rule_exit1(self) -> None:
+        rc = _run_ccp("fixtures/godot-test-project/scenes/poc_playground.tscn")
+        assert rc == 1, "poc_playground.tscn has no whitelist rule → exit 1"
 
     def test_project_godot_via_main_exit1(self) -> None:
         rc = _run_ccp("fixtures/godot-test-project/project.godot")
@@ -163,11 +169,12 @@ class TestPathWhitelistGodotAllow:
         assert rc == 0, "fixture LoginController.gd must exit 0"
 
     def test_mixed_deny_wins(self) -> None:
+        # poc_playground.tscn is default_denied; one bad path makes the whole batch fail.
         rc = _run_ccp(
             "adapters/godot/addons/autoagent/runtime/autoagent.gd",
-            "fixtures/godot-test-project/scenes/login.tscn",
+            "fixtures/godot-test-project/scenes/poc_playground.tscn",
         )
-        assert rc == 1, "one deny path must make the batch exit 1"
+        assert rc == 1, "one default_deny path must make the batch exit 1"
 
 
 class TestPathWhitelistGodotImport:
