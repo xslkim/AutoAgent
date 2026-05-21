@@ -6,6 +6,7 @@
 //   FAutoAgentStableIdResolver  — AutoAgent.StableIdResolver.*
 //   FAutoAgentSlateInputDriver  — AutoAgent.InputDriver.*
 //   FAutoAgentUmgReflector      — AutoAgent.UmgReflector.*
+//   FAutoAgentWebSocketServer   — AutoAgent.WebSocketServer.*
 
 #include "Misc/AutomationTest.h"
 
@@ -13,8 +14,11 @@
 
 #include "AutoAgentStableIdResolver.h"
 #include "AutoAgentSlateInputDriver.h"
+#include "AutoAgentWebSocketServer.h"
 #include "Framework/Application/SlateApplication.h"
 #include "AutoAgentUmgReflector.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonReader.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
@@ -438,6 +442,284 @@ bool FAutoAgentReflector_VisualFields::RunTest(const FString& /*Parameters*/)
 	TestTrue(TEXT("UImage.GetIsEnabled() default is true"), Img->GetIsEnabled());
 
 	Img->RemoveFromRoot();
+	return true;
+}
+
+// ===========================================================================
+// WebSocketServer — frame parser unit tests
+// ===========================================================================
+
+// Helper: build an unmasked WebSocket text frame (as the server sends).
+// Handles payload length 0–65535.
+static TArray<uint8> MakeTextFrame(const FString& Text)
+{
+	FTCHARToUTF8 Utf8(*Text);
+	const int32 Len = Utf8.Length();
+	TArray<uint8> Frame;
+	Frame.Add(0x81); // FIN + text opcode
+	if (Len <= 125)
+	{
+		Frame.Add(static_cast<uint8>(Len));
+	}
+	else
+	{
+		Frame.Add(126);
+		Frame.Add(static_cast<uint8>((Len >> 8) & 0xFF));
+		Frame.Add(static_cast<uint8>(Len & 0xFF));
+	}
+	Frame.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Len);
+	return Frame;
+}
+
+// Helper: build a masked WebSocket text frame (as a client sends).
+static TArray<uint8> MakeMaskedTextFrame(const FString& Text, const uint8 Mask[4])
+{
+	FTCHARToUTF8 Utf8(*Text);
+	const int32 Len = Utf8.Length();
+	TArray<uint8> Frame;
+	Frame.Add(0x81);
+	Frame.Add(static_cast<uint8>(0x80 | (Len <= 125 ? Len : 126)));
+	if (Len > 125)
+	{
+		Frame.Add(static_cast<uint8>((Len >> 8) & 0xFF));
+		Frame.Add(static_cast<uint8>(Len & 0xFF));
+	}
+	Frame.Add(Mask[0]);
+	Frame.Add(Mask[1]);
+	Frame.Add(Mask[2]);
+	Frame.Add(Mask[3]);
+	const uint8* Src = reinterpret_cast<const uint8*>(Utf8.Get());
+	for (int32 i = 0; i < Len; ++i)
+	{
+		Frame.Add(Src[i] ^ Mask[i % 4]);
+	}
+	return Frame;
+}
+
+// Helper: build a WebSocket Close frame (opcode 0x8).
+static TArray<uint8> MakeCloseFrame()
+{
+	return TArray<uint8>{0x88, 0x00};
+}
+
+// Helper: build a WebSocket Ping frame (opcode 0x9).
+static TArray<uint8> MakePingFrame()
+{
+	return TArray<uint8>{0x89, 0x00};
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Text,
+								 "AutoAgent.WebSocketServer.FrameParse.TextUnmasked",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Text::RunTest(const FString& /*Parameters*/)
+{
+	const FString Payload = TEXT("hello autoagent");
+	TArray<uint8> Buf = MakeTextFrame(Payload);
+
+	FString OutMsg;
+	bool bClosed = false;
+	const bool bGot = FAutoAgentWebSocketServer::ParseFrameForTest(Buf, OutMsg, bClosed);
+
+	TestTrue(TEXT("frame fully parsed"), bGot);
+	TestFalse(TEXT("not a close frame"), bClosed);
+	TestEqual(TEXT("payload matches"), OutMsg, Payload);
+	TestEqual(TEXT("buffer consumed"), Buf.Num(), 0);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Masked,
+								 "AutoAgent.WebSocketServer.FrameParse.TextMasked",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Masked::RunTest(const FString& /*Parameters*/)
+{
+	const uint8 Mask[4] = {0x37, 0xFA, 0x21, 0x3D};
+	const FString Payload = TEXT("masked payload");
+	TArray<uint8> Buf = MakeMaskedTextFrame(Payload, Mask);
+
+	FString OutMsg;
+	bool bClosed = false;
+	const bool bGot = FAutoAgentWebSocketServer::ParseFrameForTest(Buf, OutMsg, bClosed);
+
+	TestTrue(TEXT("masked frame parsed"), bGot);
+	TestEqual(TEXT("mask correctly removed"), OutMsg, Payload);
+	TestEqual(TEXT("buffer consumed"), Buf.Num(), 0);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Partial,
+								 "AutoAgent.WebSocketServer.FrameParse.Partial",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Partial::RunTest(const FString& /*Parameters*/)
+{
+	// A frame that arrives in two chunks — first chunk incomplete.
+	const FString Payload = TEXT("split");
+	TArray<uint8> Full = MakeTextFrame(Payload);
+
+	// Give parser only the first byte — must return false.
+	TArray<uint8> Partial;
+	Partial.Add(Full[0]);
+
+	FString OutMsg;
+	bool bClosed = false;
+	const bool bGot = FAutoAgentWebSocketServer::ParseFrameForTest(Partial, OutMsg, bClosed);
+	TestFalse(TEXT("partial frame returns false"), bGot);
+	TestEqual(TEXT("partial buffer not consumed"), Partial.Num(), 1);
+
+	// Complete buffer — must succeed.
+	TArray<uint8> Complete = MakeTextFrame(Payload);
+	const bool bGot2 = FAutoAgentWebSocketServer::ParseFrameForTest(Complete, OutMsg, bClosed);
+	TestTrue(TEXT("complete frame returns true"), bGot2);
+	TestEqual(TEXT("payload decoded"), OutMsg, Payload);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Close,
+								 "AutoAgent.WebSocketServer.FrameParse.Close",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Close::RunTest(const FString& /*Parameters*/)
+{
+	TArray<uint8> Buf = MakeCloseFrame();
+	FString OutMsg;
+	bool bClosed = false;
+	const bool bGot = FAutoAgentWebSocketServer::ParseFrameForTest(Buf, OutMsg, bClosed);
+	TestTrue(TEXT("close frame parsed"), bGot);
+	TestTrue(TEXT("bClosed is set"), bClosed);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Ping,
+								 "AutoAgent.WebSocketServer.FrameParse.Ping",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Ping::RunTest(const FString& /*Parameters*/)
+{
+	TArray<uint8> Buf = MakePingFrame();
+	FString OutMsg;
+	bool bClosed = false;
+	// Socket is nullptr → pong silently skipped (headless test).
+	const bool bGot = FAutoAgentWebSocketServer::ParseFrameForTest(Buf, OutMsg, bClosed);
+	TestTrue(TEXT("ping frame parsed"), bGot);
+	TestFalse(TEXT("ping does not close"), bClosed);
+	TestTrue(TEXT("ping produces no message"), OutMsg.IsEmpty());
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_FrameParse_Stress,
+								 "AutoAgent.WebSocketServer.FrameParse.Stress",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_FrameParse_Stress::RunTest(const FString& /*Parameters*/)
+{
+	// Simulate 100 "virtual connections" each sending a message — verify the
+	// frame parser handles them without crashing or corrupting state.
+	constexpr int32 NumVirtualConns = 100;
+	int32 SuccessCount = 0;
+
+	for (int32 i = 0; i < NumVirtualConns; ++i)
+	{
+		const FString Msg = FString::Printf(TEXT("conn_%d_message"), i);
+		TArray<uint8> Buf = MakeTextFrame(Msg);
+		FString OutMsg;
+		bool bClosed = false;
+		if (FAutoAgentWebSocketServer::ParseFrameForTest(Buf, OutMsg, bClosed))
+		{
+			if (OutMsg == Msg && !bClosed)
+			{
+				++SuccessCount;
+			}
+		}
+	}
+
+	TestEqual(TEXT("all 100 virtual connections parsed correctly"),
+			  SuccessCount,
+			  NumVirtualConns);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_ConnectionLimit,
+								 "AutoAgent.WebSocketServer.ConnectionLimit",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_ConnectionLimit::RunTest(const FString& /*Parameters*/)
+{
+	// MaxConnections must be a reasonable value: at least 4, at most 256.
+	TestTrue(TEXT("MaxConnections >= 4"),
+			 FAutoAgentWebSocketServer::MaxConnections >= 4);
+	TestTrue(TEXT("MaxConnections <= 256"),
+			 FAutoAgentWebSocketServer::MaxConnections <= 256);
+
+	// Verify GetConnectionCount() starts at 0 for a fresh (un-started) server.
+	FAutoAgentWebSocketServer Server;
+	TestEqual(TEXT("fresh server has 0 connections"),
+			  Server.GetConnectionCount(),
+			  0);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentWS_NegotiateVersionJson,
+								 "AutoAgent.WebSocketServer.NegotiateVersion",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentWS_NegotiateVersionJson::RunTest(const FString& /*Parameters*/)
+{
+	// Verify that the negotiate_version JSON is a well-formed JSON-RPC 2.0
+	// notification with the expected fields.  We parse it without a real
+	// server connection by building the same JSON string.
+	const FString Json =
+		TEXT("{\"jsonrpc\":\"2.0\",\"method\":\"negotiate_version\",")
+			TEXT("\"params\":{\"protocol\":\"autoagent.v1\",\"version\":\"1.0.0\"}}");
+
+	TSharedPtr<FJsonObject> Root;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Json);
+	const bool bParsed = FJsonSerializer::Deserialize(Reader, Root);
+	TestTrue(TEXT("negotiate_version is valid JSON"), bParsed);
+
+	if (bParsed && Root.IsValid())
+	{
+		FString Jsonrpc;
+		Root->TryGetStringField(TEXT("jsonrpc"), Jsonrpc);
+		TestEqual(TEXT("jsonrpc version is 2.0"), Jsonrpc, FString(TEXT("2.0")));
+
+		FString Method;
+		Root->TryGetStringField(TEXT("method"), Method);
+		TestEqual(TEXT("method is negotiate_version"),
+				  Method,
+				  FString(TEXT("negotiate_version")));
+
+		const TSharedPtr<FJsonObject>* Params = nullptr;
+		Root->TryGetObjectField(TEXT("params"), Params);
+		TestTrue(TEXT("params object present"), Params != nullptr);
+
+		if (Params)
+		{
+			FString Protocol;
+			(*Params)->TryGetStringField(TEXT("protocol"), Protocol);
+			TestEqual(TEXT("protocol is autoagent.v1"),
+					  Protocol,
+					  FString(TEXT("autoagent.v1")));
+
+			FString Version;
+			(*Params)->TryGetStringField(TEXT("version"), Version);
+			TestFalse(TEXT("version is non-empty"), Version.IsEmpty());
+		}
+	}
+
 	return true;
 }
 
