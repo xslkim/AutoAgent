@@ -4,7 +4,7 @@
 //
 // Automation tests for:
 //   FAutoAgentStableIdResolver  — AutoAgent.StableIdResolver.*
-//   FAutoAgentSlateInputDriver  — AutoAgent.InputDriver
+//   FAutoAgentSlateInputDriver  — AutoAgent.InputDriver.*
 //   FAutoAgentUmgReflector      — AutoAgent.UmgReflector.*
 
 #include "Misc/AutomationTest.h"
@@ -13,6 +13,7 @@
 
 #include "AutoAgentStableIdResolver.h"
 #include "AutoAgentSlateInputDriver.h"
+#include "Framework/Application/SlateApplication.h"
 #include "AutoAgentUmgReflector.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Button.h"
@@ -233,6 +234,59 @@ bool FAutoAgentInputDriverTest::RunTest(const FString& /*Parameters*/)
 			  Driver.Drag(TEXT("test_button"), TEXT("no_such_node")));
 
 	Root->RemoveFromRoot();
+	return true;
+}
+
+// ===========================================================================
+// InputDriver — Slate availability + game-thread preconditions
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentInputDriver_SlateAvailable,
+								 "AutoAgent.InputDriver.SlateAvailable",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentInputDriver_SlateAvailable::RunTest(const FString& /*Parameters*/)
+{
+	// FSlateApplication must be initialized in the editor — this is the
+	// precondition for the injection path in FAutoAgentSlateInputDriver.
+	TestTrue(TEXT("FSlateApplication is initialized in editor context"),
+			 FSlateApplication::IsInitialized());
+
+	// Automation tests run on the game thread — the driver dispatches
+	// synchronously (no cross-thread round-trip) in this context.
+	TestTrue(TEXT("automation tests execute on the game thread"),
+			 IsInGameThread());
+
+	return true;
+}
+
+// ===========================================================================
+// InputDriver — Click fallback broadcasts UButton::OnClicked
+// ===========================================================================
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentInputDriver_ClickBroadcast,
+								 "AutoAgent.InputDriver.ClickBroadcast",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentInputDriver_ClickBroadcast::RunTest(const FString& /*Parameters*/)
+{
+	// Widget is not in a viewport, so GetCachedWidget() returns null and the
+	// driver takes the UButton::OnClicked.Broadcast() fallback path.
+	UButton* Button = MakeWidget<UButton>(TEXT("cb_button"));
+	Button->AddToRoot();
+
+	bool bClicked = false;
+	Button->OnClicked.AddLambda([&bClicked]()
+								{ bClicked = true; });
+
+	TSharedRef<FAutoAgentStableIdResolver> Resolver = MakeShared<FAutoAgentStableIdResolver>();
+	FAutoAgentSlateInputDriver Driver(Resolver);
+	Driver.SetSearchRootOverride(Button);
+
+	const bool bResult = Driver.Click(TEXT("cb_button"));
+	TestTrue(TEXT("click returns true for an existing widget"), bResult);
+	TestTrue(TEXT("OnClicked broadcast via headless fallback"), bClicked);
+	TestFalse(TEXT("click on missing id returns false"), Driver.Click(TEXT("cb_missing")));
+
+	Button->RemoveFromRoot();
 	return true;
 }
 
