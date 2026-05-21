@@ -38,9 +38,16 @@ jobs:
           fi
 
       - name: Step 1 — Path whitelist (防护 0.1)
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
+          # Write PR body to a temp file so check_changed_paths can parse
+          # path_exception YAML blocks declared in the PR description.
+          PR_BODY_FILE="$(mktemp)"
+          printf '%s' "$PR_BODY" > "$PR_BODY_FILE"
           git diff --name-only ${{ steps.range.outputs.BASE }}...HEAD \
-            | python scripts/ci/check_changed_paths.py
+            | python scripts/ci/check_changed_paths.py \
+                --pr-body-file "$PR_BODY_FILE"
 
       - name: Step 2 — Visual-write audit (防护 0.2)
         run: |
