@@ -176,6 +176,43 @@ def build_parser() -> argparse.ArgumentParser:
     batch.add_argument("--save-diff-dir", type=Path, metavar="DIR",
                        help="Directory for diff PNGs on failure.")
 
+    # ---- engine convenience mode ----
+    # Allows CI scripts to specify engine / platform / name instead of full paths:
+    #   python check_visual_baseline.py \
+    #       --engine ue --platform windows --name login_screen \
+    #       --current /path/to/Saved/Automation/Comparisons/login_screen.png
+    #
+    # Engine → baselines subdirectory mapping:
+    #   unity  → baselines/unity/{platform}/{name}.png
+    #   ue     → baselines/unreal/{platform}/{name}.png
+    #   godot  → baselines/godot/{platform}/{name}.png
+    engine_grp = p.add_argument_group(
+        "Engine convenience mode (resolves --baseline from engine/platform/name)"
+    )
+    engine_grp.add_argument(
+        "--engine",
+        choices=["unity", "ue", "godot"],
+        help="Engine identifier — resolves the baseline directory automatically.",
+    )
+    engine_grp.add_argument(
+        "--platform",
+        choices=["windows", "linux", "mac"],
+        default="windows",
+        help="Target platform for baseline isolation (default: windows).",
+    )
+    engine_grp.add_argument(
+        "--name",
+        metavar="NAME",
+        help="Screenshot stem (without .png). Required with --engine.",
+    )
+    engine_grp.add_argument(
+        "--baselines-root",
+        type=Path,
+        default=Path("baselines"),
+        metavar="DIR",
+        help="Root directory for baseline trees (default: baselines/).",
+    )
+
     # ---- common ----
     p.add_argument("--threshold", type=float, default=0.95,
                    help="SSIM pass threshold (default: 0.95).")
@@ -185,8 +222,61 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+# ---------------------------------------------------------------------------
+# Engine / platform path resolution
+# ---------------------------------------------------------------------------
+
+_ENGINE_DIR: dict[str, str] = {
+    "unity": "unity",
+    "ue":    "unreal",
+    "godot": "godot",
+}
+
+
+def resolve_engine_paths(args: argparse.Namespace) -> int:
+    """
+    Populate ``args.baseline`` and (optionally) ``args.baseline_dir`` from
+    ``--engine`` / ``--platform`` / ``--name`` when those convenience flags
+    are provided.
+
+    Returns 0 on success, 2 on usage error.
+    """
+    if not args.engine:
+        return 0
+
+    if not args.name:
+        print("ERROR: --name is required when --engine is specified.", file=sys.stderr)
+        print(
+            "  Example: --engine ue --platform windows --name login_screen"
+            " --current /path/to/login_screen.png",
+            file=sys.stderr,
+        )
+        return 2
+
+    engine_subdir = _ENGINE_DIR[args.engine]
+    baseline_dir = args.baselines_root / engine_subdir / args.platform
+
+    # Single-name mode → resolve to a single baseline PNG.
+    args.baseline = baseline_dir / f"{args.name}.png"
+
+    # Ensure --current is supplied (engine mode always needs one).
+    if not getattr(args, "current", None):
+        print(
+            "ERROR: --current must be supplied together with --engine / --name.",
+            file=sys.stderr,
+        )
+        return 2
+
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+
+    # ---- engine convenience resolution (may set args.baseline) ----
+    rc = resolve_engine_paths(args)
+    if rc != 0:
+        return rc
 
     threshold = args.threshold
     failed = 0

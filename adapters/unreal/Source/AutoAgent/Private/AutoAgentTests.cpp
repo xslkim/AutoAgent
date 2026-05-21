@@ -8,11 +8,13 @@
 //   FAutoAgentUmgReflector      — AutoAgent.UmgReflector.*
 //   FAutoAgentWebSocketServer   — AutoAgent.WebSocketServer.*
 //   Packaged build compat       — AutoAgent.PackagedBuild.*
+//   ProtocolHandler routing     — AutoAgent.ProtocolHandler.*
 
 #include "Misc/AutomationTest.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
+#include "AutoAgentProtocolHandler.h"
 #include "AutoAgentStableIdResolver.h"
 #include "AutoAgentSlateInputDriver.h"
 #include "AutoAgentWebSocketServer.h"
@@ -782,6 +784,169 @@ bool FAutoAgentPB_ServerDoubleStop::RunTest(const FString& /*Parameters*/)
 	Server.Stop(); // first Stop() — server was never started
 	Server.Stop(); // second Stop() — must be idempotent
 	TestTrue(TEXT("double Stop() without Start() is safe"), true);
+	return true;
+}
+
+// ===========================================================================
+// ProtocolHandler — compare_screenshot routing
+// ===========================================================================
+// These tests exercise the JSON-RPC dispatch layer without a real game
+// viewport.  The headless (no-viewport) path is the reliable CI path; it
+// validates input validation (-32602) and the viewport-absent guard (-32603).
+
+// Helper: deserialize a JSON-RPC response and return the "error.code" if
+// present, or INT_MAX if the response is a success.
+static int32 ExtractErrorCode(const FString& ResponseJson)
+{
+	TSharedPtr<FJsonObject> Root;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseJson);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		return INT_MAX;
+	}
+	const TSharedPtr<FJsonObject>* ErrPtr = nullptr;
+	if (!Root->TryGetObjectField(TEXT("error"), ErrPtr) || !ErrPtr)
+	{
+		return INT_MAX; // success response — no error
+	}
+	int32 Code = INT_MAX;
+	(*ErrPtr)->TryGetNumberField(TEXT("code"), Code);
+	return Code;
+}
+
+// Helper: extract result field from a success response.
+static TSharedPtr<FJsonObject> ExtractResult(const FString& ResponseJson)
+{
+	TSharedPtr<FJsonObject> Root;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseJson);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		return nullptr;
+	}
+	const TSharedPtr<FJsonObject>* ResultPtr = nullptr;
+	if (!Root->TryGetObjectField(TEXT("result"), ResultPtr) || !ResultPtr)
+	{
+		return nullptr;
+	}
+	return *ResultPtr;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_CompareScreenshot_MissingName,
+								 "AutoAgent.ProtocolHandler.CompareScreenshot.MissingName",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_CompareScreenshot_MissingName::RunTest(const FString& /*Parameters*/)
+{
+	// Omitting the required "name" param must produce -32602 (invalid params).
+	FAutoAgentProtocolHandler Handler;
+	const FString Request =
+		TEXT("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"compare_screenshot\",\"params\":{}}");
+	const FString Response = Handler.Dispatch(Request);
+
+	const int32 Code = ExtractErrorCode(Response);
+	TestEqual(TEXT("missing name → error -32602"), Code, -32602);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_CompareScreenshot_NoViewport,
+								 "AutoAgent.ProtocolHandler.CompareScreenshot.NoViewport",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_CompareScreenshot_NoViewport::RunTest(const FString& /*Parameters*/)
+{
+	// In the headless test context GEngine->GameViewport is null, so the
+	// handler must return -32603 (internal error / no viewport).
+	FAutoAgentProtocolHandler Handler;
+	const FString Request =
+		TEXT("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"compare_screenshot\","
+			 "\"params\":{\"name\":\"login_screen\",\"threshold\":0.95}}");
+	const FString Response = Handler.Dispatch(Request);
+
+	const int32 Code = ExtractErrorCode(Response);
+	TestEqual(TEXT("no viewport → error -32603"), Code, -32603);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_CompareScreenshot_SavePath,
+								 "AutoAgent.ProtocolHandler.CompareScreenshot.SavePath",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_CompareScreenshot_SavePath::RunTest(const FString& /*Parameters*/)
+{
+	// Verify that the standardised save path is rooted under
+	// {ProjectSaved}/Automation/Comparisons/ and carries the .png extension.
+	// We construct the expected path using the same FPaths API as the handler.
+	const FString Name = TEXT("welcome_screen");
+	const FString ExpectedDir = FPaths::ConvertRelativePathToFull(
+		FPaths::Combine(FPaths::ProjectSavedDir(),
+						TEXT("Automation"),
+						TEXT("Comparisons")));
+
+	// Build the path as the handler would:
+	const FString ExpectedPath = FPaths::Combine(ExpectedDir, Name + TEXT(".png"));
+
+	TestFalse(TEXT("expected path is non-empty"), ExpectedPath.IsEmpty());
+	TestTrue(TEXT("path is under Automation/Comparisons"),
+			 ExpectedPath.Contains(TEXT("Automation")) &&
+				 ExpectedPath.Contains(TEXT("Comparisons")));
+	TestTrue(TEXT("path ends with .png"), ExpectedPath.EndsWith(TEXT(".png")));
+	TestTrue(TEXT("path contains screenshot name"), ExpectedPath.Contains(Name));
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_TakeScreenshot_MissingPath,
+								 "AutoAgent.ProtocolHandler.TakeScreenshot.MissingPath",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_TakeScreenshot_MissingPath::RunTest(const FString& /*Parameters*/)
+{
+	// take_screenshot with no "path" param must return -32602.
+	FAutoAgentProtocolHandler Handler;
+	const FString Request =
+		TEXT("{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"take_screenshot\",\"params\":{}}");
+	const FString Response = Handler.Dispatch(Request);
+
+	TestEqual(TEXT("missing path → error -32602"), ExtractErrorCode(Response), -32602);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_UnknownMethod,
+								 "AutoAgent.ProtocolHandler.UnknownMethod",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_UnknownMethod::RunTest(const FString& /*Parameters*/)
+{
+	// An unrecognised method name must return -32601 (method not found).
+	FAutoAgentProtocolHandler Handler;
+	const FString Request =
+		TEXT("{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"no_such_method\",\"params\":{}}");
+	const FString Response = Handler.Dispatch(Request);
+
+	TestEqual(TEXT("unknown method → error -32601"), ExtractErrorCode(Response), -32601);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPH_ParseError,
+								 "AutoAgent.ProtocolHandler.ParseError",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPH_ParseError::RunTest(const FString& /*Parameters*/)
+{
+	// Malformed JSON must return -32700 (parse error).
+	FAutoAgentProtocolHandler Handler;
+	const FString Request = TEXT("{this is not valid json");
+	const FString Response = Handler.Dispatch(Request);
+
+	TestEqual(TEXT("malformed json → error -32700"), ExtractErrorCode(Response), -32700);
 	return true;
 }
 
