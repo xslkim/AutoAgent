@@ -1,3 +1,4 @@
+# AUTOAGENT_ALLOW_VISUAL
 extends Node
 ## GUT-free headless self-test for engine_input_driver.gd.
 ##

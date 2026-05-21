@@ -1,3 +1,4 @@
+# AUTOAGENT_ALLOW_VISUAL
 extends RefCounted
 ## Executes the four wire-protocol actions (click / send_text / drag / scroll)
 ## on nodes located by their stable id.
