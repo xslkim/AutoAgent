@@ -131,6 +131,11 @@ deny:
   # Engine project settings (fixture-level — AI cannot tamper)
   - "fixtures/*/ProjectSettings/**"
   - "fixtures/*/Config/DefaultEngine.ini"
+  # Godot project settings (equivalent to Unity ProjectSettings)
+  - "fixtures/*/project.godot"
+
+  # Godot art assets (lowercase "assets" convention, unlike Unity/UE)
+  - "fixtures/*/assets/**"
 
   # Visual baselines (single-PR by humans only)
   - "baselines/**"
