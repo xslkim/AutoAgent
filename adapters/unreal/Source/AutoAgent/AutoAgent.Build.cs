@@ -6,6 +6,22 @@ public class AutoAgent : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		// -----------------------------------------------------------------------
+		// AUTOAGENT_ENABLED
+		// -----------------------------------------------------------------------
+		// 1 in all configurations except Shipping.  Setting this to 0 strips the
+		// WebSocket server, protocol handler, UMG reflector, and Slate input
+		// driver from the packaged binary, keeping the Shipping-build size
+		// increase well under 5 MB.
+		//
+		// Usage in source:
+		//   #if AUTOAGENT_ENABLED
+		//       ... runtime adapter code ...
+		//   #endif
+		// -----------------------------------------------------------------------
+		bool bAutoAgentEnabled = Target.Configuration != UnrealTargetConfiguration.Shipping;
+		PublicDefinitions.Add("AUTOAGENT_ENABLED=" + (bAutoAgentEnabled ? "1" : "0"));
+
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core",
