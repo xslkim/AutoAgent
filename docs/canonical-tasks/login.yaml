@@ -1,0 +1,94 @@
+schema_version: "1.0"
+task_id: TASK-0132
+title: "Login flow — enter credentials and reach welcome screen"
+engine: unity
+scene: LoginScene
+
+# -----------------------------------------------------------------------
+# Pre-conditions
+# -----------------------------------------------------------------------
+preconditions:
+  - fixture: LoginScene
+    state: initial          # login_panel active, welcome_panel inactive
+  - controller: LoginController
+    status: ready           # Start() completed, TMP_InputField + Button attached
+
+# -----------------------------------------------------------------------
+# Steps
+# -----------------------------------------------------------------------
+steps:
+  - id: step_clear_account
+    action: clear_text
+    target: account_input_bg
+    description: "Ensure account field is empty before typing"
+
+  - id: step_enter_username
+    action: send_text
+    target: account_input_bg
+    value: "admin"
+    description: "Type valid username into account input field"
+    verify:
+      field_value: "admin"
+
+  - id: step_clear_password
+    action: clear_text
+    target: password_input_bg
+
+  - id: step_enter_password
+    action: send_text
+    target: password_input_bg
+    value: "password"
+    description: "Type valid password into password input field"
+    verify:
+      field_value: "password"
+
+  - id: step_click_login
+    action: click
+    target: login_button_bg
+    description: "Click the login button to submit credentials"
+
+  - id: step_assert_api_called
+    action: assert_mock_called
+    target: MockApi
+    description: "Verify MockApi received the POST request with correct credentials"
+    verify:
+      post_received: true
+      username: "admin"
+      password: "password"
+
+  - id: step_assert_welcome
+    action: assert_visible
+    target: welcome_text
+    timeout_ms: 3000
+    description: "Confirm welcome_text is visible after successful login"
+
+  - id: step_assert_login_hidden
+    action: assert_hidden
+    target: login_panel
+    description: "Confirm login_panel is no longer visible"
+
+# -----------------------------------------------------------------------
+# Expected outcome
+# -----------------------------------------------------------------------
+expected_outcome:
+  visual_fields_unchanged: true   # position, size, sprite, color unmodified
+  attached_components_added:
+    - node: account_input_bg
+      component: TMP_InputField
+    - node: password_input_bg
+      component: TMP_InputField
+    - node: login_button_bg
+      component: Button
+  nodes_visible:
+    - welcome_panel
+    - welcome_text
+  nodes_hidden:
+    - login_panel
+
+# -----------------------------------------------------------------------
+# Constraints
+# -----------------------------------------------------------------------
+constraints:
+  max_iterations: 5
+  cost_limit_usd: 5.0
+  visual_diff_ssim_min: 0.95
