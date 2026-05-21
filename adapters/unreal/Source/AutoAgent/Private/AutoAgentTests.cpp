@@ -7,6 +7,7 @@
 //   FAutoAgentSlateInputDriver  — AutoAgent.InputDriver.*
 //   FAutoAgentUmgReflector      — AutoAgent.UmgReflector.*
 //   FAutoAgentWebSocketServer   — AutoAgent.WebSocketServer.*
+//   Packaged build compat       — AutoAgent.PackagedBuild.*
 
 #include "Misc/AutomationTest.h"
 
@@ -720,6 +721,67 @@ bool FAutoAgentWS_NegotiateVersionJson::RunTest(const FString& /*Parameters*/)
 		}
 	}
 
+	return true;
+}
+
+// ===========================================================================
+// PackagedBuild — AUTOAGENT_ENABLED macro + server lifecycle safety
+// ===========================================================================
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPB_MacroEnabled,
+								 "AutoAgent.PackagedBuild.MacroEnabled",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPB_MacroEnabled::RunTest(const FString& /*Parameters*/)
+{
+	// Automation tests run in the Editor context, so AUTOAGENT_ENABLED must
+	// be 1 here.  If it is 0 the Build.cs configuration is incorrect.
+#if AUTOAGENT_ENABLED
+	AddInfo(TEXT("AUTOAGENT_ENABLED=1 confirmed in editor build"));
+	TestTrue(TEXT("AUTOAGENT_ENABLED is 1 in editor/development builds"), true);
+#else
+	AddError(
+		TEXT("AUTOAGENT_ENABLED=0 in editor context — Build.cs is misconfigured"));
+#endif
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPB_ServerSafeDestruct,
+								 "AutoAgent.PackagedBuild.ServerSafeDestruct",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPB_ServerSafeDestruct::RunTest(const FString& /*Parameters*/)
+{
+	// FAutoAgentWebSocketServer must be safe to construct and destroy without
+	// calling Start().  This simulates the no-op path used in Shipping builds
+	// (AUTOAGENT_ENABLED=0) where the server object is never created, and also
+	// guards against use-after-free during PIE restart / hot-reload.
+	{
+		FAutoAgentWebSocketServer Server;
+		TestEqual(TEXT("un-started server has 0 connections"),
+				  Server.GetConnectionCount(),
+				  0);
+		// Destructor calls Stop(), which must be safe on an un-started server.
+	}
+	TestTrue(TEXT("construct/destruct without Start() does not crash"), true);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAutoAgentPB_ServerDoubleStop,
+								 "AutoAgent.PackagedBuild.ServerDoubleStop",
+								 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FAutoAgentPB_ServerDoubleStop::RunTest(const FString& /*Parameters*/)
+{
+	// Calling Stop() twice (or Stop() before Start()) must not crash.
+	// This mirrors the hot-reload scenario: Deinitialize() → Stop() is called
+	// on the old subsystem before Initialize() creates a new one.
+	FAutoAgentWebSocketServer Server;
+	Server.Stop(); // first Stop() — server was never started
+	Server.Stop(); // second Stop() — must be idempotent
+	TestTrue(TEXT("double Stop() without Start() is safe"), true);
 	return true;
 }
 
