@@ -249,5 +249,68 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		return BuildResult(Id, MakeShared<FJsonValueObject>(ResultObj));
 	}
 
+	if (Method == TEXT("compare_screenshot"))
+	{
+		// Visual regression capture — saves to the standard Automation/Comparisons
+		// directory so CI can diff against baselines/unreal/{platform}/{name}.png.
+		//
+		// Params:
+		//   name      (string, required) — screenshot name, used as the filename stem
+		//   threshold (number, optional, default 0.95) — SSIM threshold hint for CI
+		//
+		// The actual pixel comparison is performed server-side by the Python CI
+		// script:  scripts/ci/check_visual_baseline.py
+		//   --baseline baselines/unreal/windows/{name}.png
+		//   --current  {saved_path}
+		//
+		// The response is fire-and-forget: the file is written asynchronously by
+		// OnScreenshotCaptured; CI should wait for the file before running the
+		// comparison script.
+		FString Name;
+		double Threshold = 0.95;
+		Params->TryGetStringField(TEXT("name"), Name);
+		Params->TryGetNumberField(TEXT("threshold"), Threshold);
+
+		if (Name.IsEmpty())
+		{
+			return BuildError(Id, -32602, TEXT("missing param: name"));
+		}
+
+		UGameViewportClient* GameViewport = GEngine ? GEngine->GameViewport : nullptr;
+		if (!GameViewport)
+		{
+			return BuildError(Id, -32603, TEXT("no active game viewport"));
+		}
+
+		// Standard comparison path: {ProjectSaved}/Automation/Comparisons/{name}.png
+		// Matches UE Functional Test automation convention; CI maps this to
+		// baselines/unreal/{platform}/{name}.png for SSIM comparison.
+		const FString SavePath = FPaths::ConvertRelativePathToFull(
+			FPaths::Combine(FPaths::ProjectSavedDir(),
+							TEXT("Automation"),
+							TEXT("Comparisons"),
+							Name + TEXT(".png")));
+
+		PendingScreenshotPath = SavePath;
+		if (ScreenshotViewport.Get() != GameViewport)
+		{
+			if (ScreenshotViewport.IsValid() && ScreenshotHandle.IsValid())
+			{
+				ScreenshotViewport->OnScreenshotCaptured().Remove(ScreenshotHandle);
+			}
+			ScreenshotHandle = GameViewport->OnScreenshotCaptured().AddRaw(
+				this, &FAutoAgentProtocolHandler::OnScreenshotCaptured);
+			ScreenshotViewport = GameViewport;
+		}
+		FScreenshotRequest::RequestScreenshot(/*bShowUI=*/true);
+
+		TSharedRef<FJsonObject> ResultObj = MakeShared<FJsonObject>();
+		ResultObj->SetStringField(TEXT("name"), Name);
+		ResultObj->SetStringField(TEXT("saved_path"), SavePath);
+		ResultObj->SetNumberField(TEXT("threshold"), Threshold);
+		ResultObj->SetStringField(TEXT("status"), TEXT("captured"));
+		return BuildResult(Id, MakeShared<FJsonValueObject>(ResultObj));
+	}
+
 	return BuildError(Id, -32601, FString::Printf(TEXT("method not found: %s"), *Method));
 }
