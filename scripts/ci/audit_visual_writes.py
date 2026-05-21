@@ -182,15 +182,40 @@ def collect_paths(args: argparse.Namespace) -> list[Path]:
 
 
 def git_diff_names(ref_spec: str) -> list[str]:
-    """Run `git diff --name-only <ref_spec>` and return the file list."""
-    try:
-        out = subprocess.check_output(
+    """Run `git diff --name-only <ref_spec>` and return the file list.
+
+    CI environments often fetch origin/<base> with --depth=1, which can leave
+    no common ancestor for the three-dot range.  When that happens we deepen
+    the base ref's fetch by 50 commits and retry once before giving up.
+    """
+    def _run_diff() -> str:
+        return subprocess.check_output(
             ["git", "diff", "--name-only", ref_spec],
             text=True,
             stderr=subprocess.PIPE,
         )
+
+    try:
+        out = _run_diff()
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"git diff failed: {e.stderr.strip()}") from e
+        stderr_msg = e.stderr.strip()
+        if "no merge base" in stderr_msg and "..." in ref_spec:
+            # Shallow clone: deepen the base ref to find the common ancestor.
+            base_ref = ref_spec.split("...")[0]          # e.g. "origin/main"
+            remote, _, branch = base_ref.partition("/")
+            subprocess.run(
+                ["git", "fetch", remote or "origin", branch or "main", "--depth=50"],
+                check=False,
+                capture_output=True,
+            )
+            try:
+                out = _run_diff()
+            except subprocess.CalledProcessError as e2:
+                raise RuntimeError(
+                    f"git diff failed (after deepening fetch): {e2.stderr.strip()}"
+                ) from e2
+        else:
+            raise RuntimeError(f"git diff failed: {stderr_msg}") from e
     return [line.strip() for line in out.splitlines() if line.strip()]
 
 
