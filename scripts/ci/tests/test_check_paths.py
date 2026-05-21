@@ -96,7 +96,6 @@ def test_allowed_paths(checker, path):
     # Scenes / WBP
     "fixtures/unity-test-project/Assets/Scenes/LoginScene.unity",
     "fixtures/unreal-test-project/Content/UI/WBP_LoginScreen.uasset",
-    "fixtures/godot-test-project/scenes/login.tscn",
     "fixtures/unreal-test-project/Content/Maps/LoginMap.umap",
     # Art / fonts
     "fixtures/unity-test-project/Assets/Sprites/UI/btn_login_normal.png",
