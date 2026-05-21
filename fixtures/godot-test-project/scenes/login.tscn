@@ -1,100 +1,52 @@
-[gd_scene load_steps=8 format=3 uid="uid://c03voxsgmpk4v"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Texture2D" uid="uid://twhwvsncag1l" path="res://assets/ui/btn_login_disabled.png" id="btn_disabled"]
-[ext_resource type="Texture2D" uid="uid://cf8ygcaeay2s3" path="res://assets/ui/btn_login_hover.png" id="btn_hover"]
-[ext_resource type="Texture2D" uid="uid://8ni6ennhotxu" path="res://assets/ui/btn_login_normal.png" id="btn_normal"]
-[ext_resource type="Texture2D" uid="uid://bft26g2u85i6j" path="res://assets/ui/btn_login_pressed.png" id="btn_pressed"]
-[ext_resource type="Texture2D" uid="uid://ccn8ixor0tk4y" path="res://assets/ui/input_bg_focused.png" id="input_focused"]
-[ext_resource type="Texture2D" uid="uid://ba0yxucdwkra4" path="res://assets/ui/input_bg_normal.png" id="input_normal"]
-[ext_resource type="Texture2D" uid="uid://cfguvwdo24n85" path="res://assets/ui/panel_bg.png" id="panel_bg"]
+[ext_resource type="Script" path="res://scripts/LoginController.gd" id="ctrl"]
 
 [node name="LoginScene" type="CanvasLayer"]
+script = ExtResource("ctrl")
 
-[node name="login_panel" type="TextureRect" parent="."]
+[node name="login_panel" type="Panel" parent="."]
 offset_left = 640.0
 offset_top = 300.0
 offset_right = 1280.0
 offset_bottom = 780.0
-texture = ExtResource("panel_bg")
-expand_mode = 1
-stretch_mode = 6
 metadata/autoagent_pinned_id = "login_panel"
 metadata/autoagent_logical_role = "image_only"
 
-[node name="account_input_bg" type="TextureRect" parent="login_panel"]
+[node name="account_input_bg" type="LineEdit" parent="login_panel"]
 layout_mode = 0
 offset_left = 140.0
-offset_top = 100.0
+offset_top = 90.0
 offset_right = 500.0
-offset_bottom = 156.0
-texture = ExtResource("input_normal")
-expand_mode = 1
-stretch_mode = 6
+offset_bottom = 130.0
+placeholder_text = "Account"
 metadata/autoagent_pinned_id = "account_input_bg"
 metadata/autoagent_logical_role = "input"
-metadata/autoagent_state_sprites = {
-"focused": ExtResource("input_focused"),
-"normal": ExtResource("input_normal")
-}
 
-[node name="account_input_text" type="Label" parent="login_panel/account_input_bg"]
-layout_mode = 0
-offset_left = 12.0
-offset_top = 16.0
-offset_right = 348.0
-offset_bottom = 40.0
-vertical_alignment = 1
-metadata/autoagent_pinned_id = "account_input_text"
-metadata/autoagent_logical_role = "text_display"
-
-[node name="password_input_bg" type="TextureRect" parent="login_panel"]
+[node name="password_input_bg" type="LineEdit" parent="login_panel"]
 layout_mode = 0
 offset_left = 140.0
-offset_top = 180.0
+offset_top = 155.0
 offset_right = 500.0
-offset_bottom = 236.0
-texture = ExtResource("input_normal")
-expand_mode = 1
-stretch_mode = 6
+offset_bottom = 195.0
+secret = true
+placeholder_text = "Password"
 metadata/autoagent_pinned_id = "password_input_bg"
 metadata/autoagent_logical_role = "input"
-metadata/autoagent_state_sprites = {
-"focused": ExtResource("input_focused"),
-"normal": ExtResource("input_normal")
-}
 
-[node name="password_input_text" type="Label" parent="login_panel/password_input_bg"]
-layout_mode = 0
-offset_left = 12.0
-offset_top = 16.0
-offset_right = 348.0
-offset_bottom = 40.0
-vertical_alignment = 1
-metadata/autoagent_pinned_id = "password_input_text"
-metadata/autoagent_logical_role = "text_display"
-
-[node name="login_button_bg" type="TextureRect" parent="login_panel"]
+[node name="login_button_bg" type="Button" parent="login_panel"]
 layout_mode = 0
 offset_left = 200.0
-offset_top = 280.0
+offset_top = 235.0
 offset_right = 440.0
-offset_bottom = 344.0
-texture = ExtResource("btn_normal")
-expand_mode = 1
-stretch_mode = 6
+offset_bottom = 285.0
 metadata/autoagent_pinned_id = "login_button_bg"
 metadata/autoagent_logical_role = "button"
-metadata/autoagent_state_sprites = {
-"disabled": ExtResource("btn_disabled"),
-"hover": ExtResource("btn_hover"),
-"normal": ExtResource("btn_normal"),
-"pressed": ExtResource("btn_pressed")
-}
 
 [node name="login_button_label" type="Label" parent="login_panel/login_button_bg"]
 layout_mode = 0
 offset_right = 240.0
-offset_bottom = 64.0
+offset_bottom = 50.0
 text = "Login"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -104,27 +56,25 @@ metadata/autoagent_logical_role = "text_display"
 [node name="error_label" type="Label" parent="login_panel"]
 layout_mode = 0
 offset_left = 140.0
-offset_top = 360.0
+offset_top = 305.0
 offset_right = 500.0
-offset_bottom = 388.0
+offset_bottom = 335.0
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/autoagent_pinned_id = "error_label"
 metadata/autoagent_logical_role = "text_display"
 
-[node name="welcome_panel" type="TextureRect" parent="."]
+[node name="welcome_panel" type="Panel" parent="."]
 visible = false
 offset_left = 640.0
 offset_top = 300.0
 offset_right = 1280.0
 offset_bottom = 780.0
-texture = ExtResource("panel_bg")
-expand_mode = 1
-stretch_mode = 6
 metadata/autoagent_pinned_id = "welcome_panel"
 metadata/autoagent_logical_role = "image_only"
 
 [node name="welcome_text" type="Label" parent="welcome_panel"]
+visible = false
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 480.0
