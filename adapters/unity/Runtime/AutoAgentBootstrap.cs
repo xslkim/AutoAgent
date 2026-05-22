@@ -21,7 +21,7 @@ namespace AutoAgent
         /// The global event emitter. Null until <see cref="Awake"/> runs.
         /// Publish lifecycle / scene notifications through this.
         /// </summary>
-        public static EventEmitter Events { get; private set; }
+        internal static EventEmitter Events { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void AutoStart()
