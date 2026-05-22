@@ -7,6 +7,11 @@ then call ``judge_visual_diff`` when you need Claude to explain *what* changed
 in plain language (slower, costs API tokens).
 
 No engine connection is required — both images must already be on disk.
+
+Stabilisation features (TASK-0404):
+- ``max_per_session`` caps the number of API calls in this server process.
+- Results are cached automatically (same images → same answer, no re-call).
+- Transient API errors are retried with exponential backoff.
 """
 
 from __future__ import annotations
@@ -28,6 +33,7 @@ def register(mcp: FastMCP) -> None:
         diff_path: str | None = None,
         model: str = DEFAULT_MODEL,
         max_tokens: int = 512,
+        max_per_session: int | None = None,
     ) -> dict[str, Any]:
         """Use Claude Vision to describe what changed between two screenshots.
 
@@ -37,14 +43,27 @@ def register(mcp: FastMCP) -> None:
 
         Requires the ``ANTHROPIC_API_KEY`` environment variable to be set.
 
+        **Stabilisation features**
+
+        - *Retry*: transient API errors are retried up to 2 times with
+          exponential back-off (1 s, 2 s).
+        - *Cache*: identical comparisons within the same server process are
+          answered from memory — no duplicate API calls.
+        - *Session limit*: set ``max_per_session`` to cap token spend.  When
+          the limit is reached the tool returns ``{"skipped": true, …}``
+          immediately.
+
         Args:
-            baseline_path: Absolute path to the reference (before) screenshot.
-            current_path:  Absolute path to the candidate (after) screenshot.
-            diff_path:     Optional path to an SSIM diff heat-map image.
-                           When provided it is included as a third image to
-                           help Claude focus on the changed areas.
-            model:         Anthropic model to use (default ``claude-opus-4-5``).
-            max_tokens:    Maximum response tokens (default 512).
+            baseline_path:   Absolute path to the reference (before) screenshot.
+            current_path:    Absolute path to the candidate (after) screenshot.
+            diff_path:       Optional path to an SSIM diff heat-map image.
+                             When provided it is included as a third image to
+                             help Claude focus on the changed areas.
+            model:           Anthropic model to use (default ``claude-opus-4-5``).
+            max_tokens:      Maximum response tokens (default 512).
+            max_per_session: Maximum number of real API calls for this process.
+                             Once reached the tool returns a skipped result.
+                             ``null`` (default) means unlimited.
 
         Returns:
             On success::
@@ -57,6 +76,10 @@ def register(mcp: FastMCP) -> None:
                   "model": "claude-opus-4-5"
                 }
 
+            When the session limit is reached::
+
+                {"skipped": true, "reason": "max_per_session=10 reached …"}
+
             On error::
 
                 {"success": false, "error": "..."}
@@ -68,12 +91,16 @@ def register(mcp: FastMCP) -> None:
                 diff_path=diff_path or None,
                 model=model,
                 max_tokens=max_tokens,
+                max_per_session=max_per_session,
             )
         except FileNotFoundError as exc:
             return {"success": False, "error": str(exc)}
         except Exception as exc:
             # Covers anthropic.APIError, auth errors, network failures, …
             return {"success": False, "error": f"{type(exc).__name__}: {exc}"}
+
+        if result.skipped:
+            return {"skipped": True, "reason": result.skip_reason}
 
         return {
             "changed": result.changed,
