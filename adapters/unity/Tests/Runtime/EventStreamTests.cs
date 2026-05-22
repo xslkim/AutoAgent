@@ -176,7 +176,7 @@ namespace AutoAgent.Tests
         [Test]
         public void LifecycleWatcher_EmitsAppearedForNewActiveNode()
         {
-            var go      = Spawn("AppearedTarget"); // active by default
+            var go      = Spawn("AppearedTarget", true, typeof(RectTransform)); // active by default
             var watcher = CreateWatcher();
 
             // First poll: no prior state → visible node → widget_appeared
@@ -205,7 +205,7 @@ namespace AutoAgent.Tests
         [Test]
         public void LifecycleWatcher_EmitsAppearedWhenNodeActivated()
         {
-            var go      = Spawn("ActivateLater", active: false);
+            var go      = Spawn("ActivateLater", false, typeof(RectTransform));
             var watcher = CreateWatcher();
 
             // First poll: node is inactive → no appeared event, but record state
@@ -225,7 +225,7 @@ namespace AutoAgent.Tests
         [Test]
         public void LifecycleWatcher_EmitsDisappearedWhenNodeDeactivated()
         {
-            var go      = Spawn("DeactivateLater"); // active
+            var go      = Spawn("DeactivateLater", true, typeof(RectTransform)); // active
             var watcher = CreateWatcher();
 
             // Establish baseline: node is visible
@@ -245,7 +245,7 @@ namespace AutoAgent.Tests
         [Test]
         public void LifecycleWatcher_EmitsDisappearedWhenNodeDestroyed()
         {
-            var go      = Spawn("DestroyedNode"); // active
+            var go      = Spawn("DestroyedNode", true, typeof(RectTransform)); // active
             var watcher = CreateWatcher();
 
             watcher.PollNow();
