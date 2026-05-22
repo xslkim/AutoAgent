@@ -6,7 +6,7 @@ all in order so ``server.py`` only needs one import.
 
 Tool groups
 -----------
-dump.py      — dump_tree, find_widget, get_widget
+dump.py      — dump_tree, dump_tree_delta, find_widget, get_widget
 click.py     — click, drag, scroll, key_press
 text.py      — send_text
 screenshot.py — take_screenshot, wait_for
@@ -54,6 +54,7 @@ def register_all(mcp: FastMCP) -> None:
 TOOL_NAMES: tuple[str, ...] = (
     # Tree queries
     "dump_tree",
+    "dump_tree_delta",
     "find_widget",
     "get_widget",
     # Pointer inputs
@@ -89,4 +90,4 @@ TOOL_NAMES: tuple[str, ...] = (
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 26 tools registered by :func:`register_all`."""
+"""Canonical ordered list of the 27 tools registered by :func:`register_all`."""
