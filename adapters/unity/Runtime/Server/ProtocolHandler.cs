@@ -84,6 +84,9 @@ namespace AutoAgent
                     "scroll"            => HandleScroll(id, paramsJson),
                     "key_press"         => HandleKeyPress(id, paramsJson),
                     "take_screenshot"   => HandleTakeScreenshot(id, paramsJson),
+                    "invoke_method"     => HandleInvokeMethod(id, paramsJson),
+                    "get_property"      => HandleGetProperty(id, paramsJson),
+                    "set_property"      => HandleSetProperty(id, paramsJson),
                     // Async: starts a coroutine, reply is sent by the coroutine.
                     "wait_for"          => HandleWaitFor(id, paramsJson, reply),
                     _                   => JsonRpcDispatcher.ErrorResponse(
@@ -291,6 +294,73 @@ namespace AutoAgent
                 timeoutMs == 0 ? WaitConditions.DefaultTimeoutMs : timeoutMs,
                 id, reply);
             return null; // deferred — coroutine will call reply
+        }
+
+        // ------------------------------------------------------------------ reflection handlers
+
+        static string HandleInvokeMethod(object id, string paramsJson)
+        {
+            string nodeId     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string script     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "script");
+            string methodName = JsonRpcDispatcher.ExtractStringParam(paramsJson, "method_name");
+            if (string.IsNullOrEmpty(nodeId) || string.IsNullOrEmpty(script) ||
+                string.IsNullOrEmpty(methodName))
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
+                    "missing param: id / script / method_name");
+
+            var go = EngineInputDriver.FindById(nodeId);
+            if (go == null)
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+
+            string argsJson   = JsonRpcDispatcher.ExtractRawValue(paramsJson, "args") ?? "[]";
+            string returnJson = ScriptInvoker.Invoke(go, script, methodName, argsJson);
+            return JsonRpcDispatcher.OkResponse(id, $"{{\"return_value\":{returnJson}}}");
+        }
+
+        static string HandleGetProperty(object id, string paramsJson)
+        {
+            string nodeId    = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string script    = JsonRpcDispatcher.ExtractStringParam(paramsJson, "script");
+            string property  = JsonRpcDispatcher.ExtractStringParam(paramsJson, "property");
+            if (string.IsNullOrEmpty(nodeId) || string.IsNullOrEmpty(script) ||
+                string.IsNullOrEmpty(property))
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
+                    "missing param: id / script / property");
+
+            var go = EngineInputDriver.FindById(nodeId);
+            if (go == null)
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+
+            string valueJson = PropertyAccessor.GetProperty(go, script, property);
+            return JsonRpcDispatcher.OkResponse(id, $"{{\"value\":{valueJson}}}");
+        }
+
+        static string HandleSetProperty(object id, string paramsJson)
+        {
+            string nodeId   = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string script   = JsonRpcDispatcher.ExtractStringParam(paramsJson, "script");
+            string property = JsonRpcDispatcher.ExtractStringParam(paramsJson, "property");
+            string category = JsonRpcDispatcher.ExtractStringParam(paramsJson, "category") ?? "behavior";
+            if (string.IsNullOrEmpty(nodeId) || string.IsNullOrEmpty(script) ||
+                string.IsNullOrEmpty(property))
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
+                    "missing param: id / script / property");
+
+            // Visual-category gate — checked before FindById so "visual" always fails fast.
+            if (string.Equals(category, "visual", StringComparison.OrdinalIgnoreCase))
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.VisualPropertyWrite,
+                    $"visual property writes are not allowed: {property}");
+
+            var go = EngineInputDriver.FindById(nodeId);
+            if (go == null)
+                return JsonRpcDispatcher.ErrorResponse(id, WireError.WidgetNotFound,
+                    $"widget not found: {nodeId}");
+
+            string valueJson = JsonRpcDispatcher.ExtractRawValue(paramsJson, "value") ?? "null";
+            PropertyAccessor.SetProperty(go, script, property, valueJson, category);
+            return JsonRpcDispatcher.OkResponse(id, "{\"success\":true}");
         }
 
         // ------------------------------------------------------------------ misc
