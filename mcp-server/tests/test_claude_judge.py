@@ -1,4 +1,4 @@
-"""TASK-0126: Claude Vision judge tests.
+"""TASK-0126 / TASK-0404: Claude Vision judge tests.
 
 All API calls are mocked — no real ANTHROPIC_API_KEY is needed.
 Tests cover:
@@ -29,7 +29,9 @@ from autoagent_mcp.vision.claude_judge import (
     DEFAULT_MODEL,
     JudgeResult,
     _parse_response,
+    get_session_count,
     judge_diff,
+    reset_session,
 )
 
 
@@ -378,3 +380,316 @@ class TestJudgeResult:
         assert r.details == []
         assert r.model == DEFAULT_MODEL
         assert r.raw_response == ""
+
+    def test_skipped_defaults_false(self):
+        r = JudgeResult(changed=False, description="x", severity="none")
+        assert r.skipped is False
+        assert r.skip_reason == ""
+
+    def test_skipped_true(self):
+        r = JudgeResult(
+            changed=False, description="Skipped", severity="none",
+            skipped=True, skip_reason="limit",
+        )
+        assert r.skipped is True
+        assert r.skip_reason == "limit"
+
+
+# ---------------------------------------------------------------------------
+# TASK-0404: retry tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(autouse=True)
+def _reset_session_between_tests():
+    """Ensure each test starts with a clean session counter and cache."""
+    reset_session()
+    yield
+    reset_session()
+
+
+class TestRetry:
+    def test_succeeds_after_transient_failure(self, tmp_path):
+        """2 failures then success → result returned on third attempt."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+
+        call_count = 0
+
+        def _create(**kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count < 3:
+                raise RuntimeError("transient network error")
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps({
+                "changed": False, "severity": "none",
+                "description": "ok", "details": [],
+            }))])
+
+        client = MagicMock()
+        client.messages.create.side_effect = _create
+
+        with patch("time.sleep"):
+            result = judge_diff(a, b, _client=client, max_retries=2)
+
+        assert call_count == 3
+        assert isinstance(result, JudgeResult)
+        assert not result.skipped
+
+    def test_exhausts_retries_raises(self, tmp_path):
+        """All attempts fail → last exception re-raised."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+
+        client = MagicMock()
+        client.messages.create.side_effect = RuntimeError("always fails")
+
+        with patch("time.sleep"):
+            with pytest.raises(RuntimeError, match="always fails"):
+                judge_diff(a, b, _client=client, max_retries=2)
+
+        assert client.messages.create.call_count == 3  # 1 + 2 retries
+
+    def test_max_retries_zero_means_one_attempt(self, tmp_path):
+        """max_retries=0 → exactly one API call, no retry."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+
+        client = MagicMock()
+        client.messages.create.side_effect = RuntimeError("fail once")
+
+        with patch("time.sleep"):
+            with pytest.raises(RuntimeError):
+                judge_diff(a, b, _client=client, max_retries=0)
+
+        assert client.messages.create.call_count == 1
+
+    def test_exponential_backoff_sleep_called(self, tmp_path):
+        """sleep() is called between retries with increasing delays."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+
+        client = MagicMock()
+        client.messages.create.side_effect = RuntimeError("fail")
+
+        with patch("time.sleep") as mock_sleep:
+            with pytest.raises(RuntimeError):
+                judge_diff(a, b, _client=client, max_retries=2)
+
+        # 2 retries → sleep called twice (after attempt 0 and 1)
+        assert mock_sleep.call_count == 2
+        delays = [c.args[0] for c in mock_sleep.call_args_list]
+        assert delays == [1, 2]  # 2**0=1, 2**1=2
+
+    def test_file_not_found_not_retried(self, tmp_path):
+        """Missing file raises immediately — no API call made."""
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = MagicMock()
+
+        with pytest.raises(FileNotFoundError):
+            judge_diff(tmp_path / "no_such.png", b, _client=client, max_retries=2)
+
+        client.messages.create.assert_not_called()
+
+    def test_successful_call_no_sleep(self, tmp_path):
+        """A first-attempt success must not call sleep()."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        with patch("time.sleep") as mock_sleep:
+            judge_diff(a, b, _client=client, max_retries=2)
+
+        mock_sleep.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# TASK-0404: session counter tests
+# ---------------------------------------------------------------------------
+
+
+class TestSessionCounter:
+    def test_counter_starts_at_zero(self):
+        assert get_session_count() == 0
+
+    def test_counter_increments_on_api_call(self, tmp_path):
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        judge_diff(a, b, _client=client)
+        assert get_session_count() == 1
+
+    def test_counter_does_not_increment_on_cache_hit(self, tmp_path):
+        """Cached results don't count as API calls."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        judge_diff(a, b, _client=client)
+        assert get_session_count() == 1
+        judge_diff(a, b, _client=client)   # cache hit
+        assert get_session_count() == 1    # still 1
+
+    def test_counter_does_not_increment_on_skip(self, tmp_path):
+        """Skipped calls don't count."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        result = judge_diff(a, b, _client=client, max_per_session=0)
+        assert result.skipped is True
+        assert get_session_count() == 0
+
+    def test_reset_session_clears_counter(self, tmp_path):
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        judge_diff(a, b, _client=client)
+        assert get_session_count() == 1
+        reset_session()
+        assert get_session_count() == 0
+
+    def test_max_per_session_returns_skipped(self, tmp_path):
+        """After limit is reached, calls return skipped without API call."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        # First call: within limit → succeeds
+        r1 = judge_diff(a, b, _client=client, max_per_session=1)
+        assert not r1.skipped
+        assert get_session_count() == 1
+
+        # Second call (different files to avoid cache): limit exceeded → skipped
+        c = solid_png(tmp_path / "c.png", (100, 50, 200))
+        r2 = judge_diff(a, c, _client=client, max_per_session=1)
+        assert r2.skipped is True
+        assert "max_per_session=1" in r2.skip_reason
+
+    def test_skip_reason_contains_limit(self, tmp_path):
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        result = judge_diff(a, b, _client=client, max_per_session=0)
+        assert result.skipped is True
+        assert "0" in result.skip_reason  # limit value visible in reason
+
+    def test_no_limit_allows_multiple_calls(self, tmp_path):
+        """max_per_session=None means unlimited."""
+        client = _make_mock_client()
+
+        for i in range(5):
+            a = solid_png(tmp_path / f"a{i}.png", (i * 10, i * 10, i * 10))
+            b = solid_png(tmp_path / f"b{i}.png", (200 - i, 200 - i, 200 - i))
+            r = judge_diff(a, b, _client=client, max_per_session=None)
+            assert not r.skipped
+
+        assert get_session_count() == 5
+
+
+# ---------------------------------------------------------------------------
+# TASK-0404: result cache tests
+# ---------------------------------------------------------------------------
+
+
+class TestResultCache:
+    def test_identical_call_hits_cache(self, tmp_path):
+        """Same files → second call returns cached result, no extra API call."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        r1 = judge_diff(a, b, _client=client)
+        r2 = judge_diff(a, b, _client=client)
+
+        assert client.messages.create.call_count == 1  # only one real call
+        assert r1.description == r2.description
+
+    def test_different_images_not_cached(self, tmp_path):
+        """Different content → separate API calls."""
+        a  = solid_png(tmp_path / "a.png")
+        b1 = solid_png(tmp_path / "b1.png", (200, 200, 200))
+        b2 = solid_png(tmp_path / "b2.png", (100, 100, 100))
+        client = _make_mock_client()
+
+        judge_diff(a, b1, _client=client)
+        judge_diff(a, b2, _client=client)
+
+        assert client.messages.create.call_count == 2
+
+    def test_reset_session_clears_cache(self, tmp_path):
+        """After reset_session(), same call triggers a new API request."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        judge_diff(a, b, _client=client)
+        assert client.messages.create.call_count == 1
+
+        reset_session()
+        judge_diff(a, b, _client=client)
+        assert client.messages.create.call_count == 2
+
+    def test_different_model_is_separate_cache_entry(self, tmp_path):
+        """Same images but different model → two API calls."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        judge_diff(a, b, model="claude-opus-4-5", _client=client)
+        judge_diff(a, b, model="claude-3-5-sonnet-20241022", _client=client)
+
+        assert client.messages.create.call_count == 2
+
+    def test_cache_returns_same_result_object(self, tmp_path):
+        """Cached result is the exact same JudgeResult instance."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+        client = _make_mock_client()
+
+        r1 = judge_diff(a, b, _client=client)
+        r2 = judge_diff(a, b, _client=client)
+
+        assert r1 is r2  # same object from cache
+
+
+# ---------------------------------------------------------------------------
+# TASK-0404: MCP tool skipped response
+# ---------------------------------------------------------------------------
+
+
+class TestJudgeToolSkipped:
+    @pytest.mark.asyncio
+    async def test_skipped_response_shape(self, tmp_path):
+        """When session limit reached, tool returns skipped=true shape."""
+        a = solid_png(tmp_path / "a.png")
+        b = solid_png(tmp_path / "b.png", (200, 200, 200))
+
+        import autoagent_mcp.tools.judge as _jt
+        original = _jt.judge_diff
+
+        def _skip(*args, **kwargs):
+            return JudgeResult(
+                changed=False, description="Skipped", severity="none",
+                skipped=True, skip_reason="max_per_session=0 reached (current count: 0)",
+                model=DEFAULT_MODEL,
+            )
+
+        _jt.judge_diff = _skip
+        try:
+            mcp = build_server()
+            result = _result(await mcp.call_tool(
+                "judge_visual_diff",
+                {
+                    "baseline_path": str(a),
+                    "current_path": str(b),
+                    "max_per_session": 0,
+                },
+            ))
+            assert result["skipped"] is True
+            assert "reason" in result
+        finally:
+            _jt.judge_diff = original
