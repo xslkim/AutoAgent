@@ -71,6 +71,46 @@ namespace AutoAgent
             return m.Success ? m.Groups[1].Value == "true" : fallback;
         }
 
+        /// <summary>
+        /// Extracts the raw JSON token (string, number, bool, null, object, array)
+        /// for <paramref name="key"/> in <paramref name="json"/>.
+        /// Returns <c>null</c> if the key is not present.
+        /// </summary>
+        internal static string ExtractRawValue(string json, string key)
+        {
+            if (json == null) return null;
+            int ki = json.IndexOf($"\"{key}\"", System.StringComparison.Ordinal);
+            if (ki < 0) return null;
+            int colon = json.IndexOf(':', ki);
+            if (colon < 0) return null;
+            int start = colon + 1;
+            while (start < json.Length && char.IsWhiteSpace(json[start])) start++;
+            if (start >= json.Length) return null;
+            char first = json[start];
+            // object / array — delegate to balanced-bracket extractor
+            if (first == '{' || first == '[') return ExtractObject(json, key);
+            // quoted string
+            if (first == '"')
+            {
+                int end = start + 1;
+                while (end < json.Length)
+                {
+                    if (json[end] == '\\') { end += 2; continue; }
+                    if (json[end] == '"')  { end++; break; }
+                    end++;
+                }
+                return json.Substring(start, end - start);
+            }
+            // keyword (null / true / false) or number
+            {
+                int end = start;
+                while (end < json.Length && json[end] != ',' &&
+                       json[end] != '}' && json[end] != ']')
+                    end++;
+                return json.Substring(start, end - start).Trim();
+            }
+        }
+
         // ------------------------------------------------------------------ internal JSON helpers
 
         static string ExtractStringValue(string json, string key)
