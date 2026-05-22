@@ -12,8 +12,8 @@ text.py      — send_text
 screenshot.py — take_screenshot, wait_for
 meta.py      — pin_id, list_orphan_ids
 session.py   — connect_engine, disconnect, ping, get_engine_info
-visual.py    — save_baseline, compare_to_baseline, list_baselines_tool,
-               delete_baseline_tool  (TASK-0123)
+visual.py    — save_baseline, compare_to_baseline, compare_lpips_to_baseline,
+               list_baselines_tool, delete_baseline_tool  (TASK-0123/0403)
 audit.py     — audit_visual_changes  (TASK-0125)
 judge.py     — judge_visual_diff     (TASK-0126)
 reflect.py   — invoke_method, get_property, set_property  (Phase-4 stubs)
@@ -74,9 +74,10 @@ TOOL_NAMES: tuple[str, ...] = (
     "disconnect",
     "ping",
     "get_engine_info",
-    # Visual comparison (TASK-0123)
+    # Visual comparison (TASK-0123 / TASK-0403)
     "save_baseline",
     "compare_to_baseline",
+    "compare_lpips_to_baseline",
     "list_baselines_tool",
     "delete_baseline_tool",
     # Visual audit (TASK-0125)
@@ -88,4 +89,4 @@ TOOL_NAMES: tuple[str, ...] = (
     "get_property",
     "set_property",
 )
-"""Canonical ordered list of the 25 tools registered by :func:`register_all`."""
+"""Canonical ordered list of the 26 tools registered by :func:`register_all`."""

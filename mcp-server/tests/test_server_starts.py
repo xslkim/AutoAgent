@@ -33,7 +33,7 @@ def mock_connected_client():
     set_client(None)
 
 
-EXPECTED_COUNT = 25  # 24 (TASK-0125) + judge_visual_diff (TASK-0126)
+EXPECTED_COUNT = 26  # 25 + compare_lpips_to_baseline (TASK-0403)
 
 
 def test_tool_names_count():

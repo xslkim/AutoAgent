@@ -23,6 +23,10 @@ from autoagent_mcp.vision.baseline import (
     save_baseline as _save_baseline,
 )
 from autoagent_mcp.vision.ssim import compare_images
+from autoagent_mcp.vision.lpips_subprocess import (
+    LpipsNotAvailable,
+    compare_lpips,
+)
 
 
 def register(mcp: FastMCP) -> None:
@@ -117,6 +121,75 @@ def register(mcp: FastMCP) -> None:
             "identical": result.identical,
             "changed_regions": regions,
             "diff_path": str(save_diff) if save_diff else None,
+            "baseline_path": str(baseline),
+            "current_path": str(current_path),
+        }
+
+    @mcp.tool()
+    async def compare_lpips_to_baseline(
+        name: str,
+        current_path: str,
+        threshold: float = 0.1,
+    ) -> dict[str, Any]:
+        """Compare a screenshot to a saved baseline using LPIPS perceptual distance.
+
+        LPIPS (Learned Perceptual Image Patch Similarity) uses a neural network
+        to measure perceptual similarity.  It correlates better with human
+        perception than pixel-based metrics like SSIM — small colour tweaks or
+        anti-aliasing artefacts that fool SSIM are handled more gracefully.
+
+        **Score semantics differ from SSIM**: LPIPS is a *distance* — lower is
+        more similar.  ``score=0.0`` means perceptually identical; typical UI
+        screenshots that look the same to the human eye score below ``0.05``.
+        The ``identical`` flag is ``True`` when ``score < threshold``.
+
+        Requires the ``[lpips]`` extras::
+
+            pip install "autoagent-mcp[lpips]"
+
+        Args:
+            name:         Baseline name (saved with ``save_baseline`` first).
+            current_path: Absolute path to the PNG screenshot to compare.
+            threshold:    LPIPS distance above which ``identical`` is ``False``
+                          (default ``0.1``; range ``0.0``–``1.0+``).
+
+        Returns:
+            On success::
+
+                {
+                  "score": 0.023,
+                  "identical": true,
+                  "threshold": 0.1,
+                  "baseline_path": "/path/to/baseline.png",
+                  "current_path": "/path/to/current.png"
+                }
+
+            On error::
+
+                {"success": false, "error": "...", "hint": "..."}
+        """
+        try:
+            baseline = load_baseline_path(name)
+        except (FileNotFoundError, ValueError) as exc:
+            return {"success": False, "error": str(exc)}
+
+        try:
+            result = compare_lpips(baseline, current_path, threshold=threshold)
+        except LpipsNotAvailable as exc:
+            return {
+                "success": False,
+                "error": str(exc),
+                "hint": "pip install 'autoagent-mcp[lpips]'",
+            }
+        except FileNotFoundError as exc:
+            return {"success": False, "error": str(exc)}
+        except ValueError as exc:
+            return {"success": False, "error": str(exc)}
+
+        return {
+            "score": round(result.score, 6),
+            "identical": result.identical,
+            "threshold": threshold,
             "baseline_path": str(baseline),
             "current_path": str(current_path),
         }
