@@ -10,28 +10,51 @@ namespace AutoAgent
     /// Executes the four wire-protocol actions (click, drag, send_text, scroll)
     /// on UI elements located by their stable ID.
     /// All public methods must be called from the Unity main thread.
+    ///
+    /// <para><b>input_layer</b>: pass <c>"engine"</c> (default) to use Unity's
+    /// EventSystem, or <c>"os"</c> to inject OS-level input via
+    /// <see cref="Win32InputDriver"/> (Windows only).</para>
     /// </summary>
     public static class EngineInputDriver
     {
         // ------------------------------------------------------------------ click
 
         /// <summary>
-        /// Simulate a complete click on a node: PointerDown → PointerUp →
-        /// PointerClick, the same sequence the EventSystem fires for a real
-        /// mouse click, so every Selectable subclass (Button, Toggle, …) reacts.
+        /// Simulate a click on a node.
+        ///
+        /// <para><c>inputLayer="engine"</c> (default): fires PointerDown →
+        /// PointerUp → PointerClick via Unity's EventSystem.</para>
+        /// <para><c>inputLayer="os"</c>: moves the OS cursor to the node's
+        /// screen position and sends Win32 SendInput mouse events (Windows only).
+        /// No component-interactability check is performed.</para>
         /// </summary>
         /// <exception cref="WireException">
         /// Code -32001 if the id resolves to no node; code -32002 if the node
-        /// exists but has no component able to handle a click.
+        /// exists but has no clickable component (engine layer only).
         /// </exception>
-        public static void Click(string nodeId)
+        public static void Click(string nodeId,
+                                 string inputLayer = "engine",
+                                 string button     = "left")
         {
-            var go = ResolveClickable(nodeId);
+            if (inputLayer == "os")
+            {
+                var go  = FindById(nodeId);
+                if (go == null)
+                    throw new WireException(WireError.WidgetNotFound,
+                        $"widget not found: {nodeId}");
+                var pos = GetScreenPosition(go);
+                if (pos == null)
+                    throw new WireException(WireError.WidgetNotInteractable,
+                        $"widget has no RectTransform (required for os input): {nodeId}");
+                Win32InputDriver.Click(pos.Value, button);
+                return;
+            }
 
-            var eventData = NewPointerEvent(go);
-            ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerDownHandler);
-            ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerUpHandler);
-            ExecuteEvents.Execute(go, eventData, ExecuteEvents.pointerClickHandler);
+            var clickable  = ResolveClickable(nodeId);
+            var eventData  = NewPointerEvent(clickable);
+            ExecuteEvents.Execute(clickable, eventData, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(clickable, eventData, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(clickable, eventData, ExecuteEvents.pointerClickHandler);
         }
 
         // Resolve a node id to a GameObject that can actually receive a click,
@@ -76,18 +99,46 @@ namespace AutoAgent
             Mathf.Max(1, Mathf.RoundToInt(durationMs / MillisPerDragStep));
 
         /// <summary>
-        /// Multi-frame drag coroutine: PointerDown → BeginDrag → N×Drag (one
-        /// per frame) → EndDrag → Drop → PointerUp. Splitting OnDrag across
-        /// frames avoids single-frame IDragHandler implementations misbehaving.
+        /// Multi-frame drag coroutine.
+        ///
+        /// <para><c>inputLayer="engine"</c> (default): PointerDown → BeginDrag
+        /// → N×Drag → EndDrag → Drop → PointerUp via Unity's EventSystem.
+        /// Requires the source to implement a drag handler.</para>
+        /// <para><c>inputLayer="os"</c>: moves the OS cursor with SendInput
+        /// (Windows only). No drag-handler check is performed.</para>
         /// </summary>
         /// <exception cref="WireException">
         /// Code -32001 if either id resolves to no node; code -32002 if the
-        /// source has no drag handler.
+        /// source has no drag handler (engine layer only).
         /// </exception>
-        public static IEnumerator Drag(string fromId, string toId, int durationMs = 100)
+        public static IEnumerator Drag(string fromId, string toId,
+                                       int durationMs = 100,
+                                       string inputLayer = "engine")
         {
-            var (src, dst) = ResolveDrag(fromId, toId);
-            yield return DragSteps(src, dst, durationMs);
+            if (inputLayer == "os")
+            {
+                var src = FindById(fromId);
+                if (src == null)
+                    throw new WireException(WireError.WidgetNotFound,
+                        $"drag source not found: {fromId}");
+                var dst = FindById(toId);
+                if (dst == null)
+                    throw new WireException(WireError.WidgetNotFound,
+                        $"drag target not found: {toId}");
+                var fromPos = GetScreenPosition(src);
+                var toPos   = GetScreenPosition(dst);
+                if (fromPos == null)
+                    throw new WireException(WireError.WidgetNotInteractable,
+                        $"drag source has no RectTransform: {fromId}");
+                if (toPos == null)
+                    throw new WireException(WireError.WidgetNotInteractable,
+                        $"drag target has no RectTransform: {toId}");
+                yield return Win32InputDriver.Drag(fromPos.Value, toPos.Value, durationMs);
+                yield break;
+            }
+
+            var (engineSrc, engineDst) = ResolveDrag(fromId, toId);
+            yield return DragSteps(engineSrc, engineDst, durationMs);
         }
 
         // Synchronously resolve + validate the two endpoints, or throw.
@@ -201,27 +252,49 @@ namespace AutoAgent
         // ------------------------------------------------------------------ key_press
 
         /// <summary>
-        /// Send a synthetic key event to a node. Supported keys (case-insensitive):
-        ///   <c>Enter</c> / <c>Return</c> / <c>Submit</c> → ISubmitHandler.OnSubmit
-        ///     (InputField.onSubmit, Button.onClick, …)
-        ///   <c>Escape</c> / <c>Cancel</c>                → ICancelHandler.OnCancel
-        ///   <c>Tab</c>                                   → focus the next Selectable
-        ///   <c>Shift+Tab</c> / <c>ShiftTab</c>           → focus the previous Selectable
+        /// Send a key event to a node.
+        ///
+        /// <para><c>inputLayer="engine"</c> (default): dispatches Unity
+        /// EventSystem events. Supported keys:
+        ///   Enter/Return/Submit → ISubmitHandler.OnSubmit;
+        ///   Escape/Cancel       → ICancelHandler.OnCancel;
+        ///   Tab                 → focus next Selectable;
+        ///   Shift+Tab/ShiftTab  → focus previous Selectable.</para>
+        /// <para><c>inputLayer="os"</c>: sends Win32 SendInput virtual-key
+        /// events (Windows only). Supported keys: Enter, Escape, Tab,
+        /// Shift+Tab. The <paramref name="nodeId"/> must resolve to a node
+        /// with a RectTransform (for screen position), but no handler check is
+        /// performed.</para>
         /// </summary>
         /// <exception cref="WireException">
         /// Code -32001 if the id resolves to no node;
-        /// code -32002 if the node has no component able to handle the key;
+        /// code -32002 if the node has no handler for the key (engine only);
         /// code -32602 if <paramref name="key"/> is not a supported value.
         /// </exception>
-        public static void KeyPress(string nodeId, string key)
+        public static void KeyPress(string nodeId, string key,
+                                    string inputLayer = "engine")
         {
             var go = FindById(nodeId);
             if (go == null)
                 throw new WireException(WireError.WidgetNotFound,
                     $"widget not found: {nodeId}");
             if (string.IsNullOrEmpty(key))
-                throw new WireException(WireError.InvalidParams,
-                    "key is required");
+                throw new WireException(WireError.InvalidParams, "key is required");
+
+            if (inputLayer == "os")
+            {
+                string k = key.Trim().ToLowerInvariant();
+                if (k == "shifttab" || k == "shift+tab")
+                {
+                    Win32InputDriver.ShiftTab();
+                }
+                else
+                {
+                    ushort vk = Win32InputDriver.MapKey(key);
+                    Win32InputDriver.KeyPress(vk);
+                }
+                return;
+            }
 
             switch (key.Trim().ToLowerInvariant())
             {
@@ -328,6 +401,18 @@ namespace AutoAgent
         }
 
         // ------------------------------------------------------------------ helpers
+
+        /// <summary>
+        /// Return the Unity screen-space position of <paramref name="go"/>'s
+        /// RectTransform, or <c>null</c> if the object has no RectTransform.
+        /// </summary>
+        internal static Vector2? GetScreenPosition(GameObject go)
+        {
+            var rt = go?.GetComponent<RectTransform>();
+            if (rt == null) return null;
+            var cam = FindCanvasCamera(rt);
+            return RectTransformUtility.WorldToScreenPoint(cam, rt.position);
+        }
 
         static PointerEventData NewPointerEvent(GameObject go)
         {

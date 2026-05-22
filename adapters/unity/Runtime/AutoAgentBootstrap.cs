@@ -104,13 +104,27 @@ namespace AutoAgent
         /// id surfaces as a WireException now) then plays the multi-frame drag
         /// coroutine. Called from the protocol handler.
         /// </summary>
-        public static void RunDrag(string fromId, string toId, int durationMs)
+        public static void RunDrag(string fromId, string toId, int durationMs,
+                                   string inputLayer = "engine")
         {
             // Synchronous validation — throws WireException on a bad id, which
             // the protocol handler turns into an error response.
-            EngineInputDriver.ResolveDrag(fromId, toId);
+            if (inputLayer == "os")
+            {
+                // OS layer: validate that both nodes exist (no drag-handler check).
+                if (EngineInputDriver.FindById(fromId) == null)
+                    throw new WireException(WireError.WidgetNotFound,
+                        $"drag source not found: {fromId}");
+                if (EngineInputDriver.FindById(toId) == null)
+                    throw new WireException(WireError.WidgetNotFound,
+                        $"drag target not found: {toId}");
+            }
+            else
+            {
+                EngineInputDriver.ResolveDrag(fromId, toId);
+            }
             if (_instance != null)
-                _instance.StartCoroutine(EngineInputDriver.Drag(fromId, toId, durationMs));
+                _instance.StartCoroutine(EngineInputDriver.Drag(fromId, toId, durationMs, inputLayer));
         }
 
         /// <summary>

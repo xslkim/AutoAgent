@@ -171,11 +171,13 @@ namespace AutoAgent
 
         static string HandleClick(object id, string paramsJson)
         {
-            string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string nodeId     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string inputLayer = JsonRpcDispatcher.ExtractStringParam(paramsJson, "input_layer") ?? "engine";
+            string button     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "button") ?? "left";
             if (string.IsNullOrEmpty(nodeId))
                 return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             // Click throws WireException on failure; Dispatch's catch maps it.
-            EngineInputDriver.Click(nodeId);
+            EngineInputDriver.Click(nodeId, inputLayer, button);
             return JsonRpcDispatcher.OkResponse(id, "null");
         }
 
@@ -192,13 +194,14 @@ namespace AutoAgent
 
         static string HandleDrag(object id, string paramsJson)
         {
-            string fromId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "from_id");
-            string toId   = JsonRpcDispatcher.ExtractStringParam(paramsJson, "to_id");
+            string fromId     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "from_id");
+            string toId       = JsonRpcDispatcher.ExtractStringParam(paramsJson, "to_id");
+            string inputLayer = JsonRpcDispatcher.ExtractStringParam(paramsJson, "input_layer") ?? "engine";
             if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
                 return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams,
                     "missing params: from_id / to_id");
             int durationMs = (int)JsonRpcDispatcher.ExtractFloatParam(paramsJson, "duration_ms");
-            AutoAgentBootstrap.RunDrag(fromId, toId, durationMs);
+            AutoAgentBootstrap.RunDrag(fromId, toId, durationMs, inputLayer);
             return JsonRpcDispatcher.OkResponse(id, "null");
         }
 
@@ -215,13 +218,14 @@ namespace AutoAgent
 
         static string HandleKeyPress(object id, string paramsJson)
         {
-            string nodeId = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
-            string key    = JsonRpcDispatcher.ExtractStringParam(paramsJson, "key");
+            string nodeId     = JsonRpcDispatcher.ExtractStringParam(paramsJson, "id");
+            string key        = JsonRpcDispatcher.ExtractStringParam(paramsJson, "key");
+            string inputLayer = JsonRpcDispatcher.ExtractStringParam(paramsJson, "input_layer") ?? "engine";
             if (string.IsNullOrEmpty(nodeId))
                 return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: id");
             if (string.IsNullOrEmpty(key))
                 return JsonRpcDispatcher.ErrorResponse(id, WireError.InvalidParams, "missing param: key");
-            EngineInputDriver.KeyPress(nodeId, key);
+            EngineInputDriver.KeyPress(nodeId, key, inputLayer);
             return JsonRpcDispatcher.OkResponse(id, "null");
         }
 
