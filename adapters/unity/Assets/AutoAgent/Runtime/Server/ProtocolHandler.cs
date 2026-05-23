@@ -74,6 +74,7 @@ namespace AutoAgent
                 {
                     "negotiate_version" => HandleNegotiateVersion(id, paramsJson),
                     "dump_tree"         => HandleDumpTree(id, _orphanTracker),
+                    "dump_tree_delta"   => HandleDumpTreeDelta(id, paramsJson, _orphanTracker),
                     "pin_id"            => PinIdHandler.HandlePinId(id, paramsJson),
                     "list_orphan_ids"   => PinIdHandler.HandleListOrphanIds(id, _orphanTracker),
                     "find_widget"       => HandleFindWidget(id, paramsJson),
@@ -111,9 +112,11 @@ namespace AutoAgent
         static string HandleNegotiateVersion(object id, string paramsJson)
         {
             // params: { "client_version": "0.1" }
-            // result: { "server_version": "0.1", "accepted": true }
+            // result: { "server_version": "0.1", "accepted": true,
+            //           "capabilities": { "dump_tree_delta": true } }
             return JsonRpcDispatcher.OkResponse(id,
-                "{\"server_version\":\"0.1\",\"accepted\":true}");
+                "{\"server_version\":\"0.1\",\"accepted\":true," +
+                "\"capabilities\":{\"dump_tree_delta\":true}}");
         }
 
         static string HandleDumpTree(object id, OrphanTracker tracker = null)
@@ -123,6 +126,88 @@ namespace AutoAgent
             tracker?.Save(nodes.ConvertAll(n => n.Id));
             var json  = NodeSerializer.SerializeTree(nodes);
             return JsonRpcDispatcher.OkResponse(id, json);
+        }
+
+        /// <summary>
+        /// Incremental dump_tree supporting adapter-side delta computation.
+        ///
+        /// Params: <c>since</c> (optional snapshot id), <c>include_invisible</c>
+        /// (default false), <c>max_depth</c> (default -1 = unlimited).
+        ///
+        /// The response mirrors the MCP <c>DeltaResult</c> schema so
+        /// <c>dump_tree_delta</c> on the Python side can forward it directly.
+        /// </summary>
+        static string HandleDumpTreeDelta(object id, string paramsJson,
+                                          OrphanTracker tracker = null)
+        {
+            string since = JsonRpcDispatcher.ExtractStringParam(paramsJson, "since") ?? "";
+            bool includeInvisible = JsonRpcDispatcher.ExtractBoolParam(
+                paramsJson, "include_invisible", false);
+            int maxDepth = (int)JsonRpcDispatcher.ExtractFloatParam(
+                paramsJson, "max_depth");
+
+            var nodes = UGuiReflector.DumpActiveScene();
+            tracker?.Save(nodes.ConvertAll(n => n.Id));
+
+            // Apply filters (mirrors Python dump_tree logic).
+            if (!includeInvisible)
+                nodes = nodes.FindAll(n => n.Visual.Visible);
+            if (maxDepth >= 0)
+                nodes = FilterByDepth(nodes, maxDepth);
+
+            DeltaResult dr;
+            if (string.IsNullOrEmpty(since))
+            {
+                dr = DeltaResult.Full(nodes, TreeCache.Store(nodes));
+            }
+            else
+            {
+                dr = TreeCache.Diff(since, nodes);
+            }
+
+            var sb = new StringBuilder();
+            sb.Append('{');
+            sb.Append("\"snapshot_id\":\"").Append(dr.snapshotId).Append('"');
+            sb.Append(",\"changed\":");
+            sb.Append(NodeSerializer.SerializeTree(dr.changed));
+            sb.Append(",\"removed_ids\":[");
+            for (int i = 0; i < dr.removedIds.Count; i++)
+            {
+                if (i > 0) sb.Append(',');
+                sb.Append('"').Append(NodeSerializer.Esc(dr.removedIds[i])).Append('"');
+            }
+            sb.Append(']');
+            sb.Append(",\"unchanged_count\":").Append(dr.unchangedCount);
+            sb.Append(",\"full_snapshot\":").Append(dr.fullSnapshot ? "true" : "false");
+            sb.Append('}');
+            return JsonRpcDispatcher.OkResponse(id, sb.ToString());
+        }
+
+        /// <summary>
+        /// Keep only nodes whose depth (hops to root) is ≤ <paramref name="maxDepth"/>.
+        /// </summary>
+        static List<NodeData> FilterByDepth(List<NodeData> nodes, int maxDepth)
+        {
+            // Compute depth per node via parent chain.
+            var idToNode = new Dictionary<string, NodeData>();
+            foreach (var n in nodes)
+                if (!string.IsNullOrEmpty(n.Id))
+                    idToNode[n.Id] = n;
+
+            int DepthOf(NodeData n, int limit)
+            {
+                int d = 0;
+                var cur = n;
+                while (!string.IsNullOrEmpty(cur.ParentId) && d <= limit)
+                {
+                    if (!idToNode.TryGetValue(cur.ParentId, out var p)) break;
+                    cur = p;
+                    d++;
+                }
+                return d;
+            }
+
+            return nodes.FindAll(n => DepthOf(n, maxDepth) <= maxDepth);
         }
 
         static string HandleFindWidget(object id, string paramsJson)

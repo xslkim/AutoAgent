@@ -79,6 +79,7 @@ class WebSocketClient:
         self.port = port
         self._ws: Any = None   # websockets.ClientConnection
         self._next_id: int = 0
+        self._capabilities: dict[str, Any] = {}
 
     # ------------------------------------------------------------------ state
 
@@ -86,6 +87,11 @@ class WebSocketClient:
     def connected(self) -> bool:
         """True when the WebSocket connection is currently open."""
         return self._ws is not None and self._ws.state is _WsState.OPEN
+
+    @property
+    def capabilities(self) -> dict[str, Any]:
+        """Capabilities returned by the adapter during negotiate_version."""
+        return self._capabilities
 
     @property
     def uri(self) -> str:
@@ -108,6 +114,7 @@ class WebSocketClient:
         result = await self.call(
             "negotiate_version", {"client_version": self.PROTOCOL_VERSION}
         )
+        self._capabilities = result.get("capabilities", {}) if isinstance(result, dict) else {}
         return result  # type: ignore[return-value]
 
     async def disconnect(self) -> None:

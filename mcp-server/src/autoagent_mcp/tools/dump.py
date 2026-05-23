@@ -103,7 +103,28 @@ def register(mcp: FastMCP) -> None:
             r2 = dump_tree_delta(since=snap)
             snap = r2["snapshot_id"]   # update for next call
         """
-        raw_nodes: list[dict] = await get_client().call("dump_tree", {}) or []
+        client = get_client()
+        caps = client.capabilities if hasattr(client, "capabilities") else {}
+
+        if caps.get("dump_tree_delta"):
+            params: dict[str, Any] = {
+                "include_invisible": include_invisible,
+                "max_depth": max_depth,
+            }
+            if since:
+                params["since"] = since
+            result: dict = await client.call("dump_tree_delta", params) or {}
+            return {
+                "snapshot_id": result.get("snapshot_id", ""),
+                "nodes": result.get("changed", []),
+                "removed_ids": result.get("removed_ids", []),
+                "unchanged_count": result.get("unchanged_count", 0),
+                "full_snapshot": result.get("full_snapshot", False),
+                "captured_at": time.time(),
+            }
+
+        # Fallback to full dump + Python-side delta.
+        raw_nodes: list[dict] = await client.call("dump_tree", {}) or []
 
         # Apply the same filters as dump_tree so the diff reflects what the
         # agent actually sees.
