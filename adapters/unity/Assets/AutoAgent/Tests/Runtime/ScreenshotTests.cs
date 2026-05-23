@@ -1,3 +1,4 @@
+// AUTOAGENT_ALLOW_VISUAL: test fixtures set RectTransform size/position for test setup.
 using System;
 using System.Collections;
 using System.IO;
