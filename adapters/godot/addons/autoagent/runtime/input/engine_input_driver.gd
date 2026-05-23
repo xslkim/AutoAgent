@@ -1,7 +1,11 @@
 # AUTOAGENT_ALLOW_VISUAL
 extends RefCounted
-## Executes the four wire-protocol actions (click / send_text / drag / scroll)
+## Executes wire-protocol actions (click / send_text / drag / scroll / key_press)
 ## on nodes located by their stable id.
+##
+## input_layer = "engine" (default): events via viewport.push_input.
+## input_layer = "os": warps OS cursor via DisplayServer.cursor_set_position(),
+##   then injects via Input.parse_input_event() for cross-window visibility.
 ##
 ## By default nodes are searched in the active scene; tests may set
 ## `search_root` to point the driver at an explicit subtree.
@@ -11,27 +15,23 @@ const PINNED_META := "autoagent_pinned_id"
 var search_root: Node = null
 
 
-func click(node_id) -> bool:
+func click(node_id, input_layer := "engine") -> bool:
 	var node := _find(node_id)
 	if node == null:
 		return false
-	# Respect mouse_filter: MOUSE_FILTER_IGNORE nodes are visually present but
-	# intentionally transparent to input — do not synthesise clicks on them.
 	if node is Control:
 		var ctrl := node as Control
 		if ctrl.mouse_filter == Control.MOUSE_FILTER_IGNORE:
 			return false
 	if node is BaseButton:
-		# Fire the button's action directly — reliable in headless and windowed
-		# runs alike (mirrors the UE adapter's OnClicked broadcast).
 		(node as BaseButton).pressed.emit()
 		return true
 	if node is Control:
-		# Generic controls: synthesise a mouse click through the viewport.
 		var center := (node as Control).get_global_rect().get_center()
+		if input_layer == "os":
+			_os_warp_cursor(center)
 		var vp := (node as Control).get_viewport()
-		_mouse_button(vp, center, true)
-		_mouse_button(vp, center, false)
+		_viewport_click(vp, center)
 		return true
 	return false
 
@@ -51,17 +51,17 @@ func send_text(node_id, text: String) -> bool:
 	return false
 
 
-func drag(from_id, to_id) -> bool:
+func drag(from_id, to_id, input_layer := "engine") -> bool:
 	var src := _find(from_id)
 	var dst := _find(to_id)
 	if src == null or dst == null or not (src is Control) or not (dst is Control):
 		return false
-	var vp := (src as Control).get_viewport()
 	var a := (src as Control).get_global_rect().get_center()
 	var b := (dst as Control).get_global_rect().get_center()
-	_mouse_button(vp, a, true)
-	_mouse_motion(vp, a, b)
-	_mouse_button(vp, b, false)
+	if input_layer == "os":
+		_os_warp_cursor(a)
+	var vp := (src as Control).get_viewport()
+	_viewport_drag(vp, a, b)
 	return true
 
 
@@ -75,6 +75,49 @@ func scroll(node_id, delta_x: float, delta_y: float) -> bool:
 		sc.scroll_vertical += int(delta_y)
 		return true
 	return false
+
+
+## Send a key-press event to a widget.
+## Supported keys: Enter/Return/Submit, Escape/Esc/Cancel, Tab, Shift+Tab.
+func key_press(node_id, key: String, input_layer := "engine") -> bool:
+	var node := _find(node_id)
+	if node == null:
+		return false
+
+	var k := key.to_lower().strip_edges()
+
+	# Build an InputEventKey for the given keycode + pressed state.
+	var _make_key := func(kc: Key, pressed: bool, shift := false) -> InputEventKey:
+		var ev := InputEventKey.new()
+		ev.keycode = kc
+		ev.pressed = pressed
+		ev.shift_pressed = shift
+		return ev
+
+	var events: Array[InputEventKey] = []
+	match k:
+		"enter", "return", "submit":
+			events = [_make_key(KEY_ENTER, true), _make_key(KEY_ENTER, false)]
+		"escape", "esc", "cancel":
+			events = [_make_key(KEY_ESCAPE, true), _make_key(KEY_ESCAPE, false)]
+		"tab":
+			events = [_make_key(KEY_TAB, true), _make_key(KEY_TAB, false)]
+		"shifttab", "shift+tab":
+			events = [
+				_make_key(KEY_SHIFT, true, true),
+				_make_key(KEY_TAB, true, true),
+				_make_key(KEY_TAB, false, true),
+				_make_key(KEY_SHIFT, false, false),
+			]
+		_:
+			return false
+
+	if input_layer == "os":
+		_os_warp_cursor((node as Control).get_global_rect().get_center() if node is Control else Vector2.ZERO)
+
+	for ev in events:
+		Input.parse_input_event(ev)
+	return true
 
 
 # --- helpers ---------------------------------------------------------------
@@ -98,6 +141,21 @@ func _find_recursive(node: Node, target: String) -> Node:
 		if found != null:
 			return found
 	return null
+
+
+func _viewport_click(vp: Viewport, pos: Vector2) -> void:
+	_mouse_button(vp, pos, true)
+	_mouse_button(vp, pos, false)
+
+
+func _viewport_drag(vp: Viewport, a: Vector2, b: Vector2) -> void:
+	_mouse_button(vp, a, true)
+	_mouse_motion(vp, a, b)
+	_mouse_button(vp, b, false)
+
+
+func _os_warp_cursor(pos: Vector2) -> void:
+	DisplayServer.cursor_set_position(pos)
 
 
 func _mouse_button(viewport: Viewport, pos: Vector2, pressed: bool) -> void:

@@ -10,6 +10,7 @@
 //   2. Direct UMG API call                             — headless / test mode
 
 #include "AutoAgentSlateInputDriver.h"
+#include "AutoAgentOSInput.h"
 #include "AutoAgentStableIdResolver.h"
 #include "Async/TaskGraphInterfaces.h"
 #include "Blueprint/UserWidget.h"
@@ -144,10 +145,12 @@ UWidget* FAutoAgentSlateInputDriver::FindWidget(const FString& NodeId) const
 // Public — four actions (marshal to game thread, then call *Impl)
 // ===========================================================================
 
-bool FAutoAgentSlateInputDriver::Click(const FString& NodeId) const
+bool FAutoAgentSlateInputDriver::Click(const FString& NodeId,
+										const FString& InputLayer,
+										const FString& Button) const
 {
-	return DispatchToGameThread<bool>([this, NodeId]()
-									  { return ClickImpl(NodeId); });
+	return DispatchToGameThread<bool>([this, NodeId, InputLayer, Button]()
+									  { return ClickImpl(NodeId, InputLayer, Button); });
 }
 
 bool FAutoAgentSlateInputDriver::SendText(const FString& NodeId, const FString& Text) const
@@ -162,22 +165,40 @@ bool FAutoAgentSlateInputDriver::Scroll(const FString& NodeId, float DeltaX, flo
 									  { return ScrollImpl(NodeId, DeltaX, DeltaY); });
 }
 
-bool FAutoAgentSlateInputDriver::Drag(const FString& FromId, const FString& ToId, int32 Steps) const
+bool FAutoAgentSlateInputDriver::Drag(const FString& FromId, const FString& ToId,
+									   int32 Steps, const FString& InputLayer) const
 {
-	return DispatchToGameThread<bool>([this, FromId, ToId, Steps]()
-									  { return DragImpl(FromId, ToId, Steps); });
+	return DispatchToGameThread<bool>([this, FromId, ToId, Steps, InputLayer]()
+									  { return DragImpl(FromId, ToId, Steps, InputLayer); });
+}
+
+bool FAutoAgentSlateInputDriver::KeyPress(const FString& NodeId, const FString& Key,
+										   const FString& InputLayer) const
+{
+	return DispatchToGameThread<bool>([this, NodeId, Key, InputLayer]()
+									  { return KeyPressImpl(NodeId, Key, InputLayer); });
 }
 
 // ===========================================================================
 // Private — ClickImpl
 // ===========================================================================
 
-bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId) const
+bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId,
+											const FString& InputLayer,
+											const FString& Button) const
 {
 	UWidget* Widget = FindWidget(NodeId);
 	if (!Widget)
 	{
 		return false;
+	}
+
+	if (InputLayer == TEXT("os"))
+	{
+		const FVector2D Center = GetWidgetCenter(Widget);
+		if (Center.IsZero()) return false;
+		FAutoAgentOSInput::Click(Center, Button);
+		return true;
 	}
 
 	// --- Slate injection path ---
@@ -186,7 +207,6 @@ bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId) const
 		const TSharedPtr<SWidget> Slate = Widget->GetCachedWidget();
 		if (Slate.IsValid())
 		{
-			// Focus before synthesizing click.
 			FSlateApplication::Get().SetKeyboardFocus(Slate, EFocusCause::SetDirectly);
 
 			const FVector2D Center = GetWidgetCenter(Widget);
@@ -195,35 +215,24 @@ bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId) const
 			WithLeft.Add(EKeys::LeftMouseButton);
 
 			FPointerEvent MouseDown(
-				0u,
-				Center,
-				Center,
-				NoButtons,
-				EKeys::LeftMouseButton,
-				0.0f,
-				FModifierKeysState());
+				0u, Center, Center, NoButtons, EKeys::LeftMouseButton,
+				0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonDownEvent(
 				TSharedPtr<SWindow>(), MouseDown);
 
 			FPointerEvent MouseUp(
-				0u,
-				Center,
-				Center,
-				WithLeft,
-				EKeys::LeftMouseButton,
-				0.0f,
-				FModifierKeysState());
+				0u, Center, Center, WithLeft, EKeys::LeftMouseButton,
+				0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonUpEvent(MouseUp);
 			return true;
 		}
 	}
 
-	// --- Fallback: broadcast UButton::OnClicked ---
 	if (UButton* Button = Cast<UButton>(Widget))
 	{
 		Button->OnClicked.Broadcast();
 	}
-	return true; // widget was found even if it isn't a UButton
+	return true;
 }
 
 // ===========================================================================
@@ -319,13 +328,23 @@ bool FAutoAgentSlateInputDriver::ScrollImpl(const FString& NodeId,
 
 bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 										  const FString& ToId,
-										  int32 Steps) const
+										  int32 Steps,
+										  const FString& InputLayer) const
 {
 	UWidget* FromWidget = FindWidget(FromId);
 	UWidget* ToWidget = FindWidget(ToId);
 	if (!FromWidget || !ToWidget)
 	{
 		return false;
+	}
+
+	if (InputLayer == TEXT("os"))
+	{
+		const FVector2D FromCenter = GetWidgetCenter(FromWidget);
+		const FVector2D ToCenter   = GetWidgetCenter(ToWidget);
+		if (FromCenter.IsZero() && ToCenter.IsZero()) return false;
+		FAutoAgentOSInput::Drag(FromCenter, ToCenter, 100, Steps);
+		return true;
 	}
 
 	// --- Slate injection path ---
@@ -342,19 +361,12 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 			TSet<FKey> WithLeft;
 			WithLeft.Add(EKeys::LeftMouseButton);
 
-			// 1. Mouse button down at source
 			FPointerEvent MouseDown(
-				0u,
-				FromCenter,
-				FromCenter,
-				NoButtons,
-				EKeys::LeftMouseButton,
-				0.0f,
-				FModifierKeysState());
+				0u, FromCenter, FromCenter, NoButtons, EKeys::LeftMouseButton,
+				0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonDownEvent(
 				TSharedPtr<SWindow>(), MouseDown);
 
-			// 2. Linear mouse-move events from source to target
 			const int32 NumSteps = FMath::Max(1, Steps);
 			FVector2D PrevPos = FromCenter;
 			for (int32 i = 1; i <= NumSteps; ++i)
@@ -362,31 +374,94 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 				const float T = static_cast<float>(i) / static_cast<float>(NumSteps);
 				const FVector2D MovePos = FMath::Lerp(FromCenter, ToCenter, T);
 				FPointerEvent MoveEvent(
-					0u,
-					MovePos,
-					PrevPos,
-					WithLeft,
-					EKeys::Invalid,
-					0.0f,
-					FModifierKeysState());
+					0u, MovePos, PrevPos, WithLeft, EKeys::Invalid,
+					0.0f, FModifierKeysState());
 				FSlateApplication::Get().ProcessMouseMoveEvent(MoveEvent);
 				PrevPos = MovePos;
 			}
 
-			// 3. Mouse button up at target
 			FPointerEvent MouseUp(
-				0u,
-				ToCenter,
-				ToCenter,
-				WithLeft,
-				EKeys::LeftMouseButton,
-				0.0f,
-				FModifierKeysState());
+				0u, ToCenter, ToCenter, WithLeft, EKeys::LeftMouseButton,
+				0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonUpEvent(MouseUp);
 			return true;
 		}
 	}
 
-	// --- Fallback: both endpoints exist, no-op ---
 	return true;
+}
+
+// ===========================================================================
+// Private — KeyPressImpl
+// ===========================================================================
+
+bool FAutoAgentSlateInputDriver::KeyPressImpl(const FString& NodeId,
+											   const FString& Key,
+											   const FString& InputLayer) const
+{
+	UWidget* Widget = FindWidget(NodeId);
+	if (!Widget) return false;
+
+	FString K = Key.ToLower().TrimStartAndEnd();
+
+	if (InputLayer == TEXT("os"))
+	{
+		if (K == TEXT("shifttab") || K == TEXT("shift+tab"))
+		{
+			FAutoAgentOSInput::ShiftTab();
+		}
+		else
+		{
+			int32 Vk = FAutoAgentOSInput::MapKey(Key);
+			if (Vk < 0) return false;
+			FAutoAgentOSInput::KeyPress(Vk);
+		}
+		return true;
+	}
+
+	// Engine layer: FSlateApplication key events.
+	if (FSlateApplication::IsInitialized())
+	{
+		const TSharedPtr<SWidget> Slate = Widget->GetCachedWidget();
+		if (Slate.IsValid())
+		{
+			FSlateApplication::Get().SetKeyboardFocus(Slate, EFocusCause::SetDirectly);
+			FKeyEvent KeyEvent;
+			if (K == TEXT("enter") || K == TEXT("return") || K == TEXT("submit"))
+			{
+				KeyEvent = FKeyEvent(EKeys::Enter, FModifierKeysState(), 0u, false, 0, 0);
+				FSlateApplication::Get().ProcessKeyDownEvent(KeyEvent);
+				FSlateApplication::Get().ProcessKeyUpEvent(KeyEvent);
+			}
+			else if (K == TEXT("escape") || K == TEXT("esc") || K == TEXT("cancel"))
+			{
+				KeyEvent = FKeyEvent(EKeys::Escape, FModifierKeysState(), 0u, false, 0, 0);
+				FSlateApplication::Get().ProcessKeyDownEvent(KeyEvent);
+				FSlateApplication::Get().ProcessKeyUpEvent(KeyEvent);
+			}
+			else if (K == TEXT("tab"))
+			{
+				KeyEvent = FKeyEvent(EKeys::Tab, FModifierKeysState(), 0u, false, 0, 0);
+				FSlateApplication::Get().ProcessKeyDownEvent(KeyEvent);
+				FSlateApplication::Get().ProcessKeyUpEvent(KeyEvent);
+			}
+			else if (K == TEXT("shifttab") || K == TEXT("shift+tab"))
+			{
+				FModifierKeysState ShiftState;
+				ShiftState.bIsLeftShiftDown = true;
+				FKeyEvent ShiftDown(EKeys::LeftShift, ShiftState, 0u, false, 0, 0);
+				FKeyEvent TabDown(EKeys::Tab, ShiftState, 0u, false, 0, 0);
+				FSlateApplication::Get().ProcessKeyDownEvent(ShiftDown);
+				FSlateApplication::Get().ProcessKeyDownEvent(TabDown);
+				FSlateApplication::Get().ProcessKeyUpEvent(TabDown);
+				FSlateApplication::Get().ProcessKeyUpEvent(ShiftDown);
+			}
+			else
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+	return false;
 }

@@ -39,13 +39,19 @@ func dispatch(json_text: String) -> String:
 		"get_widget":
 			return _get_widget(id, params)
 		"click":
-			return _action(id, _input.click(params.get("id", "")))
+			return _action(id, _input.click(
+				params.get("id", ""), params.get("input_layer", "engine")))
 		"send_text":
 			return _action(id, _input.send_text(
 				params.get("id", ""), str(params.get("text", ""))))
 		"drag":
 			return _action(id, _input.drag(
-				params.get("from_id", ""), params.get("to_id", "")))
+				params.get("from_id", ""), params.get("to_id", ""),
+				params.get("input_layer", "engine")))
+		"key_press":
+			return _action(id, _input.key_press(
+				params.get("id", ""), str(params.get("key", "")),
+				params.get("input_layer", "engine")))
 		"scroll":
 			return _action(id, _input.scroll(
 				params.get("id", ""),
