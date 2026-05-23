@@ -46,7 +46,16 @@ namespace AutoAgent
                 if (pos == null)
                     throw new WireException(WireError.WidgetNotInteractable,
                         $"widget has no RectTransform (required for os input): {nodeId}");
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                 Win32InputDriver.Click(pos.Value, button);
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+                MacInputDriver.Click(pos.Value, button);
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+                LinuxInputDriver.Click(pos.Value, button);
+#else
+                throw new WireException(WireError.InternalError,
+                    "os input_layer requires Windows, macOS, or Linux");
+#endif
                 return;
             }
 
@@ -133,7 +142,16 @@ namespace AutoAgent
                 if (toPos == null)
                     throw new WireException(WireError.WidgetNotInteractable,
                         $"drag target has no RectTransform: {toId}");
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                 yield return Win32InputDriver.Drag(fromPos.Value, toPos.Value, durationMs);
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+                yield return MacInputDriver.Drag(fromPos.Value, toPos.Value, durationMs);
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+                yield return LinuxInputDriver.Drag(fromPos.Value, toPos.Value, durationMs);
+#else
+                throw new WireException(WireError.InternalError,
+                    "os input_layer requires Windows, macOS, or Linux");
+#endif
                 yield break;
             }
 
@@ -286,12 +304,32 @@ namespace AutoAgent
                 string k = key.Trim().ToLowerInvariant();
                 if (k == "shifttab" || k == "shift+tab")
                 {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                     Win32InputDriver.ShiftTab();
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+                    MacInputDriver.ShiftTab();
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+                    LinuxInputDriver.ShiftTab();
+#else
+                    throw new WireException(WireError.InternalError,
+                        "os input_layer requires Windows, macOS, or Linux");
+#endif
                 }
                 else
                 {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                     ushort vk = Win32InputDriver.MapKey(key);
                     Win32InputDriver.KeyPress(vk);
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+                    ushort ck = MacInputDriver.MapKey(key);
+                    MacInputDriver.KeyPress(ck);
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+                    uint xk = LinuxInputDriver.MapKey(key);
+                    LinuxInputDriver.KeyPress(xk);
+#else
+                    throw new WireException(WireError.InternalError,
+                        "os input_layer requires Windows, macOS, or Linux");
+#endif
                 }
                 return;
             }
