@@ -50,6 +50,7 @@ allow:
   - "protocol/README.md"
 
   # CI / e2e / orchestrator / agent scripts
+  - "scripts/release.sh"
   - "scripts/ci/**"
   - "scripts/e2e/**"
   - "scripts/orchestrator/**"
