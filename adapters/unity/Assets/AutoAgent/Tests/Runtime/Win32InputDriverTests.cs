@@ -60,10 +60,13 @@ namespace AutoAgent.Tests
         public void NonWindowsPlatform_Click_ThrowsWireException()
         {
             // This test only verifies the stub on non-Windows platforms.
-            // On Windows the real implementation runs instead, so skip there.
-            Assume.That(Application.platform != RuntimePlatform.WindowsEditor &&
-                        Application.platform != RuntimePlatform.WindowsPlayer,
-                        "skip: running on Windows (real SendInput available)");
+            // On Windows the real SendInput implementation is active, so pass immediately.
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                Assert.Pass("skip: running on Windows (real SendInput available)");
+                return;
+            }
 
             Assert.Throws<WireException>(() =>
                 Win32InputDriver.Click(Vector2.zero));
@@ -72,9 +75,12 @@ namespace AutoAgent.Tests
         [Test]
         public void NonWindowsPlatform_KeyPress_ThrowsWireException()
         {
-            Assume.That(Application.platform != RuntimePlatform.WindowsEditor &&
-                        Application.platform != RuntimePlatform.WindowsPlayer,
-                        "skip: running on Windows");
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                Assert.Pass("skip: running on Windows");
+                return;
+            }
 
             Assert.Throws<WireException>(() =>
                 Win32InputDriver.KeyPress(Win32InputDriver.VK_RETURN));
