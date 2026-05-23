@@ -44,8 +44,9 @@
 | Phase 1 | 35 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
 | Phase 2 | 12 (anchor) | UE adapter 完整 + 跨引擎 MVP 一致 |
 | Phase 3 | 10 (anchor) | Godot adapter 完整 + 三引擎一致 |
-| Phase 4 | 11 (anchor) | OS 输入 / LPIPS / 性能优化 / v1.0 release |
-| **合计** | **93** | |
+| Phase 4 | 11 | OS 输入 / LPIPS / 性能优化 / v1.0 release |
+| **合计** | **93 (20 anchor)** | |
+| **已完成** | **73** | Phase 0-3 全部完成 + Phase 4 部分 (0115/0400-0404/0405C/0408) |
 
 ## 三、分 Phase 任务文件
 
@@ -96,11 +97,11 @@
 4. ☐ 5 道防护在 Godot 全部生效
 
 ### Phase 4 出口 (TASK-0408 / TASK-0409)
-1. ☐ OS 输入双轨可用（三平台）
-2. ☐ LPIPS 子进程化 + 内存隔离生效
-3. ☐ 大场景（1000+ 节点）性能达标
-4. ☐ v1.0 changelog + migration guide 完成
-5. ☐ 文档与实际实现 sync 完成
+1. ☑ OS 输入双轨可用（三平台）— Win32 SendInput + macOS CGEventPost + Linux XTest
+2. ☑ LPIPS 子进程化 + 内存隔离生效 — TASK-0403
+3. ☐ 大场景（1000+ 节点）性能达标 — TASK-0406 (anchor)
+4. ☑ v1.0 changelog + migration guide 完成 — TASK-0408
+5. ☐ 文档与实际实现 sync 完成 — TASK-0409 (进行中)
 
 ## 五、修订历史
 

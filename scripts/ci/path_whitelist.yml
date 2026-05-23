@@ -111,6 +111,10 @@ review_required:
   - ".clang-format"
   - "LICENSE"
   - "README.md"
+  - "CHANGELOG.md"
+
+  # Migration / upgrade docs
+  - "docs/migration/**"
 
   # UE plugin resources (may carry art — human eyeballs)
   - "adapters/unreal/Resources/**"
