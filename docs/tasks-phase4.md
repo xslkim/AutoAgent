@@ -30,7 +30,7 @@
 | TASK-0406 | 大场景 dump 性能优化 | ⬜ anchor | — |
 | TASK-0407 | 三引擎大场景 stress test + nightly | ⬜ anchor | — |
 | TASK-0408 | v1.0 release prep (CHANGELOG + migration guide) | 🔶 pr-open | — |
-| TASK-0409 | 文档 review + final polish | ⬜ anchor | — |
+| TASK-0409 | 文档 review + final polish | 🔶 in-progress | — |
 
 ---
 
@@ -254,11 +254,12 @@ title: changelog + migration guide + tag
 phase: 4
 engine: none
 depends_on: [TASK-0400, TASK-0401, TASK-0402, TASK-0403, TASK-0405, TASK-0406]
-status: anchor
+status: pr-open
+pr: pending
 includes:
-  - CHANGELOG.md 初版
-  - docs/migration/v0.x-to-v1.0.md
-  - SemVer git tag 流程
+  - CHANGELOG.md 初版 (v1.0.0 — 三引擎 + 五道防护 + 三平台 OS 输入)
+  - docs/migration/v0.x-to-v1.0.md (10 项 breaking/新增变更)
+  - SemVer git tag 流程 (待完成)
 mode: manual
 risk: low
 ```
