@@ -38,8 +38,8 @@ public:
 	 * @param Button      "left" (default), "right", or "middle".
 	 */
 	bool Click(const FString& NodeId,
-	           const FString& InputLayer = TEXT("engine"),
-	           const FString& Button     = TEXT("left")) const;
+			   const FString& InputLayer = TEXT("engine"),
+			   const FString& Button = TEXT("left")) const;
 
 	/** See Click. */
 	bool SendText(const FString& NodeId, const FString& Text) const;
@@ -51,9 +51,7 @@ public:
 	 * Drag from FromId to ToId.
 	 * @param Steps  Move events along the straight-line path (min 1; default 8).
 	 */
-	bool Drag(const FString& FromId, const FString& ToId,
-	          int32 Steps = 8,
-	          const FString& InputLayer = TEXT("engine")) const;
+	bool Drag(const FString& FromId, const FString& ToId, int32 Steps = 8, const FString& InputLayer = TEXT("engine")) const;
 
 	/**
 	 * Send a key-press event to a widget.
@@ -61,8 +59,7 @@ public:
 	 * @param InputLayer  "engine": FSlateApplication OnKeyDown/Up;
 	 *                    "os": OS-level virtual-key injection.
 	 */
-	bool KeyPress(const FString& NodeId, const FString& Key,
-	              const FString& InputLayer = TEXT("engine")) const;
+	bool KeyPress(const FString& NodeId, const FString& Key, const FString& InputLayer = TEXT("engine")) const;
 
 	/** Test seam: when set, FindWidget searches this subtree instead of the
 	    on-screen user widgets. */
@@ -73,14 +70,11 @@ private:
 	FVector2D GetWidgetCenter(UWidget* Widget) const;
 
 	// Game-thread implementations.
-	bool ClickImpl(const FString& NodeId, const FString& InputLayer,
-	               const FString& Button) const;
+	bool ClickImpl(const FString& NodeId, const FString& InputLayer, const FString& Button) const;
 	bool SendTextImpl(const FString& NodeId, const FString& Text) const;
 	bool ScrollImpl(const FString& NodeId, float DeltaX, float DeltaY) const;
-	bool DragImpl(const FString& FromId, const FString& ToId, int32 Steps,
-	              const FString& InputLayer) const;
-	bool KeyPressImpl(const FString& NodeId, const FString& Key,
-	                  const FString& InputLayer) const;
+	bool DragImpl(const FString& FromId, const FString& ToId, int32 Steps, const FString& InputLayer) const;
+	bool KeyPressImpl(const FString& NodeId, const FString& Key, const FString& InputLayer) const;
 
 	TSharedRef<FAutoAgentStableIdResolver> Resolver;
 	UWidget* SearchRootOverride = nullptr;

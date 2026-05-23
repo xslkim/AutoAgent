@@ -49,16 +49,16 @@ struct FAutoAgentOSInput
 	// ---- key-code constants ----
 	static constexpr int32 VK_RETURN = 0x0D;
 	static constexpr int32 VK_ESCAPE = 0x1B;
-	static constexpr int32 VK_TAB    = 0x09;
-	static constexpr int32 VK_SHIFT  = 0x10;
+	static constexpr int32 VK_TAB = 0x09;
+	static constexpr int32 VK_SHIFT = 0x10;
 
 	static constexpr int32 CGKEY_RETURN = 0x24;
 	static constexpr int32 CGKEY_ESCAPE = 0x35;
-	static constexpr int32 CGKEY_TAB    = 0x30;
+	static constexpr int32 CGKEY_TAB = 0x30;
 	static constexpr int32 CGKEY_LSHIFT = 0x38;
 
 	static constexpr int32 XK_RETURN = 36;
 	static constexpr int32 XK_ESCAPE = 9;
-	static constexpr int32 XK_TAB    = 23;
+	static constexpr int32 XK_TAB = 23;
 	static constexpr int32 XK_LSHIFT = 50;
 };

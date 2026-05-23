@@ -146,8 +146,8 @@ UWidget* FAutoAgentSlateInputDriver::FindWidget(const FString& NodeId) const
 // ===========================================================================
 
 bool FAutoAgentSlateInputDriver::Click(const FString& NodeId,
-										const FString& InputLayer,
-										const FString& Button) const
+									   const FString& InputLayer,
+									   const FString& Button) const
 {
 	return DispatchToGameThread<bool>([this, NodeId, InputLayer, Button]()
 									  { return ClickImpl(NodeId, InputLayer, Button); });
@@ -165,15 +165,13 @@ bool FAutoAgentSlateInputDriver::Scroll(const FString& NodeId, float DeltaX, flo
 									  { return ScrollImpl(NodeId, DeltaX, DeltaY); });
 }
 
-bool FAutoAgentSlateInputDriver::Drag(const FString& FromId, const FString& ToId,
-									   int32 Steps, const FString& InputLayer) const
+bool FAutoAgentSlateInputDriver::Drag(const FString& FromId, const FString& ToId, int32 Steps, const FString& InputLayer) const
 {
 	return DispatchToGameThread<bool>([this, FromId, ToId, Steps, InputLayer]()
 									  { return DragImpl(FromId, ToId, Steps, InputLayer); });
 }
 
-bool FAutoAgentSlateInputDriver::KeyPress(const FString& NodeId, const FString& Key,
-										   const FString& InputLayer) const
+bool FAutoAgentSlateInputDriver::KeyPress(const FString& NodeId, const FString& Key, const FString& InputLayer) const
 {
 	return DispatchToGameThread<bool>([this, NodeId, Key, InputLayer]()
 									  { return KeyPressImpl(NodeId, Key, InputLayer); });
@@ -184,8 +182,8 @@ bool FAutoAgentSlateInputDriver::KeyPress(const FString& NodeId, const FString& 
 // ===========================================================================
 
 bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId,
-											const FString& InputLayer,
-											const FString& Button) const
+										   const FString& InputLayer,
+										   const FString& Button) const
 {
 	UWidget* Widget = FindWidget(NodeId);
 	if (!Widget)
@@ -196,7 +194,8 @@ bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId,
 	if (InputLayer == TEXT("os"))
 	{
 		const FVector2D Center = GetWidgetCenter(Widget);
-		if (Center.IsZero()) return false;
+		if (Center.IsZero())
+			return false;
 		FAutoAgentOSInput::Click(Center, Button);
 		return true;
 	}
@@ -215,14 +214,12 @@ bool FAutoAgentSlateInputDriver::ClickImpl(const FString& NodeId,
 			WithLeft.Add(EKeys::LeftMouseButton);
 
 			FPointerEvent MouseDown(
-				0u, Center, Center, NoButtons, EKeys::LeftMouseButton,
-				0.0f, FModifierKeysState());
+				0u, Center, Center, NoButtons, EKeys::LeftMouseButton, 0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonDownEvent(
 				TSharedPtr<SWindow>(), MouseDown);
 
 			FPointerEvent MouseUp(
-				0u, Center, Center, WithLeft, EKeys::LeftMouseButton,
-				0.0f, FModifierKeysState());
+				0u, Center, Center, WithLeft, EKeys::LeftMouseButton, 0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonUpEvent(MouseUp);
 			return true;
 		}
@@ -341,8 +338,9 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 	if (InputLayer == TEXT("os"))
 	{
 		const FVector2D FromCenter = GetWidgetCenter(FromWidget);
-		const FVector2D ToCenter   = GetWidgetCenter(ToWidget);
-		if (FromCenter.IsZero() && ToCenter.IsZero()) return false;
+		const FVector2D ToCenter = GetWidgetCenter(ToWidget);
+		if (FromCenter.IsZero() && ToCenter.IsZero())
+			return false;
 		FAutoAgentOSInput::Drag(FromCenter, ToCenter, 100, Steps);
 		return true;
 	}
@@ -362,8 +360,7 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 			WithLeft.Add(EKeys::LeftMouseButton);
 
 			FPointerEvent MouseDown(
-				0u, FromCenter, FromCenter, NoButtons, EKeys::LeftMouseButton,
-				0.0f, FModifierKeysState());
+				0u, FromCenter, FromCenter, NoButtons, EKeys::LeftMouseButton, 0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonDownEvent(
 				TSharedPtr<SWindow>(), MouseDown);
 
@@ -374,15 +371,13 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 				const float T = static_cast<float>(i) / static_cast<float>(NumSteps);
 				const FVector2D MovePos = FMath::Lerp(FromCenter, ToCenter, T);
 				FPointerEvent MoveEvent(
-					0u, MovePos, PrevPos, WithLeft, EKeys::Invalid,
-					0.0f, FModifierKeysState());
+					0u, MovePos, PrevPos, WithLeft, EKeys::Invalid, 0.0f, FModifierKeysState());
 				FSlateApplication::Get().ProcessMouseMoveEvent(MoveEvent);
 				PrevPos = MovePos;
 			}
 
 			FPointerEvent MouseUp(
-				0u, ToCenter, ToCenter, WithLeft, EKeys::LeftMouseButton,
-				0.0f, FModifierKeysState());
+				0u, ToCenter, ToCenter, WithLeft, EKeys::LeftMouseButton, 0.0f, FModifierKeysState());
 			FSlateApplication::Get().ProcessMouseButtonUpEvent(MouseUp);
 			return true;
 		}
@@ -396,11 +391,12 @@ bool FAutoAgentSlateInputDriver::DragImpl(const FString& FromId,
 // ===========================================================================
 
 bool FAutoAgentSlateInputDriver::KeyPressImpl(const FString& NodeId,
-											   const FString& Key,
-											   const FString& InputLayer) const
+											  const FString& Key,
+											  const FString& InputLayer) const
 {
 	UWidget* Widget = FindWidget(NodeId);
-	if (!Widget) return false;
+	if (!Widget)
+		return false;
 
 	FString K = Key.ToLower().TrimStartAndEnd();
 
@@ -413,7 +409,8 @@ bool FAutoAgentSlateInputDriver::KeyPressImpl(const FString& NodeId,
 		else
 		{
 			int32 Vk = FAutoAgentOSInput::MapKey(Key);
-			if (Vk < 0) return false;
+			if (Vk < 0)
+				return false;
 			FAutoAgentOSInput::KeyPress(Vk);
 		}
 		return true;

@@ -178,8 +178,10 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetStringField(TEXT("id"), TargetId);
 		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
 		Params->TryGetStringField(TEXT("button"), Button);
-		if (InputLayer.IsEmpty()) InputLayer = TEXT("engine");
-		if (Button.IsEmpty())     Button     = TEXT("left");
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
+		if (Button.IsEmpty())
+			Button = TEXT("left");
 		return InputDriver->Click(TargetId, InputLayer, Button)
 				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
 				   : BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
@@ -201,7 +203,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetStringField(TEXT("from_id"), FromId);
 		Params->TryGetStringField(TEXT("to_id"), ToId);
 		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
-		if (InputLayer.IsEmpty()) InputLayer = TEXT("engine");
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
 		return InputDriver->Drag(FromId, ToId, 8, InputLayer)
 				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
 				   : BuildError(Id, -32001, TEXT("source or destination widget not found"));
@@ -213,7 +216,8 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 		Params->TryGetStringField(TEXT("id"), TargetId);
 		Params->TryGetStringField(TEXT("key"), Key);
 		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
-		if (InputLayer.IsEmpty()) InputLayer = TEXT("engine");
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
 		if (Key.IsEmpty())
 			return BuildError(Id, -32602, TEXT("missing param: key"));
 		return InputDriver->KeyPress(TargetId, Key, InputLayer)
