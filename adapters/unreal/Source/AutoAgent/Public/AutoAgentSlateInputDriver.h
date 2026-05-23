@@ -31,46 +31,35 @@ public:
 		const TSharedRef<FAutoAgentStableIdResolver>& InResolver);
 
 	/**
-	 * Synthesize a left-click at the widget's screen-space centre.
-	 * Injects FPointerEvent(MouseButtonDown) + FPointerEvent(MouseButtonUp)
-	 * via FSlateApplication::ProcessMouseButtonDownEvent / UpEvent.
-	 * Falls back to UButton::OnClicked.Broadcast() when no Slate SWidget is
-	 * cached.
+	 * Click a widget.
 	 *
-	 * @return false if the widget was not found; true otherwise.
+	 * @param InputLayer  "engine" (default): FSlateApplication injection;
+	 *                    "os": OS-level SendInput / CGEventPost / XTest.
+	 * @param Button      "left" (default), "right", or "middle".
 	 */
-	bool Click(const FString& NodeId) const;
+	bool Click(const FString& NodeId,
+			   const FString& InputLayer = TEXT("engine"),
+			   const FString& Button = TEXT("left")) const;
 
-	/**
-	 * Focus the target widget and inject each character of Text via
-	 * FSlateApplication::ProcessKeyCharEvent (one FCharacterEvent per TCHAR).
-	 * Falls back to UEditableText(Box)::SetText() in headless / unit-test mode.
-	 *
-	 * @return false if the widget was not found or is not a text widget.
-	 */
+	/** See Click. */
 	bool SendText(const FString& NodeId, const FString& Text) const;
 
-	/**
-	 * Inject a mouse-wheel event at the widget's screen-space centre via
-	 * FSlateApplication::ProcessMouseWheelOrGestureEvent.
-	 * Falls back to UScrollBox::SetScrollOffset() when no SWidget is cached.
-	 *
-	 * @param DeltaX  Horizontal scroll (positive = right).
-	 * @param DeltaY  Vertical scroll   (positive = up / scroll-back in UE).
-	 * @return false if the widget was not found.
-	 */
+	/** See Click. */
 	bool Scroll(const FString& NodeId, float DeltaX, float DeltaY) const;
 
 	/**
-	 * Synthesize a drag gesture: mouse-down at FromId's screen centre, a
-	 * linear sequence of mouse-move events, then mouse-up at ToId's centre.
-	 * Falls back to a no-op (returns true) when widgets have no cached SWidget.
-	 *
-	 * @param Steps  Number of intermediate FPointerEvent move events along
-	 *               the straight-line path (minimum 1; default 8).
-	 * @return false if either widget was not found.
+	 * Drag from FromId to ToId.
+	 * @param Steps  Move events along the straight-line path (min 1; default 8).
 	 */
-	bool Drag(const FString& FromId, const FString& ToId, int32 Steps = 8) const;
+	bool Drag(const FString& FromId, const FString& ToId, int32 Steps = 8, const FString& InputLayer = TEXT("engine")) const;
+
+	/**
+	 * Send a key-press event to a widget.
+	 * Supported keys: Enter/Return/Submit, Escape/Esc/Cancel, Tab, Shift+Tab.
+	 * @param InputLayer  "engine": FSlateApplication OnKeyDown/Up;
+	 *                    "os": OS-level virtual-key injection.
+	 */
+	bool KeyPress(const FString& NodeId, const FString& Key, const FString& InputLayer = TEXT("engine")) const;
 
 	/** Test seam: when set, FindWidget searches this subtree instead of the
 	    on-screen user widgets. */
@@ -78,12 +67,14 @@ public:
 
 private:
 	UWidget* FindWidget(const FString& NodeId) const;
+	FVector2D GetWidgetCenter(UWidget* Widget) const;
 
-	// Game-thread implementations — called after thread dispatch.
-	bool ClickImpl(const FString& NodeId) const;
+	// Game-thread implementations.
+	bool ClickImpl(const FString& NodeId, const FString& InputLayer, const FString& Button) const;
 	bool SendTextImpl(const FString& NodeId, const FString& Text) const;
 	bool ScrollImpl(const FString& NodeId, float DeltaX, float DeltaY) const;
-	bool DragImpl(const FString& FromId, const FString& ToId, int32 Steps) const;
+	bool DragImpl(const FString& FromId, const FString& ToId, int32 Steps, const FString& InputLayer) const;
+	bool KeyPressImpl(const FString& NodeId, const FString& Key, const FString& InputLayer) const;
 
 	TSharedRef<FAutoAgentStableIdResolver> Resolver;
 	UWidget* SearchRootOverride = nullptr;

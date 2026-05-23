@@ -174,9 +174,15 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 
 	if (Method == TEXT("click"))
 	{
-		FString TargetId;
+		FString TargetId, InputLayer, Button;
 		Params->TryGetStringField(TEXT("id"), TargetId);
-		return InputDriver->Click(TargetId)
+		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
+		Params->TryGetStringField(TEXT("button"), Button);
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
+		if (Button.IsEmpty())
+			Button = TEXT("left");
+		return InputDriver->Click(TargetId, InputLayer, Button)
 				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
 				   : BuildError(Id, -32001, FString::Printf(TEXT("widget not found: %s"), *TargetId));
 	}
@@ -193,12 +199,30 @@ FString FAutoAgentProtocolHandler::Dispatch(const FString& RequestJson)
 
 	if (Method == TEXT("drag"))
 	{
-		FString FromId, ToId;
+		FString FromId, ToId, InputLayer;
 		Params->TryGetStringField(TEXT("from_id"), FromId);
 		Params->TryGetStringField(TEXT("to_id"), ToId);
-		return InputDriver->Drag(FromId, ToId)
+		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
+		return InputDriver->Drag(FromId, ToId, 8, InputLayer)
 				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
 				   : BuildError(Id, -32001, TEXT("source or destination widget not found"));
+	}
+
+	if (Method == TEXT("key_press"))
+	{
+		FString TargetId, Key, InputLayer;
+		Params->TryGetStringField(TEXT("id"), TargetId);
+		Params->TryGetStringField(TEXT("key"), Key);
+		Params->TryGetStringField(TEXT("input_layer"), InputLayer);
+		if (InputLayer.IsEmpty())
+			InputLayer = TEXT("engine");
+		if (Key.IsEmpty())
+			return BuildError(Id, -32602, TEXT("missing param: key"));
+		return InputDriver->KeyPress(TargetId, Key, InputLayer)
+				   ? BuildResult(Id, MakeShared<FJsonValueNull>())
+				   : BuildError(Id, -32001, FString::Printf(TEXT("key press failed: %s"), *TargetId));
 	}
 
 	if (Method == TEXT("scroll"))

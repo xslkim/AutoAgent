@@ -30,8 +30,7 @@ jobs:
 
       - name: Install deps
         run: |
-          pip install pyyaml
-          sudo apt-get update && sudo apt-get install -y clang-format-15
+          pip install pyyaml clang-format
 
       - name: Static fixture validation (UE slice)
         run: python scripts/fixtures/validate_static_fixtures.py --engine unreal
@@ -47,4 +46,4 @@ jobs:
             echo "no C++ files to format-check"
             exit 0
           fi
-          clang-format-15 --dry-run --Werror $FILES
+          clang-format --dry-run --Werror $FILES
