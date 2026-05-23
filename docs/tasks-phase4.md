@@ -20,16 +20,16 @@
 | Task | 标题 | 状态 | PR |
 |---|---|---|---|
 | TASK-0115 | invoke_method / get_property / set_property | ✅ merged | #121 |
-| TASK-0400 | Windows SendInput OS 层输入驱动 | 🔶 pr-open | #125 |
-| TASK-0401 | macOS CGEventPost | ⬜ anchor | — |
-| TASK-0402 | Linux uinput / XTest | ⬜ anchor | — |
+| TASK-0400 | Windows SendInput OS 层输入驱动 | ✅ merged | #125 |
+| TASK-0401 | macOS CGEventPost | ✅ merged | #126 |
+| TASK-0402 | Linux uinput / XTest | ✅ merged | #126 |
 | TASK-0403 | LPIPS subprocess 化 | ✅ merged | #122 |
 | TASK-0404 | Claude Vision 裁决稳定化 | ✅ merged | #123 |
 | TASK-0405C | MCP 层 dump_tree_delta delta cache | ✅ merged | #124 |
 | TASK-0405 | 增量 dump 协议 v0.2（三引擎 adapter） | ⬜ anchor | — |
 | TASK-0406 | 大场景 dump 性能优化 | ⬜ anchor | — |
 | TASK-0407 | 三引擎大场景 stress test + nightly | ⬜ anchor | — |
-| TASK-0408 | v1.0 release prep | ⬜ anchor | — |
+| TASK-0408 | v1.0 release prep (CHANGELOG + migration guide) | 🔶 pr-open | — |
 | TASK-0409 | 文档 review + final polish | ⬜ anchor | — |
 
 ---
