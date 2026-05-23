@@ -246,7 +246,7 @@ namespace AutoAgent
         /// <summary>Not available on non-Linux platforms.</summary>
         public static IEnumerator Drag(Vector2 _from, Vector2 _to,
                                        int _ms = 100)
-        { throw NotLinux(); yield break; }
+        { throw NotLinux(); }
 
         /// <summary>Not available on non-Linux platforms.</summary>
         public static void Scroll(Vector2 _pos, float _delta) =>
