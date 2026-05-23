@@ -63,23 +63,23 @@ class TestAllowPatterns:
     # --- Unity adapter ---
 
     @pytest.mark.parametrize("path", [
-        "adapters/unity/Runtime/AutoAgentBootstrap.cs",
-        "adapters/unity/Runtime/Core/NodeScanner.cs",
-        "adapters/unity/Runtime/Handlers/ClickHandler.cs",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs",
+        "adapters/unity/Assets/AutoAgent/Runtime/Core/NodeScanner.cs",
+        "adapters/unity/Assets/AutoAgent/Runtime/Handlers/ClickHandler.cs",
     ])
     def test_unity_runtime_cs(self, checker, path):
         assert checker.check(path, set()).classification == "allow"
 
     @pytest.mark.parametrize("path", [
-        "adapters/unity/Editor/AutoAgentMenu.cs",
-        "adapters/unity/Editor/Inspectors/NodeInspector.cs",
+        "adapters/unity/Assets/AutoAgent/Editor/AutoAgentMenu.cs",
+        "adapters/unity/Assets/AutoAgent/Editor/Inspectors/NodeInspector.cs",
     ])
     def test_unity_editor_cs(self, checker, path):
         assert checker.check(path, set()).classification == "allow"
 
     @pytest.mark.parametrize("path", [
-        "adapters/unity/Tests/Runtime/NodeScannerTests.cs",
-        "adapters/unity/Tests/Editor/MenuTests.cs",
+        "adapters/unity/Assets/AutoAgent/Tests/Runtime/NodeScannerTests.cs",
+        "adapters/unity/Assets/AutoAgent/Tests/Editor/MenuTests.cs",
     ])
     def test_unity_tests_cs(self, checker, path):
         assert checker.check(path, set()).classification == "allow"
@@ -91,17 +91,17 @@ class TestAllowPatterns:
         assert checker.check(path, set()).classification == "allow"
 
     @pytest.mark.parametrize("path", [
-        "adapters/unity/Runtime/AutoAgent.asmdef",
-        "adapters/unity/Editor/AutoAgentEditor.asmdef",
-        "adapters/unity/Tests/AutoAgentTests.asmdef",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgent.Runtime.asmdef",
+        "adapters/unity/Assets/AutoAgent/Editor/AutoAgent.Editor.asmdef",
+        "adapters/unity/Assets/AutoAgent/Tests/Runtime/AutoAgent.Tests.Runtime.asmdef",
     ])
     def test_unity_asmdef(self, checker, path):
         assert checker.check(path, set()).classification == "allow"
 
     @pytest.mark.parametrize("path", [
-        "adapters/unity/Runtime/AutoAgentBootstrap.cs.meta",
-        "adapters/unity/Editor/AutoAgentMenu.cs.meta",
-        "adapters/unity/Runtime/Core.meta",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs.meta",
+        "adapters/unity/Assets/AutoAgent/Editor/StableIdInspector.cs.meta",
+        "adapters/unity/Assets/AutoAgent/Runtime/Input.meta",
     ])
     def test_unity_meta(self, checker, path):
         assert checker.check(path, set()).classification == "allow"
@@ -335,8 +335,8 @@ class TestAllowNegative:
 
     @pytest.mark.parametrize("path", [
         # Wrong extension in Unity adapter
-        "adapters/unity/Runtime/AutoAgentBootstrap.py",
-        "adapters/unity/Runtime/AutoAgentBootstrap.txt",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.py",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.txt",
         # Unity .meta in wrong location
         "some/other/dir/file.cs.meta",
         # Not under adapters
@@ -541,7 +541,7 @@ class TestDenyNegative:
 
     @pytest.mark.parametrize("path", [
         # .unity inside the adapter (code), not fixtures
-        "adapters/unity/Runtime/SomeUtil.unity",  # would be weird but not in fixtures → not deny
+        "adapters/unity/Assets/AutoAgent/Runtime/SomeUtil.unity",  # would be weird but not in fixtures → not deny
         # baselines prefix but not under baselines/
         "fixtures/baselines/image.png",
         # *.key deep in path (deny is anchored to root-level *.key)
@@ -621,6 +621,27 @@ class TestReviewRequiredPatterns:
         "fixtures/unreal-test-project/Packages/manifest.json",
     ])
     def test_packages_manifest(self, checker, path):
+        assert checker.check(path, set()).classification == "review"
+
+    @pytest.mark.parametrize("path", [
+        "adapters/unity/Packages/manifest.json",
+        "adapters/unity/Packages/packages-lock.json",
+    ])
+    def test_adapter_unity_packages(self, checker, path):
+        assert checker.check(path, set()).classification == "review"
+
+    @pytest.mark.parametrize("path", [
+        "adapters/unity/ProjectSettings/ProjectSettings.asset",
+        "adapters/unity/ProjectSettings/EditorSettings.asset",
+        "adapters/unity/ProjectSettings/ProjectVersion.txt",
+    ])
+    def test_adapter_unity_project_settings(self, checker, path):
+        assert checker.check(path, set()).classification == "review"
+
+    @pytest.mark.parametrize("path", [
+        "adapters/unity/.gitignore",
+    ])
+    def test_adapter_unity_gitignore(self, checker, path):
         assert checker.check(path, set()).classification == "review"
 
     @pytest.mark.parametrize("path", [
