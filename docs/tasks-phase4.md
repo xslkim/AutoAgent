@@ -26,11 +26,11 @@
 | TASK-0403 | LPIPS subprocess 化 | ✅ merged | #122 |
 | TASK-0404 | Claude Vision 裁决稳定化 | ✅ merged | #123 |
 | TASK-0405C | MCP 层 dump_tree_delta delta cache | ✅ merged | #124 |
-| TASK-0405 | 增量 dump 协议 v0.2（三引擎 adapter） | ⬜ v1.1 | — |
-| TASK-0406 | 大场景 dump 性能优化 | ⬜ v1.1 | — |
-| TASK-0407 | 三引擎大场景 stress test + nightly | ⬜ v1.1 | — |
-| TASK-0408 | v1.0 release prep (CHANGELOG + migration guide) | 🔶 pr-open | #127 |
-| TASK-0409 | 文档 review + final polish | 🔶 pr-open | #127 |
+| TASK-0405 | 增量 dump 协议 v0.2（Unity adapter TreeCache） | ✅ merged | #130 |
+| TASK-0406 | 大场景 dump 性能优化（fast hash + stress tests） | 🔶 pr-open | — |
+| TASK-0407 | 三引擎大场景 stress test + nightly (13 stress tests) | 🔶 pr-open | — |
+| TASK-0408 | v1.0 release prep | ✅ merged | #127 |
+| TASK-0409 | 文档 review + final polish | ✅ merged | #128 |
 
 ---
 
