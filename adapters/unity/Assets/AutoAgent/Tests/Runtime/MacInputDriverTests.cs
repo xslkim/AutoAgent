@@ -80,10 +80,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToScreenPoint_Origin_ReturnsNonNegativeValues()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.OSXEditor ||
-                Application.platform == RuntimePlatform.OSXPlayer,
-                "skip: CGEvent only available on macOS");
+            if (Application.platform != RuntimePlatform.OSXEditor &&
+                Application.platform != RuntimePlatform.OSXPlayer)
+            {
+                Assert.Ignore("CGEvent only available on macOS");
+            }
             var (mx, my) = MacInputDriver.ToScreenPoint(Vector2.zero);
             Assert.GreaterOrEqual(mx, 0);
             Assert.GreaterOrEqual(my, 0);
@@ -92,10 +93,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToScreenPoint_HigherUnityY_DecreasesMacY()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.OSXEditor ||
-                Application.platform == RuntimePlatform.OSXPlayer,
-                "skip: CGEvent only available on macOS");
+            if (Application.platform != RuntimePlatform.OSXEditor &&
+                Application.platform != RuntimePlatform.OSXPlayer)
+            {
+                Assert.Ignore("CGEvent only available on macOS");
+            }
             var (_, my0)   = MacInputDriver.ToScreenPoint(new Vector2(0, 0));
             var (_, my100) = MacInputDriver.ToScreenPoint(new Vector2(0, 100));
             Assert.Less(my100, my0,
@@ -105,10 +107,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToScreenPoint_RightwardUnityX_IncreasesMacX()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.OSXEditor ||
-                Application.platform == RuntimePlatform.OSXPlayer,
-                "skip: CGEvent only available on macOS");
+            if (Application.platform != RuntimePlatform.OSXEditor &&
+                Application.platform != RuntimePlatform.OSXPlayer)
+            {
+                Assert.Ignore("CGEvent only available on macOS");
+            }
             var (mx0, _)   = MacInputDriver.ToScreenPoint(new Vector2(0, 0));
             var (mx100, _) = MacInputDriver.ToScreenPoint(new Vector2(100, 0));
             Assert.Greater(mx100, mx0,

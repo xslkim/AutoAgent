@@ -80,10 +80,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToX11Coords_Origin_ReturnsNonNegativeValues()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.LinuxEditor ||
-                Application.platform == RuntimePlatform.LinuxPlayer,
-                "skip: XTest only available on Linux");
+            if (Application.platform != RuntimePlatform.LinuxEditor &&
+                Application.platform != RuntimePlatform.LinuxPlayer)
+            {
+                Assert.Ignore("XTest only available on Linux");
+            }
             var (x, y) = LinuxInputDriver.ToX11Coords(Vector2.zero);
             Assert.GreaterOrEqual(x, 0);
             Assert.GreaterOrEqual(y, 0);
@@ -92,10 +93,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToX11Coords_HigherUnityY_DecreasesX11Y()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.LinuxEditor ||
-                Application.platform == RuntimePlatform.LinuxPlayer,
-                "skip: XTest only available on Linux");
+            if (Application.platform != RuntimePlatform.LinuxEditor &&
+                Application.platform != RuntimePlatform.LinuxPlayer)
+            {
+                Assert.Ignore("XTest only available on Linux");
+            }
             var (_, y0)   = LinuxInputDriver.ToX11Coords(new Vector2(0, 0));
             var (_, y100) = LinuxInputDriver.ToX11Coords(new Vector2(0, 100));
             Assert.Less(y100, y0,
@@ -105,10 +107,11 @@ namespace AutoAgent.Tests
         [Test]
         public void ToX11Coords_RightwardUnityX_IncreasesX11X()
         {
-            Assume.That(
-                Application.platform == RuntimePlatform.LinuxEditor ||
-                Application.platform == RuntimePlatform.LinuxPlayer,
-                "skip: XTest only available on Linux");
+            if (Application.platform != RuntimePlatform.LinuxEditor &&
+                Application.platform != RuntimePlatform.LinuxPlayer)
+            {
+                Assert.Ignore("XTest only available on Linux");
+            }
             var (x0, _)   = LinuxInputDriver.ToX11Coords(new Vector2(0, 0));
             var (x100, _) = LinuxInputDriver.ToX11Coords(new Vector2(100, 0));
             Assert.Greater(x100, x0,
