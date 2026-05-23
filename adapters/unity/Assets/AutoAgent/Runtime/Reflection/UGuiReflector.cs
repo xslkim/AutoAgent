@@ -16,10 +16,9 @@ namespace AutoAgent
         /// </summary>
         public static List<NodeData> DumpActiveScene()
         {
-            var nodes = new List<NodeData>();
             var roots = SceneManager.GetActiveScene().GetRootGameObjects();
-            // One allocator owns id assignment for the whole dump so that
-            // pinned / hash ids and dedup suffixes stay internally consistent.
+            // Pre-allocate: estimate ~10 nodes per root (typical for UI hierarchies).
+            var nodes = new List<NodeData>(roots.Length * 10);
             var allocator = IdAllocator.Allocate(roots);
             foreach (var root in roots)
                 DumpTransform(root.transform, null, nodes, allocator);

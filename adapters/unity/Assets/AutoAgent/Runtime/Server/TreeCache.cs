@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
@@ -137,25 +137,25 @@ namespace AutoAgent
         // Internals
         // ------------------------------------------------------------------
 
+        static readonly System.Random _rng = new System.Random();
+
         static string GenerateId()
         {
-            var bytes = new byte[4];
-            using (var rng = RandomNumberGenerator.Create())
-                rng.GetBytes(bytes);
-            var sb = new StringBuilder(8);
-            foreach (var b in bytes) sb.AppendFormat("{0:x2}", b);
-            return sb.ToString();
+            // 4 random bytes → 8 hex chars, fast and sufficient for cache keys.
+            int val;
+            lock (_rng) { val = _rng.Next(); }
+            return val.ToString("x8");
         }
 
         static string ComputeNodeHash(NodeData node)
         {
-            var sb = new StringBuilder();
-            sb.Append(node.Id); sb.Append('|');
-            sb.Append(node.Type); sb.Append('|');
-            sb.Append(node.EngineType); sb.Append('|');
-            sb.Append(node.ParentId ?? ""); sb.Append('|');
-            sb.Append(string.Join(",", node.ChildrenIds)); sb.Append('|');
-            sb.Append(node.StableIdSource ?? ""); sb.Append('|');
+            var sb = new StringBuilder(256);
+            AppendField(sb, node.Id);
+            AppendField(sb, node.Type);
+            AppendField(sb, node.EngineType);
+            AppendField(sb, node.ParentId ?? "");
+            AppendField(sb, string.Join(",", node.ChildrenIds));
+            AppendField(sb, node.StableIdSource ?? "");
 
             var v = node.Visual;
             sb.Append(v.Position?[0] ?? 0); sb.Append(','); sb.Append(v.Position?[1] ?? 0); sb.Append('|');
@@ -163,8 +163,8 @@ namespace AutoAgent
             sb.Append(v.Anchor?[0] ?? 0); sb.Append(','); sb.Append(v.Anchor?[1] ?? 0); sb.Append('|');
             sb.Append(v.Visible); sb.Append('|');
             sb.Append(v.Alpha); sb.Append('|');
-            sb.Append(v.Color ?? ""); sb.Append('|');
-            sb.Append(v.SpriteRef ?? ""); sb.Append('|');
+            AppendField(sb, v.Color ?? "");
+            AppendField(sb, v.SpriteRef ?? "");
             if (v.WorldBounds != null && v.WorldBounds.Length == 4)
             { sb.Append(v.WorldBounds[0]); sb.Append(','); sb.Append(v.WorldBounds[1]);
               sb.Append(','); sb.Append(v.WorldBounds[2]); sb.Append(','); sb.Append(v.WorldBounds[3]); }
@@ -173,28 +173,43 @@ namespace AutoAgent
             var b = node.Behavior;
             sb.Append(b.Interactable); sb.Append('|');
             sb.Append(b.RaycastTarget); sb.Append('|');
-            sb.Append(string.Join(",", b.EventHandlers)); sb.Append('|');
-            sb.Append(string.Join(",", b.CustomScripts)); sb.Append('|');
-            sb.Append(string.Join(",", b.AttachedComponents)); sb.Append('|');
+            AppendField(sb, string.Join(",", b.EventHandlers));
+            AppendField(sb, string.Join(",", b.CustomScripts));
+            AppendField(sb, string.Join(",", b.AttachedComponents));
 
             var m = node.Meta;
             if (m != null)
             {
-                sb.Append(m.LogicalRole ?? ""); sb.Append('|');
-                sb.Append(m.Intent ?? ""); sb.Append('|');
-                sb.Append(string.Join(",", m.Tags ?? new List<string>())); sb.Append('|');
+                AppendField(sb, m.LogicalRole ?? "");
+                AppendField(sb, m.Intent ?? "");
+                AppendField(sb, string.Join(",", m.Tags ?? new List<string>()));
                 if (m.StateSprites != null)
                     foreach (var kv in m.StateSprites)
                     { sb.Append(kv.Key); sb.Append('='); sb.Append(kv.Value); sb.Append(';'); }
             }
 
-            using (var sha = SHA256.Create())
+            // FNV-1a 64-bit: fast non-crypto hash, good distribution for content comparison.
+            return Fnv1a64(sb.ToString()).ToString("x16");
+        }
+
+        static void AppendField(StringBuilder sb, string val)
+        {
+            sb.Append(val); sb.Append('|');
+        }
+
+        static ulong Fnv1a64(string s)
+        {
+            const ulong offset = 14695981039346656037UL;
+            const ulong prime  = 1099511628211UL;
+            ulong hash = offset;
+            foreach (char c in s)
             {
-                var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
-                var hashSb = new StringBuilder(bytes.Length * 2);
-                foreach (var bt in bytes) hashSb.AppendFormat("{0:x2}", bt);
-                return hashSb.ToString();
+                hash ^= (byte)(c & 0xFF);
+                hash *= prime;
+                hash ^= (byte)(c >> 8);
+                hash *= prime;
             }
+            return hash;
         }
 
         static void EvictLocked()
