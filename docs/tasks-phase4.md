@@ -26,11 +26,11 @@
 | TASK-0403 | LPIPS subprocess 化 | ✅ merged | #122 |
 | TASK-0404 | Claude Vision 裁决稳定化 | ✅ merged | #123 |
 | TASK-0405C | MCP 层 dump_tree_delta delta cache | ✅ merged | #124 |
-| TASK-0405 | 增量 dump 协议 v0.2（三引擎 adapter） | ⬜ anchor | — |
-| TASK-0406 | 大场景 dump 性能优化 | ⬜ anchor | — |
-| TASK-0407 | 三引擎大场景 stress test + nightly | ⬜ anchor | — |
-| TASK-0408 | v1.0 release prep (CHANGELOG + migration guide) | 🔶 pr-open | — |
-| TASK-0409 | 文档 review + final polish | 🔶 in-progress | — |
+| TASK-0405 | 增量 dump 协议 v0.2（三引擎 adapter） | ⬜ v1.1 | — |
+| TASK-0406 | 大场景 dump 性能优化 | ⬜ v1.1 | — |
+| TASK-0407 | 三引擎大场景 stress test + nightly | ⬜ v1.1 | — |
+| TASK-0408 | v1.0 release prep (CHANGELOG + migration guide) | 🔶 pr-open | #127 |
+| TASK-0409 | 文档 review + final polish | 🔶 pr-open | #127 |
 
 ---
 
@@ -212,11 +212,13 @@ title: 协议 v0.2 — 节点增量更新, 减少 token
 phase: 4
 engine: all
 depends_on: [TASK-0309]
-status: anchor          # MCP 层已有 0405C 作为低风险先行版
+status: anchor          # → v1.1; MCP 层已有 0405C 作为低风险先行版
 notes: >
-  TASK-0405C 已在 MCP 层实现 delta cache（不改协议/adapter）。
-  完整 TASK-0405 需三引擎 adapter 支持增量推送（高风险，高工作量）。
+  TASK-0405C 已在 MCP 层实现 delta cache（不改协议/adapter），
+  dump_tree_delta 工具已可用。完整 TASK-0405 需三引擎 adapter
+  支持增量推送（高风险，高工作量）→ 推迟到 v1.1。
 risk: high
+target: v1.1
 ```
 
 ---
@@ -228,8 +230,9 @@ title: 1000+ 节点场景 dump < 100ms
 phase: 4
 engine: all
 depends_on: [TASK-0405]
-status: anchor
+status: anchor          # → v1.1
 risk: medium
+target: v1.1
 ```
 
 ---
@@ -241,8 +244,9 @@ title: stress test 套件 + CI nightly
 phase: 4
 engine: all
 depends_on: [TASK-0406]
-status: anchor
+status: anchor          # → v1.1
 risk: medium
+target: v1.1
 ```
 
 ---
