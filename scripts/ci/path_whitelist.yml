@@ -112,6 +112,10 @@ review_required:
   - "LICENSE"
   - "README.md"
   - "CHANGELOG.md"
+  - "ARCHITECTURE.md"
+
+  # User-facing docs
+  - "docs/quickstart.md"
 
   # Migration / upgrade docs
   - "docs/migration/**"
