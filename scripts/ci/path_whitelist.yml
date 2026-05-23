@@ -49,13 +49,16 @@ allow:
   - "protocol/tests/**/*.py"
   - "protocol/README.md"
 
-  # CI / e2e / orchestrator / agent scripts
+  # CI / e2e / orchestrator / agent / stress scripts
   - "scripts/release.sh"
   - "scripts/ci/**"
   - "scripts/e2e/**"
   - "scripts/orchestrator/**"
   - "scripts/agent/**"
   - "scripts/fixtures/**/*.py"
+
+  # Integration / stress tests
+  - "tests/**"
 
   # Fixture user scripts (AI implements interactivity)
   # Patterns cover both  fixtures/<engine>/Scripts/**  and
