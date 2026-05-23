@@ -20,9 +20,9 @@
 
 allow:
   # Engine adapters — AI implements interactive controls here
-  - "adapters/unity/Runtime/**/*.cs"
-  - "adapters/unity/Editor/**/*.cs"
-  - "adapters/unity/Tests/**/*.cs"
+  - "adapters/unity/Assets/AutoAgent/Runtime/**/*.cs"
+  - "adapters/unity/Assets/AutoAgent/Editor/**/*.cs"
+  - "adapters/unity/Assets/AutoAgent/Tests/**/*.cs"
   - "adapters/unity/package.json"
   - "adapters/unity/**/*.asmdef"
   # Unity .meta sidecars — must travel with the asset they describe; a new
@@ -100,6 +100,11 @@ review_required:
   # Godot login scene — text-based .tscn modified by AI to wire LineEdit/Button
   # for the login MVP (TASK-0307). Needs human review for structural changes.
   - "fixtures/godot-test-project/scenes/login.tscn"
+
+  # Unity adapter project infrastructure (not fixtures — adapter IS a Unity project)
+  - "adapters/unity/.gitignore"
+  - "adapters/unity/Packages/**"
+  - "adapters/unity/ProjectSettings/**"
 
   # Repo root common files
   - ".gitignore"

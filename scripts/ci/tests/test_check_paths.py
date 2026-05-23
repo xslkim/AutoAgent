@@ -4,7 +4,7 @@ Tests for scripts/ci/check_changed_paths.py and path_whitelist.yml.
 
 Per docs/tasks-phase0.md TASK-0003:
 - 模拟改 .unity 文件 → exit code 非 0
-- 模拟改 adapters/unity/Runtime/*.cs → exit code 0
+- 模拟改 adapters/unity/Assets/AutoAgent/Runtime/*.cs → exit code 0
 - 模拟改 .env → exit code 非 0
 """
 
@@ -79,7 +79,7 @@ def checker():
 
 
 @pytest.mark.parametrize("path", [
-    "adapters/unity/Runtime/AutoAgentBootstrap.cs",
+    "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs",
     "mcp-server/src/autoagent_mcp/server.py",
     "protocol/schema/node.json",
     "scripts/ci/check_changed_paths.py",
@@ -170,8 +170,8 @@ def test_unity_scene_change_fails():
 
 
 def test_unity_adapter_runtime_cs_passes():
-    """模拟改 adapters/unity/Runtime/*.cs → exit code 0."""
-    rc = _run(["adapters/unity/Runtime/AutoAgentBootstrap.cs"])
+    """模拟改 adapters/unity/Assets/AutoAgent/Runtime/*.cs → exit code 0."""
+    rc = _run(["adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs"])
     assert rc == 0
 
 
@@ -193,7 +193,7 @@ def test_secret_key_fails():
 
 def test_multiple_allowed_passes():
     rc = _run([
-        "adapters/unity/Runtime/AutoAgentBootstrap.cs",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs",
         "mcp-server/src/autoagent_mcp/server.py",
         "protocol/schema/node.json",
     ])
@@ -202,7 +202,7 @@ def test_multiple_allowed_passes():
 
 def test_one_denied_among_many_fails():
     rc = _run([
-        "adapters/unity/Runtime/AutoAgentBootstrap.cs",
+        "adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs",
         "fixtures/unity-test-project/Assets/Scenes/LoginScene.unity",
         "mcp-server/src/autoagent_mcp/server.py",
     ])
@@ -267,7 +267,7 @@ def test_subprocess_stdin_denied():
     """Pipe paths via stdin like a real CI run."""
     result = subprocess.run(
         [sys.executable, str(SCRIPT_DIR / "check_changed_paths.py"), "--quiet"],
-        input=".env\nadapters/unity/Runtime/Foo.cs\n",
+        input=".env\nadapters/unity/Assets/AutoAgent/Runtime/Foo.cs\n",
         capture_output=True,
         text=True,
         timeout=10,
@@ -279,7 +279,7 @@ def test_subprocess_stdin_denied():
 def test_subprocess_stdin_all_allowed():
     result = subprocess.run(
         [sys.executable, str(SCRIPT_DIR / "check_changed_paths.py"), "--quiet"],
-        input="adapters/unity/Runtime/Foo.cs\nmcp-server/src/autoagent_mcp/server.py\n",
+        input="adapters/unity/Assets/AutoAgent/Runtime/Foo.cs\nmcp-server/src/autoagent_mcp/server.py\n",
         capture_output=True,
         text=True,
         timeout=10,

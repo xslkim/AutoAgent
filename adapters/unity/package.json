@@ -5,5 +5,7 @@
   "description": "AutoAgent UI automation adapter for Unity — WebSocket wire protocol server.",
   "unity": "2021.3",
   "author": { "name": "AutoAgent" },
-  "dependencies": {}
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6"
+  }
 }

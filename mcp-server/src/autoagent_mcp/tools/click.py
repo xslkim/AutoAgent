@@ -31,10 +31,18 @@ def register(mcp: FastMCP) -> None:
     ) -> dict[str, Any]:
         """Click a UI widget by its stable id.
 
-        ``button`` and ``input_layer`` are accepted for schema compatibility
-        but the current adapter always performs an engine-layer left-click.
+        Args:
+            id:          Stable node id returned by ``dump_tree`` / ``find_widget``.
+            button:      Mouse button to use (default ``"left"``).
+            input_layer: ``"engine"`` (default) fires Unity EventSystem events;
+                         ``"os"`` injects OS-level SendInput on Windows.
         """
-        await get_client().call("click", {"id": id})
+        params: dict[str, Any] = {"id": id}
+        if button != "left":
+            params["button"] = button
+        if input_layer != "engine":
+            params["input_layer"] = input_layer
+        await get_client().call("click", params)
         return {"success": True, "captured_at": time.time()}
 
     @mcp.tool()
@@ -43,12 +51,25 @@ def register(mcp: FastMCP) -> None:
         from_id: str,
         to_id: str,
         duration_ms: int = 200,
+        input_layer: Literal["engine", "os"] = "engine",
     ) -> dict[str, Any]:
-        """Drag from one widget to another over *duration_ms* milliseconds."""
-        await get_client().call(
-            "drag",
-            {"from_id": from_id, "to_id": to_id, "duration_ms": duration_ms},
-        )
+        """Drag from one widget to another over *duration_ms* milliseconds.
+
+        Args:
+            from_id:     Stable id of the drag source.
+            to_id:       Stable id of the drag target.
+            duration_ms: Drag duration in milliseconds (default 200).
+            input_layer: ``"engine"`` fires Unity IDragHandler events;
+                         ``"os"`` uses Win32 SendInput (Windows only).
+        """
+        params: dict[str, Any] = {
+            "from_id": from_id,
+            "to_id": to_id,
+            "duration_ms": duration_ms,
+        }
+        if input_layer != "engine":
+            params["input_layer"] = input_layer
+        await get_client().call("drag", params)
         return {"success": True, "captured_at": time.time()}
 
     @mcp.tool()
@@ -79,9 +100,16 @@ def register(mcp: FastMCP) -> None:
     ) -> dict[str, Any]:
         """Send a key-press event to a specific UI widget.
 
-        ``key`` must be a Unity KeyCode name (e.g. ``"Return"``, ``"Tab"``,
-        ``"Escape"``, ``"A"``).  ``input_layer`` is accepted for schema
-        compatibility but the adapter currently only supports engine-layer input.
+        Args:
+            id:          Stable node id of the target widget.
+            key:         Key name. Engine layer supports: ``"Enter"``,
+                         ``"Escape"``, ``"Tab"``, ``"Shift+Tab"``.
+                         OS layer supports the same set via Win32 SendInput.
+            input_layer: ``"engine"`` (default) dispatches Unity EventSystem
+                         events; ``"os"`` uses Win32 SendInput (Windows only).
         """
-        await get_client().call("key_press", {"id": id, "key": key})
+        params: dict[str, Any] = {"id": id, "key": key}
+        if input_layer != "engine":
+            params["input_layer"] = input_layer
+        await get_client().call("key_press", params)
         return {"success": True, "captured_at": time.time()}

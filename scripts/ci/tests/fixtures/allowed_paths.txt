@@ -1,5 +1,5 @@
-adapters/unity/Runtime/AutoAgentBootstrap.cs
-adapters/unity/Editor/AutoAgentMenu.cs
+adapters/unity/Assets/AutoAgent/Runtime/AutoAgentBootstrap.cs
+adapters/unity/Assets/AutoAgent/Editor/AutoAgentMenu.cs
 adapters/unreal/Source/AutoAgentRuntime/AutoAgent.cpp
 adapters/godot/addons/autoagent/main.gd
 mcp-server/src/autoagent_mcp/server.py

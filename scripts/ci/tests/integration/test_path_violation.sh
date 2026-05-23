@@ -44,7 +44,7 @@ expect_exit "reject secret file (.env) edit" 1 \
 expect_exit "reject baselines/ edit" 1 \
     python "$CHECK" --path "baselines/unity/windows/login_screen.png" --quiet
 expect_exit "allow adapter source edit" 0 \
-    python "$CHECK" --path "adapters/unity/Runtime/Server/ProtocolHandler.cs" --quiet
+    python "$CHECK" --path "adapters/unity/Assets/AutoAgent/Runtime/Server/ProtocolHandler.cs" --quiet
 
 echo ""
 echo "$pass passed, $fail failed"
