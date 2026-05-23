@@ -8,7 +8,7 @@ namespace AutoAgent
     /// <summary>
     /// Result returned by <see cref="TreeCache.Diff"/>.
     /// </summary>
-    public struct DeltaResult
+    internal struct DeltaResult
     {
         public string      snapshotId;
         public List<NodeData> changed;
@@ -36,7 +36,7 @@ namespace AutoAgent
     /// <para>Keeps at most <c>MaxSnapshots</c> entries (default 20),
     /// evicting the oldest on overflow.</para>
     /// </summary>
-    public static class TreeCache
+    internal static class TreeCache
     {
         const int DefaultMaxSnapshots = 20;
 
