@@ -117,6 +117,7 @@ review_required:
   - "README.md"
   - "CHANGELOG.md"
   - "ARCHITECTURE.md"
+  - "STATUS.md"
 
   # User-facing docs
   - "docs/quickstart.md"
