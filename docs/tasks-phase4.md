@@ -148,7 +148,7 @@ title: Windows SendInput native plugin
 phase: 4
 engine: unity          # Unity 侧实现；UE/Godot 待后续 anchor
 depends_on: []
-status: pr-open        # PR #125 — 待合并，CI 运行中
+status: merged          # PR #125 — 2026-05-23
 pr: 125
 output:
   - adapters/unity/Runtime/Input/Win32InputDriver.cs      (新增)
@@ -182,24 +182,51 @@ risk: medium
 ### TASK-0401: OS 级输入 — macOS CGEventPost
 
 ```yaml
-title: macOS native plugin
+title: macOS CGEventPost native plugin
 phase: 4
-engine: all
+engine: unity
 depends_on: [TASK-0400]
-status: anchor
+status: merged          # PR #126 — 2026-05-23
+pr: 126
+goal: 实现 macOS CGEventPost OS 层输入驱动
+output:
+  - adapters/unity/Assets/AutoAgent/Runtime/Input/MacInputDriver.cs (新增)
+  - adapters/unity/Assets/AutoAgent/Runtime/Input/EngineInputDriver.cs (#if OSX dispatch)
+  - adapters/unity/Assets/AutoAgent/Tests/Runtime/MacInputDriverTests.cs (新增)
+verification:
+  - CGKeyCode constants + MapKey + platform guard test 跨平台可跑
+  - macOS-only ToScreenPoint 测试 (Assume → Assert.Ignore)
+notes: >
+  CoreGraphics CGEventPost API: CGEventCreateMouseEvent / CGEventCreateKeyboardEvent /
+  CGEventCreateScrollWheelEvent + CGEventPost(kCGHIDEventTap) + CFRelease。
+  PostAndRelease helper 模式。Drag 使用 CGEventLeftMouseDragged。
+  macOS 10.14+ 需要辅助功能权限。
 risk: medium
 ```
 
 ---
 
-### TASK-0402: OS 级输入 — Linux uinput / XTest
+### TASK-0402: OS 级输入 — Linux XTest
 
 ```yaml
-title: Linux native plugin
+title: Linux X11 XTest native plugin
 phase: 4
-engine: all
+engine: unity
 depends_on: [TASK-0400]
-status: anchor
+status: merged          # PR #126 — 2026-05-23
+pr: 126
+goal: 实现 Linux X11 XTest OS 层输入驱动
+output:
+  - adapters/unity/Assets/AutoAgent/Runtime/Input/LinuxInputDriver.cs (新增)
+  - adapters/unity/Assets/AutoAgent/Runtime/Input/EngineInputDriver.cs (#if LINUX dispatch)
+  - adapters/unity/Assets/AutoAgent/Tests/Runtime/LinuxInputDriverTests.cs (新增)
+verification:
+  - X11 keycode constants + MapKey + platform guard test 跨平台可跑
+  - Linux-only ToX11Coords 测试 (Assume → Assert.Ignore)
+notes: >
+  libX11.so.6 + libXtst.so.6 P/Invoke。持久 X11 Display 连接（lazy-init + lock）。
+  XTestFakeMotionEvent / XTestFakeButtonEvent / XTestFakeKeyEvent + XFlush。
+  Scroll 通过 X11 button 4 (up) / button 5 (down) 模拟。
 risk: medium
 ```
 
@@ -258,12 +285,13 @@ title: changelog + migration guide + tag
 phase: 4
 engine: none
 depends_on: [TASK-0400, TASK-0401, TASK-0402, TASK-0403, TASK-0405, TASK-0406]
-status: pr-open
-pr: pending
+status: merged          # PR #127 + #128 — 2026-05-23
+pr: 127
 includes:
   - CHANGELOG.md 初版 (v1.0.0 — 三引擎 + 五道防护 + 三平台 OS 输入)
   - docs/migration/v0.x-to-v1.0.md (10 项 breaking/新增变更)
-  - SemVer git tag 流程 (待完成)
+  - scripts/release.sh (SemVer tag 自动化)
+  - docs/quickstart.md (5 分钟上手指南)
 mode: manual
 risk: low
 ```
@@ -277,11 +305,13 @@ title: 全文档 review + sync 实际实现
 phase: 4
 engine: none
 depends_on: [TASK-0408]
-status: anchor
+status: merged          # PR #128 — 2026-05-23
+pr: 128
 includes:
-  - 00-08 文档对照实际实现勘误
-  - example / quickstart 补全
-  - API reference 自动生成 (Sphinx / Doxygen)
+  - quickstart.md 创建 + ARCHITECTURE.md 文档导航更新
+  - tasks.md / tasks-phase4.md 任务状态同步
+  - 0405/0406/0407 标记 v1.1
+  - 00-08 深度勘误 + API reference 自动生成 → v1.1
 mode: manual
 risk: low
 ```
