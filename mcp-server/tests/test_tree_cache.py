@@ -283,6 +283,7 @@ class TestResetTreeCache:
 def _make_client(nodes: list[dict]) -> MagicMock:
     client = MagicMock()
     client.call = AsyncMock(return_value=nodes)
+    client.capabilities = {}
     return client
 
 
