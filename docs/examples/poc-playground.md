@@ -614,7 +614,7 @@ pytest scripts/ci/tests/ mcp-server/tests/
 python scripts/e2e/capture_baseline.py --engine <unity|unreal|godot> --scene poc_playground
 
 # Agent 自治
-python scripts/agent/runner.py --task docs/canonical-tasks/poc_playground.yaml --engine <unity|unreal|godot>
+python scripts/agent/run_task.py --task docs/canonical-tasks/poc_playground.yaml --engine <unity|unreal|godot>
 
 # 发布
 bash scripts/release.sh patch

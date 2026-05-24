@@ -1,0 +1,14 @@
+# AutoAgent MCP Server — configuration template.
+# Copy to ~/.autoagent/config.toml and adjust as needed.
+# All keys are optional; omitted keys fall back to the defaults shown below.
+
+[server]
+host = "127.0.0.1"
+port = 27842
+engine = "unity"          # "unity" | "unreal" | "godot" — hint only
+
+[logging]
+file = "~/.autoagent/logs/mcp-server.log"
+level = "INFO"            # DEBUG | INFO | WARNING | ERROR
+max_bytes = 10485760      # 10 MB before rotation
+backup_count = 5
