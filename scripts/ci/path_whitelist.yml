@@ -42,6 +42,7 @@ allow:
   - "mcp-server/src/**/*.py"
   - "mcp-server/tests/**/*.py"
   - "mcp-server/pyproject.toml"
+  - "mcp-server/config.toml.example"
   - "mcp-server/README.md"
 
   # Protocol schema
