@@ -1,3 +1,5 @@
+# AUTOAGENT_ALLOW_VISUAL: highlight modulates color, Button wrapper repositions child,
+# and show/hide toggles visible. These are test/reference fixtures — not product changes.
 extends CanvasLayer
 ## Interactive card-panel controller for the poc_playground scene.
 ##
