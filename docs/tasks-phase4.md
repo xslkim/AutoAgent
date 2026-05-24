@@ -15,7 +15,7 @@
 
 ---
 
-## 进度快照（最后更新：2026-05-23）
+## 进度快照（最后更新：2026-05-24 — v1.0 final）
 
 | Task | 标题 | 状态 | PR |
 |---|---|---|---|
@@ -26,9 +26,12 @@
 | TASK-0403 | LPIPS subprocess 化 | ✅ merged | #122 |
 | TASK-0404 | Claude Vision 裁决稳定化 | ✅ merged | #123 |
 | TASK-0405C | MCP 层 dump_tree_delta delta cache | ✅ merged | #124 |
-| TASK-0405 | 增量 dump 协议 v0.2（Unity adapter TreeCache） | ✅ merged | #130 |
-| TASK-0406 | 大场景 dump 性能优化（fast hash + stress tests） | 🔶 pr-open | — |
-| TASK-0407 | 三引擎大场景 stress test + nightly (13 stress tests) | 🔶 pr-open | — |
+| TASK-0405 | 增量 dump v0.2 (Unity adapter TreeCache) | ✅ merged | #130 |
+| TASK-0406 | 大场景 dump 性能优化 (fast hash + stress) | ✅ merged | #131 |
+| TASK-0407 | Stress test 13 cases | ✅ merged | #131 |
+| TASK-0408 | v1.0 release prep | ✅ merged | #127 |
+| TASK-0409 | 文档 review + final polish | ✅ merged | #128 |
+| UE+Godot OS | UE C++ 三平台 + Godot GDScript OS 层 | ✅ merged | #132 |
 | TASK-0408 | v1.0 release prep | ✅ merged | #127 |
 | TASK-0409 | 文档 review + final polish | ✅ merged | #128 |
 
@@ -239,13 +242,13 @@ title: 协议 v0.2 — 节点增量更新, 减少 token
 phase: 4
 engine: all
 depends_on: [TASK-0309]
-status: anchor          # → v1.1; MCP 层已有 0405C 作为低风险先行版
+status: merged          # PR #130 — 2026-05-24
+pr: 130
+goal: Unity adapter TreeCache + dump_tree_delta wire protocol + MCP fallback
 notes: >
-  TASK-0405C 已在 MCP 层实现 delta cache（不改协议/adapter），
-  dump_tree_delta 工具已可用。完整 TASK-0405 需三引擎 adapter
-  支持增量推送（高风险，高工作量）→ 推迟到 v1.1。
+  TreeCache.cs (SHA256→FNV-1a hash, LRU eviction), ProtocolHandler dump_tree_delta,
+  negotiate_version capabilities, MCP dump.py feature detection + fallback.
 risk: high
-target: v1.1
 ```
 
 ---
@@ -257,9 +260,10 @@ title: 1000+ 节点场景 dump < 100ms
 phase: 4
 engine: all
 depends_on: [TASK-0405]
-status: anchor          # → v1.1
+status: merged          # PR #131 — 2026-05-24
+pr: 131
+goal: FNV-1a fast hash + List pre-allocation + stress test 13 cases
 risk: medium
-target: v1.1
 ```
 
 ---
@@ -271,9 +275,10 @@ title: stress test 套件 + CI nightly
 phase: 4
 engine: all
 depends_on: [TASK-0406]
-status: anchor          # → v1.1
+status: merged          # PR #131 — 2026-05-24
+pr: 131
+goal: test_tree_cache_stress.py 13 cases + stress_dump_tree.py benchmark
 risk: medium
-target: v1.1
 ```
 
 ---
