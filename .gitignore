@@ -46,7 +46,7 @@ state/stop_signal
 .worktrees/
 
 # ===== Python =====
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
@@ -60,6 +60,12 @@ dist/
 build/
 
 # ===== Unity =====
+adapters/unity/Library/
+adapters/unity/Logs/
+adapters/unity/Temp/
+adapters/unity/UserSettings/
+adapters/unity/*.csproj
+adapters/unity/*.sln
 fixtures/unity-test-project/Library/
 fixtures/unity-test-project/Temp/
 fixtures/unity-test-project/Obj/
@@ -106,6 +112,8 @@ desktop.ini
 *.log
 *.tmp
 tmp/
+tmpgfb_*.cs
+python/test_cursor.py
 
 # dry-run sandbox (see docs/dry-run-report.md)
 state-dryrun/

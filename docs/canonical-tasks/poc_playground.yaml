@@ -1,0 +1,196 @@
+# AutoAgent 任务 DSL v1.0 — poc_playground 交互面板
+#
+# 本任务定义了一个简单的卡片选择器 UI 交互，基于三引擎共享的 poc_playground 场景。
+# AI Agent 需要在纯视觉骨架上添加交互逻辑，不修改任何视觉字段。
+
+schema_version: "1.0"
+task_id: "POC-PLAYGROUND-001"
+title: "PocPlayground 交互面板 — 按钮高亮 + 文字过滤 + 拖拽 + 滚动"
+engine: "unity"          # AI 执行时替换为 unreal / godot
+scene: "PocPlaygroundScene"
+map: "PocPlaygroundMap"  # UE 使用 map 字段
+
+preconditions:
+  scene_loaded: "PocPlaygroundScene"
+  nodes_present:
+    - click_target
+    - click_target_variant_1
+    - click_target_variant_2
+    - click_target_variant_3
+    - click_target_variant_4
+    - click_target_variant_5
+    - text_target
+    - text_target_text
+    - drag_source
+    - drag_target
+    - scroll_container
+    - scroll_item_001
+  controller_status: "controller NOT present"
+
+constraints:
+  max_iterations: 5
+  cost_limit_usd: 2.0
+  visual_diff_ssim_min: 0.95
+  negative_test: false
+  path_whitelist: true
+  visual_write_block: true
+
+implementation_hints:
+  unity:
+    controller_class: "PocPlaygroundController"
+    controller_parent: "MonoBehaviour"
+    text_component: "TMP_InputField"
+    button_component: "Button"
+    find_nodes_by: "GameObject.Find() with pinned name"
+    hide_method: "SetActive(false)"
+    show_method: "SetActive(true)"
+  unreal:
+    controller_class: "UPocPlaygroundController"
+    controller_parent: "UActorComponent"
+    text_component: "UEditableTextBox"
+    button_click: "OnClicked.AddDynamic"
+    find_nodes_by: "BindWidget UPROPERTY with AutoAgentId meta"
+    hide_method: "SetVisibility(ESlateVisibility::Collapsed)"
+    show_method: "SetVisibility(ESlateVisibility::Visible)"
+  godot:
+    controller_class: "PocPlaygroundController"
+    controller_parent: "CanvasLayer"
+    text_component: "LineEdit"
+    button_signal: "pressed.connect"
+    find_nodes_by: "get_node() with scene path"
+    hide_method: "visible = false"
+    show_method: "visible = true"
+
+steps:
+  # ---- Step 1: 创建 Controller 脚本 ----
+  - id: "create_controller"
+    action: "create_script"
+    description: |
+      创建 PocPlaygroundController 脚本，挂载到场景根节点。
+      Controller 在 Awake/Start/_ready 中：
+      1. 遍历所有 click_target* 节点
+      2. 给每个节点添加可点击的交互组件（Button/OnClicked.AddDynamic/pressed.connect）
+      3. 给 text_target 添加文本输入组件（TMP_InputField/UEditableTextBox/LineEdit）
+      4. 给 drag_source/drag_target 添加拖拽处理器
+      5. 初始状态：所有按钮未选中，输入框为空
+
+  # ---- Step 2: 点击高亮 ----
+  - id: "click_highlight"
+    action: "click"
+    target: "click_target_variant_1"
+    description: "点击第一个变体按钮 — 应为它添加高亮选中状态"
+
+  - id: "verify_highlight"
+    action: "assert_visible"
+    target: "click_target_variant_1"
+    description: "click_target_variant_1 处于选中/高亮状态"
+    verify:
+      visual_fields_unchanged: true
+      attached_components_added: ["Button"]
+
+  - id: "click_variant_2"
+    action: "click"
+    target: "click_target_variant_2"
+    description: "点击第二个变体 — 应切换高亮到它，取消 variant_1"
+
+  - id: "screenshot_after_click"
+    action: "screenshot"
+    target: "canvas"
+    description: "截图验证两个按钮点击后的视觉状态"
+
+  # ---- Step 3: 文字过滤 ----
+  - id: "send_filter_text"
+    action: "send_text"
+    target: "text_target"
+    value: "variant_1"
+    description: "在输入框中输入 variant_1 — 只应显示 variant_1，其他变体隐藏"
+    verify:
+      nodes_visible: ["click_target_variant_1"]
+      nodes_hidden:
+        - "click_target_variant_2"
+        - "click_target_variant_3"
+        - "click_target_variant_4"
+        - "click_target_variant_5"
+
+  - id: "clear_filter"
+    action: "clear_text"
+    target: "text_target"
+    description: "清空输入框 — 所有变体重新可见"
+
+  - id: "verify_clear_filter"
+    action: "assert_visible"
+    target: "click_target_variant_2"
+    description: "清空后所有按钮重新可见"
+
+  # ---- Step 4: 拖拽 ----
+  - id: "drag_reorder"
+    action: "drag"
+    from: "drag_source"
+    to: "drag_target"
+    description: "从 drag_source 拖到 drag_target — 触发重排/交换回调"
+
+  - id: "verify_drag"
+    action: "assert_mock_called"
+    target: "drag_handler"
+    description: "拖拽处理器被调用"
+
+  # ---- Step 5: 滚动 ----
+  - id: "scroll_down"
+    action: "scroll"
+    target: "scroll_container"
+    direction: "down"
+    amount: 500
+    description: "向下滚动 500px — 滚动容器滚动到新位置"
+
+  - id: "screenshot_final"
+    action: "screenshot"
+    target: "canvas"
+    description: "最终截图 — 验证整体视觉一致"
+
+  # ---- Step 6: 键操作 ----
+  - id: "key_enter"
+    action: "key_press"
+    target: "text_target"
+    key: "Enter"
+    description: "按 Enter 提交输入"
+
+  - id: "key_tab"
+    action: "key_press"
+    target: "text_target"
+    key: "Tab"
+    description: "按 Tab 切换焦点到下一个控件"
+
+  - id: "wait_final"
+    action: "wait_ms"
+    duration: 500
+    description: "等待 500ms 让 UI 稳定"
+
+expected_outcome:
+  visual_fields_unchanged: true
+  visual_diff_ssim_min: 0.95
+  attached_components_added:
+    - "click_target: Button"
+    - "text_target: InputField"
+  controller_wired: true
+  nodes_visible:
+    - "click_target"
+    - "click_target_variant_1"
+    - "click_target_variant_2"
+    - "click_target_variant_3"
+    - "click_target_variant_4"
+    - "click_target_variant_5"
+    - "text_target"
+    - "drag_source"
+    - "drag_target"
+    - "scroll_container"
+  behavior_trace:
+    - event: "click"
+      target: "click_target_variant_1"
+      outcome: "highlighted"
+    - event: "click"
+      target: "click_target_variant_2"
+      outcome: "highlighted"
+    - event: "send_text"
+      target: "text_target"
+      value: "variant_1"
+      outcome: "filtered"

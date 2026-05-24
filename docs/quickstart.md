@@ -40,13 +40,13 @@ pip install -e ".[dev]"
 mkdir -p ~/.autoagent
 
 cat > ~/.autoagent/config.toml << 'EOF'
-[engine]
-host = "localhost"
-port = 9876
+[server]
+host = "127.0.0.1"
+port = 27842
 
-[vision]
-ssim_threshold = 0.95
-lpips_threshold = 0.1
+[logging]
+file = "~/.autoagent/logs/mcp-server.log"
+level = "INFO"
 EOF
 ```
 
@@ -117,7 +117,7 @@ cp .env.agent.example .env.agent
 # 编辑 .env.agent: 填入 API key 和 MCP server 地址
 
 # 启动自治 agent
-python scripts/agent/runner.py --task docs/canonical-tasks/login_mvp.yaml
+python scripts/agent/run_task.py --task docs/canonical-tasks/login.yaml
 ```
 
 Agent 会自动：
@@ -142,10 +142,10 @@ Agent 会自动：
 
 ```bash
 # 建立 baseline
-python scripts/e2e/take_baseline.py --id welcome_screen
+python scripts/e2e/capture_baseline.py --engine unity --scene poc_playground
 
-# 对比当前截图与 baseline
-python scripts/e2e/check_visual_baseline.py --id welcome_screen
+# 对比当前截图与 baseline（CI 脚本）
+python scripts/ci/check_visual_baseline.py --baseline baselines/unity/windows/poc_playground.png
 ```
 
 ## 下一步
