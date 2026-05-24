@@ -120,6 +120,7 @@ review_required:
 
   # User-facing docs
   - "docs/quickstart.md"
+  - "docs/examples/**"
 
   # Migration / upgrade docs
   - "docs/migration/**"
