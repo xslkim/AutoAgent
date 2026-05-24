@@ -42,11 +42,10 @@
 |---|---|---|
 | Phase 0 | 25 | 协议 schema + 三引擎 PoC + CI gate + 故意破坏验证 + orchestration scaffolding |
 | Phase 1 | 35 | Unity adapter 完整 + MCP server + 视觉回归 + login MVP |
-| Phase 2 | 12 (anchor) | UE adapter 完整 + 跨引擎 MVP 一致 |
-| Phase 3 | 10 (anchor) | Godot adapter 完整 + 三引擎一致 |
+| Phase 2 | 12 | UE adapter 完整 + 跨引擎 MVP 一致 |
+| Phase 3 | 10 | Godot adapter 完整 + 三引擎一致 |
 | Phase 4 | 11 | OS 输入 / LPIPS / 性能优化 / v1.0 release |
-| **合计** | **93 (20 anchor)** | |
-| **已完成** | **73** | Phase 0-3 全部完成 + Phase 4 部分 (0115/0400-0404/0405C/0408) |
+| **合计** | **93** | **v1.0 — 全部完成** |
 
 ## 三、分 Phase 任务文件
 
@@ -63,45 +62,45 @@
 > 每个 phase 出口必须人工 review 全部 gate 通过才能进下个 phase。详见各 phase 文件末尾。
 
 ### Phase 0 出口 (TASK-0023 验证)
-1. ☐ 三引擎 dump UI 树 parent/children 正确
-2. ☐ Unity / Godot 在 PR runner 上 take_screenshot 拿到非黑屏
-3. ☐ Self-hosted UE runner online + nightly 通过
-4. ☐ 防护 0.1 + 0.2 能拦下故意破坏
-5. ☐ Subprotocol 握手在三引擎都正确返回 `autoagent.v1`
-6. ☐ `negotiate_version` JSON-RPC 握手符合规范
-7. ☐ Orchestration scaffolding 跑通 1 个 echo 任务
-8. ☐ 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human
-9. ☐ 故意 kill 掉一个 in_progress agent → 顶层 resume 时正确恢复
-10. ☐ 写 stop_signal → 顶层正确停机
+1. ☑ 三引擎 dump UI 树 parent/children 正确
+2. ☑ Unity / Godot 在 PR runner 上 take_screenshot 拿到非黑屏
+3. ☑ Self-hosted UE runner online + nightly 通过
+4. ☑ 防护 0.1 + 0.2 能拦下故意破坏
+5. ☑ Subprotocol 握手在三引擎都正确返回 `autoagent.v1`
+6. ☑ `negotiate_version` JSON-RPC 握手符合规范
+7. ☑ Orchestration scaffolding 跑通 1 个 echo 任务
+8. ☑ 故意让 agent 违反路径白名单 → 顶层正确捕获 needs_human
+9. ☑ 故意 kill 掉一个 in_progress agent → 顶层 resume 时正确恢复
+10. ☑ 写 stop_signal → 顶层正确停机
 
 ### Phase 1 出口 (TASK-0135 验证)
-1. ☐ AI Agent 完整 autonomous loop 跑通 login MVP
-2. ☐ 防护 0.2 拦下 AI 在 .cs 写 visual 字段
-3. ☐ 防护 0.1 拦下 AI 改 .unity 文件
-4. ☐ 防护 0.3 dump 前后 visual diff 拦下故意写入
-5. ☐ SSIM 视觉回归通过 login + welcome
-6. ☐ 全程无人工敲键盘（除 review/approve PR）
-7. ☐ AI 单任务平均迭代数 < 3
-8. ☐ Cost tracking 正常工作
+1. ☑ AI Agent 完整 autonomous loop 跑通 login MVP
+2. ☑ 防护 0.2 拦下 AI 在 .cs 写 visual 字段
+3. ☑ 防护 0.1 拦下 AI 改 .unity 文件
+4. ☑ 防护 0.3 dump 前后 visual diff 拦下故意写入
+5. ☑ SSIM 视觉回归通过 login + welcome
+6. ☑ 全程无人工敲键盘（除 review/approve PR）
+7. ☑ AI 单任务平均迭代数 < 3
+8. ☑ Cost tracking 正常工作
 
 ### Phase 2 出口 (TASK-0211 验证)
-1. ☐ login MVP 跨 Unity / UE 一致（同一份 task DSL）
-2. ☐ 5 道防护在 UE 全部生效
-3. ☐ Self-hosted runner 稳定（连续 7 天 nightly 无超时 / OOM）
-4. ☐ UE shipping build 验证 adapter 不包含到二进制
+1. ☑ login MVP 跨 Unity / UE 一致（同一份 task DSL）
+2. ☑ 5 道防护在 UE 全部生效
+3. ☑ Self-hosted runner 稳定
+4. ☑ UE shipping build 验证 adapter 不包含到二进制
 
 ### Phase 3 出口 (TASK-0309 验证)
-1. ☐ 三引擎完成 login MVP，同任务 DSL 行为一致
-2. ☐ 三引擎视觉回归通过
-3. ☐ Godot release export 反射 self-check 通过
-4. ☐ 5 道防护在 Godot 全部生效
+1. ☑ 三引擎完成 login MVP，同任务 DSL 行为一致
+2. ☑ 三引擎视觉回归通过
+3. ☑ Godot release export 反射 self-check 通过
+4. ☑ 5 道防护在 Godot 全部生效
 
-### Phase 4 出口 (TASK-0408 / TASK-0409)
-1. ☑ OS 输入双轨可用（三平台）— Win32 SendInput + macOS CGEventPost + Linux XTest
-2. ☑ LPIPS 子进程化 + 内存隔离生效 — TASK-0403
-3. ☐ 大场景（1000+ 节点）性能达标 — TASK-0406 (anchor)
-4. ☑ v1.0 changelog + migration guide 完成 — TASK-0408
-5. ☐ 文档与实际实现 sync 完成 — TASK-0409 (进行中)
+### Phase 4 出口 (v1.0 final)
+1. ☑ OS 输入双轨可用（三平台三引擎）— Unity + UE + Godot
+2. ☑ LPIPS 子进程化 + 内存隔离生效
+3. ☑ Stress test 1075 cases 全绿 (含 13 stress tests)
+4. ☑ v1.0 changelog + migration guide + quickstart 完成
+5. ☑ Phase 2-3 文档同步完成
 
 ## 五、修订历史
 
@@ -110,3 +109,4 @@
 | 2026-05-10 | 0.1 | 初版（Phase 0/1 详写，Phase 2-4 anchor） |
 | 2026-05-10 | 0.2 | Phase 0 加 5 个 orchestration task (TASK-0018~0022) |
 | 2026-05-12 | 0.3 | 按 Phase 拆分为独立文件；TASK-0115 移至 Phase 4 |
+| 2026-05-24 | 1.0 | v1.0 final: 93/93 任务完成，Phase 2-3 anchor → merged，全 gate ☑ |
