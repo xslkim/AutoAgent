@@ -68,6 +68,8 @@ adb devices
 
 PowerShell调用带空格的可执行路径必须使用 `&`。Godot引擎参数放在 `--` 之前，游戏参数放在之后；不要把 `--rendering-method` 作为游戏用户参数传入。
 
+上表记录的是PowerShell 7。`.cmd` 文件里的 `powershell` 命令启动的是系统自带的Windows PowerShell，本次没有探测它的版本和行为；对脚本的兼容要求见TASKS T00。
+
 ## 6. 工程创建后的运行方式
 
 **以下命令现在不能运行；需T00及相应任务完成。**
@@ -83,7 +85,7 @@ $GodotExe = 'D:\gunforge_cache\tools\godot-4.6.3\Godot_v4.6.3-stable_win64_conso
 & $GodotExe --path 'gunforge3d/game' --rendering-method gl_compatibility -- --art=on
 ```
 
-每次运行检查 `$LASTEXITCODE`。无头模式用于逻辑测试，截图、最终限亮、材质和帧率必须用真实窗口渲染；本次没有验证Forward+或Compatibility画面。Compatibility与Godot的Mobile渲染器是不同方法，切换时需重新验收材质和环境，参见[Godot渲染器说明](https://docs.godotengine.org/en/4.6/tutorials/rendering/renderers.html)。
+每次运行检查 `$LASTEXITCODE`。如果指定 `--rendering-method gl_compatibility` 后Godot报渲染驱动不匹配，再加上引擎参数 `--rendering-driver opengl3`；这一点本次没有实测。无头模式用于逻辑测试，截图、最终限亮、材质和帧率必须用真实窗口渲染；本次没有验证Forward+或Compatibility画面。Compatibility与Godot的Mobile渲染器是不同方法，切换时需重新验收材质和环境，参见[Godot渲染器说明](https://docs.godotengine.org/en/4.6/tutorials/rendering/renderers.html)。
 
 交互游戏可失焦暂停；自动脚本/回放按TASKS禁用失焦暂停。普通窗口自动检查建议120秒超时，整关回放600秒，结束只清理自己启动的进程。性能采集与截图/图像回读分开运行。开发TCP默认19020、测试19021；本次未验证端口空闲。
 

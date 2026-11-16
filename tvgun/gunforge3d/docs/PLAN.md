@@ -1,6 +1,6 @@
 # GunForge3D：3D 光枪游戏引擎方案
 
-版本：v0.4 · 2026-11-16 · 状态：三次评审修订（修订点见 §10），作为实现基线；玩法效果待实测。执行拆分见 [TASKS.md](TASKS.md)。
+版本：v0.4 · 2026-11-16 · 状态：三次评审修订（修订点见 §10），并补充了与美术阶段的衔接（§11），作为实现基线；玩法效果待实测。执行拆分见 [TASKS.md](TASKS.md)，开发机环境见 [DEV_ENVIRONMENT.md](DEV_ENVIRONMENT.md)。
 
 ## 1. 目标与已确认的边界
 
@@ -75,7 +75,7 @@
 gunforge3d/
   README.md            运行与测试说明
   run.ps1              启动器（查找 Godot）
-  docs/                PLAN.md、TASKS.md、PROGRESS.md、PLAYTEST.md
+  docs/                PLAN.md、TASKS.md、PROGRESS.md、PLAYTEST.md、DEV_ENVIRONMENT.md；ART3D_*.md 属于后续美术阶段
   tools/               capture.ps1、make_gallery.ps1 等开发脚本
   game/                Godot 工程根（project.godot）
     main.tscn main.gd  组装 Shell、Sim、View、HUD、Audio、Dev
@@ -257,10 +257,12 @@ v0.2 落实了上一轮评审的12项意见（R01–R12；评审原文 REVIEW.md
 - **自动化可靠性**：失焦自动暂停不作用于脚本/回放/性能运行；性能指标改为关闭 VSync 后的帧间隔分位数；数据与代码哈希先把换行归一为 LF；需要渲染的限亮测试明确为窗口模式自检，不进无头测试。
 - **其他澄清**：实体 id 约定、安全框定义、空轨道与没有 required 敌人的停留段的行为、射击冷却测试移到有射击功能的 T08、HUD 不再二次缩放、调试端口可改。
 
-## 11 美术阶段衔接（2026-11-16）
+## 11. 美术阶段衔接（2026-11-16）
 
 本机工具路径、版本、验证范围和未具备条件见[DEV_ENVIRONMENT.md](DEV_ENVIRONMENT.md)。T00–T20仍是独立白模阶段：禁止引入外部素材/额外工具链的限制适用于该阶段。后续美术框架AF任务允许在gunforge3d/artkit下使用隔离Python环境和已有Blender；素材导入及EI/WR接入在T20完成且用户认可方向后执行，按两份ART3D文档验收。不提前改变白模验收标准。
 
 纯表现资产覆盖原颜色，不删除或迁移archetypes里的字段。EI05启用姿态轨属于玩法改动：加载阶段校验并注入Sim（step期间不读文件），轨迹存game/data/poses；回放增加pose_data_sha256及姿态配置标识，快照包含clip/tick。修改轨迹必须拒绝旧回放并重新跑T20。--art开关仅控制View；同一玩法姿态配置开/关美术的最终哈希相同。
 
 Compatibility属于后续EI06新增验收，Forward+白模性能结果不代表Compatibility性能。启动器必须把引擎参数`--rendering-method gl_compatibility`放在`--`之前，游戏参数放在之后；建议EI06新增`-Renderer forward_plus|gl_compatibility`并验证透传。框架与游戏文档若数值冲突，玩法尺寸以TASKS及已生成的Sim数据为准，美术不得擅改。
+
+扩展空间（2026-11-16）：美术风格和硬件档位不是引擎的固定属性。白模阶段和首个美术档案之外，以后可以增加别的风格和更强的硬件档位，规则见[ART3D_FRAMEWORK.md](ART3D_FRAMEWORK.md) §18。对引擎侧的要求有四条：渲染器由启动参数选择，`-Renderer`的取值同时预留`mobile`；`--art`的取值是`off`、`on`或档案名，`on`等同于游戏的基准档案；灯光、环境、后期的设置按档案放在美术数据里，由View读取，Sim不读，同一玩法姿态配置下任何档案的最终哈希相同；任何后期效果都在内容视口内完成，限亮着色器和白边框仍在它们之后，白边框始终是画面里最亮的。这些要求在EI阶段落实，不改变T00–T20的白模验收，白模阶段不需要为此提前写代码。
