@@ -1,12 +1,12 @@
 # GunForge3D 开发任务
 
-版本：v0.2 · 2026-11-15 · 二次评审修订。方案见 [PLAN.md](PLAN.md)。本文是执行者（AI 编码模型）的工作说明，按 T00 → T20 顺序执行。
+版本：v0.3 · 2026-11-16 · 三次评审修订（修订点见 PLAN §10）。方案见 [PLAN.md](PLAN.md)。本文是执行者（AI 编码模型）的工作说明，按 T00 → T20 顺序执行。
 
 ## 0. 执行规则（每个任务都适用）
 
 ### 0.1 环境
 
-- 仓库根：`E:\tvgun`。本工程根：`E:\tvgun\gunforge3d`。Godot 工程根：`E:\tvgun\gunforge3d\game`。
+- 仓库根：开发机上是 `E:\tvgun`。本工程根：`E:\tvgun\gunforge3d`。Godot 工程根：`E:\tvgun\gunforge3d\game`。若实际检出路径不同，以实际路径为准，下文的 `E:\tvgun` 相应替换；脚本和代码里不得硬编码仓库盘符，一律用相对路径或 `$PSScriptRoot`。除特别说明外，本文的命令都在仓库根执行。
 - Godot：`D:\gunforge_cache\tools\godot-4.6.3\Godot_v4.6.3-stable_win64_console.exe`（下文记为 `$GODOT`，PowerShell 中用调用运算符 `&` 执行）。如环境变量 `GODOT_BIN` 已设置则优先用它。**不要下载或安装任何引擎、插件或素材。**
 - 语言只用 GDScript。除脚本、着色器和 JSON 外不需要其他工具链。
 
@@ -35,6 +35,8 @@
 - 测试必须真实断言行为。禁止为了通过而放宽断言、跳过用例或在被测代码里识别测试环境。
 - 继承 `SceneTree` 的脚本在 `_initialize()` 开头，根节点尚未进入场景树。需要节点时先 `await process_frame`。
 - 涉及画面的任务还要截图自检：按任务给出的方式生成 PNG，自己查看图片，确认与描述相符后再提交。截图存到 `gunforge3d/reports/captures/`（已被忽略，不入库）。截图需要非无头模式，会短暂弹出窗口，属正常。
+- 需要真实渲染的检查（截图、限亮测量、性能）无法在无头模式运行，不放进 `run_all`，按任务说明用窗口模式单独执行并把结果记入 PROGRESS。
+- 启动窗口的自动化命令要设超时（建议 120 秒，整关回放 600 秒）。超时视为失败并排查原因，不要无限等待。
 - 每个任务结束前跑一遍全量测试，之前任务的测试不得失败。
 
 ### 0.5 提交与进度
@@ -48,7 +50,9 @@
 - 坐标系：+X 右，+Y 上，前进方向 −Z。单位米。角度在 JSON 中用度。
 - 向量写 `[x, y, z]`，颜色写 `"#rrggbb"`。
 - 规范坐标：1920×1080。内容区是规范坐标 `[72,72]–[1848,1008]`，大小 1776×936。"内容像素"指以内容区左上为原点、1776×936 的坐标。
+- 安全框：内容区四边各内缩 60 内容像素，即内容像素 `[60,60]–[1716,876]`。运行时的可见性判定（T10）和校验器（T17）用同一个定义。
 - 相机：垂直视场默认 60°，宽高比固定 1776/936，近裁 0.1，远裁 200。
+- 实体 id：关卡数据里定义的实体（spawn、props、debug_actors）直接用数据中的字符串 id，Boss 用 `<段 id>:boss`；运行期生成的实体（投射物、拾取物、Boss 放出的小怪）用 `<类型>#<序号>`，序号取自 Sim 的下一实体序号。所有实体另带单调递增的生成序号，排序和平局处理一律按生成序号，不按 id。事件、令牌、`captor` 引用和机器人候选里的 id 都是这个 id。
 
 ---
 
@@ -69,7 +73,7 @@
    - 查找顺序：`-Godot` → `$env:GODOT_BIN` → `D:\gunforge_cache\tools\godot-4.6.3\Godot_v4.6.3-stable_win64_console.exe` → 仓库同级 `..\gunforge_cache\tools\godot-4.6.3\...` → PATH 中的 `godot`。找不到时报错并说明如何设置。
    - 所有路径基于 `$PSScriptRoot`，不依赖调用方 cwd。启动前，若 `game/.godot/` 不存在，先执行一次 `--headless --path <game绝对路径> --import`，失败时明确报错。
    - `-Test` 运行全量测试并返回其退出码。
-6. `E:\tvgun\play_3d.cmd`：调用 `gunforge3d\run.ps1`，写法参照根目录的 `play_paper_lantern.cmd`；用 `%*` 完整透传参数，验证带空格的路径。
+6. `E:\tvgun\play_3d.cmd`：调用 `gunforge3d\run.ps1`，写法参照根目录的 `play_paper_lantern.cmd`（该文件不存在时用 `powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0gunforge3d\run.ps1" %*`）；用 `%*` 完整透传参数，验证带空格的路径。
 7. `gunforge3d/.gitignore`：`game/.godot/`、`reports/captures/`、`*.tmp`。
 8. `gunforge3d/README.md`：如何启动、如何测试、目录说明、与 2D 工程的关系（各 1–3 句）。
 9. `gunforge3d/docs/PROGRESS.md`：进度表初稿。
@@ -141,7 +145,7 @@
 **必测**（`tests/test_input.gd`）：用手工构造的 `InputEventMouseButton`、`InputEventMouseMotion`、`InputEventKey` 喂给 `mouse_source`。
 
 - 1920×1080、outer=0 时点击窗口 `(960,540)` → SHOT，规范坐标 `(960,540)`；路由后内容像素 `(888,468)`，`in_content` 为真。
-- 点击 `(30,30)`（白边内）→ SHOT 且 `in_content` 为假。
+- 点击 `(10,10)`（白边内）和 `(30,30)`（暗带内）→ 都是 SHOT 且 `in_content` 为假。
 - monitor 档下点击窗口 `(2,2)`（外黑边）→ 路由后为 RELOAD。
 - R、右键 → RELOAD；Enter → START；5 → COIN；Esc → EXIT，且 EXIT 不出现在 `collect()` 的结果里。
 - 带 `echo = true` 的按键不产生事件。
@@ -185,7 +189,7 @@
 - 哈希精度：手工构造两个只在某个浮点字段上相差 1e-15 的 snapshot 字典，按 `state_hash` 的序列化方式得到的哈希不同。
 - title 阶段收到 START → phase 为 `"playing"`，当 tick 的 events 含 `phase_change`。
 - 扫描 `res://sim/` 下所有 `.gd`：使用能识别字符串与注释的轻量词法扫描，禁止场景树依赖和 `Engine.`、`Time.`、`OS.`、`get_tree(`、`class_name`；禁止无接收者的全局随机调用（randf、randi、randf_range、randi_range、randfn、randomize、seed）。只允许 `SimWorld.rng` 或显式指向它的局部变量调用随机方法。测试覆盖全局调用被拒绝、实例调用被接受、字符串/注释/带空白的调用不误判。
-- 冷却边界：k 时刻开枪后 k+5 被拒绝、k+6 可开枪（0.1 秒）；同 tick 阶段切换不重复触发玩法。
+- 同 tick 阶段切换：title 阶段在同一 tick 送入 START 和 SHOT，只产生一次 `phase_change`。射击冷却和换弹的计时边界本任务还没有可测的功能，放在 T08 测。
 
 ---
 
@@ -260,7 +264,7 @@
 1. `sim/level_loader.gd`：`load_file(path) -> Dictionary`，返回 `{"ok": bool, "level": Dictionary, "errors": Array[String]}`。
    - 结构检查：format 正确、必填字段、id 唯一、material 引用存在、shape 合法、数值有限且尺寸为正。
    - 生成运行期数据：`level.blockers: Array`，即所有 solid 几何对应的 `geom` shape 字典。
-   - 计算 `level.sha256`（原始文件文本的 SHA-256），供回放使用。
+   - 计算 `level.sha256`，供回放使用：取文件文本，先把 CRLF 归一为 LF，再算 SHA-256。git 的换行转换会让同一文件在不同检出下字节不同，不归一的话入库的回放夹具换一台机器就会被拒绝。rules、archetypes 的哈希和 T16 的 `sim_revision` 同样处理。
 2. `sim_world.setup` 保存 `blockers`。
 3. `view/world_view.gd`（`Node3D`）：`build(level)`。
    - 按 geometry 生成 `MeshInstance3D`（`BoxMesh`、`CylinderMesh`、`SphereMesh`、`CapsuleMesh`），材质用 `StandardMaterial3D`，同名材质共用一个实例。
@@ -302,19 +306,20 @@
 - `camera` 关键帧的 `t` 是段内秒数。每段在 `t = 0` 处有一个隐含关键帧，等于上一段结束时的姿态；第一段必须显式给出 `t = 0`。关键帧可带 `fov`（默认 60）。
 - 位置：关键帧之间用 Catmull-Rom（首尾端点重复）。`look` 目标点与 `fov` 线性插值。
 - `ease`：`"linear"`（默认）或 `"smooth"`（仅move）。对每两个相邻关键帧之间的局部归一化时间做 smoothstep，再用于位置/look/fov插值，保证中间关键帧时刻仍命中给定姿态。
-- 最后一个关键帧之后保持不动。hold 段可以没有关键帧；有关键帧时，正常清场离段不得早于最后关键帧（先清场则停止新攻击并等镜头走完），以保证下一段缓存的起始姿态连续。关键帧t不得超过duration/timeout。
-- 最后一段结束后发 `rail_end` 事件。
+- 最后一个关键帧之后保持不动。hold 段可以没有关键帧；有关键帧时，正常清场离段不得早于最后关键帧（先清场则停止新攻击并等镜头走完），以保证下一段缓存的起始姿态连续。关键帧t不得超过duration/timeout。hold 的关键帧只用来让镜头到位（最后一个 t 建议 ≤ 3 秒），不要用关键帧做持续漂移，否则该段无法早于最后关键帧结束。
+- 持续漂移用 hold 段的可选字段 `"drift": {"amp": [0.4, 0, 0], "period": 8.0}`：最后一个关键帧之后，相机位置叠加 `w · amp · sin(2π·τ/period)`，`amp` 是世界坐标下的米，τ 是最后关键帧之后的秒数，`look` 目标不变。权重 `w` 保证离段时相机回到关键帧终点姿态，取三项的最小值，每项都钳制在 0–1：`漂移已进行的 tick / 60`（淡入）；`(timeout tick − seg_tick) / 60`（超时前淡出）；清场后的 `(离段 tick − seg_tick) / 60`（清场淡出，未清场时这一项为 1；离段 tick 由 T10 的导演给出）。`w` 是 seg_tick 和离段 tick 的纯函数，不需要另存状态。限制：`amp` 长度 ≤ 1.0 米，`period` ≥ 4 秒，只允许出现在 hold 段。
+- 最后一段结束后发 `rail_end` 事件。rail 为空的关卡（只用于结构夹具）进入 playing 后相机固定在 `(0, 1.6, 0)` 看向 −Z，不发 `rail_end`，不会自行结束。
 
 **交付**
 
-1. `sim/rail.gd`：`setup(segments)`；`pose_at(segment_index: int, seg_tick: int) -> Dictionary`（`{"pos", "look", "fov"}`）。内部缓存每段的起始姿态。
+1. `sim/rail.gd`：`setup(segments)`；`pose_at(segment_index: int, seg_tick: int, exit_tick: int = -1) -> Dictionary`（`{"pos", "look", "fov"}`）。`exit_tick` 是已确定的离段 tick，只用于漂移权重，未清场时传 −1。内部缓存每段的起始姿态（不含漂移）。
 2. `sim/camera_rig.gd`：由姿态计算 `transform: Transform3D`（`looking_at`，上方向 +Y）与 `fov`。提供：
    - `screen_ray(content_px: Vector2) -> Dictionary`：`{"origin", "dir"}`。`ndc = px / (1776, 936) * 2 - 1`，`dir = basis * Vector3(ndc.x * tan(fov/2) * aspect, -ndc.y * tan(fov/2), -1)` 归一化，`aspect = 1776/936`。
    - `project(world: Vector3) -> Dictionary`：`{"px": Vector2, "depth": float, "in_front": bool}`，是 `screen_ray` 的逆。
    - `px_per_meter(depth: float) -> float`：`936 / (2 * depth * tan(fov/2))`。
 3. `sim_world`：playing 阶段每 tick 推进 `seg_index`、`seg_tick`，更新 `camera`。段切换时发 `segment_enter {id, index}`。新增 `seek(segment_id)`：直接跳到该段开头并重置该段状态（开发用）。snapshot 包含段索引与段内 tick。
 4. `view/game_view.gd`：每帧把 Sim 相机的 transform 和 fov 拷给 `Camera3D`。title 阶段显示第一段 `t = 0` 的姿态。
-5. 关卡加载器校验 rail：id 唯一、type 合法、move 有正的 duration、hold 有正的 timeout、关键帧 t 非负且递增、第一段有 `t = 0`、`pos` 与 `look` 不重合且视线不与上方向平行，fov在(0,180)内，关键帧不超过段的时限；空rail只供结构夹具，playable须非空。
+5. 关卡加载器校验 rail：id 唯一、type 合法、move 有正的 duration、hold 有正的 timeout、关键帧 t 非负且递增、第一段有 `t = 0`、`pos` 与 `look` 不重合且视线不与上方向平行，fov在(0,180)内，关键帧不超过段的时限，`drift` 只在 hold 段且满足上面的限制；空rail只供结构夹具，playable须非空。
 6. 给 `box_room.json` 加 3 段轨道：move 4 秒前进 → hold（timeout 3 秒）→ move 3 秒并向右转。
 
 **必测**（`tests/test_rail.gd`）
@@ -325,6 +330,7 @@
 - 相机后方的点 `in_front` 为假。
 - 把 `Camera3D` 加到尺寸 1776×936 的 `SubViewport`（需 `tree`，并等一帧），其 `project_ray_normal(px)` 与 `screen_ray(px).dir` 在 5 个像素点上的差 < 1e-4。
 - 跑完三段后收到 `rail_end`。`seek` 到第二段后段索引与相机姿态正确。
+- 漂移：给一个 hold 段加 `drift`（amp `[0.4,0,0]`、period 4、timeout 10）。段中相机相对关键帧终点的最大偏移不小于 0.35 米、不超过 0.4 米（容差 1e-6）；`seg_tick` 等于 timeout 对应的 tick 时偏移 < 1e-6；传入 `exit_tick` 后，`seg_tick` 等于它时偏移同样 < 1e-6；下一段第 0 tick 与上一段最后一个 tick 的 `pos` 距离 < 0.05。
 
 ---
 
@@ -340,7 +346,7 @@
    - `--fixed`：启动即冻结，只能由调试接口或脚本推进
    - `--mute`、`--profile=monitor|tv`、`--window=<宽>x<高>`
    - `--script-run=<json 路径>`：按脚本自动执行（见第 3 点）
-2. `dev/dev_server.gd`：只监听 `127.0.0.1:19020` 的 TCP。每行一个 JSON 请求，每行一个 JSON 回应。仅在 `OS.is_debug_build()` 时启用。命令：
+2. `dev/dev_server.gd`：只监听 `127.0.0.1` 的 TCP，端口默认 19020，可用 `--dev-port=<端口>` 或构造参数改。端口被占用时打印一条警告并继续运行（不启用调试接口），不要崩溃。每行一个 JSON 请求，每行一个 JSON 回应。仅在 `OS.is_debug_build()` 时启用。命令：
    - `{"cmd":"state"}` → tick、phase、段、相机、玩家、各实体摘要、`hash`
    - `{"cmd":"freeze","on":true}`
    - `{"cmd":"step","n":60}`：冻结时推进 n tick，回应最新 state
@@ -358,7 +364,7 @@
 **必测**（`tests/test_dev.gd`）
 
 - 脚本解析：合法脚本得到步骤数组；未知步骤类型报错。
-- 在测试里创建 `dev_server`（Sim 用 `box_room`），用 `StreamPeerTCP` 连接 `127.0.0.1:19020`，测试手动调用服务器的 `poll()`：`state` 得到含 `tick` 的回应；`freeze` 后 `step 10` 使 tick 增加 10；`input START` 使 phase 变为 playing；`seek` 后段索引改变。
+- 在测试里创建 `dev_server`（Sim 用 `box_room`，端口用 19021，避免与正在运行的游戏抢 19020），用 `StreamPeerTCP` 连接它，测试手动调用服务器的 `poll()`：`state` 得到含 `tick` 的回应；`freeze` 后 `step 10` 使 tick 增加 10；`input START` 使 phase 变为 playing；`seek` 后段索引改变。
 
 **截图自检**：用 `capture.ps1` 对 `box_room` 的三段各截一张，确认镜头位置随段变化。
 
@@ -383,7 +389,7 @@
    - `shot_fired`：从镜头右下方到命中点（或射线 60 米处）的细弹道线（0.06 秒），以及镜头右下方一个 0.05 秒的小 `OmniLight3D` 闪光。
    - `impact_world`：命中点一个深色小圆片贴花（贴合法线，保留 10 秒，最多 64 个，超出回收最旧的），加 6–10 个向法线半球飞散并受重力下落的小方块碎屑（0.5 秒）。
 5. `hud/hud.gd`（`Control`，挂在 `Content` 下，绘制在 3D 之上）：
-   - HUD 根节点按 `Content` 实际宽度 / 1776 等比缩放，内部一律用内容像素布局。
+   - `Content` 固定为 1776×936，HUD 直接用内容像素布局，不做额外缩放；整体缩放由 Shell 的 TextureRect 完成。
    - 准星：跟随 `input_router` 的 aim（转成内容像素）。十字加圆环，开枪时短暂扩张。aim 在内容区外时不显示。
    - 右下弹药：8 个子弹图标（自绘矩形），已用的变暗。弹匣空时屏幕中下方闪烁"换弹！（右键 / R）"。换弹中显示进度条。
 6. `main.gd` 的 `_dispatch` 把事件分发给 `fx` 和 `hud`。
@@ -396,7 +402,8 @@
 - 换弹期间开枪被忽略；到时弹药回满；满弹时 RELOAD 无效果。
 - `in_content == false` 的 SHOT 扣弹但没有 `impact_world`。
 - 朝没有几何的方向开枪得到 `shot_miss`。
-- title 阶段的 SHOT 不扣弹。
+- title 阶段的 SHOT 不扣弹。title 阶段同一 tick 的 START 和 SHOT：进入 playing，弹药仍是满的。
+- 计时边界（规则见 T03 第 8 步）：第 k tick 开枪后，第 k+5 tick 的 SHOT 被忽略，第 k+6 tick 的可以开枪（0.1 秒 = 6 tick）。第 k tick 开始换弹，第 k+47 tick 的 SHOT 被忽略，第 k+48 tick 的 SHOT 能打出（0.8 秒 = 48 tick），且该 tick 的事件里 `reload_done` 在 `shot_fired` 之前。
 - `assist_px`：构造一个球形非世界目标，射线从其外侧 3 像素处擦过。`assist_px = 0` 不中，`assist_px = 5` 命中。
 
 **截图自检**：脚本在 `box_room` 中对墙和箱子开 5 枪后截图，能看到弹孔贴花、弹药图标减少。
@@ -489,7 +496,7 @@
 - `enter`：`"run"`（从 from 经 path 跑到 to）、`"popup"`（直接出现在 to，处于隐藏姿态）、`"side"`（从 from 侧移到 to，面朝相机）。
 - `required` 对敌人默认true，决定是否计入清场；人质强制false。`params` 覆盖原型参数。spawn.id 在全关唯一，wave索引连续，at≥0且不得超出所属段时限；held captor须同波同时或先生成，不允许未解析引用。
 - `waves` 可省略。第 0 波在段开始时启动。第 n 波在第 n−1 波的 spawn 全部生成、且其中 required 的存活数 ≤ `when_remaining`（默认 0）之后再过 `delay`（默认 0.5 秒）启动。`tokens` 若给出，从该波开始覆盖段的令牌数。
-- hold 段结束：所有波已启动并生成完毕，且所有 required 敌人死亡 → 事件 `segment_clear`，达到 `max(清场tick+60, 最后相机关键帧tick)` 后进入下一段。清场后取消本段全部剩余攻击、清除投射物，非required敌人逃离。到 `timeout` 仍未清场 → 存活敌人进入 `flee`，事件 `segment_timeout`，进入下一段。
+- hold 段结束：所有波已启动并生成完毕，且所有 required 敌人死亡 → 事件 `segment_clear`，达到 `max(清场tick+60, 最后相机关键帧tick)` 后进入下一段。清场后取消本段全部剩余攻击、清除投射物，非required敌人逃离。到 `timeout` 仍未清场 → 存活敌人进入 `flee`，事件 `segment_timeout`，进入下一段。带 `drift` 的段清场时把离段 tick 传给 `rail.pose_at`，漂移在离段等待内淡出（T06），离段时相机回到基准姿态。没有任何 required 敌人、也没有入段 carry 敌人和 Boss 的 hold 段（只会出现在结构夹具里）不算清场，等到 `timeout` 结束，不发 `segment_clear`。
 - move 段：所有 spawn 视为第 0 波，按 `at` 生成。段结束时仍存活的敌人，spawn 上有 `"carry": true` 的带入下一段并计入其清场，其余进入 `flee`。
 - `cues`：本任务只实现 `caption {text, duration}`。
 
@@ -518,7 +525,7 @@
    - 受伤：全屏红色暗角 0.5 秒（峰值不透明度 0.45）。
    - 字幕：屏幕上方居中，半透明黑底。
 7. View：受伤时仅让边缘暗角、弹药图标和非瞄准装饰轻震（≤6 内容像素、0.15 秒）。Camera3D、活体部件、准星和预警圈不叠加独立位移。
-8. `tests/fixtures/arena_gunner.json`：一个小场地，一段 hold，两波共 4 个射手，2 个掩体箱。
+8. `tests/fixtures/arena_gunner.json`：一个小场地，一段 hold，两波共 4 个射手，2 个掩体箱。所有 `arena_*` 夹具到 T17 都要通过 playable 校验，现在就按那里的约束摆：敌人站位距相机 5–11 米、暴露时头部在安全框内且不被遮挡、相机离 solid 表面 ≥ 0.25 米、hold 的 timeout ≤ 90 秒。
 
 **必测**（`tests/test_director.gd`、`tests/test_gunner.gd`）
 
@@ -534,6 +541,7 @@
 - 令牌不泄漏：`tokens` 为 1、2 个射手。第一个开火后，在它的 `cooldown` 期间打它躯干一枪（不致死）；之后第二个射手仍能进入 windup。再测：持有令牌的射手在 windup 中进入 flee（段超时），令牌被释放。
 - 可见性：把一个射手的站位放在一堵墙后（完全不可见）。预检失败不申请令牌；将已开始预警的射手遮住则重置预警，4 秒后取消并释放令牌。把站位放在画面外同理；0.2 秒可见/0.2 秒不可见反复切换时不得累计到开火。
 - 同 tick 顺序：在 windup 的最后一个 tick 送入致命的 SHOT，玩家不掉血。
+- 带 `drift` 的 hold 段在漂移中途清场：离段前最后一个 tick，相机位置与该段关键帧终点的距离 < 0.02 米；下一段第 0 tick 的位置等于关键帧终点。
 - 同一输入序列两次运行哈希一致。
 
 **截图自检**：`arena_gunner` 中预警圈的黄色大圈与红色小圈各一张，受伤暗角一张。
@@ -563,7 +571,7 @@
    - 投出时用 `transfer_token` 把令牌交给投射物。投射物结束（被击落、命中或被清除）时释放。投掷兵此后死亡不影响这个令牌。飞行中不再申请令牌；结束后等待 interval 再预警。所有释放使用 0.6 秒冷却；删除兜底不延长已有冷却。
    - `windup` 期间受击：发 `attack_cancel`、归还令牌，`flinch` 0.4 秒后等待 interval。
 5. `sim/behaviors/shield.gd`。参数：`speed` 1.2、`hp` 3、`windup` 1.2、`interval` 3.0、`stop_range` 4.0。
-   - 身体：humanoid 追加部件 `shield`，box 0.70×1.40×0.08，zone `armor`。举盾时中心 (0, 1.13, 0.38)；放下时中心 (−0.55, 1.13, 0.10)。盾下沿离地 0.43 米，腿始终可打。
+   - 身体：humanoid 追加部件 `shield`，box 0.70×1.20×0.08，zone `armor`。举盾时中心 (0, 1.23, 0.38)；放下时中心 (−0.55, 1.23, 0.10)。盾覆盖 0.63–1.83 米高度，挡住躯干和头；下沿离地 0.63 米，腿始终可打。下沿不能再低：相机在 1.6 米高、4 米外看腿部中心（0.41 米）的视线，在盾面处高约 0.54 米，下沿低于这个值时瞄腿中心会打在盾上。
    - `advance`：举盾，姿态 `run`（慢速）走向相机，到 `stop_range` 停下。每 `interval` 申请令牌 → `windup`：放下盾，姿态 `aim`，暴露躯干和头，事件 `attack_windup` → 到时 `damage_player(1)`、发 `attack_fire`、释放令牌（冷却 0.6 秒）→ 重新举盾。
    - windup 期间受击（未死）：发 `attack_cancel`、释放令牌（冷却 0.6 秒）并举盾。
 6. View 与 HUD：投射物为深色球加一圈红色环，拖短尾迹。HUD 在飞行中的投射物上画跟随的红色菱形标记，剩余 < 0.5 秒时闪烁。`projectile_destroyed` 有小爆点特效。
@@ -574,7 +582,7 @@
 - 冲锋兵：不开枪时到达并造成伤害；3 枪身体击杀；受击后 0.5 秒内的位移小于未受击时的 60%；在 move 段里仍能追到近战距离。
 - 投掷兵：`windup` 后生成投射物；`flight` 秒后命中玩家；按其投影位置开枪可击落且玩家不掉血；击落后令牌归还。投射物飞行途中击杀投掷兵：令牌仍由投射物持有，投射物结束后才释放，且只释放一次。
 - 投射物轨迹：终点与目标点距离 < 0.05 米，最高点高于起点与终点。
-- 盾兵：正面瞄躯干与头部中心 → `armor_hit`，不掉血，`shots_hit` 不增加；打腿掉血；`windup` 时可爆头。
+- 盾兵：相机高 1.6 米，距离 4 米和 10 米各测一次。举盾时瞄躯干与头部中心 → `armor_hit`，不掉血，`shots_hit` 不增加；瞄任一条腿的中心 → `hit_actor`，part 为该腿，掉血；`windup` 时可爆头。
 - 三个 hold 段都能被"威胁一出现就击杀"的测试脚本无伤通过（测试里直接读 Sim 状态算瞄点）。
 
 **截图自检**：三种敌人各一张，投射物飞行中一张。确认三者可区分，盾清楚可见。
@@ -647,8 +655,8 @@
    - playing 计时仅统计实际战斗推进 tick，含失败尝试，不含 title、continue 倒计时、results、Shell 暂停。每段总耗时为其所有尝试之和，并保留逐次明细。
    - `results`：前 3 秒不接受输入。之后 START 或 SHOT → 整个 Sim 重置回 `title`（同一 seed）。
    - 评级：得分 / `par_score` ≥ 1.0 为 S，≥ 0.8 为 A，≥ 0.6 为 B，其余 C。未通关为 `"-"`。
-   - COIN：`credits += 1`，只显示。
-3. Shell 暂停：Esc 切换。暂停时不推进 Sim，画面压暗并显示"暂停 — Esc 继续 / Q 退出"。暂停时按 Q 退出程序。窗口失去焦点时自动暂停。
+   - COIN：`credits += 1`，只显示。`credits` 是 Sim 状态，results → title 重置时清零。
+3. Shell 暂停：Esc 切换。暂停时不推进 Sim，画面压暗并显示"暂停 — Esc 继续 / Q 退出"。暂停时按 Q 退出程序。窗口失去焦点时自动暂停；带 `--script-run`、`--replay`、`--fixed` 或 `--perf` 启动的运行除外。由 Agent 在后台启动的窗口经常拿不到焦点，自动暂停会让脚本和回放永远等下去。
 4. HUD：
    - 右上分数（数字滚动），其下连击数与倍率（连击 ≥ 2 才显示）。
    - 飘分：带 `pos` 的 `score` 事件在其投影处上飘 0.8 秒。爆头的字更大、颜色不同。
@@ -741,7 +749,7 @@
 5. 低血量：生命为 1 时屏幕边缘缓慢脉动红色，循环播放 `heartbeat`。
 6. 换弹：弹匣图标逐发填充；完成时短促闪光。
 7. 相机运动只来自 rail。启停缓动用轨道 ease 表达，View 不追加俯仰、震动或相机插值；所有可命中部件的位置与 Sim 同步。
-8. 调试命令 `{"cmd":"luma"}`：返回内容区画面在限亮之后的最大与平均 sRGB 亮度。计算部分写成可测的纯函数 `dev/luma.gd`：`measure(image: Image) -> Dictionary`。测量来源必须是最终窗口截图裁出的内容区域，不能对未限亮的Content在CPU再套限亮公式后宣称通过。增加黑、0.5灰、白、RGB色块的实际渲染测试，验证颜色空间和输出Y′；必要的线性/sRGB转换以这些截图为准。
+8. 调试命令 `{"cmd":"luma"}`：返回内容区画面在限亮之后的最大与平均 sRGB 亮度。计算部分写成可测的纯函数 `dev/luma.gd`：`measure(image: Image) -> Dictionary`。测量来源必须是最终窗口截图裁出的内容区域，不能对未限亮的Content在CPU再套限亮公式后宣称通过。增加黑、0.5灰、白、RGB色块的实际渲染检查，验证颜色空间和输出Y′；必要的线性/sRGB转换以这些截图为准。这项检查需要真实渲染，做成窗口模式的 `gunforge3d/tools/luma_check.ps1`（在 `Content` 里铺色块、整窗截图、裁出内容区后用 `luma.measure` 判定，失败时退出码非 0），不放进无头的 `run_all`；结果记入 PROGRESS。
 
 **必测**（`tests/test_feel.gd`）
 
@@ -749,7 +757,7 @@
 - 开启全部反馈，在相同 tick 用 Camera3D 投影实际活体部件中心，转换为内容像素后射击，仍命中相同 id/part；覆盖移动段与窗口缩放。
 - `luma.measure` 对手工构造的纯白、纯黑、0.5 灰、半白半黑图像返回正确的最大值与平均值。
 
-**截图自检**：爆头瞬间、低血量、进场提示环各一张。在 `arena_mixed` 战斗中执行 `luma`，最大亮度 ≤ 0.76。
+**截图自检**：爆头瞬间、低血量、进场提示环各一张。运行 `luma_check.ps1`：白色块限亮后 Y′ 在 0.74–0.76，0.5 灰和黑色块不被改变（误差 ≤ 0.02）。在 `arena_mixed` 战斗中执行 `luma`，最大亮度 ≤ 0.76。
 
 ---
 
@@ -762,9 +770,9 @@
 1. `dev/replay.gd`：
    - 录制：仅 `session_clean=true` 且从 setup/title 开始的对局记录每个进入 Sim 的输入及其入口 tick，同 tick 保持数组顺序。首次进入 results 后立即封存，退出时可保存未完成局；结果画面的重开输入不并入旧回放。重开时建立新录制。调试污染规则见 T07；Shell 暂停不污染。
    - 格式：`{"format":"gunforge3d-replay-v1","engine_build","sim_revision","level_id","level_sha256","rules_sha256","archetypes_sha256","inputs":[{"tick","event","x","y","in_content"}],"inputs_sha256","final_tick","final_hash"}`。
-   - `engine_build` 为 Godot 完整构建标识；`sim_revision` 为所有 sim/*.gd（含子目录）按相对路径排序拼接路径和文件 SHA-256 后的总哈希。输入摘要使用 T03 的规范 JSON 序列化。
+   - `engine_build` 为 Godot 完整构建标识；`sim_revision` 为所有 sim/*.gd（含子目录）按相对路径排序拼接路径和文件 SHA-256 后的总哈希，文件文本先把 CRLF 归一为 LF（同 T05）。输入摘要使用 T03 的规范 JSON 序列化。
    - 无头回放：`run(replay, level, rules, archetypes) -> {"ok": bool, "final_hash", "error"}`。运行前检查格式、引擎/模拟代码版本、三个数据哈希、输入摘要、tick 合法且非递减；不匹配即拒绝。匹配后从 setup 运行 final_tick 步，结束时比较最终哈希并报告差异。禁止将“最终哈希”作为运行前已可验证的字段。
-   - 命令行 `--replay=<路径>`：窗口逐 tick 注入同一序列，禁止现场 SHOT/START/RELOAD/COIN 或调试 input/seek/set 混入，仅允许暂停、退出、截图。到 final_tick 冻结并报告哈希结果。回放观看不再录制。
+   - 命令行 `--replay=<路径>`：窗口逐 tick 注入同一序列，禁止现场 SHOT/START/RELOAD/COIN 或调试 input/seek/set/step/freeze 混入，仅允许暂停、退出和只读的调试命令（state、capture、luma、quit）。到 final_tick 冻结并报告哈希结果；加 `--quit-on-end` 时报告后自动退出，退出码 0 表示哈希一致（T20 的自动验收用）。回放观看不再录制。
 2. `dev/bot.gd`：只通过 `SimWorld` 的只读状态和 `step(inputs)` 驱动。
 
    | 档位 | 反应时间 | 瞄准时间（d 为准星到目标的内容像素距离） | 落点抖动 σ（内容像素） | 爆头倾向 |
@@ -776,9 +784,9 @@
 
    - 机器人维护一个虚拟准星。候选单位为 `(id, part)`；从实际可见、可命中时起经过反应时间才进入候选。连续可见期间只支付一次反应时间，消失后再次暴露重新计时。
    - 优先级：1 秒内将命中的投射物 > windup 中的敌人（剩余时间短者优先）> 近战距离内的冲锋兵 > 其他投射物 > 其他暴露的敌人 > 拾取物 > 含物品的箱子。油桶：爆炸半径内有 ≥ 2 个敌人且没有人质时，与"windup 中的敌人"同级。
-   - 瞄点：按爆头倾向决定瞄头还是躯干。用 `geom.segment_blocked` 确认从相机到瞄点没有被世界、道具或人质挡住；被挡则换另一部件，再不行换目标。盾兵举盾时瞄腿。
+   - 瞄点：按爆头倾向决定瞄头还是躯干，瞄点取部件中心。用 `geom.segment_blocked` 确认从相机到瞄点没有被世界、道具、人质或任何角色的 armor 部件（盾、Boss 装甲）挡住；被挡则换另一部件，再不行换目标。盾兵举盾时瞄腿。
    - 选定目标后经过“瞄准时间”开枪；每枪重新支付瞄准时间和枪械冷却，反应时间按上述暴露窗口处理。开枪前重新投影当前部件中心，再加二维高斯抖动；部件消失/不可打时取消瞄准，优先级变化可中止并重新瞄准。不得预读未来状态。
-   - 人质保护：瞄点周围 1.5σ 半径内有人质部件的投影时，改瞄头部；仍不满足则放弃该目标。机器人不得用 `shooting.resolve` 预先试探抖动后的落点。
+   - 人质保护：瞄点到最近人质部件投影轮廓的距离 < 1.5σ 时，改瞄该目标的头部，并把瞄点沿远离该人质部件的方向偏移 0.5 个头部投影半径。偏移后仍 < 1.5σ 的目标暂不射击，先处理其他候选。两种情况下照常按偏移后的瞄点开枪并承担误伤风险：该目标正在 windup；或已连续 1.0 秒没有其他可射击的候选。没有这个例外，被挟持人质挡住的挟持者会被永远放弃（挟持者头部中心离人质头顶只有 0.13 米，8 米外约 13 内容像素，小于 novice 的 33 和 average 的 18），段只能超时。机器人不得用 `shooting.resolve` 预先试探抖动后的落点。
    - 换弹：弹匣空时立即；没有候选目标且弹药 ≤ 3 时。
    - 流程：title 发 START；continue 立即续关；results 不再操作。
    - 抖动与倾向用独立的 rng，种子由机器人种子与档位决定，结果可复现。
@@ -812,7 +820,7 @@
    | REF_MARKER | error | spawn 的 from、to、path 引用的 marker 都存在；`held` 人质的 captor 存在于同一段 |
    | REF_ARCHETYPE | error | archetype 存在 |
    | SPAWN_IN_SOLID | error | 被 spawn 引用的 marker，其上方 0.1–1.7 米的 5 个采样点都不在 solid 几何内 |
-   | RAIL_SPEED | error | move轨道每tick采样弧长/时长>2.5米/秒，或相邻朝向角速度>45°/秒 |
+   | RAIL_SPEED | error | move 段的平均速度（逐 tick 采样位置累加出的弧长 ÷ 段时长）> 2.5 米/秒；或任意相邻两 tick 的视线夹角 > 0.75°（即 45°/秒）。带 `drift` 的 hold 段同样查角速度 |
    | CAM_IN_SOLID | error | 每段每 6 tick 采样的相机位置距任何 solid 表面 ≥ 0.25 米 |
    | COMBAT_OFFSCREEN | error | 在"采样时刻"，站位处暴露姿态的头部中心投影落在内容区内缩 60 像素的安全框里 |
    | WEAK_OCCLUDED | error | 在"采样时刻"，从相机到暴露姿态头部中心的线段不被 solid 几何或道具挡住。`held` 的挟持者还不得被其人质的部件挡住 |
@@ -826,12 +834,12 @@
    | NO_ATTACK_WINDOW | error | 非 carry 的移动段敌人从最早到位到段末，没有完整的可见预警窗口；不能把空采样视为通过 |
    | FIRST_THREAT_TOO_EARLY | warning | 段内最早可能的 `attack_fire` 距段开始 < 2.0 秒 |
    | DENSITY | warning | 任一波的敌人 > 6 |
-   | BARREL_NEAR_CAMERA | error | 油桶距其存在期间任一相机采样位置 < 4 米 |
+   | BARREL_NEAR_CAMERA | error | 油桶距其所属段（`segment` 字段；未写的按全部段）内任一相机采样位置 < 4 米。后续段镜头只是路过未引爆的油桶不算（油桶不伤玩家，且小巷宽 8 米，路过时必然近于 4 米） |
    | DURATION | warning | 估算总时长（move 之和，每个普通 hold 估 25 秒，Boss 段估 70 秒）不在 180–300 秒 |
    | LUMA_MATERIAL | warning | 材质颜色的 sRGB 亮度 > 0.75 |
 
    - 空rail、无效fov/关键帧、重复实体id、未知行为名、非法波次及错误参数类型属于structure错误，必须先拒绝，不能继续几何采样。
-   - “采样时刻”：hold 从段首到 timeout 每 0.1 秒采样，末端必须包含；后续波次的开始时刻可能随清敌速度改变，因此对各站位保守检查全部相机姿态。move 从 spawn.at 开始每 0.1 秒到段末，包含首尾；path 进场时间纳入最早到位估算，不再跳过出生后首秒。
+   - “采样时刻”：hold 从段首到 timeout 每 0.1 秒采样，末端必须包含，有 `drift` 时按不清场的完整漂移轨迹取相机姿态；后续波次的开始时刻可能随清敌速度改变，因此对各站位保守检查全部相机姿态。move 从 spawn.at 开始每 0.1 秒到段末，包含首尾；path 进场时间纳入最早到位估算，不再跳过出生后首秒。
    - hold 的静态可见性/尺寸要求在所有样本成立。move 允许进出视野，但在可攻击站位上必须存在不少于该敌人完整预警时长的连续合格区间；carry 敌人可在下一 hold 获得窗口，但前段仍由运行时可见性门控禁止不公平攻击。无样本/无窗口报 NO_ATTACK_WINDOW。
    - “站位”：射手/投掷兵取 to；盾兵取 to 和相对每个相机样本计算的停步点；冲锋兵检查路径引用与 windup，攻击时的实际可打性由 T10 门控及动态验收保证。人质不套用敌人头部尺寸规则。
    - “暴露姿态”：射手 aim、投掷兵 throw 的 progress=0/0.5/1、盾兵放下盾的 aim。held 同时测试人质与挟持者，使用共享 pose_lib，不用单独近似。道具按所属段激活且尚未摧毁的保守状态检查。
@@ -843,7 +851,7 @@
 **必测**（`tests/test_validator.gd`）
 
 - 以一个合法的最小关卡为基底（0 error），每条规则各构造一个违例变体，断言出现对应 code。
-- box_room/empty 的 structure 检查为 0 error；box_room 的 playable 检查应按实际报告 HOLD_NO_REQUIRED，证明分层生效。arena_* 全部 playable 0 error。
+- box_room/empty 的 structure 检查为 0 error；box_room 的 playable 检查应按实际报告 HOLD_NO_REQUIRED，证明分层生效。arena_* 全部 playable 0 error。夹具不达标时改夹具的几何和站位，不放宽规则；改完后依赖该夹具的旧测试必须仍然通过。
 - 移动段末尾出生的不可攻击敌人、遮挡路径、短于预警的可见窗口均报告对应错误；有效 carry 路径不误报。
 
 ---
@@ -878,14 +886,15 @@
 | s2_gate | move 8s | 穿门。2 个冲锋兵从门内迎面跑来，间隔 1.2 秒 |
 | s3_dock | hold，tokens 2 | 波 0：平台上 2 个射手，走道上 1 个投掷兵。字幕："击落飞来的投掷物"。波 1：1 个人质 `run_across` 横穿，同时 2 个射手与 1 个冲锋兵。一个含奖章的箱子 |
 | s4_aisle | move 15s | 镜头沿通道前进并左右各摆一次。3 个射手依次从货架缺口 `side` 闪出（`use_cover` false，`windup` 1.3）。路边一个含医疗包的箱子 |
-| s5_aisle_end | hold，tokens 2 | 波 0：2 个盾兵从远处逼近，1 个射手。字幕："盾牌挡子弹 — 打腿，或等它露头"。波 1：2 个冲锋兵从两侧，1 个投掷兵。油桶在冲锋兵的路径旁 |
-| s6_stairs | move 8s | 上楼，镜头上抬。楼梯顶 1 个投掷兵；办公室门口 1 个射手（`carry: true`） |
-| s7_office | hold，tokens 2 | 波 0：1 组挟持（挟持者 `windup` 3.0，给足瞄头的时间），窗后 2 个射手。波 1：桌后 1 个 `cower` 人质，3 个射手，1 个冲锋兵从门冲入 |
+| s5_aisle_end | hold，tokens 2 | 镜头停在通道前段（z≈−52），前方留约 12 米通道。波 0：2 个盾兵从通道尽头逼近，1 个射手。字幕："盾牌挡子弹 — 打腿，或等它露头"。波 1：2 个冲锋兵从两侧，1 个投掷兵。油桶在冲锋兵的路径旁 |
+| s6_stairs | move 12s | 先走完通道余下约 12 米，再上楼，镜头上抬。楼梯顶 1 个投掷兵（`at` 取镜头进入其 11 米内之后）；办公室门口 1 个射手（`carry: true`） |
+| s7_office | hold，tokens 2 | 波 0：1 组挟持（挟持者 `windup` 3.0，给足瞄头的时间；站位距相机 4–6 米，头部够大，机器人和新手才打得了），窗后 2 个射手。波 1：桌后 1 个 `cower` 人质，3 个射手，1 个冲锋兵从门冲入 |
 | s8_descend | move 7s | 从夹层边缘俯视 Boss 装卸区，沿斜线降到 (0, 1.6, −88)，看向 −Z。字幕："警告：重型目标接近" |
 
-- 每个 hold 段的相机可有缓慢小幅漂移（≤ 0.5 米），避免画面完全静止。
-- move段按实际轨道采样弧长/时长计算平均速度≤2.5米/秒，转头角速度≤45°/秒。先完成路线再布置敌人；不能仅以首尾直线距离代替弧长。建议相机段末位置：s0=(0,1.6,−6)，s2=(0,1.6,−24)，s4=(0,1.6,−60)，s6=(7,5.1,−74)，s8=(0,1.6,−88)。s4前半穿过装卸区，后半进入货架；s6经过楼梯中间关键帧，不能直线穿过台阶。相应初始移动时长合计42秒，加s10共45秒，hold预算约200秒，总体约245秒。
-- 多用纵深与高低：每个 hold 段内最近与最远的敌人站位，深度差 ≥ 5 米。
+- 每个 hold 段的相机可有缓慢小幅漂移，避免画面完全静止。用 rail 的 `drift` 字段（T06，amp ≤ 0.5 米、period 6–10 秒），不要用关键帧做漂移。
+- move段按实际轨道采样弧长/时长计算平均速度≤2.5米/秒，转头角速度≤45°/秒。先完成路线再布置敌人；不能仅以首尾直线距离代替弧长。建议相机段末位置：s0=(0,1.6,−6)，s2=(0,1.6,−24)，s4=(0,1.6,−52)，s6=(7,5.1,−74)，s8=(0,1.6,−88)。对应直线估算的平均速度约为 1.5、2.25、1.9、2.1、2.4 米/秒。s4 前 20 米穿过装卸区，最后约 8 米进入货架通道，射手从前方的货架缺口闪出；s6 先走完通道，再经过楼梯中间关键帧，不能直线穿过台阶。相应初始移动时长合计46秒，加s10共49秒，hold预算约200秒，总体约249秒。RAIL_SPEED 超限时优先延长该段时长（s8 余量最小），不要删减路线。
+- 每个 hold 的停留点前方要有战斗纵深：最远的敌人站位在 11 米内，最近与最远相差 ≥ 5 米，油桶距相机 ≥ 4 米。停留点距前方墙体或通道尽头不足 10 米时，把停留点往回挪，不要把敌人挤在近处。
+- 多用纵深与高低：每个 hold 段内最近与最远的敌人站位，深度差 ≥ 5 米。s7 办公室只有 10×12 米，镜头要斜向看过整间办公室（如看向远角，最远约 10 米），才摆得下这个深度差。
 
 **验收**（全部满足才提交）
 
@@ -938,7 +947,7 @@
    - Boss 段超时（150秒）：无击毁奖励，记录 segment_timeout、boss_defeated=false，清除全部小怪/投射物/待发动作，跳过 s10，直接 results，finished_route=false、cleared=false、fail_reason="boss_escaped"，发 game_over。不得显示“任务完成”。
 4. 导演：段上的 `"boss": {"archetype": "boss_mech", "from": "<marker>", "to": "<marker>", "adds": ["<marker>", "<marker>"]}`。段开始时生成 Boss，仅以 boss_defeated=true 且击毁演出结束为清场条件；超时移除不触发 segment_clear。
 5. `warehouse_raid.json` 增加：
-   - `s9_boss`：hold，timeout 150。相机在 (0, 1.6, −88) 缓慢左右漂移 ±0.8 米。场地两侧各 1 个含医疗包的箱子。进入时字幕"摧毁导弹舱！"，阶段 2 时"蓄力时射击核心！"。
+   - `s9_boss`：hold，timeout 150。相机在 (0, 1.6, −88) 缓慢左右漂移 ±0.8 米，用 `drift`（amp `[0.8, 0, 0]`、period 10）；不能用关键帧做，否则击毁 Boss 后要等到最后一个关键帧才能离段。场地两侧各 1 个含医疗包的箱子。进入时字幕"摧毁导弹舱！"，阶段 2 时"蓄力时射击核心！"。
    - `s10_outro`：move 3 秒，镜头后拉上升，字幕"任务完成"。
 6. View、HUD、Audio：
    - Boss 生命条：屏幕上方，分三格显示（左舱、右舱、核心）。
@@ -985,9 +994,9 @@
    - 任一段的 `average` 平均受伤 ≤ 1.5，Boss 段 ≤ 2。
    - 固定机器人种子1..10。先取得 expert 的原始得分，再将 par_score 固定为 `max(500, roundi(expert平均得分 * 0.9 / 500) * 500)`；之后重新生成最终数据哈希、指标和回放，不能沿用修改前的回放。
    - 调整顺序与禁令同 T18；Boss 专项参数范围见 T19。全程审计可见预警，违规攻击数为0。
-2. 性能：窗口模式回放一条 `average` 通关记录，固定1280×720、monitor、Forward+，记录引擎/硬件/VSync；读取 `Performance.TIME_PROCESS` 的秒数乘1000，报告平均、P95、P99、最大值及>16.7ms帧数，要求最大帧时间<16.7ms（仅排除启动后前60帧）。性能采集与截图/图像回读分别运行，避免 luma 回读污染性能。结果写入 PROGRESS。
+2. 性能：窗口模式回放一条 `average` 通关记录，固定1280×720、monitor、Forward+，记录引擎和硬件。新增命令行参数 `--perf=<json 路径>`：关闭 VSync（`DisplayServer.window_set_vsync_mode`），在 `main.gd` 的 `_process` 里用相邻两帧 `Time.get_ticks_usec()` 之差记录帧间隔，排除启动后前 60 帧，退出时写出平均、P95、P99、最大值及 >16.7ms、>33.3ms 的帧数和它们所在的 tick。不用 `Performance.TIME_PROCESS`：它是引擎汇总后的监视值而不是逐帧的帧间隔，开着 VSync 时还可能把等待垂直同步的时间算进去，做不了分位数统计。要求 P99 ≤ 16.7ms，且 >33.3ms 的帧不超过 3 个；超标帧在 PROGRESS 里写明 tick 和原因（如首次出现某种特效时的着色器编译）。不把“全程最大值 < 16.7ms”当硬指标，一万多帧里单次系统抖动就会让它失败。性能采集与截图/图像回读分别运行，避免 luma 回读污染性能。结果写入 PROGRESS。
 3. 限亮与白框：回放全程每30帧采一次限亮后的内容区域 luma，并覆盖枪闪、爆炸、纯白HUD和Boss核心最亮时刻，采样最大值≤0.76；结果只代表覆盖到的画面，不能宣称逐帧证明。另取 5 张整窗截图，检查白框四条边中点处的像素为纯白。
-4. 确定性回归：把一条 `average` 通关回放存为 `game/tests/fixtures/warehouse_raid_average.replay.json`，新增测试断言回放的最终哈希。有意修改关卡或规则时重新生成它。
+4. 确定性回归：把一条 `average` 通关回放存为 `game/tests/fixtures/warehouse_raid_average.replay.json`，新增测试断言回放的最终哈希。有意修改关卡、规则、原型或 `sim/` 下任何代码后都要重新生成它（`sim_revision` 会变，旧回放在运行前就被拒绝）。
 5. 画廊：`gunforge3d/tools/make_gallery.ps1` 一键生成 12–16 张代表性截图到 `reports/captures/`；`gunforge3d/reports/gallery.md` 逐张列出文件名和一句说明。
 6. `gunforge3d/README.md` 定稿：启动、操作、命令行参数、测试、机器人与校验器的用法、新建一个关卡的最小步骤、目录说明、已知限制。
 7. `gunforge3d/docs/PLAYTEST.md`：给用户的试玩清单。启动方法、建议试玩 3 遍、PLAN §8 的五个判断问题、每段希望留意的点、反馈记录表（段、问题、感受）。
@@ -998,7 +1007,7 @@
 
 - 上述指标全部达到，全量测试通过。
 - 删除 `game/.godot/` 后执行 `play_3d.cmd`，能启动并进入标题画面。
-- 用 `--replay` 窗口回放第 4 点的回放文件，能从标题一路播放到结算。
+- 用 `--replay` 加 `--quit-on-end` 窗口回放第 4 点的回放文件，能从标题一路播放到结算，退出码 0。
 
 ---
 
@@ -1057,5 +1066,7 @@ View、HUD、Audio 只通过这些事件和 Sim 的只读状态工作。新增�
 ## 附录 C 文档修订核对
 
 v0.2 保留原产品范围，并将上一轮 review 落实到任务和必测项：R01→T09/T12；R02→T10/T11；R03→T16/T19；R04→T13/T19/T20；R05→T08/T09及事件表；R06→T13；R07/R08→T03；R09→T01/T10/T12/T15；R10→T10/T17/T18；R11/R12→T07/T16。二次审查另补齐了计时边界、carry跨段/续关生命周期、Boss阶段3打断和状态收尾、结构夹具校验、回放代码版本、固定视口比例、真实限亮测量与性能采集隔离，以及88米推进距离与移动时长/限速的可行性。
+
+v0.3（三次评审）只修正文档内部的矛盾和会卡住执行的缺口，范围不变，摘要见 PLAN §10。落点：路径与超时约定、安全框、实体 id→§0；冷却测试移位→T03/T08；换行归一的哈希→T05/T16；`drift` 与空轨道→T06/T10/T17/T18/T19；调试端口→T07；HUD 不二次缩放→T08；盾的尺寸→T11；失焦暂停的例外、credits→T13；窗口模式的限亮检查→T15；机器人的人质保护与装甲遮挡、回放只读命令→T16；油桶规则与测速口径→T17；S5 停留点、S6 时长→T18；性能口径→T20。
 
 本文件定义待实现的行为与验收，不代表已有游戏通过测试。不得因文档标为修订完成就将PROGRESS中的开发任务或人工试玩标为完成。
