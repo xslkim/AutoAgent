@@ -1,0 +1,26 @@
+{
+  "head": "cda72663f29686bbb3443db48c9cf648b8b7a8fa",
+  "status": " M docs/ART_PLAN_PAPER_LANTERN_CITY.md\n M docs/GAME01_PAPER_LANTERN_CITY.md\n M docs/GUNFORGE_PLAN.md\n D scripts/run_record_extend.py\n D scripts/run_video_test.py\n?? README.md\n?? REVIEW_LEVEL_DESIGN_ENGINE_PLAN_v0.2.md\n?? docs/ARCADE_LIGHTGUN_LEVEL_RESEARCH.md\n?? docs/FPSGAME_TVGUN_PLAN.md\n?? docs/LEVEL_DESIGN_ENGINE_PLAN.md\n?? docs/LEVEL_DESIGN_ENGINE_TASKS.md\n?? docs/PROJECT_CLEANUP_2026-11-08.md\n?? docs/REVIEW_LEVEL_DESIGN_ENGINE_PLAN.md\n?? docs/REVIEW_LEVEL_DESIGN_ENGINE_PLAN_v0.2.md\n?? docs/REVIEW_LEVEL_DESIGN_ENGINE_TASKS.md\n?? gunforge/level_design/\n?? gunforge/pipeline/level_design/\n",
+  "original": "D:\\gunforge_cache\\level_design\\baseline-v1\\original",
+  "recording_project": "D:\\gunforge_cache\\level_design\\baseline-v1\\recording_project",
+  "manifest": "D:\\gunforge_cache\\level_design\\baseline-v1\\source_manifest.json",
+  "manifest_sha256": "4b319e99a5141bb4f47a56c9b92737919d3e6a1a505caa8f3c10d641e97a4f43",
+  "recording_patch_sha256": "6dfee4406c255c102a4ed8318740fddf38ebc617e41fbfa9862b43b2ef0b0bcf",
+  "files": 149,
+  "untracked_files": [
+    "README.md",
+    "REVIEW_LEVEL_DESIGN_ENGINE_PLAN_v0.2.md",
+    "docs/ARCADE_LIGHTGUN_LEVEL_RESEARCH.md",
+    "docs/FPSGAME_TVGUN_PLAN.md",
+    "docs/LEVEL_DESIGN_ENGINE_PLAN.md",
+    "docs/LEVEL_DESIGN_ENGINE_TASKS.md",
+    "docs/PROJECT_CLEANUP_2026-11-08.md",
+    "docs/REVIEW_LEVEL_DESIGN_ENGINE_PLAN.md",
+    "docs/REVIEW_LEVEL_DESIGN_ENGINE_PLAN_v0.2.md",
+    "docs/REVIEW_LEVEL_DESIGN_ENGINE_TASKS.md",
+    "gunforge/level_design/reviews/execution_state.json",
+    "gunforge/level_design/reviews/implementation_decisions.json",
+    "gunforge/pipeline/level_design/freeze_baseline.py"
+  ],
+  "restore": "Copy original/gunforge/framework to a fresh directory, then Godot --editor --import --quit; run -- --fixed. Recording project changes only input isolation, observation and test ports."
+}

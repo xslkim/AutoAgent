@@ -1,0 +1,1565 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "attack": {
+      "channel": "impact",
+      "duration_ms": 320,
+      "resource": "sound_attack",
+      "volume_db": -10
+    },
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 65000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "crow_release": {
+      "anchor_uv": [
+        0.36,
+        0.98
+      ],
+      "color": "#e5726e",
+      "duration_ms": 560,
+      "kind": "attack_release",
+      "radius": 84
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "顶灯亮",
+      "radius": 118
+    },
+    "umbrella_release": {
+      "anchor_uv": [
+        0.68,
+        0.98
+      ],
+      "color": "#a786c5",
+      "duration_ms": 510,
+      "kind": "attack_release",
+      "radius": 76
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "green_car.canopy": {
+      "height": 212,
+      "hit_resource": "image_019",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1088,
+            "y": 387
+          },
+          {
+            "at_ms": 2400,
+            "x": 1088,
+            "y": 387
+          },
+          {
+            "at_ms": 2560,
+            "rotation_rad": 0.12,
+            "scale_x": 0.76,
+            "scale_y": 0.98,
+            "x": 1099.295,
+            "y": 390
+          },
+          {
+            "at_ms": 2785,
+            "rotation_rad": 0.27,
+            "scale_x": 0.34,
+            "scale_y": 0.82,
+            "x": 1133.18,
+            "y": 382
+          },
+          {
+            "at_ms": 3000,
+            "opacity": 0,
+            "rotation_rad": 0.38,
+            "scale_x": 0.09,
+            "scale_y": 0.61,
+            "x": 1160.79,
+            "y": 380
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_018",
+      "template": "target",
+      "width": 251,
+      "x": 1088,
+      "y": 387
+    },
+    "green_car.crow": {
+      "height": 250,
+      "mask_permission": {
+        "resource": "image_012",
+        "source": "green_car.light",
+        "threshold": 0.16
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.13,
+            "x": 115,
+            "y": 590
+          },
+          {
+            "at_ms": 410,
+            "rotation_rad": -0.19,
+            "x": 145,
+            "y": 553
+          },
+          {
+            "at_ms": 980,
+            "rotation_rad": -0.12,
+            "x": 392,
+            "y": 360
+          },
+          {
+            "at_ms": 1690,
+            "rotation_rad": 0.04,
+            "x": 515,
+            "y": 236
+          },
+          {
+            "at_ms": 3550,
+            "rotation_rad": -0.06,
+            "x": 515,
+            "y": 236
+          },
+          {
+            "at_ms": 4850,
+            "rotation_rad": 0.17,
+            "x": 531,
+            "y": 250
+          },
+          {
+            "at_ms": 6100,
+            "rotation_rad": 0.09,
+            "x": 392,
+            "y": 360
+          },
+          {
+            "at_ms": 7490,
+            "rotation_rad": 0.03,
+            "x": 515,
+            "y": 236
+          },
+          {
+            "at_ms": 10000,
+            "rotation_rad": -0.05,
+            "x": 515,
+            "y": 236
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "image_013",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "image_014",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "z": 32
+      },
+      "template": "target",
+      "width": 250,
+      "x": 440,
+      "y": 294
+    },
+    "green_car.fold_body": {
+      "height": 274,
+      "hit_resource": "image_016",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 1088,
+            "y": 368
+          },
+          {
+            "at_ms": 125,
+            "opacity": 0,
+            "x": 1088,
+            "y": 368
+          },
+          {
+            "at_ms": 365,
+            "opacity": 0.92,
+            "x": 1088,
+            "y": 361
+          },
+          {
+            "at_ms": 600,
+            "x": 1088,
+            "y": 356
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 29
+      },
+      "resource": "image_015",
+      "template": "target",
+      "width": 251,
+      "x": 1088,
+      "y": 356
+    },
+    "green_car.lamp": {
+      "height": 71,
+      "hit_resource": "image_009",
+      "parallax": 0.24,
+      "properties": {
+        "activation_cooldown_ms": 6000,
+        "z": 10
+      },
+      "resource": "image_008",
+      "template": "activation_source",
+      "width": 184,
+      "x": 797,
+      "y": 169
+    },
+    "green_car.lamp_ink": {
+      "height": 64,
+      "parallax": 0.24,
+      "properties": {
+        "z": 12
+      },
+      "resource": "image_011",
+      "template": "decoration",
+      "width": 176,
+      "x": 801,
+      "y": 173
+    },
+    "green_car.light": {
+      "height": 526,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 300,
+            "opacity": 1,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 4700,
+            "opacity": 1,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 4850,
+            "opacity": 0.68,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 5050,
+            "opacity": 1,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 5200,
+            "opacity": 1,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 5400,
+            "opacity": 0.42,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 5700,
+            "opacity": 1,
+            "x": 353,
+            "y": 0
+          },
+          {
+            "at_ms": 6000,
+            "opacity": 0,
+            "x": 353,
+            "y": 0
+          }
+        ]
+      },
+      "parallax": 0.24,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_010",
+      "template": "decoration",
+      "width": 1071,
+      "x": 353,
+      "y": 0
+    },
+    "green_car.umbrella": {
+      "height": 274,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1088,
+            "y": 356
+          },
+          {
+            "at_ms": 1500,
+            "x": 1107,
+            "y": 356
+          },
+          {
+            "at_ms": 3800,
+            "x": 1069,
+            "y": 356
+          },
+          {
+            "at_ms": 6000,
+            "x": 1088,
+            "y": 356
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_016",
+          "resource": "image_015",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_015",
+      "template": "target",
+      "width": 251,
+      "x": 1088,
+      "y": 356
+    }
+  },
+  "events": {
+    "green_car.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "green_car.crow",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "green_car.umbrella",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "green_car.complete": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.clear",
+        "delay_ms": 1500
+      }
+    },
+    "green_car.crow1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow1.release",
+        "delay_ms": 550
+      }
+    },
+    "green_car.crow1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "green_car.crow1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.start",
+        "delay_ms": 3600
+      }
+    },
+    "green_car.crow2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow2.release",
+        "delay_ms": 550
+      }
+    },
+    "green_car.crow2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "green_car.crow2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.start",
+        "delay_ms": 9200
+      }
+    },
+    "green_car.crow3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow3.release",
+        "delay_ms": 550
+      }
+    },
+    "green_car.crow3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.crow3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "green_car.crow3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "green_car.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.start",
+        "delay_ms": 14700
+      }
+    },
+    "green_car.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "green_car.fold": {
+      "actions": {
+        "a0": {
+          "entity": "green_car.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "green_car.fold_body",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "green_car.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.fold.start",
+        "delay_ms": 600
+      }
+    },
+    "green_car.fold.start": {
+      "actions": {
+        "a0": {
+          "entity": "green_car.canopy",
+          "kind": "blocker",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "green_car.fold_body",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "green_car.fold_body",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.start",
+        "delay_ms": 2400
+      }
+    },
+    "green_car.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "green_car.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "green_car.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.lamp.open",
+        "delay_ms": 6000
+      }
+    },
+    "green_car.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "green_car.light",
+          "op": "spawn"
+        },
+        "a1": {
+          "effect": "light_fx",
+          "entity": "green_car.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:green_car.lamp"
+      }
+    },
+    "green_car.score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 2,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "green_car.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "green_car"
+        },
+        "a1": {
+          "entity": "green_car.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "green_car.lamp_ink",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "green_car.crow",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "green_car.canopy",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "green_car.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "green_car.umbrella1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.umbrella1.release",
+        "delay_ms": 550
+      }
+    },
+    "green_car.umbrella1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.umbrella1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "green_car.umbrella1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.fold",
+        "delay_ms": 3000
+      }
+    },
+    "green_car.umbrella2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.umbrella2.release",
+        "delay_ms": 550
+      }
+    },
+    "green_car.umbrella2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.umbrella2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "green_car.umbrella2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "green_car.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "green_car.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "green_car.fold",
+        "delay_ms": 9700
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.green_car",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "bottom_wipes": {
+      "green_car.lamp_ink": "green_car.light"
+    },
+    "camera": {
+      "amplitude_x": 38,
+      "amplitude_y": 15
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {
+      "green_car.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "green_car.crow": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      },
+      "green_car.fold_body": {
+        "invalid": "收伞中"
+      },
+      "green_car.umbrella": {
+        "primary": "收伞 · 射击"
+      }
+    },
+    "entity_tints": {
+      "green_car.crow": {
+        "invalid": "#657198"
+      }
+    },
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "射亮顶灯 · 拦截飞入灯光的墨鸦 · 等墨伞收伞",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "车厢陷入黑暗",
+      "result_success": "车厢安全了",
+      "section_unit": "站"
+    },
+    "layers": {
+      "green_car.aisle": {
+        "blocker": false,
+        "height": 210,
+        "parallax": 0.24,
+        "resource": "image_004",
+        "section": "green_car",
+        "width": 1920,
+        "x": -72,
+        "y": 768,
+        "z": 4
+      },
+      "green_car.ceiling": {
+        "blocker": false,
+        "height": 218,
+        "parallax": 0.24,
+        "resource": "image_001",
+        "section": "green_car",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 1
+      },
+      "green_car.luggage_rack": {
+        "blocker": false,
+        "height": 84,
+        "parallax": 0.24,
+        "resource": "image_005",
+        "section": "green_car",
+        "width": 1725,
+        "x": 26,
+        "y": 243,
+        "z": 5
+      },
+      "green_car.near_left_seat": {
+        "blocker": true,
+        "height": 311,
+        "parallax": 0.55,
+        "resource": "image_006",
+        "section": "green_car",
+        "width": 405,
+        "x": -72,
+        "y": 667,
+        "z": 73
+      },
+      "green_car.near_right_seat": {
+        "blocker": true,
+        "height": 312,
+        "parallax": 0.55,
+        "resource": "image_007",
+        "section": "green_car",
+        "width": 409,
+        "x": 1439,
+        "y": 666,
+        "z": 74
+      },
+      "green_car.sidewall": {
+        "blocker": false,
+        "height": 600,
+        "parallax": 0.24,
+        "resource": "image_002",
+        "section": "green_car",
+        "width": 1920,
+        "x": -72,
+        "y": 173,
+        "z": 2
+      },
+      "green_car.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_000",
+        "section": "green_car",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "green_car.window_frames": {
+        "blocker": false,
+        "height": 235,
+        "parallax": 0.24,
+        "resource": "image_003",
+        "section": "green_car",
+        "width": 1561,
+        "x": 110,
+        "y": 326,
+        "z": 3
+      }
+    },
+    "puppets": {},
+    "sound_bindings": {
+      "attack.launched": "attack",
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第三关 · 绿皮车厢",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "image_000": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/sky.png",
+      "sha256": "80720364c43c16d1bd0ac98514c880028ea15cee488714283a23adda945898ae"
+    },
+    "image_001": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/ceiling.png",
+      "sha256": "678bdcb8ebed01490f900a5ed028c03c530beb2c62b51772059dd2c3a62aa00a"
+    },
+    "image_002": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/sidewall.png",
+      "sha256": "b544f371011eb4b764cd8ca870cd7831bebff0c1c8c69c5e91033ae00b3ad7d3"
+    },
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/window_frames.png",
+      "sha256": "3becb057c1a01b703efa4ceae8db53725002beb7c00388717f940d6a7e3de8c4"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/aisle.png",
+      "sha256": "715a630fdf097fed800633becdd02f439380d62bd208b4a7971a1ca50cfb0188"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/luggage_rack.png",
+      "sha256": "47c6145284e8116f2c8b2b522784b84b2646beff83649e1abbb33ec442cd414d"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/near_left_seat.png",
+      "sha256": "b6107f26e16da614156f1ca53608bdc8d1ce66db9a30b134fa0c4b00adb6ed36"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/near_right_seat.png",
+      "sha256": "917f43ebf325d4eab6c893c3a54346c3a1df4ce968b9d13fe4ef4d4d40fc07e1"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/green_car/lamp.png",
+      "sha256": "c8855ad0b4fd532484d09c7b7982d4ca8d84ee425723b0595c4df5436bedf77d"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/green_car_lamp_hit.png",
+      "sha256": "cb90454c5fed336c11bc028c63240fcd390aab0fcb2e90349bc6c693704e89bd"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/green_car_light_add.png",
+      "sha256": "8a04025904d3454fdb759b839064c79f43e51bf5cd3f174bbf540726c0672029"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/green_car_lamp_ink.png",
+      "sha256": "1c12cacc3c40a625d26a5cef9712dde1f163074629bf29d2452e369f07e4b425"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/green_car_light_influence.png",
+      "sha256": "5838c5efb4a643257405c616b9328c0fe145f2c51a2902588c256f290341cb48"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/body.png",
+      "sha256": "16c91f1f8a3e47071e1f44422525fd4d3d0ebdc1d0798205d6683a8efcd6bab3"
+    },
+    "image_014": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/core.png",
+      "sha256": "f5a343c49980c0c17a75e1ce0b5aad19097fff815f429a129fb14178c9ed367f"
+    },
+    "image_015": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/body.png",
+      "sha256": "9abe0f7e704bf58a7cb222427be64b07611769ac8f8e55ceb9d3883110f78489"
+    },
+    "image_016": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/ink_umbrella_hit.png",
+      "sha256": "a2b518433bd5ae3b4d249f11ee817f745b636f4661e0531c87479a59fde5f60f"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/weak.png",
+      "sha256": "50fb77326e9c42904ca556eb7ff39d8388ec7ed67bb450268b0501b890dae881"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/open.png",
+      "sha256": "6b05fba3bc4861a59b42300706a0993649401847bddfd48e0b3deccc1eb763b0"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/green_car/umbrella_open_hit.png",
+      "sha256": "1cd76b2509e382ea020f948c096d4d987c738574b0d25c378c040e2f03753b06"
+    },
+    "sound_attack": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_attack.wav",
+      "sha256": "cbf21f7119d51f05047fac0d2bff41a993fb777680e60d04493b5fff214f62d6"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "green_car": {
+      "hint": "座椅挡光弹。射亮顶灯，等墨鸦飞入光区；右侧墨伞收伞后可直接净化。",
+      "index": 1,
+      "targets": [
+        "green_car.crow",
+        "green_car.umbrella"
+      ],
+      "title": "绿皮车厢"
+    }
+  },
+  "seed": 432,
+  "tick_hz": 60
+}

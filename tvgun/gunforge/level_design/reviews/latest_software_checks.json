@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "timing",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/timing_tests.gd"
+      ],
+      "exit_code": 0,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\timing.log",
+      "sha256": "57f75487fe044dd941a9979371b374297edc65f3d8bf900777017bc57ad09d99"
+    },
+    {
+      "name": "snapshot",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/snapshot_tests.gd"
+      ],
+      "exit_code": 0,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\snapshot.log",
+      "sha256": "472f8ff4c5b3431d3fc82527af57257f2d569b34bc9381f4677eb5f44bbf3351"
+    },
+    {
+      "name": "defects",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/defect_tests.gd"
+      ],
+      "exit_code": 0,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\defects.log",
+      "sha256": "b9c63971ff65d71e579945c22d83aebfb849fce6393a09bf0c8c1eabadbe5881"
+    },
+    {
+      "name": "corrected_replay",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/replay_baseline_tests.gd",
+        "--",
+        "--baseline=D:\\gunforge_cache\\level_design\\baseline-v1",
+        "--output=D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\replay.json",
+        "--expected-fixes"
+      ],
+      "exit_code": 0,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\corrected_replay.log",
+      "sha256": "fee88c69b372b1d1ac5092f0375c8f0a161178746f4e75a0dc779ee9be107d83"
+    },
+    {
+      "name": "compiler",
+      "command": [
+        "D:\\tvgun\\.venv\\Scripts\\python.exe",
+        "D:\\tvgun\\gunforge\\pipeline\\level_design\\test_compiler.py"
+      ],
+      "exit_code": 0,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\final-foundation-1794140816609662100\\compiler.log",
+      "sha256": "42c59a45bba6f50c7b8b4edf4af8a608cc3e1adad924da9dfe04f6a61ff5fb43"
+    }
+  ],
+  "source_hashes": {
+    "gunforge/framework/main.gd": "aa564e9a86f7cd0001b06c5189839dd3c7bc62ee31b197f49326f4eaf1e73e62",
+    "gunforge/framework/core/audio.gd": "c9733139f1db29c0ff68816a5d399b60b6a349241adb353c9bdfd8801aebfa71",
+    "gunforge/framework/core/calibration.gd": "3417bf726487b17fed7aae8470868da070aed397bd6cec0deb0e77d24d656f35",
+    "gunforge/framework/core/fixed_clock.gd": "c5261c0940537e9296f6c97023cef09d3367c5329d1319c979ce00fcfc798772",
+    "gunforge/framework/core/gun_input.gd": "be46161dc884f9b50dfd6b8ed3ff05ef985b7953c288fc86562f28fe019071ce",
+    "gunforge/framework/core/hit_resolver.gd": "245da47bf1bb51328ee5a82e04de7aa94db1a61a978a3298560b5043b6cbacfb",
+    "gunforge/framework/core/http_controls.gd": "5265b21eb0687c126398a506ed31428fa63c681dd24010985e87e2f11dfb70b9",
+    "gunforge/framework/core/pose_codec.gd": "936b9f6f54dcbcc4a421e6307bda798e9cee6967f2178a603c04b48f1bf2a4d2",
+    "gunforge/framework/core/puppet.gd": "305eefe660afcf26b4938fed9ef837fa2dc9494910020f531de92f1f7d1ffd42",
+    "gunforge/framework/core/raster_item.gd": "99a092f0fb3a98df14bad3af05e1b57bee85e7dd212bf39b330bb63e39af6540",
+    "gunforge/framework/core/raster_layer.gd": "8a069615688422cb85d56632c8b303bbeb2515291704f03fdb4a15d9f9c32986",
+    "gunforge/framework/core/screen_frame.gd": "2c55dad396b6cdb1e5b9142fb21d124c6521eb257cfacc5ba2f100780c1fb33e",
+    "gunforge/framework/core/tick_input_queue.gd": "f0eb30438aa44eb431622297e57be16f2d2da2b343b7aba61118902f3cb7ab38",
+    "gunforge/framework/tests/core_tests.gd": "9ffdd063a50ee22adbdccf3fe2e140383f8f197ecf8f5fb4deba9b312b771b63",
+    "gunforge/framework/tests/defect_tests.gd": "e2b3b32ff067653e00ee3ff3668a2c058c8d5ee793d8cd63ba2952da0a365378",
+    "gunforge/framework/tests/geometry_baseline_tests.gd": "f6ea294b410b267e6edf0ac9883cd9199beaa040cb0051bc37af8afae9e64068",
+    "gunforge/framework/tests/replay_baseline_tests.gd": "2862de0b4ef6c74163d430aadf17cdb74223cda957f7471d5d687ff9ff5b8189",
+    "gunforge/framework/tests/snapshot_tests.gd": "c7baee1c50f5849985c8af8417df27f0ff62560b004db4f8ca7b56a0f1faa320",
+    "gunforge/framework/tests/timing_tests.gd": "7067abb33dc5bfffb3f7a0576cb8579df652d5e70b2b92de886af91fc4483ad4",
+    "gunforge/games/g01/scripts/alley_pose.gd": "9218df542c1e8fa508e1a97765537e6bd7d0ec0a1a659ef27efab26d684f6290",
+    "gunforge/games/g01/scripts/alley_rules.gd": "29758dafc8abecaedd03d1d9a1c7ec61ed431b224b073bef7634f5e4172e0dc9",
+    "gunforge/games/g01/scripts/alley_scene.gd": "be3fadfd166e68aeab52952789a4a9273010ba1d3deccc18cd5c3cb228fc1b47",
+    "gunforge/pipeline/level_design/capture_baseline.py": "84fa31189dd0dd079b036d482cf3fa40f21212601806723425ec46b223fa2ecb",
+    "gunforge/pipeline/level_design/check_current.py": "f5e4bd460f24647c02bbd8a2d9f6682eaab5466698be7757ea1bb164568f8a91",
+    "gunforge/pipeline/level_design/compiler.py": "8d08cff294344f207ec0681201a46d23215baaf8ee59c1ce86228ac654df89a1",
+    "gunforge/pipeline/level_design/freeze_baseline.py": "7027d5d7eddd3047624f7da33c036b87703961c7c09f8174f786ee0d6d9d5e96",
+    "gunforge/pipeline/level_design/instrument_baseline.py": "6da24fbba71f385f4ff8209f0c0cfc3415e4e7eb1885a4cad73c368be48b737e",
+    "gunforge/pipeline/level_design/record_baseline.py": "c57fd5404a07c938bd844c44b023a1aacaa3c57fdd041332f0724d7b91314351",
+    "gunforge/pipeline/level_design/record_geometry.py": "e6935e11468130828349311100d67b8c615801d74da774400b83acf90b1f98de",
+    "gunforge/pipeline/level_design/schema_contract.py": "e183ce669f558c338651992d84075e5ada1219261bcf44a80d0801dccd45cc57",
+    "gunforge/pipeline/level_design/test_compiler.py": "b985f666b495d037500dffd4338eef74a523b3ac9d1caf01f4119ec5e22c1071",
+    "gunforge/pipeline/level_design/validate_a1a.py": "6f0acdbfc4bab50f77ff0938ea362877265f919167b5c31f667cd9873a5eb493"
+  },
+  "complete_scope": "foundation only; not full LD00-LD23",
+  "next": "LD09 source/dual-package contract and runtime integration",
+  "warnings": [
+    "actual phone and audio listening pending",
+    "compiler is not yet connected to a generic playable runtime"
+  ]
+}

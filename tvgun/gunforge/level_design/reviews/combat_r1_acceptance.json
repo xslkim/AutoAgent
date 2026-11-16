@@ -1,0 +1,80 @@
+{
+  "state": "software_checked_candidate_not_adopted",
+  "build_id": "bec2b28b2722689e4794b051af9e0ec2ef950f1dd5dc03e8da2bf9fb046365d0",
+  "source_revision": "39a5bf56940a54db8c7a63c36baaadb1e9ae07b48d39f326634dc043b1393a60",
+  "feedback": "user-gameplay-2026-11-08",
+  "response": {
+    "id": "d55049b9cf1143a1a049a3d2594e6cbc",
+    "comment_id": "user-gameplay-2026-11-08",
+    "old_build_id": "b8ce863a41bb203339dce85a07c9717b54597b58d78d2bc41de35a5a72f43928",
+    "new_build_id": "bec2b28b2722689e4794b051af9e0ec2ef950f1dd5dc03e8da2bf9fb046365d0",
+    "source_revision": "39a5bf56940a54db8c7a63c36baaadb1e9ae07b48d39f326634dc043b1393a60",
+    "actor": "agent",
+    "status": "resolution_proposed",
+    "message": "F01-F05: 独立战斗候选 R1 已实现六波29只、近身攻击/墨弹拦截、可选灯火震退、弱点和攻防音画反馈。43项软件回归、完整回放、12个跳转点和独立目录重建通过。请通过候选入口继续试玩批注；自然度、音效喜好、光枪手感未冒充通过。",
+    "time_ns": 1794153108433747700
+  },
+  "software": {
+    "passed": true,
+    "index": "D:\\gunforge_cache\\level_design\\runs\\software-1794152759808460400\\index.json",
+    "sha256": "e1d084908ae253445766df7a97bc725c701e3e870219476329a6e5f9298731d9",
+    "run": "D:\\gunforge_cache\\level_design\\runs\\software-1794152759808460400",
+    "checks": 43,
+    "supplemental": {
+      "passed": true,
+      "index": "D:\\gunforge_cache\\level_design\\runs\\supplemental-1794153464610657200\\index.json",
+      "sha256": "fe128468dc70caf8fc662e1eddde28a3b67f72535673042a36dcfa8b8de6bc11"
+    }
+  },
+  "independent_delivery": {
+    "passed": true,
+    "index": "D:\\gunforge_cache\\level_design\\runs\\delivery-1794153360165808900\\index.json",
+    "sha256": "1fce0e0ad5a049964e71791740aa79a4b40b393f1766bfb66d128b69be33ce03",
+    "checks": 16
+  },
+  "media": {
+    "video": {
+      "path": "D:\\gunforge_cache\\level_design\\combat-r1-preview.mp4",
+      "sha256": "5f899e0d4d71f95ba0c27e6747d7980e743f45956e59f2204caabfa968121491"
+    },
+    "state": {
+      "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\state.json",
+      "sha256": "e001042da82eb316f9100b83f16f52f67fd76ce460be0c1ac4fa5aa7a2933c37"
+    },
+    "recording": {
+      "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\input.bin",
+      "sha256": "0a04ba3296f86a1124f5c55dce734303227c1dd8559e94beb6cae845b47eaab0"
+    },
+    "frames": {
+      "frame-260.png": {
+        "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\frame-260.png",
+        "sha256": "eb672cf0032021b35250dc92c9b76fb2c59de1d2717ef69cfd6675dd450cceed"
+      },
+      "frame-314.png": {
+        "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\frame-314.png",
+        "sha256": "4cf9c17d69408c18363d2539120a9bfe10bcdff68b0faae591adca58d1992457"
+      },
+      "frame-336.png": {
+        "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\frame-336.png",
+        "sha256": "92b7b61d9f8bcdb6b58f008f67e620fe325fcf4cf1189c530f9de0df9953dc97"
+      },
+      "frame-462.png": {
+        "path": "D:\\gunforge_cache\\level_design\\combat-r1-demo-v4\\frame-462.png",
+        "sha256": "d7865c1e4c30720709c5fa2a303af007c8000cffa5d0fa89a5d280340c3aeb71"
+      }
+    }
+  },
+  "media_policy": "12s scripted actual Godot runtime and audio recording, deliberately allowed first hit then support/shots; no human playtest or subjective listening claim",
+  "remaining": [
+    "user gameplay feedback and adoption",
+    "actual phone/display/TV experience",
+    "new skeletal/frame-by-frame crow animation not implemented"
+  ],
+  "audio_track": {
+    "decoded_samples": 579584,
+    "sample_rate": 48000,
+    "peak": 0.24477611482143402,
+    "rms": 0.017943806370625454,
+    "scope": "decoded actual Godot movie audio; no subjective listening claim"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "version": "g01-alley-extent-1",
+  "station_id": "g01_st_l1_01_alley",
+  "acceptance_source": "D:\\tvgun\\gunforge\\games\\g01\\reports\\art\\T07\\revisions\\A2i\\user_feedback.yaml",
+  "basis": "explicit A2h acceptance of complete shapes as 2D design specification; not independent historic truth",
+  "rule": "immutable; asset changes compared to this baseline, mask changes require new design review",
+  "rows": [
+    {
+      "layer": "far_base",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\far_base.png",
+      "sha256": "3778a33cc1a4ed008ffe255dc55513d735f7503255dd51b6ca080a03c46ce0de",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\far_base_full.png",
+      "accepted_color_sha256": "f89cc98cfe3807d4eb664f6597274a460ffe470aab2eca142a9bce650d97aebf"
+    },
+    {
+      "layer": "far_town",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\far_town.png",
+      "sha256": "bc9f51bada1b94f634916a1887447ce7237cbadf6f3f415f1c35216d8695df72",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\far_town_full.png",
+      "accepted_color_sha256": "b0b16a9df63b483f1c29493ccbf9245002d2fa7f34c49829addeff2d172d09d9"
+    },
+    {
+      "layer": "mid_ground",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\mid_ground.png",
+      "sha256": "c031549bc4fba2150dbc2c2b1ffdadfcdcc2974e9362b24eeb2ca8d2d8664423",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\mid_ground_full.png",
+      "accepted_color_sha256": "9c98aab1a59c728823cdbbb6d5cf081fdab4be5c870d26c046918707e0436a0e"
+    },
+    {
+      "layer": "mid_left",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\mid_left.png",
+      "sha256": "9cb6f38053dcbbaa171fbc6065c9d0483b375a00a02e2413ac560f26e211dac2",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\mid_left_full.png",
+      "accepted_color_sha256": "486c19d5cd0debb7debaad4797ad0a5d9c64997e2c810c90de41a3b7a0276d40"
+    },
+    {
+      "layer": "mid_right",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\mid_right.png",
+      "sha256": "117b37a5626a7d0a0d671e95d30d6d20914b1b7c8510b8fa36ee6a50b0af9348",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\mid_right_full.png",
+      "accepted_color_sha256": "24eea31d8ded7de06ad5623ead481010baa444d2fda5ba09e1e71064c4a0f65f"
+    },
+    {
+      "layer": "near_left",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\near_left.png",
+      "sha256": "89c9621c8be8680cfd71ab8ea7e78a2fdd7743b6025600335d849f1cfb541d87",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\near_left_full.png",
+      "accepted_color_sha256": "e7fcb0a2184f5312005c0e8242ee1077f059c7e9f0b8983608b3b1bb5893515a"
+    },
+    {
+      "layer": "near_right",
+      "file": "D:\\tvgun\\gunforge\\games\\g01\\bible\\geometry\\alley_extent_v1\\near_right.png",
+      "sha256": "7f86c1783c660836bb52ac89733767305840640539af4d1a6489d24f528ce4e1",
+      "accepted_color_reference": "D:\\gunforge_cache\\g01\\T04\\station\\layers\\near_right_full.png",
+      "accepted_color_sha256": "520274be63e3b04e0a39688a450bf23877d2d9aa3b8b00a0b13de93b4a3f9b11"
+    }
+  ]
+}

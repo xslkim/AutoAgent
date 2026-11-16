@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "project": "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+  "checks": [
+    {
+      "name": "timing",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+        "--script",
+        "res://tests/timing_tests.gd"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.17984290000094916,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\timing_checks.log",
+      "sha256": "57f75487fe044dd941a9979371b374297edc65f3d8bf900777017bc57ad09d99"
+    },
+    {
+      "name": "core",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+        "--script",
+        "res://tests/core_tests.gd"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.2665279000011651,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\core_checks.log",
+      "sha256": "993f0d06efd41d52628bfe999d9a73a283a8e07ef0802cd6182c242de60f63c3"
+    },
+    {
+      "name": "snapshot",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+        "--script",
+        "res://tests/snapshot_tests.gd"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.45683069999904546,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\snapshot_checks.log",
+      "sha256": "7f703aa75e404bb5869c989d9930f8e15cf0594e6d3c1a167c431c39d776fecc"
+    },
+    {
+      "name": "geometry",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+        "--script",
+        "res://tests/geometry_baseline_tests.gd",
+        "--",
+        "--baseline=D:\\gunforge_cache\\level_design\\baseline-v1\\geometry_0.json",
+        "--output=D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\geometry_comparison.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 4.059523699999772,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\geometry_checks.log",
+      "sha256": "ad0f2bfe3a516c16260388b40417637ca14f2edbb486e1fbf88a275d10ad2fbd"
+    },
+    {
+      "name": "replay",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\gunforge_cache\\level_design\\a1a-verified\\gunforge\\framework",
+        "--script",
+        "res://tests/replay_baseline_tests.gd",
+        "--",
+        "--baseline=D:\\gunforge_cache\\level_design\\baseline-v1",
+        "--output=D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\replay_comparison.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 7.846076899999389,
+      "log": "D:\\gunforge_cache\\level_design\\runs\\a1a-1794140416609498500\\replay_checks.log",
+      "sha256": "fee88c69b372b1d1ac5092f0375c8f0a161178746f4e75a0dc779ee9be107d83"
+    }
+  ],
+  "numeric_comparison": "Legacy Godot JSON encoding roundtrip normalizes parsed numeric types; discrete decisions and sampled geometry strictly match; no numeric/tick tolerance used. Native snapshot restore additionally bit-exact.",
+  "limitations": [
+    "live actual phone, audio listening and calibrated end-to-end display latency not tested",
+    "freeze debug input uses explicit zero-time boundary for backwards compatibility"
+  ]
+}

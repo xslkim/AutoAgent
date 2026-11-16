@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "name": "visible-alpha-diagnostic-v1",
+  "role": "functional coverage, not human difficulty prediction",
+  "input_interval_ms": 200,
+  "visibility_grid_content_px": 8,
+  "state_access": "current submitted geometry and visible permission colors; no future spawns or hidden-target aim",
+  "action_policy": "activate visible sources when an invalid target is visible; then shoot currently hittable targets; reload an empty declared magazine",
+  "metrics": "cpu-alpha-grid-v1",
+  "low_visibility_ratio_heuristic": 0.2,
+  "heuristic_calibration": "not calibrated; warnings remain open",
+  "limitations": ["no reaction-time or aim-noise human model", "features smaller than grid spacing may be missed", "no physical gun or display latency measurement"]
+}

@@ -1,0 +1,523 @@
+{
+  "type": "object",
+  "properties": {
+    "native_level": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "number"
+        },
+        "waves": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "resident_at": {
+                "type": "number",
+                "minimum": 0
+              },
+              "pickup_at": {
+                "type": "number",
+                "minimum": 0
+              },
+              "enemies": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "at": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "deadline": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "at",
+                    "deadline"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "enemy_order": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "duration",
+              "resident_at",
+              "pickup_at",
+              "enemies",
+              "enemy_order"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "wave_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "rules": {
+          "type": "object",
+          "properties": {
+            "lives": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99
+            },
+            "magazine": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99
+            },
+            "shot_interval": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reload_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "lamp_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "light_fade_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "warning_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "wave_gap": {
+              "type": "number",
+              "minimum": 0
+            },
+            "resume_countdown": {
+              "type": "number",
+              "minimum": 0
+            },
+            "continue_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "lives",
+            "magazine",
+            "shot_interval",
+            "reload_seconds",
+            "lamp_seconds",
+            "light_fade_seconds",
+            "warning_seconds",
+            "wave_gap",
+            "resume_countdown",
+            "continue_seconds"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "duration",
+        "waves",
+        "wave_order",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "presentation": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string"
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "amplitude": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "rate": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "amplitude",
+            "rate"
+          ],
+          "additionalProperties": false
+        },
+        "breath": {
+          "type": "object",
+          "properties": {
+            "amplitude": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "rate": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "amplitude",
+            "rate"
+          ],
+          "additionalProperties": false
+        },
+        "actor_parallax": {
+          "type": "number"
+        },
+        "light_parallax": {
+          "type": "number"
+        },
+        "soft_exposure": {
+          "type": "number"
+        },
+        "resident_origin": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "crow": {
+          "type": "object",
+          "properties": {
+            "origin": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "amplitude": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "rate": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "canvas_size": {
+              "type": "number"
+            },
+            "draw_size": {
+              "type": "number"
+            },
+            "recoil": {
+              "type": "number"
+            },
+            "recoil_decay": {
+              "type": "number"
+            },
+            "dissolve_seconds": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "origin",
+            "amplitude",
+            "rate",
+            "canvas_size",
+            "draw_size",
+            "recoil",
+            "recoil_decay",
+            "dissolve_seconds"
+          ],
+          "additionalProperties": false
+        },
+        "lamp": {
+          "type": "object",
+          "properties": {
+            "hit_rect": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "aim": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "cover_origin": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "cover_size": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "cover_order": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "hit_rect",
+            "aim",
+            "cover_origin",
+            "cover_size",
+            "cover_order"
+          ],
+          "additionalProperties": false
+        },
+        "pickup": {
+          "type": "object",
+          "properties": {
+            "origin": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "size": {
+              "type": "number"
+            },
+            "amplitude_y": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "origin",
+            "size",
+            "amplitude_y",
+            "rate",
+            "types"
+          ],
+          "additionalProperties": false
+        },
+        "warning": {
+          "type": "object",
+          "properties": {
+            "radius": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "pulse_hz": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "radius",
+            "pulse_hz"
+          ],
+          "additionalProperties": false
+        },
+        "hud": {
+          "type": "object",
+          "properties": {
+            "life_origin": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "life_stride": {
+              "type": "number"
+            },
+            "life_size": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "ammo_origin": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "ammo_stride": {
+              "type": "number"
+            },
+            "ammo_size": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "score_rect": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            }
+          },
+          "required": [
+            "life_origin",
+            "life_stride",
+            "life_size",
+            "ammo_origin",
+            "ammo_stride",
+            "ammo_size",
+            "score_rect"
+          ],
+          "additionalProperties": false
+        },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "lamp": {
+              "type": "number"
+            },
+            "rescue": {
+              "type": "number"
+            },
+            "weak": {
+              "type": "number"
+            },
+            "primary": {
+              "type": "number"
+            },
+            "pickup": {
+              "type": "number"
+            },
+            "protected": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "lamp",
+            "rescue",
+            "weak",
+            "primary",
+            "pickup",
+            "protected"
+          ],
+          "additionalProperties": false
+        },
+        "cue_bindings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "camera",
+        "breath",
+        "actor_parallax",
+        "light_parallax",
+        "soft_exposure",
+        "resident_origin",
+        "crow",
+        "lamp",
+        "pickup",
+        "warning",
+        "hud",
+        "scores",
+        "cue_bindings"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "native_level",
+    "presentation"
+  ],
+  "additionalProperties": false
+}

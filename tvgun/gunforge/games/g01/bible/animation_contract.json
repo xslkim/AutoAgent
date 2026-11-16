@@ -1,0 +1,89 @@
+{
+  "version": "civilian-motion-5",
+  "source": "A2 explicit animation feedback and offline revision validation",
+  "human_roles": [
+    "hostage",
+    "npc"
+  ],
+  "human_body_attackable": false,
+  "human_attack_animations": [],
+  "root": "hips",
+  "legs": "two-bone IK with positive knee flexion, constant bone lengths, world-space planted feet",
+  "hinges": {
+    "knee": [
+      0,
+      95
+    ],
+    "elbow": [
+      0,
+      125
+    ]
+  },
+  "free_hand": "anatomical right, legacy _l / screen left",
+  "held_prop": "anatomical left, legacy _r / screen right",
+  "foot": "procedural articulation of original shin/foot pixels, no added rig PNG",
+  "paper": "opaque interiors at rendering, original source PNG preserved",
+  "rescue": {
+    "eligible_clips": [
+      "idle",
+      "peek",
+      "startle",
+      "wave_for_help",
+      "struggle"
+    ],
+    "visible_decal_inset_content_px": 7,
+    "hit_mask": "same visible ink alpha, excluding foreground protected hands",
+    "candidate_minimum_heights": {
+      "vendor": 512,
+      "video": 300
+    }
+  },
+  "acceptance": "A2g_prop_direction_and_prior_visuals_approved_remaining_technical_pending",
+  "laterality": {
+    "legacy_l": "screen_left_anatomical_right",
+    "legacy_r": "screen_right_anatomical_left"
+  },
+  "hand_attachment": "correct anatomical right palm, no mirrored forearm, cuff wrist anchor",
+  "expressions": {
+    "distress": [
+      "hostage",
+      "peek",
+      "startle",
+      "wave_for_help",
+      "struggle"
+    ],
+    "relieved": [
+      "after_rescue_0.95s",
+      "thank"
+    ]
+  },
+  "rules": "D:/tvgun/docs/art/ANIMATION_RULES_A2c.md",
+  "lowered_elbow": {
+    "target_deg": 6,
+    "project_visual_check_deg": [
+      0,
+      12
+    ],
+    "angle_space": "actual shoulder-elbow-wrist, adjusted per bind axes",
+    "not_universal_anatomical_limit": true
+  },
+  "civilian_prop_constraint": {
+    "object": "tanghulu_civilian_prop",
+    "hand": "anatomical left, screen right",
+    "grip_in_prop": [
+      20,
+      180
+    ],
+    "grip_in_forearm": [
+      102,
+      211
+    ],
+    "upright_world_angle_deg": [
+      6.5,
+      9.5
+    ],
+    "wrist_compensation": "world target minus forearm world angle",
+    "layering": "prop before holding hand; hand covers bare bamboo at grip",
+    "attackable": false
+  }
+}

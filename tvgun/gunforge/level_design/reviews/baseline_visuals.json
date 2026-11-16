@@ -1,0 +1,19 @@
+{
+  "captures": [
+    {
+      "file": "D:\\gunforge_cache\\level_design\\baseline-v1\\lit.png",
+      "sha256": "2773e5be82341e2a4162a7aa1c6fc623dedb78ec8567843c74c737b4da6e98bc"
+    },
+    {
+      "file": "D:\\gunforge_cache\\level_design\\baseline-v1\\debug.png",
+      "sha256": "d143b2997f9135c184dc7e1ef8f36942f027dab109b917665bc0db94f37d4e1f"
+    },
+    {
+      "file": "D:\\gunforge_cache\\level_design\\baseline-v1\\rescued.png",
+      "sha256": "78088ba83af02e17aa75b14fad231432770febe28f2cb4f5205a47999bb71b9d"
+    }
+  ],
+  "log": "D:\\gunforge_cache\\level_design\\baseline-v1\\gpu.log",
+  "actual_gpu": true,
+  "visual_review": "lit and AABB overlay inspected; layered scene, characters, frame and HUD visible; GPU NVIDIA RTX 3090"
+}

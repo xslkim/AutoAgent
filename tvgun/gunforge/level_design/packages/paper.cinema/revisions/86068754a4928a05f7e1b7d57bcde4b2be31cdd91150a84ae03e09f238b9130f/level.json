@@ -1,0 +1,4448 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 180000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "灯亮",
+      "radius": 155
+    },
+    "sweep_fx": {
+      "color": "#9c83d6",
+      "duration_ms": 900,
+      "kind": "beam_sweep",
+      "radius": 152
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "auditorium.canopy": {
+      "height": 215,
+      "hit_resource": "image_021",
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_020",
+      "template": "target",
+      "width": 255,
+      "x": 770,
+      "y": 522
+    },
+    "auditorium.lamp": {
+      "height": 115,
+      "hit_resource": "image_043",
+      "parallax": 0.44,
+      "properties": {
+        "activation_cooldown_ms": 7500,
+        "z": 10
+      },
+      "resource": "image_042",
+      "template": "activation_source",
+      "width": 122,
+      "x": 1408,
+      "y": 218
+    },
+    "auditorium.light": {
+      "height": 358,
+      "parallax": 0.44,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_044",
+      "template": "decoration",
+      "width": 365,
+      "x": 1283,
+      "y": 106
+    },
+    "auditorium.rescue": {
+      "height": 92,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 25
+      },
+      "template": "target",
+      "width": 100,
+      "x": 1144.0,
+      "y": 402.72
+    },
+    "auditorium.resident": {
+      "height": 277,
+      "parallax": 0.41,
+      "properties": {
+        "z": 24
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "passerby_b",
+        "success": "rescued",
+        "target": "auditorium.rescue",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 244,
+      "x": 1072,
+      "y": 303
+    },
+    "auditorium.tape": {
+      "bob": {
+        "amplitude_x": -48.0,
+        "amplitude_y": 0,
+        "period_ms": 4600,
+        "phase_rad": -1.5707963267948966
+      },
+      "height": 186,
+      "mask_permission": {
+        "resource": "image_045",
+        "source": "auditorium.light",
+        "threshold": 0.3
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1441.0,
+            "y": 258.0
+          },
+          {
+            "at_ms": 4600,
+            "x": 1441.0,
+            "y": 258.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 270,
+      "x": 432,
+      "y": 310
+    },
+    "auditorium.umbrella": {
+      "height": 279,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 770,
+            "y": 490
+          },
+          {
+            "at_ms": 1500,
+            "x": 789,
+            "y": 490
+          },
+          {
+            "at_ms": 3800,
+            "x": 751,
+            "y": 490
+          },
+          {
+            "at_ms": 6000,
+            "x": 770,
+            "y": 490
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_018",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_019",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_017",
+      "template": "target",
+      "width": 255,
+      "x": 770,
+      "y": 490
+    },
+    "poster_hall.canopy": {
+      "height": 215,
+      "hit_resource": "image_021",
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_020",
+      "template": "target",
+      "width": 255,
+      "x": 1161,
+      "y": 374
+    },
+    "poster_hall.lamp": {
+      "height": 133,
+      "hit_resource": "image_032",
+      "parallax": 0.45,
+      "properties": {
+        "activation_cooldown_ms": 7500,
+        "z": 10
+      },
+      "resource": "image_031",
+      "template": "activation_source",
+      "width": 128,
+      "x": 240,
+      "y": 234
+    },
+    "poster_hall.light": {
+      "height": 317,
+      "parallax": 0.45,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_033",
+      "template": "decoration",
+      "width": 349,
+      "x": 131,
+      "y": 149
+    },
+    "poster_hall.tape": {
+      "bob": {
+        "amplitude_x": -92.5,
+        "amplitude_y": 0,
+        "period_ms": 4600,
+        "phase_rad": -1.5707963267948966
+      },
+      "height": 186,
+      "mask_permission": {
+        "resource": "image_034",
+        "source": "poster_hall.light",
+        "threshold": 0.3
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 297.5,
+            "y": 274.0
+          },
+          {
+            "at_ms": 4600,
+            "x": 297.5,
+            "y": 274.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 270,
+      "x": 490,
+      "y": 284
+    },
+    "poster_hall.umbrella": {
+      "height": 279,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1161,
+            "y": 342
+          },
+          {
+            "at_ms": 1500,
+            "x": 1180,
+            "y": 342
+          },
+          {
+            "at_ms": 3800,
+            "x": 1142,
+            "y": 342
+          },
+          {
+            "at_ms": 6000,
+            "x": 1161,
+            "y": 342
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_018",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_019",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_017",
+      "template": "target",
+      "width": 255,
+      "x": 1161,
+      "y": 342
+    },
+    "projection_booth.canopy": {
+      "height": 181,
+      "hit_resource": "image_021",
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_020",
+      "template": "target",
+      "width": 215,
+      "x": 1109,
+      "y": 310
+    },
+    "projection_booth.lamp": {
+      "height": 103,
+      "hit_resource": "image_056",
+      "parallax": 0.38,
+      "properties": {
+        "activation_cooldown_ms": 7500,
+        "z": 10
+      },
+      "resource": "image_055",
+      "template": "activation_source",
+      "width": 172,
+      "x": 793,
+      "y": 194
+    },
+    "projection_booth.light": {
+      "height": 301,
+      "parallax": 0.38,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_057",
+      "template": "decoration",
+      "width": 443,
+      "x": 653,
+      "y": 99
+    },
+    "projection_booth.rescue": {
+      "height": 92,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 25
+      },
+      "template": "target",
+      "width": 100,
+      "x": 864.0,
+      "y": 576.12
+    },
+    "projection_booth.resident": {
+      "height": 317,
+      "parallax": 0.41,
+      "properties": {
+        "z": 24
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "projectionist",
+        "success": "rescued",
+        "target": "projection_booth.rescue",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 250,
+      "x": 789,
+      "y": 462
+    },
+    "projection_booth.tape": {
+      "bob": {
+        "amplitude_x": 115.0,
+        "amplitude_y": 0,
+        "period_ms": 4600,
+        "phase_rad": -1.5707963267948966
+      },
+      "height": 186,
+      "mask_permission": {
+        "resource": "image_058",
+        "source": "projection_booth.light",
+        "threshold": 0.3
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 550.0,
+            "y": 214.0
+          },
+          {
+            "at_ms": 4600,
+            "x": 550.0,
+            "y": 214.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 270,
+      "x": 446,
+      "y": 315
+    },
+    "projection_booth.umbrella": {
+      "height": 235,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1109,
+            "y": 283
+          },
+          {
+            "at_ms": 1500,
+            "x": 1128,
+            "y": 283
+          },
+          {
+            "at_ms": 3800,
+            "x": 1090,
+            "y": 283
+          },
+          {
+            "at_ms": 6000,
+            "x": 1109,
+            "y": 283
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_018",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_019",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_017",
+      "template": "target",
+      "width": 215,
+      "x": 1109,
+      "y": 283
+    },
+    "projector_center": {
+      "height": 121,
+      "parallax": 0.34,
+      "properties": {
+        "z": 22
+      },
+      "resource": "image_073",
+      "template": "target",
+      "width": 135,
+      "x": 820,
+      "y": 642
+    },
+    "projector_center.dark": {
+      "height": 500,
+      "parallax": 0.34,
+      "properties": {
+        "z": 19
+      },
+      "resource": "image_079",
+      "template": "decoration",
+      "width": 252,
+      "x": 763,
+      "y": 167
+    },
+    "projector_center.lens": {
+      "height": 1,
+      "parallax": 0.34,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "decoration",
+      "width": 1,
+      "x": 897,
+      "y": 652
+    },
+    "projector_center.warm": {
+      "height": 500,
+      "parallax": 0.34,
+      "properties": {
+        "z": 19
+      },
+      "resource": "image_080",
+      "template": "decoration",
+      "width": 252,
+      "x": 763,
+      "y": 167
+    },
+    "projector_left": {
+      "height": 121,
+      "parallax": 0.34,
+      "properties": {
+        "z": 22
+      },
+      "resource": "image_073",
+      "template": "target",
+      "width": 135,
+      "x": 326,
+      "y": 642
+    },
+    "projector_left.dark": {
+      "height": 467,
+      "parallax": 0.34,
+      "properties": {
+        "z": 18
+      },
+      "resource": "image_077",
+      "template": "decoration",
+      "width": 308,
+      "x": 387,
+      "y": 200
+    },
+    "projector_left.lens": {
+      "height": 1,
+      "parallax": 0.34,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "decoration",
+      "width": 1,
+      "x": 403,
+      "y": 652
+    },
+    "projector_left.warm": {
+      "height": 467,
+      "parallax": 0.34,
+      "properties": {
+        "z": 18
+      },
+      "resource": "image_078",
+      "template": "decoration",
+      "width": 308,
+      "x": 387,
+      "y": 200
+    },
+    "projector_right": {
+      "height": 121,
+      "parallax": 0.34,
+      "properties": {
+        "z": 22
+      },
+      "resource": "image_073",
+      "template": "target",
+      "width": 135,
+      "x": 1315,
+      "y": 642
+    },
+    "projector_right.dark": {
+      "height": 467,
+      "parallax": 0.34,
+      "properties": {
+        "z": 20
+      },
+      "resource": "image_081",
+      "template": "decoration",
+      "width": 326,
+      "x": 1083,
+      "y": 200
+    },
+    "projector_right.lens": {
+      "height": 1,
+      "parallax": 0.34,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "decoration",
+      "width": 1,
+      "x": 1392,
+      "y": 652
+    },
+    "projector_right.warm": {
+      "height": 467,
+      "parallax": 0.34,
+      "properties": {
+        "z": 20
+      },
+      "resource": "image_082",
+      "template": "decoration",
+      "width": 326,
+      "x": 1083,
+      "y": 200
+    },
+    "reel_center": {
+      "height": 116,
+      "hit_resource": "image_076",
+      "parallax": 0.34,
+      "properties": {
+        "z": 24
+      },
+      "resource": "image_075",
+      "template": "target",
+      "width": 130,
+      "x": 788,
+      "y": 527
+    },
+    "reel_left": {
+      "height": 116,
+      "hit_resource": "image_076",
+      "parallax": 0.34,
+      "properties": {
+        "z": 24
+      },
+      "resource": "image_075",
+      "template": "target",
+      "width": 130,
+      "x": 292,
+      "y": 527
+    },
+    "reel_right": {
+      "height": 116,
+      "hit_resource": "image_076",
+      "parallax": 0.34,
+      "properties": {
+        "z": 24
+      },
+      "resource": "image_075",
+      "template": "target",
+      "width": 130,
+      "x": 1282,
+      "y": 527
+    },
+    "shadow_core": {
+      "height": 124,
+      "hit_resource": "image_072",
+      "parallax": 0.29,
+      "properties": {
+        "z": 42
+      },
+      "resource": "image_071",
+      "template": "target",
+      "width": 130,
+      "x": 823,
+      "y": 234
+    },
+    "sweep_tape_1": {
+      "height": 181,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 471,
+            "y": 326
+          },
+          {
+            "at_ms": 1500,
+            "x": 476,
+            "y": 326
+          },
+          {
+            "at_ms": 3800,
+            "x": 466,
+            "y": 326
+          },
+          {
+            "at_ms": 6000,
+            "x": 471,
+            "y": 326
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 262,
+      "x": 471,
+      "y": 326
+    },
+    "sweep_tape_2": {
+      "height": 181,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 757,
+            "y": 326
+          },
+          {
+            "at_ms": 1500,
+            "x": 762,
+            "y": 326
+          },
+          {
+            "at_ms": 3800,
+            "x": 752,
+            "y": 326
+          },
+          {
+            "at_ms": 6000,
+            "x": 757,
+            "y": 326
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 262,
+      "x": 757,
+      "y": 326
+    },
+    "sweep_tape_3": {
+      "height": 181,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1043,
+            "y": 326
+          },
+          {
+            "at_ms": 1500,
+            "x": 1048,
+            "y": 326
+          },
+          {
+            "at_ms": 3800,
+            "x": 1038,
+            "y": 326
+          },
+          {
+            "at_ms": 6000,
+            "x": 1043,
+            "y": 326
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 262,
+      "x": 1043,
+      "y": 326
+    },
+    "ticket_office.canopy": {
+      "height": 182,
+      "hit_resource": "image_021",
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_020",
+      "template": "target",
+      "width": 216,
+      "x": 1165,
+      "y": 451
+    },
+    "ticket_office.lamp": {
+      "height": 125,
+      "hit_resource": "image_011",
+      "parallax": 0.48,
+      "properties": {
+        "activation_cooldown_ms": 7500,
+        "z": 10
+      },
+      "resource": "image_010",
+      "template": "activation_source",
+      "width": 282,
+      "x": 315,
+      "y": 208
+    },
+    "ticket_office.light": {
+      "height": 335,
+      "parallax": 0.48,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_012",
+      "template": "decoration",
+      "width": 492,
+      "x": 208,
+      "y": 99
+    },
+    "ticket_office.rescue": {
+      "height": 92,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 25
+      },
+      "template": "target",
+      "width": 100,
+      "x": 646.5,
+      "y": 610.8
+    },
+    "ticket_office.resident": {
+      "height": 280,
+      "parallax": 0.41,
+      "properties": {
+        "z": 24
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "ticket_clerk",
+        "success": "rescued",
+        "target": "ticket_office.rescue",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 253,
+      "x": 570,
+      "y": 510
+    },
+    "ticket_office.tape": {
+      "bob": {
+        "amplitude_x": -107.5,
+        "amplitude_y": 0,
+        "period_ms": 4600,
+        "phase_rad": -1.5707963267948966
+      },
+      "height": 186,
+      "mask_permission": {
+        "resource": "image_013",
+        "source": "ticket_office.light",
+        "threshold": 0.3
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 512.5,
+            "y": 249.0
+          },
+          {
+            "at_ms": 4600,
+            "x": 512.5,
+            "y": 249.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_015",
+          "resource": "image_014",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_016",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_014",
+      "template": "target",
+      "width": 270,
+      "x": 716,
+      "y": 266
+    },
+    "ticket_office.umbrella": {
+      "height": 236,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1165,
+            "y": 424
+          },
+          {
+            "at_ms": 1500,
+            "x": 1184,
+            "y": 424
+          },
+          {
+            "at_ms": 3800,
+            "x": 1146,
+            "y": 424
+          },
+          {
+            "at_ms": 6000,
+            "x": 1165,
+            "y": 424
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_018",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_019",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_017",
+      "template": "target",
+      "width": 216,
+      "x": 1165,
+      "y": 424
+    }
+  },
+  "events": {
+    "auditorium.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "auditorium.tape",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "auditorium.umbrella",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "auditorium.rescue",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "auditorium.fold": {
+      "actions": {
+        "a0": {
+          "entity": "auditorium.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "auditorium.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.start",
+        "delay_ms": 2400
+      }
+    },
+    "auditorium.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "auditorium.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "auditorium.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.lamp",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "auditorium.lamp",
+          "field": "value",
+          "value": 1
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.lamp.open",
+        "delay_ms": 7500
+      }
+    },
+    "auditorium.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "auditorium.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 1
+        },
+        "a1": {
+          "entity": "auditorium.light",
+          "op": "spawn"
+        },
+        "a2": {
+          "effect": "light_fx",
+          "entity": "auditorium.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.lamp",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:auditorium.lamp"
+      }
+    },
+    "auditorium.leave": {
+      "actions": {
+        "a0": {
+          "entity": "auditorium.lamp",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "auditorium.light",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "auditorium.resident",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.clear",
+        "delay_ms": 1300
+      }
+    },
+    "auditorium.rescue.clean": {
+      "actions": {
+        "a0": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:auditorium.rescue"
+      }
+    },
+    "auditorium.resident.protected": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 30,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:auditorium.resident"
+      }
+    },
+    "auditorium.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "auditorium"
+        },
+        "a1": {
+          "entity": "auditorium.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "auditorium.tape",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "auditorium.canopy",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "auditorium.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a5": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a6": {
+          "entity": "auditorium.resident",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "auditorium.rescue",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.leave",
+        "delay_ms": 0
+      }
+    },
+    "auditorium.tape.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "auditorium.tape",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.tape.warn",
+        "delay_ms": 1250
+      }
+    },
+    "auditorium.tape.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "auditorium.tape",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.start",
+        "delay_ms": 8750
+      }
+    },
+    "auditorium.umbrella.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "auditorium.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.umbrella.warn",
+        "delay_ms": 1250
+      }
+    },
+    "auditorium.umbrella.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "auditorium.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "auditorium.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.fold",
+        "delay_ms": 7500
+      }
+    },
+    "cinema.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "poster_hall.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "poster_hall.tape",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "poster_hall.umbrella",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "poster_hall.fold": {
+      "actions": {
+        "a0": {
+          "entity": "poster_hall.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "poster_hall.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.start",
+        "delay_ms": 2400
+      }
+    },
+    "poster_hall.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "poster_hall.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "poster_hall.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.lamp",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "poster_hall.lamp",
+          "field": "value",
+          "value": 1
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.lamp.open",
+        "delay_ms": 7500
+      }
+    },
+    "poster_hall.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "poster_hall.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 1
+        },
+        "a1": {
+          "entity": "poster_hall.light",
+          "op": "spawn"
+        },
+        "a2": {
+          "effect": "light_fx",
+          "entity": "poster_hall.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.lamp",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:poster_hall.lamp"
+      }
+    },
+    "poster_hall.leave": {
+      "actions": {
+        "a0": {
+          "entity": "poster_hall.lamp",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "poster_hall.light",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.clear",
+        "delay_ms": 850
+      }
+    },
+    "poster_hall.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "poster_hall"
+        },
+        "a1": {
+          "entity": "poster_hall.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "poster_hall.tape",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "poster_hall.canopy",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "poster_hall.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a5": {
+          "enabled": true,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.leave",
+        "delay_ms": 0
+      }
+    },
+    "poster_hall.tape.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "poster_hall.tape",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.tape.warn",
+        "delay_ms": 1250
+      }
+    },
+    "poster_hall.tape.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "poster_hall.tape",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.start",
+        "delay_ms": 8200
+      }
+    },
+    "poster_hall.umbrella.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "poster_hall.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.umbrella.warn",
+        "delay_ms": 1250
+      }
+    },
+    "poster_hall.umbrella.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "poster_hall.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "poster_hall.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "poster_hall.fold",
+        "delay_ms": 7000
+      }
+    },
+    "projection_booth.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "projection_booth.tape",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "projection_booth.umbrella",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "projection_booth.rescue",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "projection_booth.fold": {
+      "actions": {
+        "a0": {
+          "entity": "projection_booth.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projection_booth.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.start",
+        "delay_ms": 2400
+      }
+    },
+    "projection_booth.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "projection_booth.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projection_booth.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.lamp",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "projection_booth.lamp",
+          "field": "value",
+          "value": 1
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.lamp.open",
+        "delay_ms": 7500
+      }
+    },
+    "projection_booth.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "projection_booth.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 1
+        },
+        "a1": {
+          "entity": "projection_booth.light",
+          "op": "spawn"
+        },
+        "a2": {
+          "effect": "light_fx",
+          "entity": "projection_booth.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.lamp",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:projection_booth.lamp"
+      }
+    },
+    "projection_booth.leave": {
+      "actions": {
+        "a0": {
+          "entity": "projection_booth.lamp",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projection_booth.light",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "projection_booth.resident",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.clear",
+        "delay_ms": 1300
+      }
+    },
+    "projection_booth.rescue.clean": {
+      "actions": {
+        "a0": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:projection_booth.rescue"
+      }
+    },
+    "projection_booth.resident.protected": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 30,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:projection_booth.resident"
+      }
+    },
+    "projection_booth.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "projection_booth"
+        },
+        "a1": {
+          "entity": "projection_booth.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "projection_booth.tape",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "projection_booth.canopy",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "projection_booth.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a5": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a6": {
+          "entity": "projection_booth.resident",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "projection_booth.rescue",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "auditorium.leave",
+        "delay_ms": 0
+      }
+    },
+    "projection_booth.tape.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "projection_booth.tape",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.tape.warn",
+        "delay_ms": 1250
+      }
+    },
+    "projection_booth.tape.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "projection_booth.tape",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.start",
+        "delay_ms": 9300
+      }
+    },
+    "projection_booth.umbrella.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "projection_booth.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.umbrella.warn",
+        "delay_ms": 1250
+      }
+    },
+    "projection_booth.umbrella.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "projection_booth.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "projection_booth.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.fold",
+        "delay_ms": 8000
+      }
+    },
+    "projector_center.sweep": {
+      "actions": {
+        "a0": {
+          "effect": "sweep_fx",
+          "entity": "sweep_tape_2",
+          "op": "vfx",
+          "source": "projector_center.lens"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_center",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "screen_stage.start",
+        "delay_ms": 3100
+      }
+    },
+    "projector_center.sweep.spawn": {
+      "actions": {
+        "a0": {
+          "entity": "sweep_tape_2",
+          "op": "spawn"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_center",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_center.sweep",
+        "delay_ms": 450
+      }
+    },
+    "projector_left.sweep": {
+      "actions": {
+        "a0": {
+          "effect": "sweep_fx",
+          "entity": "sweep_tape_1",
+          "op": "vfx",
+          "source": "projector_left.lens"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_left",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "screen_stage.start",
+        "delay_ms": 1500
+      }
+    },
+    "projector_left.sweep.spawn": {
+      "actions": {
+        "a0": {
+          "entity": "sweep_tape_1",
+          "op": "spawn"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_left",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_left.sweep",
+        "delay_ms": 450
+      }
+    },
+    "projector_right.sweep": {
+      "actions": {
+        "a0": {
+          "effect": "sweep_fx",
+          "entity": "sweep_tape_3",
+          "op": "vfx",
+          "source": "projector_right.lens"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_right",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "screen_stage.start",
+        "delay_ms": 4700
+      }
+    },
+    "projector_right.sweep.spawn": {
+      "actions": {
+        "a0": {
+          "entity": "sweep_tape_3",
+          "op": "spawn"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "reel_right",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_right.sweep",
+        "delay_ms": 450
+      }
+    },
+    "reel_center.clean": {
+      "actions": {
+        "a0": {
+          "entity": "projector_center.dark",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projector_center.warm",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "sweep_tape_2",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 12,
+      "trigger": {
+        "on": "target.neutralized:reel_center"
+      }
+    },
+    "reel_left.clean": {
+      "actions": {
+        "a0": {
+          "entity": "projector_left.dark",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projector_left.warm",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "sweep_tape_1",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 12,
+      "trigger": {
+        "on": "target.neutralized:reel_left"
+      }
+    },
+    "reel_right.clean": {
+      "actions": {
+        "a0": {
+          "entity": "projector_right.dark",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "projector_right.warm",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "sweep_tape_3",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 12,
+      "trigger": {
+        "on": "target.neutralized:reel_right"
+      }
+    },
+    "score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 80,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "screen_stage.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "screen_stage"
+        },
+        "a1": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a10": {
+          "entity": "projector_right",
+          "op": "spawn"
+        },
+        "a11": {
+          "entity": "projector_right",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a12": {
+          "entity": "reel_right",
+          "op": "spawn"
+        },
+        "a13": {
+          "entity": "projector_right.dark",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "projector_left",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "projector_left",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a4": {
+          "entity": "reel_left",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "projector_left.dark",
+          "op": "spawn"
+        },
+        "a6": {
+          "entity": "projector_center",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "projector_center",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a8": {
+          "entity": "reel_center",
+          "op": "spawn"
+        },
+        "a9": {
+          "entity": "projector_center.dark",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10",
+        "a11",
+        "a12",
+        "a13"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projection_booth.leave",
+        "delay_ms": 0
+      }
+    },
+    "shadow.clear": {
+      "actions": {
+        "a0": {
+          "entity": "sweep_tape_1",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "sweep_tape_2",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "sweep_tape_3",
+          "op": "remove"
+        },
+        "a3": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:shadow_core"
+      }
+    },
+    "shadow.reveal": {
+      "actions": {
+        "a0": {
+          "entity": "shadow_core",
+          "op": "spawn"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "reel_left",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "reel_center",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "reel_right",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "sweep_tape_1.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "sweep_tape_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "sweep_tape_1.warn",
+        "delay_ms": 1250
+      }
+    },
+    "sweep_tape_1.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "sweep_tape_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_left.sweep.spawn",
+        "delay_ms": 2800
+      }
+    },
+    "sweep_tape_2.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "sweep_tape_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "sweep_tape_2.warn",
+        "delay_ms": 1250
+      }
+    },
+    "sweep_tape_2.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "sweep_tape_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_center.sweep.spawn",
+        "delay_ms": 2800
+      }
+    },
+    "sweep_tape_3.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "sweep_tape_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "sweep_tape_3.warn",
+        "delay_ms": 1250
+      }
+    },
+    "sweep_tape_3.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "sweep_tape_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "sweep_tape_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "projector_right.sweep.spawn",
+        "delay_ms": 2800
+      }
+    },
+    "ticket_office.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "ticket_office.tape",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "ticket_office.umbrella",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "ticket_office.rescue",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "ticket_office.fold": {
+      "actions": {
+        "a0": {
+          "entity": "ticket_office.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ticket_office.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.start",
+        "delay_ms": 2400
+      }
+    },
+    "ticket_office.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "ticket_office.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ticket_office.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.lamp",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "ticket_office.lamp",
+          "field": "value",
+          "value": 1
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.lamp.open",
+        "delay_ms": 7500
+      }
+    },
+    "ticket_office.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "ticket_office.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 1
+        },
+        "a1": {
+          "entity": "ticket_office.light",
+          "op": "spawn"
+        },
+        "a2": {
+          "effect": "light_fx",
+          "entity": "ticket_office.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.lamp",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 24,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:ticket_office.lamp"
+      }
+    },
+    "ticket_office.leave": {
+      "actions": {
+        "a0": {
+          "entity": "ticket_office.lamp",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ticket_office.light",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "ticket_office.resident",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.clear",
+        "delay_ms": 1300
+      }
+    },
+    "ticket_office.rescue.clean": {
+      "actions": {
+        "a0": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:ticket_office.rescue"
+      }
+    },
+    "ticket_office.resident.protected": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 30,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:ticket_office.resident"
+      }
+    },
+    "ticket_office.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "ticket_office"
+        },
+        "a1": {
+          "entity": "ticket_office.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "ticket_office.tape",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "ticket_office.canopy",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "ticket_office.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a5": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a6": {
+          "entity": "ticket_office.resident",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "ticket_office.rescue",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "ticket_office.tape.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "ticket_office.tape",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.tape.warn",
+        "delay_ms": 1250
+      }
+    },
+    "ticket_office.tape.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "ticket_office.tape",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.tape",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.start",
+        "delay_ms": 7650
+      }
+    },
+    "ticket_office.umbrella.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "ticket_office.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.umbrella.warn",
+        "delay_ms": 1250
+      }
+    },
+    "ticket_office.umbrella.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "ticket_office.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "ticket_office.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ticket_office.fold",
+        "delay_ms": 6500
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "获救",
+      "resource": "rescued"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.cinema",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "rescued": 0,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "camera": {
+      "amplitude_x": 38,
+      "amplitude_y": 15
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {
+      "auditorium.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "auditorium.tape": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      },
+      "poster_hall.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "poster_hall.tape": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      },
+      "projection_booth.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "projection_booth.tape": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      },
+      "ticket_office.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "ticket_office.tape": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      }
+    },
+    "entity_tints": {
+      "auditorium.tape": {
+        "invalid": "#6a7797"
+      },
+      "poster_hall.tape": {
+        "invalid": "#6a7797"
+      },
+      "projection_booth.tape": {
+        "invalid": "#6a7797"
+      },
+      "ticket_office.tape": {
+        "invalid": "#6a7797"
+      }
+    },
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "射灯后等磁带墨入光 · 看准收伞时机 · 净化胶片盘墨渍",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "银幕陷入黑暗",
+      "result_success": "旧影院重新亮了",
+      "section_unit": "站"
+    },
+    "layers": {
+      "auditorium.aisle": {
+        "blocker": false,
+        "height": 395,
+        "parallax": 0.29,
+        "resource": "image_037",
+        "section": "auditorium",
+        "width": 1920,
+        "x": -72,
+        "y": 583,
+        "z": 2
+      },
+      "auditorium.left_seats": {
+        "blocker": true,
+        "height": 384,
+        "parallax": 0.84,
+        "resource": "image_040",
+        "section": "auditorium",
+        "width": 657,
+        "x": -72,
+        "y": 594,
+        "z": 72
+      },
+      "auditorium.rear_wall": {
+        "blocker": false,
+        "height": 459,
+        "parallax": 0.2,
+        "resource": "image_036",
+        "section": "auditorium",
+        "width": 1314,
+        "x": 237,
+        "y": 140,
+        "z": 1
+      },
+      "auditorium.right_seats": {
+        "blocker": true,
+        "height": 381,
+        "parallax": 0.91,
+        "resource": "image_041",
+        "section": "auditorium",
+        "width": 615,
+        "x": 1233,
+        "y": 597,
+        "z": 73
+      },
+      "auditorium.right_wall": {
+        "blocker": false,
+        "height": 580,
+        "parallax": 0.44,
+        "resource": "image_039",
+        "section": "auditorium",
+        "width": 336,
+        "x": 1512,
+        "y": 65,
+        "z": 4
+      },
+      "auditorium.screen_and_curtains": {
+        "blocker": false,
+        "height": 429,
+        "parallax": 0.35,
+        "resource": "image_038",
+        "section": "auditorium",
+        "width": 1077,
+        "x": 347,
+        "y": 138,
+        "z": 3
+      },
+      "auditorium.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_035",
+        "section": "auditorium",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "poster_hall.bench": {
+        "blocker": false,
+        "height": 175,
+        "parallax": 0.56,
+        "resource": "image_028",
+        "section": "poster_hall",
+        "width": 333,
+        "x": 410,
+        "y": 530,
+        "z": 4
+      },
+      "poster_hall.display_case": {
+        "blocker": true,
+        "height": 384,
+        "parallax": 0.84,
+        "resource": "image_029",
+        "section": "poster_hall",
+        "width": 278,
+        "x": -72,
+        "y": 594,
+        "z": 72
+      },
+      "poster_hall.end_wall": {
+        "blocker": false,
+        "height": 428,
+        "parallax": 0.2,
+        "resource": "image_025",
+        "section": "poster_hall",
+        "width": 1159,
+        "x": 689,
+        "y": 237,
+        "z": 1
+      },
+      "poster_hall.floor": {
+        "blocker": false,
+        "height": 330,
+        "parallax": 0.32,
+        "resource": "image_026",
+        "section": "poster_hall",
+        "width": 1920,
+        "x": -72,
+        "y": 648,
+        "z": 2
+      },
+      "poster_hall.poster_wall": {
+        "blocker": false,
+        "height": 743,
+        "parallax": 0.45,
+        "resource": "image_027",
+        "section": "poster_hall",
+        "width": 872,
+        "x": -72,
+        "y": 60,
+        "z": 3
+      },
+      "poster_hall.right_door": {
+        "blocker": true,
+        "height": 723,
+        "parallax": 0.63,
+        "resource": "image_030",
+        "section": "poster_hall",
+        "width": 142,
+        "x": 1706,
+        "y": 107,
+        "z": 73
+      },
+      "poster_hall.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_024",
+        "section": "poster_hall",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "projection_booth.floor": {
+        "blocker": false,
+        "height": 271,
+        "parallax": 0.33,
+        "resource": "image_050",
+        "section": "projection_booth",
+        "width": 1920,
+        "x": -72,
+        "y": 707,
+        "z": 2
+      },
+      "projection_booth.left_rack": {
+        "blocker": false,
+        "height": 278,
+        "parallax": 0.48,
+        "resource": "image_052",
+        "section": "projection_booth",
+        "width": 356,
+        "x": -72,
+        "y": 117,
+        "z": 5
+      },
+      "projection_booth.left_workbench": {
+        "blocker": true,
+        "height": 522,
+        "parallax": 0.65,
+        "resource": "image_053",
+        "section": "projection_booth",
+        "width": 462,
+        "x": -72,
+        "y": 394,
+        "z": 72
+      },
+      "projection_booth.rear_wall": {
+        "blocker": false,
+        "height": 658,
+        "parallax": 0.18,
+        "resource": "image_049",
+        "section": "projection_booth",
+        "width": 1920,
+        "x": -72,
+        "y": 68,
+        "z": 1
+      },
+      "projection_booth.right_workbench": {
+        "blocker": true,
+        "height": 716,
+        "parallax": 0.84,
+        "resource": "image_054",
+        "section": "projection_booth",
+        "width": 461,
+        "x": 1387,
+        "y": 172,
+        "z": 73
+      },
+      "projection_booth.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_048",
+        "section": "projection_booth",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "projection_booth.viewing_window": {
+        "blocker": false,
+        "height": 216,
+        "parallax": 0.38,
+        "resource": "image_051",
+        "section": "projection_booth",
+        "width": 394,
+        "x": 349,
+        "y": 274,
+        "z": 3
+      },
+      "screen_stage.fixtures": {
+        "blocker": false,
+        "height": 936,
+        "parallax": 0.34,
+        "resource": "image_070",
+        "section": "screen_stage",
+        "width": 1776,
+        "x": 0,
+        "y": 0,
+        "z": 20
+      },
+      "screen_stage.left_curtain": {
+        "blocker": false,
+        "height": 569,
+        "parallax": 0.43,
+        "resource": "image_065",
+        "section": "screen_stage",
+        "width": 367,
+        "x": -72,
+        "y": 108,
+        "z": 4
+      },
+      "screen_stage.left_seats": {
+        "blocker": true,
+        "height": 159,
+        "parallax": 0.88,
+        "resource": "image_067",
+        "section": "screen_stage",
+        "width": 392,
+        "x": -72,
+        "y": 819,
+        "z": 72
+      },
+      "screen_stage.projector_center.clean": {
+        "blocker": false,
+        "height": 116,
+        "parallax": 0.34,
+        "resource": "image_074",
+        "section": "screen_stage",
+        "width": 110,
+        "x": 798,
+        "y": 527,
+        "z": 23
+      },
+      "screen_stage.projector_left.clean": {
+        "blocker": false,
+        "height": 116,
+        "parallax": 0.34,
+        "resource": "image_074",
+        "section": "screen_stage",
+        "width": 110,
+        "x": 302,
+        "y": 527,
+        "z": 23
+      },
+      "screen_stage.projector_right.clean": {
+        "blocker": false,
+        "height": 116,
+        "parallax": 0.34,
+        "resource": "image_074",
+        "section": "screen_stage",
+        "width": 110,
+        "x": 1292,
+        "y": 527,
+        "z": 23
+      },
+      "screen_stage.right_curtain": {
+        "blocker": false,
+        "height": 570,
+        "parallax": 0.43,
+        "resource": "image_066",
+        "section": "screen_stage",
+        "width": 366,
+        "x": 1482,
+        "y": 107,
+        "z": 5
+      },
+      "screen_stage.right_seats": {
+        "blocker": true,
+        "height": 159,
+        "parallax": 0.88,
+        "resource": "image_068",
+        "section": "screen_stage",
+        "width": 395,
+        "x": 1453,
+        "y": 819,
+        "z": 73
+      },
+      "screen_stage.screen": {
+        "blocker": false,
+        "height": 484,
+        "parallax": 0.29,
+        "resource": "image_063",
+        "section": "screen_stage",
+        "width": 1211,
+        "x": 281,
+        "y": 130,
+        "z": 2
+      },
+      "screen_stage.screen_wall": {
+        "blocker": false,
+        "height": 581,
+        "parallax": 0.18,
+        "resource": "image_062",
+        "section": "screen_stage",
+        "width": 1617,
+        "x": 80,
+        "y": 96,
+        "z": 1
+      },
+      "screen_stage.shadow": {
+        "blocker": false,
+        "height": 394,
+        "parallax": 0.29,
+        "resource": "image_069",
+        "section": "screen_stage",
+        "width": 643,
+        "x": 566,
+        "y": 160,
+        "z": 14
+      },
+      "screen_stage.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_061",
+        "section": "screen_stage",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "screen_stage.stage_and_floor": {
+        "blocker": false,
+        "height": 336,
+        "parallax": 0.34,
+        "resource": "image_064",
+        "section": "screen_stage",
+        "width": 1920,
+        "x": -72,
+        "y": 642,
+        "z": 3
+      },
+      "ticket_office.counter_edge": {
+        "blocker": true,
+        "height": 261,
+        "parallax": 0.89,
+        "resource": "image_008",
+        "section": "ticket_office",
+        "width": 303,
+        "x": -72,
+        "y": 717,
+        "z": 72
+      },
+      "ticket_office.far_wall": {
+        "blocker": false,
+        "height": 584,
+        "parallax": 0.18,
+        "resource": "image_004",
+        "section": "ticket_office",
+        "width": 1920,
+        "x": -72,
+        "y": 98,
+        "z": 1
+      },
+      "ticket_office.floor": {
+        "blocker": false,
+        "height": 307,
+        "parallax": 0.32,
+        "resource": "image_005",
+        "section": "ticket_office",
+        "width": 1920,
+        "x": -72,
+        "y": 671,
+        "z": 2
+      },
+      "ticket_office.queue_rail": {
+        "blocker": true,
+        "height": 406,
+        "parallax": 0.76,
+        "resource": "image_009",
+        "section": "ticket_office",
+        "width": 387,
+        "x": 1461,
+        "y": 572,
+        "z": 73
+      },
+      "ticket_office.right_jamb": {
+        "blocker": false,
+        "height": 599,
+        "parallax": 0.59,
+        "resource": "image_007",
+        "section": "ticket_office",
+        "width": 163,
+        "x": 1685,
+        "y": 92,
+        "z": 4
+      },
+      "ticket_office.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_003",
+        "section": "ticket_office",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "ticket_office.ticket_booth": {
+        "blocker": false,
+        "height": 724,
+        "parallax": 0.48,
+        "resource": "image_006",
+        "section": "ticket_office",
+        "width": 731,
+        "x": -72,
+        "y": 64,
+        "z": 3
+      }
+    },
+    "puppets": {
+      "passerby_b": {
+        "atlas": "image_047",
+        "character": "metadata_046",
+        "clips": {
+          "rescued": "metadata_001",
+          "struggle": "metadata_000",
+          "thank": "metadata_002"
+        }
+      },
+      "projectionist": {
+        "atlas": "image_060",
+        "character": "metadata_059",
+        "clips": {
+          "rescued": "metadata_001",
+          "struggle": "metadata_000",
+          "thank": "metadata_002"
+        }
+      },
+      "ticket_clerk": {
+        "atlas": "image_023",
+        "character": "metadata_022",
+        "clips": {
+          "rescued": "metadata_001",
+          "struggle": "metadata_000",
+          "thank": "metadata_002"
+        }
+      }
+    },
+    "sound_bindings": {
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第二关 · 旧影院",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/sky.png",
+      "sha256": "e01eb3beee1de57dbea97e1316885fb05bc0e96bf7766c0f6c34f689f579258c"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/far_wall.png",
+      "sha256": "908c71aa7cd1f71c5e2fe63648f6a3263cd6fa89187e37196d75865d5ee840dc"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/floor.png",
+      "sha256": "2b8985d864f7da9d77d0890efe73608af082e3e36aafc66bd22c5ff1c58325d8"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/ticket_booth.png",
+      "sha256": "61af9cfa4bc1d1ea5eb1d2e8311b8ab94dd87bbc291c65297630e001d3251452"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/right_jamb.png",
+      "sha256": "05b147f06d4f30a32c4c4bd43b4500eb1093f0542a80659e0cb92f7a8727a507"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/counter_edge.png",
+      "sha256": "0c2d5ef0a7af60f48a8c0d4e5a40c07c18be0d4fb47dbd944cb211455183ea9f"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/queue_rail.png",
+      "sha256": "319b6f1d0f056e6c8c8e0c7595a84a19465ad6c33fe67f9a1c31e4dc1a8e028e"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/ticket_office/lamp.png",
+      "sha256": "af0aa3ba035ae5bdbad4d78a8be4b308f0773c6cb6db2b64b8d72d50c991436d"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ticket_office_lamp_hit.png",
+      "sha256": "817f1a4d1f3161b46f199b94b966a0d6b9e1e6f2ac03b8c0a04106336acff1b6"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ticket_office_light_add.png",
+      "sha256": "a323d1372b32d30bc943c6dfa0d540a4e272fb47fe36ac2f5d4da4fecc78362b"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ticket_office_light_influence.png",
+      "sha256": "b0393177168ba23dc9b817e3e19ef6e71efb73c8e23b915550e1461e216f6923"
+    },
+    "image_014": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_tape/body.png",
+      "sha256": "c9e9486b5e14a5bae0a1a2c27e74b85263524a01926e36d19b475b23a1291f6a"
+    },
+    "image_015": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ink_tape_hit.png",
+      "sha256": "35248dacb1e12eaa073c41a5813909bdcb37e8f6f80a993cccffb12dde1f0488"
+    },
+    "image_016": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_tape/weak.png",
+      "sha256": "0efee9486672feba7f0dbdc9b0c623d3291e2b45cc89d07dcf10feddc32be674"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/body.png",
+      "sha256": "9abe0f7e704bf58a7cb222427be64b07611769ac8f8e55ceb9d3883110f78489"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ink_umbrella_hit.png",
+      "sha256": "a2b518433bd5ae3b4d249f11ee817f745b636f4661e0531c87479a59fde5f60f"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/weak.png",
+      "sha256": "50fb77326e9c42904ca556eb7ff39d8388ec7ed67bb450268b0501b890dae881"
+    },
+    "image_020": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/open.png",
+      "sha256": "6b05fba3bc4861a59b42300706a0993649401847bddfd48e0b3deccc1eb763b0"
+    },
+    "image_021": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/umbrella_open_hit.png",
+      "sha256": "1cd76b2509e382ea020f948c096d4d987c738574b0d25c378c040e2f03753b06"
+    },
+    "image_023": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/ticket_clerk_rig.png",
+      "sha256": "498d932388f0dcef1109b4288c33358dbdf64ff3162dc495cc7e8a007f5246e8"
+    },
+    "image_024": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/sky.png",
+      "sha256": "c9c8a146caf0dbb36816c1c5443936e9d3b55e3598a4270df499e8e24ecfb983"
+    },
+    "image_025": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/end_wall.png",
+      "sha256": "e4cc1f85b10be1a42b2508f3776ff1cb8d87f836ed998ae515d30d21c8d3dc47"
+    },
+    "image_026": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/floor.png",
+      "sha256": "cde7a3941db4599b243104fb28e346313e079a383547c4995a91e0d31dd3b6a6"
+    },
+    "image_027": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/poster_wall.png",
+      "sha256": "ab0ac10225fcb8b868577b57b22946195b4058ff1eb6eff5a57c597b7a0f235f"
+    },
+    "image_028": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/bench.png",
+      "sha256": "4b58c87963f58764aa0cc1956b4cc8450701509c146bbadbee064b6be14c7c96"
+    },
+    "image_029": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/display_case.png",
+      "sha256": "75a0c5932f94256171fb772c7516e811ea75589d8690f1bc1eee153a74d43ed2"
+    },
+    "image_030": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/right_door.png",
+      "sha256": "2a58d8683b8d118409b3c5580a5cac7435638d571a84feb7b12e095b40cff416"
+    },
+    "image_031": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/poster_hall/lamp.png",
+      "sha256": "a08c2243e7f79398a1a6c2b8cc0db12895d7f42c3dd9f17070242dc5642a1a68"
+    },
+    "image_032": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/poster_hall_lamp_hit.png",
+      "sha256": "b5b7a1508a103eabee9665d3399c672a567702ff9f1ddade11ded04350f3e7b4"
+    },
+    "image_033": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/poster_hall_light_add.png",
+      "sha256": "d9365c805d57ca6b67917ae425526c50571b80c58dd547f5f910f6b1cf550d54"
+    },
+    "image_034": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/poster_hall_light_influence.png",
+      "sha256": "966f46f64d413f8cb07c9dcb6fed779568ea9f5634cddc2a9a2b7b0c581890ac"
+    },
+    "image_035": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/sky.png",
+      "sha256": "df0aa2d6116fe081334bb602bbbec53bb666191209452990fbcc0d6534314ee9"
+    },
+    "image_036": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/rear_wall.png",
+      "sha256": "92dcb624a7cf671021abbaff1985f7afb16ddf4f727e727999f346b0f082a5cd"
+    },
+    "image_037": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/aisle.png",
+      "sha256": "88fbd1474f41e277f77bb011ce6e8f39d335f10ecc592adf40eb5afc5a780063"
+    },
+    "image_038": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/screen_and_curtains.png",
+      "sha256": "1acc74e84c2ae1c58106e2c5040bd0ae695bc7edff86625b1cbb8584539e167d"
+    },
+    "image_039": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/right_wall.png",
+      "sha256": "d3d02009a9cbccdb217103f5e39c7f07636f0bac862f1ef11e44b9ae4ef3a141"
+    },
+    "image_040": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/left_seats.png",
+      "sha256": "63b2cfaa2d80a63a8c803e3578941c3f951926af063d7b6b5470a94e9ab6d399"
+    },
+    "image_041": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/right_seats.png",
+      "sha256": "3073acf2ede80108dbb27c0b8bf6683552a12550f848cc16b82863be5b2eac88"
+    },
+    "image_042": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/auditorium/lamp.png",
+      "sha256": "ea69c09708df305d7f48e3c916b08eb73cb25248483316d79f0dcb093d7f8751"
+    },
+    "image_043": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/auditorium_lamp_hit.png",
+      "sha256": "42e9c8cde69b9664f5af4b77d03c4e26eeb62e1895c218ce96c382d1ed381a85"
+    },
+    "image_044": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/auditorium_light_add.png",
+      "sha256": "b25ab3b972f36f063d4743ceeff1ec888e99569b557fc805f867eb99cceaf5ea"
+    },
+    "image_045": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/auditorium_light_influence.png",
+      "sha256": "ee5777e14e52f26f1b22e60bb6939bae7e5f45b22a6726bae737dc1fe63a2901"
+    },
+    "image_047": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/passerby_b_rig.png",
+      "sha256": "120fffdc04519f8e2bdd439caebfc7047424ad3333e3f5db9e5a44fe7b81f216"
+    },
+    "image_048": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/sky.png",
+      "sha256": "0e731cb03af1d9d1a201fd61359c9ed9e47d12b34dc27cfd81a3f4a2127b6033"
+    },
+    "image_049": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/rear_wall.png",
+      "sha256": "508dfc37b1ad75fbdd3a6114a6948d0b7e30035ccfd93b8706c7bc7468f56742"
+    },
+    "image_050": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/floor.png",
+      "sha256": "406d90c54b78dafa399f3307bc124fd7591ca0f0353187df6b9d7f9bc06ca553"
+    },
+    "image_051": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/viewing_window.png",
+      "sha256": "77fbd30014f1aac12b7ea621a66ed88c7b9d55f008f35994cba93a7cda70df7a"
+    },
+    "image_052": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/left_rack.png",
+      "sha256": "38da3f8b0f655894373e713f9292a65414d0e3e6f304a7c6133a67631cfd3e06"
+    },
+    "image_053": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/left_workbench.png",
+      "sha256": "ca968647f06fc314ec36b95c5c0667372e047524a626c5303512bbc80c049a00"
+    },
+    "image_054": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/right_workbench.png",
+      "sha256": "7956b54442483c053c8127610a9ebcb464e0e49a774875d4c9078208e9f62ab9"
+    },
+    "image_055": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/projection_booth/lamp.png",
+      "sha256": "437f9bcae5362e46b70bdc1e7614fda6509fc56eed96b73eeb41ba469eb77f7e"
+    },
+    "image_056": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projection_booth_lamp_hit.png",
+      "sha256": "97c63aeadfa7de9b0084a71f04ffa3b4706d30eda691ca971965fbb6596992c5"
+    },
+    "image_057": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projection_booth_light_add.png",
+      "sha256": "e8be049ac9b49eb3cbf21d564d383328d2bb0e303ceace447588e768448777f8"
+    },
+    "image_058": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projection_booth_light_influence.png",
+      "sha256": "175211267614ab5d2a6fb53dc83e46180336d4bfa5d60c392d2b6c94b45914eb"
+    },
+    "image_060": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projectionist_rig.png",
+      "sha256": "3a31bdc6db80448566daaef6267d5203a08d1c5fcebd9e2ea0270d328036083d"
+    },
+    "image_061": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/sky.png",
+      "sha256": "ebc4a5227cd0520c488adcc2652446c6f174f8bc3681bb0417d0f822a3eaef37"
+    },
+    "image_062": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/screen_wall.png",
+      "sha256": "d8a20327758e58984996b956b1a7cb906cce937f7b3081de262149e48c93535c"
+    },
+    "image_063": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/screen.png",
+      "sha256": "ad5d3cb62779f1c65fd141b762db12c600d9638ad26f7c5cc1fb9f68c843368e"
+    },
+    "image_064": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/stage_and_floor.png",
+      "sha256": "7348fed54e0e7b4799a5fed9e393489be5351571dfbc9a7c9813fd1bc4911d06"
+    },
+    "image_065": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/left_curtain.png",
+      "sha256": "6c0f4a3b793603cdc67dec6c7a77bed7f12de1a365294837f87d65e37d446e77"
+    },
+    "image_066": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/right_curtain.png",
+      "sha256": "d15c25004633f2247f8fef7d967336b99e5e64c5b7bf5f2afc80e6c75ab68a43"
+    },
+    "image_067": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/left_seats.png",
+      "sha256": "ef36f3ae8050ce32ffb4385898fe9493c26f580cec818f477bf36686c4b82d68"
+    },
+    "image_068": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/parallax/screen_stage/right_seats.png",
+      "sha256": "96d526e9d93d672d3e8c03de53bea31acee4b8660b75b50d484a16067596287c"
+    },
+    "image_069": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/shadow.png",
+      "sha256": "09c8581a009536319555e76df3bfcdb7a7100837dd1f5622b681152d3bb3ca2b"
+    },
+    "image_070": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/fixtures.png",
+      "sha256": "362c62187ee45b8f9df21539d384f5fc6d79a890219f91c03d15334ec3d09e76"
+    },
+    "image_071": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/core.png",
+      "sha256": "5348e2da5e0b0d02d629d646a33a354d70b485f816e36b22fe3a4de0916918a4"
+    },
+    "image_072": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/shadow_core_hit.png",
+      "sha256": "19f80ba8bacde528e36fff3ae372d9390595b6b1fe29f6315fb8fb03ba7d2719"
+    },
+    "image_073": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/projector.png",
+      "sha256": "0f26a40daa5c2ea32d17e01e197eda7cbfdb455e27bec8001bfee07aced871f8"
+    },
+    "image_074": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/clean_reel.png",
+      "sha256": "1472bd284db4e5bc6aff6ba7b7388ebf2eefbdb7692a31ba0c1b4b2fc5368a24"
+    },
+    "image_075": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/screen_shadow/reel_ink.png",
+      "sha256": "035a19f32d713993e1c923b6f0cccfe9fc5782b09bcc8710ee8da41c7a0063dc"
+    },
+    "image_076": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/reel_hit.png",
+      "sha256": "269a4871c7862743d78585805cf5acabc89102e93a165a6cad4fe532f897a5d4"
+    },
+    "image_077": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_left.dark.png",
+      "sha256": "2765818f8b5701e64f5592e826fdbd20014229ab4aecdcd99487b88ea926ac78"
+    },
+    "image_078": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_left.warm.png",
+      "sha256": "3dbfc35d3ddbd43627b676e8ef99603db8657119931961e444d87d3355e34205"
+    },
+    "image_079": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_center.dark.png",
+      "sha256": "31bbf19fda93377216b4d3b6dccfdafc58aa97c54ce42b8ac52bd06a894b84ee"
+    },
+    "image_080": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_center.warm.png",
+      "sha256": "8dcf1c4f1b219505b2e687789f3ea3b46e0b56be604735025a8cd0b1a9497348"
+    },
+    "image_081": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_right.dark.png",
+      "sha256": "bc6077fd2bf71b525309c13b3fe07f5de5a89cc84f8d4d4e5eb38de5f9851025"
+    },
+    "image_082": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/cinema/projector_right.warm.png",
+      "sha256": "5a6f9842e390b889115cf099c4a53278814b17c6aee074ae9309d3cb0b3b2e9e"
+    },
+    "metadata_000": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/resident_struggle.json",
+      "sha256": "81fa5b755616f2e01c1ffa73e1eaf63bc37a521ff31ea23528ead01df7217de5"
+    },
+    "metadata_001": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/resident_rescued.json",
+      "sha256": "f8c041e8aea558e294a3274d9d55ed7cb3f525570e8972c0bfde04f380a64945"
+    },
+    "metadata_002": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/resident_thank.json",
+      "sha256": "275c259556ad641cda4facf728aa0be898e201092b90c487136f7885371d7ada"
+    },
+    "metadata_022": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/ticket_clerk_rig.json",
+      "sha256": "5abefe2872ff98ca8183337b7c929e313f33d4ef24a73d22e3662f1f8603e9d6"
+    },
+    "metadata_046": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/passerby_b_rig.json",
+      "sha256": "b1b560d48a6e7ec813a7448ee384bd8a20adf55f466f73a71972d553cf368e77"
+    },
+    "metadata_059": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/cinema/projectionist_rig.json",
+      "sha256": "b1b560d48a6e7ec813a7448ee384bd8a20adf55f466f73a71972d553cf368e77"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "auditorium": {
+      "hint": "射灯后等磁带墨进入暖光，等墨伞收起再射。 只射居民胸口的墨团。",
+      "index": 3,
+      "targets": [
+        "auditorium.tape",
+        "auditorium.umbrella",
+        "auditorium.rescue"
+      ],
+      "title": "观众席"
+    },
+    "poster_hall": {
+      "hint": "射灯后等磁带墨进入暖光，等墨伞收起再射。",
+      "index": 2,
+      "targets": [
+        "poster_hall.tape",
+        "poster_hall.umbrella"
+      ],
+      "title": "海报长廊"
+    },
+    "projection_booth": {
+      "hint": "射灯后等磁带墨进入暖光，等墨伞收起再射。 只射居民胸口的墨团。",
+      "index": 4,
+      "targets": [
+        "projection_booth.tape",
+        "projection_booth.umbrella",
+        "projection_booth.rescue"
+      ],
+      "title": "放映室"
+    },
+    "screen_stage": {
+      "hint": "墨光扫过会冒出磁带墨。清除三盘墨渍，最后净化影核。",
+      "index": 5,
+      "targets": [
+        "reel_left",
+        "reel_center",
+        "reel_right",
+        "shadow_core"
+      ],
+      "title": "银幕前 · 银幕影"
+    },
+    "ticket_office": {
+      "hint": "射灯后等磁带墨进入暖光，等墨伞收起再射。 只射居民胸口的墨团。",
+      "index": 1,
+      "targets": [
+        "ticket_office.tape",
+        "ticket_office.umbrella",
+        "ticket_office.rescue"
+      ],
+      "title": "售票处"
+    }
+  },
+  "seed": 424,
+  "tick_hz": 60
+}

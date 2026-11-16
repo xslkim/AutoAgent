@@ -1,0 +1,145 @@
+{
+  "anchor": "next",
+  "author": "user",
+  "build_id": "02badec715e3bcb884f6ce5976121ff45678c5161113f32ef2af3e432dd19056",
+  "comment_id": "note-1794231842-878-642677",
+  "evidence": {
+    "alpha": {
+      "path": "D:/gunforge_cache/level_design/runs/gallery-earlier-target/evidence/note-1794231842-878-642677/alpha.png",
+      "sha256": "caf507d448e86293aea3d801a0e76f9705d91b726740423d11a84a183187b682"
+    },
+    "player": {
+      "path": "D:/gunforge_cache/level_design/runs/gallery-earlier-target/evidence/note-1794231842-878-642677/player.png",
+      "sha256": "8ffae9cea91ec52289bbafca706bbcee15247a0c2f382cd99f547847e1400a37"
+    },
+    "recording": {
+      "path": "D:/gunforge_cache/level_design/runs/gallery-earlier-target/evidence/note-1794231842-878-642677/input.bin",
+      "sha256": "544f85e495e8e1a0d281a9d3bcdaf048af0157d9974c5001bca5ee6d76c16a8a"
+    }
+  },
+  "package": "gallery.intro",
+  "source_revision": "743788ee24ed1d759665e45ee658528c62223ef3a878f39efcf68d162d03579b",
+  "state": {
+    "active_cues": {},
+    "active_effects": {},
+    "cue_serial": 0,
+    "current_section": "",
+    "effect_serial": 0,
+    "entities": {
+      "protected_a": {
+        "active": true,
+        "age_ticks": 180,
+        "defeated_at": -1,
+        "generation": 1,
+        "health": 1,
+        "height": 100.0,
+        "hit_direction": 1,
+        "kind": "protected",
+        "last_hit_tick": -1000,
+        "motion_phase": "",
+        "next_activation": -1,
+        "pause_motion_until": -1,
+        "properties": {},
+        "removed_at": -1,
+        "stun_until": -1,
+        "stunned": false,
+        "template": "protected",
+        "value": 0.0,
+        "view_tick": 180,
+        "visible": true,
+        "width": 100.0,
+        "x": 380.0,
+        "y": 300.0
+      },
+      "target_a": {
+        "active": true,
+        "age_ticks": 180,
+        "defeated_at": -1,
+        "generation": 1,
+        "health": 1,
+        "height": 100.0,
+        "hit_direction": 1,
+        "kind": "primary",
+        "last_hit_tick": -1000,
+        "motion_phase": "",
+        "next_activation": -1,
+        "pause_motion_until": -1,
+        "properties": {
+          "shape": "circle"
+        },
+        "removed_at": -1,
+        "stun_until": -1,
+        "stunned": false,
+        "template": "target",
+        "value": 0.0,
+        "view_tick": 180,
+        "visible": true,
+        "width": 100.0,
+        "x": 170.0,
+        "y": 180.0
+      },
+      "target_b": {
+        "active": false,
+        "age_ticks": 0,
+        "defeated_at": -1,
+        "generation": 0,
+        "health": 1,
+        "height": 90.0,
+        "hit_direction": 1,
+        "kind": "primary",
+        "last_hit_tick": -1000,
+        "motion_phase": "",
+        "next_activation": -1,
+        "pause_motion_until": -1,
+        "properties": {
+          "shape": "circle",
+          "vx": 12.0
+        },
+        "removed_at": -1,
+        "stun_until": -1,
+        "stunned": false,
+        "template": "target",
+        "value": 0.0,
+        "view_tick": 180,
+        "visible": true,
+        "width": 100.0,
+        "x": 520.0,
+        "y": 200.0
+      }
+    },
+    "hits": 0,
+    "input_enabled": true,
+    "next_shot": 0,
+    "pause_reasons": [],
+    "phase": "running",
+    "queries": {
+      "entry_zone": {
+        "algorithm": "cpu-nearest-v1",
+        "space": "content_px",
+        "tick": 180,
+        "value": 0.0
+      },
+      "target_distance": {
+        "algorithm": "cpu-nearest-v1",
+        "space": "content_px",
+        "tick": 180,
+        "value": 350.3212890625
+      }
+    },
+    "reload_at": -1,
+    "resources": {
+      "ammo": 4.0,
+      "score": 0.0
+    },
+    "result": "",
+    "shots": 0,
+    "tick": 180
+  },
+  "status": "open",
+  "submission_id": "",
+  "text": "等得有点久，希望早点出，其他没什么。",
+  "tick": 180,
+  "time_ms": 3000.0,
+  "source": "current chat: feedback after repeated desktop mouse play",
+  "evidence_origin": "Agent reconstructed the paused 3.0s frame in the tested proposal; the evidence contains no user replay."
+}

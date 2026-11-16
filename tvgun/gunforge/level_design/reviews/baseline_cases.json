@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "input_isolation": [
+    "UDP START",
+    "HTTP /start",
+    "synthetic desktop KEY_ENTER handler"
+  ],
+  "cases": [
+    {
+      "case": "normal",
+      "checks": {
+        "complete": true
+      },
+      "sha256": "b772f45b951634c54d60cd085fd3a56f9062328b82f825c04b7859dfaa79bae7",
+      "runs": 2
+    },
+    {
+      "case": "one_miss_per_wave",
+      "checks": {
+        "one_miss_each_wave": true
+      },
+      "sha256": "acd3f89c394e4dbe2fbc23c85260bf5fc7c8b3de406697a6c966fd28b34cffce",
+      "runs": 2
+    },
+    {
+      "case": "miss_and_continue",
+      "checks": {
+        "continue_same_wave": true
+      },
+      "sha256": "f6465dbbffa0b3f834b8464119121d7f485d576e8c8519d3cacfa0b32fe9bcfe",
+      "runs": 2
+    },
+    {
+      "case": "paper",
+      "checks": {
+        "D08_life_penalty_reproduced": true
+      },
+      "sha256": "4730e918d7d51e81e7d8d653d0017fd221a019c5ebc1d24249f4df2a5b291af0",
+      "runs": 2
+    },
+    {
+      "case": "repeat_rescue",
+      "checks": {
+        "D02_repeat_reward_reproduced": true
+      },
+      "sha256": "51aaedb78f36975c2db54e489d7296db448020c9336e59681891bd17607ca2b1",
+      "runs": 2
+    },
+    {
+      "case": "repeat_lamp",
+      "checks": {
+        "D03_repeat_reward_reproduced": true
+      },
+      "sha256": "c6722e7606c4b8df2acfc2e6879df147cd5d26ef507630ef0a6bc18677fed20f",
+      "runs": 2
+    },
+    {
+      "case": "reload",
+      "checks": {
+        "offscreen_reload": true
+      },
+      "sha256": "c7064352fadbeb47e02165f31c2feb19cfaba7bc2b21bc5e42eb25efd9dfebf8",
+      "runs": 2
+    },
+    {
+      "case": "loss",
+      "checks": {
+        "loss_pause_resume": true
+      },
+      "sha256": "7d58210a8c2374809dcf2775ff9e130e77d33d61cec5bbe50066dd21d32ef9e1",
+      "runs": 2
+    }
+  ],
+  "directory": "D:\\gunforge_cache\\level_design\\baseline-v1",
+  "engine_log_sha256": "18c8aa93fd6df46fbd3ae02e130bcd7f117bb3de3ad5532f78a0e90ff1f7090f",
+  "baseline_source_manifest": "4b319e99a5141bb4f47a56c9b92737919d3e6a1a505caa8f3c10d641e97a4f43",
+  "recording_patch_sha256": "6dfee4406c255c102a4ed8318740fddf38ebc617e41fbfa9862b43b2ef0b0bcf",
+  "limitations": [
+    "headless software renderer: no GPU screenshot or audio listening validation",
+    "record_steps refreshes geometry once per tick; records explicitly differ from batched legacy step"
+  ],
+  "reproduce": ".venv/Scripts/python.exe gunforge/pipeline/level_design/record_baseline.py"
+}

@@ -1,0 +1,35 @@
+{
+  "authorization": "User explicitly authorized autonomous execution after self-review, 2026-11-08",
+  "self_review": "Task dependencies and phase separation are sound. User authorization supersedes repeated phase approval stops; candidate adoption remains explicit user action. Hardware evidence cannot be fabricated.",
+  "technical_defaults": {
+    "tick_hz": 60,
+    "source_time": "integer_ms",
+    "extra_rewind_ms": 0,
+    "early_tool": "Godot preview and chat annotations"
+  },
+  "rules": {
+    "D01": {
+      "value": 8,
+      "status": "preserve_demo_not_new_user_choice"
+    },
+    "D03": {
+      "status": "migration_legacy_until_scoring_comparison"
+    },
+    "D07": {
+      "status": "preserve_demo_score_reset"
+    },
+    "D02": {
+      "status": "authorized_reproduce_then_fix"
+    },
+    "D08": {
+      "status": "authorized_fix_existing_approved_score_only_contract"
+    },
+    "D04": {
+      "status": "technical_audit_required"
+    },
+    "D05": {
+      "status": "technical_audit_required"
+    }
+  },
+  "candidate_adoption": "Never infer accepted from autonomous development authorization"
+}

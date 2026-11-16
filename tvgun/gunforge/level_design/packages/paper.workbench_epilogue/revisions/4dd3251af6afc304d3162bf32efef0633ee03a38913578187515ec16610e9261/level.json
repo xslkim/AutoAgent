@@ -1,0 +1,8730 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "attack": {
+      "channel": "impact",
+      "duration_ms": 320,
+      "resource": "sound_attack",
+      "volume_db": -10
+    },
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "ending.tape": {
+      "channel": "voice",
+      "duration_ms": 20400,
+      "resource": "audio_052",
+      "volume_db": 0
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 156600,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "crow_release": {
+      "anchor_uv": [
+        0.64,
+        0.98
+      ],
+      "color": "#e5726e",
+      "duration_ms": 560,
+      "kind": "attack_release",
+      "radius": 84
+    },
+    "forget.stroke_1.ink": {
+      "anchor_uv": [
+        0.5,
+        0.85
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 54
+    },
+    "forget.stroke_2.ink": {
+      "anchor_uv": [
+        0.24,
+        0.87
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 96
+    },
+    "forget.stroke_3.ink": {
+      "anchor_uv": [
+        0.76,
+        0.87
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 74
+    },
+    "forget.stroke_4.ink": {
+      "anchor_uv": [
+        0.3,
+        0.8
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 62
+    },
+    "forget.stroke_5.ink": {
+      "anchor_uv": [
+        0.53,
+        0.93
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 124
+    },
+    "forget.stroke_6.ink": {
+      "anchor_uv": [
+        0.67,
+        0.79
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 50
+    },
+    "forget.stroke_7.ink": {
+      "anchor_uv": [
+        0.48,
+        0.87
+      ],
+      "color": "#a786c5",
+      "duration_ms": 550,
+      "kind": "attack_release",
+      "radius": 105
+    },
+    "forget.wrong": {
+      "color": "#aaa9b3",
+      "duration_ms": 360,
+      "kind": "pulse",
+      "radius": 75
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "站灯亮",
+      "radius": 112
+    },
+    "umbrella_release": {
+      "anchor_uv": [
+        0.35,
+        0.98
+      ],
+      "color": "#a786c5",
+      "duration_ms": 510,
+      "kind": "attack_release",
+      "radius": 76
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "ending.city_view": {
+      "height": 1117,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": -145,
+            "y": -81
+          },
+          {
+            "at_ms": 1200,
+            "opacity": 1,
+            "x": -141,
+            "y": -83
+          },
+          {
+            "at_ms": 8100,
+            "opacity": 1,
+            "x": -72,
+            "y": -103
+          },
+          {
+            "at_ms": 9600,
+            "opacity": 0,
+            "x": -66,
+            "y": -105
+          }
+        ]
+      },
+      "parallax": 0,
+      "properties": {
+        "z": 100
+      },
+      "resource": "image_051",
+      "template": "decoration",
+      "width": 1984,
+      "x": -145,
+      "y": -81
+    },
+    "ending.halo": {
+      "height": 523,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 20,
+            "y": 425
+          },
+          {
+            "at_ms": 550,
+            "opacity": 0.18,
+            "x": 20,
+            "y": 425
+          },
+          {
+            "at_ms": 1450,
+            "opacity": 0.75,
+            "x": 20,
+            "y": 425
+          },
+          {
+            "at_ms": 3100,
+            "opacity": 1,
+            "x": 20,
+            "y": 425
+          }
+        ]
+      },
+      "parallax": 0.18,
+      "properties": {
+        "z": 24
+      },
+      "resource": "image_049",
+      "template": "decoration",
+      "width": 523,
+      "x": 20,
+      "y": 425
+    },
+    "ending.paper": {
+      "height": 323,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 120,
+            "y": 525
+          },
+          {
+            "at_ms": 550,
+            "opacity": 0.18,
+            "x": 120,
+            "y": 525
+          },
+          {
+            "at_ms": 1450,
+            "opacity": 0.75,
+            "x": 120,
+            "y": 525
+          },
+          {
+            "at_ms": 3100,
+            "opacity": 1,
+            "x": 120,
+            "y": 525
+          }
+        ]
+      },
+      "parallax": 0.18,
+      "properties": {
+        "z": 25
+      },
+      "resource": "image_050",
+      "template": "decoration",
+      "width": 323,
+      "x": 120,
+      "y": 525
+    },
+    "forget.stroke_1": {
+      "height": 107,
+      "hit_resource": "image_028",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 834,
+            "y": 260
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 834,
+            "y": 260
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 35
+      },
+      "resource": "image_028",
+      "template": "target",
+      "width": 114,
+      "x": 834,
+      "y": 160
+    },
+    "forget.stroke_1.outline": {
+      "height": 107,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 834,
+            "y": 160
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 834,
+            "y": 160
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 36
+      },
+      "resource": "image_029",
+      "template": "decoration",
+      "width": 114,
+      "x": 834,
+      "y": 160
+    },
+    "forget.stroke_1.residue": {
+      "height": 107,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_030",
+      "template": "decoration",
+      "width": 114,
+      "x": 834,
+      "y": 160
+    },
+    "forget.stroke_2": {
+      "height": 99,
+      "hit_resource": "image_031",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 683,
+            "y": 343
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 683,
+            "y": 343
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 38
+      },
+      "resource": "image_031",
+      "template": "target",
+      "width": 396,
+      "x": 683,
+      "y": 243
+    },
+    "forget.stroke_2.outline": {
+      "height": 99,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 683,
+            "y": 243
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 683,
+            "y": 243
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 39
+      },
+      "resource": "image_032",
+      "template": "decoration",
+      "width": 396,
+      "x": 683,
+      "y": 243
+    },
+    "forget.stroke_2.residue": {
+      "height": 99,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_033",
+      "template": "decoration",
+      "width": 396,
+      "x": 683,
+      "y": 243
+    },
+    "forget.stroke_3": {
+      "height": 173,
+      "hit_resource": "image_034",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 736,
+            "y": 410
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 736,
+            "y": 410
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 41
+      },
+      "resource": "image_034",
+      "template": "target",
+      "width": 320,
+      "x": 736,
+      "y": 310
+    },
+    "forget.stroke_3.outline": {
+      "height": 173,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 736,
+            "y": 310
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 736,
+            "y": 310
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 42
+      },
+      "resource": "image_035",
+      "template": "decoration",
+      "width": 320,
+      "x": 736,
+      "y": 310
+    },
+    "forget.stroke_3.residue": {
+      "height": 173,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_036",
+      "template": "decoration",
+      "width": 320,
+      "x": 736,
+      "y": 310
+    },
+    "forget.stroke_4": {
+      "height": 158,
+      "hit_resource": "image_037",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 641,
+            "y": 618
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 641,
+            "y": 618
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 44
+      },
+      "resource": "image_037",
+      "template": "target",
+      "width": 92,
+      "x": 641,
+      "y": 518
+    },
+    "forget.stroke_4.outline": {
+      "height": 158,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 641,
+            "y": 518
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 641,
+            "y": 518
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 45
+      },
+      "resource": "image_038",
+      "template": "decoration",
+      "width": 92,
+      "x": 641,
+      "y": 518
+    },
+    "forget.stroke_4.residue": {
+      "height": 158,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_039",
+      "template": "decoration",
+      "width": 92,
+      "x": 641,
+      "y": 518
+    },
+    "forget.stroke_5": {
+      "height": 185,
+      "hit_resource": "image_040",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 759,
+            "y": 630
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 759,
+            "y": 630
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 47
+      },
+      "resource": "image_040",
+      "template": "target",
+      "width": 377,
+      "x": 759,
+      "y": 530
+    },
+    "forget.stroke_5.outline": {
+      "height": 185,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 759,
+            "y": 530
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 759,
+            "y": 530
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 48
+      },
+      "resource": "image_041",
+      "template": "decoration",
+      "width": 377,
+      "x": 759,
+      "y": 530
+    },
+    "forget.stroke_5.residue": {
+      "height": 185,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_042",
+      "template": "decoration",
+      "width": 377,
+      "x": 759,
+      "y": 530
+    },
+    "forget.stroke_6": {
+      "height": 102,
+      "hit_resource": "image_043",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 844,
+            "y": 575
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 844,
+            "y": 575
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 50
+      },
+      "resource": "image_043",
+      "template": "target",
+      "width": 117,
+      "x": 844,
+      "y": 475
+    },
+    "forget.stroke_6.outline": {
+      "height": 102,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 844,
+            "y": 475
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 844,
+            "y": 475
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 51
+      },
+      "resource": "image_044",
+      "template": "decoration",
+      "width": 117,
+      "x": 844,
+      "y": 475
+    },
+    "forget.stroke_6.residue": {
+      "height": 102,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_045",
+      "template": "decoration",
+      "width": 117,
+      "x": 844,
+      "y": 475
+    },
+    "forget.stroke_7": {
+      "height": 120,
+      "hit_resource": "image_046",
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 1024,
+            "y": 571
+          },
+          {
+            "at_ms": 1630,
+            "opacity": 0,
+            "x": 1024,
+            "y": 571
+          },
+          {
+            "at_ms": 2280,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "hits": 5,
+        "weak_damage": 5,
+        "z": 53
+      },
+      "resource": "image_046",
+      "template": "target",
+      "width": 151,
+      "x": 1024,
+      "y": 471
+    },
+    "forget.stroke_7.outline": {
+      "height": 120,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 340,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 680,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 1020,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 1360,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 1700,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 2040,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 2380,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 2720,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 3060,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 3400,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 3740,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 4080,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 4420,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 4760,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 5100,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 5440,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 5780,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 6120,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 6460,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 6800,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 7140,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 7480,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 7820,
+            "opacity": 0.5,
+            "x": 1024,
+            "y": 471
+          },
+          {
+            "at_ms": 8160,
+            "opacity": 1,
+            "x": 1024,
+            "y": 471
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 54
+      },
+      "resource": "image_047",
+      "template": "decoration",
+      "width": 151,
+      "x": 1024,
+      "y": 471
+    },
+    "forget.stroke_7.residue": {
+      "height": 120,
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_048",
+      "template": "decoration",
+      "width": 151,
+      "x": 1024,
+      "y": 471
+    },
+    "lantern_base.canopy": {
+      "height": 214,
+      "hit_resource": "image_019",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 504,
+            "y": 333
+          },
+          {
+            "at_ms": 2400,
+            "x": 504,
+            "y": 333
+          },
+          {
+            "at_ms": 2560,
+            "rotation_rad": 0.12,
+            "scale_x": 0.76,
+            "scale_y": 0.98,
+            "x": 515.43,
+            "y": 336
+          },
+          {
+            "at_ms": 2785,
+            "rotation_rad": 0.27,
+            "scale_x": 0.34,
+            "scale_y": 0.82,
+            "x": 549.72,
+            "y": 328
+          },
+          {
+            "at_ms": 3000,
+            "opacity": 0,
+            "rotation_rad": 0.38,
+            "scale_x": 0.09,
+            "scale_y": 0.61,
+            "x": 577.66,
+            "y": 326
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_018",
+      "template": "target",
+      "width": 254,
+      "x": 504,
+      "y": 333
+    },
+    "lantern_base.crow": {
+      "height": 250,
+      "mask_permission": {
+        "resource": "image_012",
+        "source": "lantern_base.light",
+        "threshold": 0.16
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.09,
+            "x": 1156,
+            "y": 318
+          },
+          {
+            "at_ms": 830,
+            "rotation_rad": -0.08,
+            "x": 1174,
+            "y": 308
+          },
+          {
+            "at_ms": 1610,
+            "rotation_rad": -0.03,
+            "x": 992,
+            "y": 273
+          },
+          {
+            "at_ms": 3500,
+            "rotation_rad": 0.07,
+            "x": 992,
+            "y": 273
+          },
+          {
+            "at_ms": 4900,
+            "rotation_rad": -0.15,
+            "x": 974,
+            "y": 291
+          },
+          {
+            "at_ms": 6230,
+            "rotation_rad": 0.06,
+            "x": 1156,
+            "y": 318
+          },
+          {
+            "at_ms": 7720,
+            "rotation_rad": -0.03,
+            "x": 992,
+            "y": 273
+          },
+          {
+            "at_ms": 10100,
+            "rotation_rad": 0.04,
+            "x": 992,
+            "y": 273
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "image_013",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "image_014",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "z": 32
+      },
+      "template": "target",
+      "width": 250,
+      "x": 1156,
+      "y": 318
+    },
+    "lantern_base.fold_body": {
+      "height": 277,
+      "hit_resource": "image_016",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 504,
+            "y": 314
+          },
+          {
+            "at_ms": 125,
+            "opacity": 0,
+            "x": 504,
+            "y": 314
+          },
+          {
+            "at_ms": 365,
+            "opacity": 0.92,
+            "x": 504,
+            "y": 307
+          },
+          {
+            "at_ms": 600,
+            "x": 504,
+            "y": 302
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 29
+      },
+      "resource": "image_015",
+      "template": "target",
+      "width": 254,
+      "x": 504,
+      "y": 302
+    },
+    "lantern_base.lamp": {
+      "height": 76,
+      "hit_resource": "image_009",
+      "parallax": 0.1,
+      "properties": {
+        "activation_cooldown_ms": 6000,
+        "z": 10
+      },
+      "resource": "image_008",
+      "template": "activation_source",
+      "width": 149,
+      "x": 815,
+      "y": 231
+    },
+    "lantern_base.lamp_ink": {
+      "height": 68,
+      "parallax": 0.1,
+      "properties": {
+        "z": 12
+      },
+      "resource": "image_011",
+      "template": "decoration",
+      "width": 141,
+      "x": 819,
+      "y": 235
+    },
+    "lantern_base.light": {
+      "height": 569,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 300,
+            "opacity": 1,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 4700,
+            "opacity": 1,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 4850,
+            "opacity": 0.68,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 5050,
+            "opacity": 1,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 5200,
+            "opacity": 1,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 5400,
+            "opacity": 0.42,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 5700,
+            "opacity": 1,
+            "x": 337,
+            "y": 0
+          },
+          {
+            "at_ms": 6000,
+            "opacity": 0,
+            "x": 337,
+            "y": 0
+          }
+        ]
+      },
+      "parallax": 0.1,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_010",
+      "template": "decoration",
+      "width": 1103,
+      "x": 337,
+      "y": 0
+    },
+    "lantern_base.umbrella": {
+      "height": 277,
+      "mask_permission": {
+        "resource": "image_012",
+        "source": "lantern_base.light",
+        "threshold": 0.16
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 504,
+            "y": 302
+          },
+          {
+            "at_ms": 1500,
+            "x": 523,
+            "y": 302
+          },
+          {
+            "at_ms": 3800,
+            "x": 485,
+            "y": 302
+          },
+          {
+            "at_ms": 6000,
+            "x": 504,
+            "y": 302
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_016",
+          "resource": "image_015",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_015",
+      "template": "target",
+      "width": 254,
+      "x": 504,
+      "y": 302
+    },
+    "pullback.exterior": {
+      "height": 936,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "scale": 4.625,
+            "x": 2807,
+            "y": -1660
+          },
+          {
+            "at_ms": 900,
+            "opacity": 0,
+            "scale": 4.625,
+            "x": 2807,
+            "y": -1660
+          },
+          {
+            "at_ms": 1160,
+            "opacity": 1,
+            "scale": 4.625,
+            "x": 2807,
+            "y": -1660
+          },
+          {
+            "at_ms": 2130,
+            "opacity": 1,
+            "scale": 1.078125,
+            "x": 41,
+            "y": -34
+          },
+          {
+            "at_ms": 2330,
+            "opacity": 1,
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "at_ms": 2530,
+            "opacity": 0,
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          }
+        ]
+      },
+      "parallax": 0,
+      "properties": {
+        "z": 91
+      },
+      "resource": "image_027",
+      "template": "decoration",
+      "width": 1776,
+      "x": 0,
+      "y": 0
+    },
+    "pullback.interior": {
+      "height": 936,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "at_ms": 230,
+            "opacity": 1,
+            "scale": 1.03125,
+            "x": 0,
+            "y": -14
+          },
+          {
+            "at_ms": 820,
+            "opacity": 1,
+            "scale": 2.8125,
+            "x": 0,
+            "y": -717
+          },
+          {
+            "at_ms": 1130,
+            "opacity": 1,
+            "scale": 2.8125,
+            "x": 0,
+            "y": -717
+          },
+          {
+            "at_ms": 1340,
+            "opacity": 0,
+            "scale": 2.8125,
+            "x": 0,
+            "y": -717
+          }
+        ]
+      },
+      "parallax": 0,
+      "properties": {
+        "z": 90
+      },
+      "resource": "image_026",
+      "template": "decoration",
+      "width": 1776,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "events": {
+    "ending.city": {
+      "actions": {
+        "a0": {
+          "entity": "ending.halo",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ending.paper",
+          "op": "remove"
+        },
+        "a2": {
+          "op": "section",
+          "section": "ending_city"
+        },
+        "a3": {
+          "entity": "ending.city_view",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ending.city_prepare",
+        "delay_ms": 0
+      }
+    },
+    "ending.city_prepare": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ending.light",
+        "delay_ms": 4600
+      }
+    },
+    "ending.light": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "ending_light"
+        },
+        "a1": {
+          "entity": "forget.stroke_1.residue",
+          "op": "remove"
+        },
+        "a10": {
+          "cue": "ending.tape",
+          "op": "cue"
+        },
+        "a11": {
+          "enabled": false,
+          "op": "input"
+        },
+        "a2": {
+          "entity": "forget.stroke_2.residue",
+          "op": "remove"
+        },
+        "a3": {
+          "entity": "forget.stroke_3.residue",
+          "op": "remove"
+        },
+        "a4": {
+          "entity": "forget.stroke_4.residue",
+          "op": "remove"
+        },
+        "a5": {
+          "entity": "forget.stroke_5.residue",
+          "op": "remove"
+        },
+        "a6": {
+          "entity": "forget.stroke_6.residue",
+          "op": "remove"
+        },
+        "a7": {
+          "entity": "forget.stroke_7.residue",
+          "op": "remove"
+        },
+        "a8": {
+          "entity": "ending.halo",
+          "op": "spawn"
+        },
+        "a9": {
+          "entity": "ending.paper",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10",
+        "a11"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.clear",
+        "delay_ms": 750
+      }
+    },
+    "ending.quote": {
+      "actions": {
+        "a0": {
+          "entity": "ending.city_view",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ending.halo",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "ending.paper",
+          "op": "remove"
+        },
+        "a3": {
+          "op": "section",
+          "section": "ending_quote"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ending.city",
+        "delay_ms": 9600
+      }
+    },
+    "ending.skip": {
+      "actions": {
+        "a0": {
+          "entity": "ending.city_view",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "ending.halo",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "ending.paper",
+          "op": "remove"
+        },
+        "a3": {
+          "op": "section",
+          "section": "ending_quote"
+        },
+        "a4": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "section.skipped"
+      }
+    },
+    "forget.start": {
+      "actions": {
+        "a0": {
+          "enabled": true,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "pullback.settle",
+        "delay_ms": 650
+      }
+    },
+    "forget.stroke_1.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_1.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_1.ink",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_1.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.ready",
+        "delay_ms": 2300
+      }
+    },
+    "forget.stroke_1.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_1.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_1.ink",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_1.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.ready",
+        "delay_ms": 5700
+      }
+    },
+    "forget.stroke_1.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_1.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_1.ink",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_1.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.ready",
+        "delay_ms": 9100
+      }
+    },
+    "forget.stroke_1.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_1.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_1.ink",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_1.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.ready",
+        "delay_ms": 12500
+      }
+    },
+    "forget.stroke_1.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_1.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_1.ink",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_1.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.ready",
+        "delay_ms": 15900
+      }
+    },
+    "forget.stroke_1.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_1.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_1.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_1"
+      }
+    },
+    "forget.stroke_1.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_1",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_1"
+      }
+    },
+    "forget.stroke_1.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_1",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_1.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.start",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_1.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_1.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_1"
+      }
+    },
+    "forget.stroke_2.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_2.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_2.ink",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_2.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.ready",
+        "delay_ms": 1950
+      }
+    },
+    "forget.stroke_2.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_2.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_2.ink",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_2.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.ready",
+        "delay_ms": 5350
+      }
+    },
+    "forget.stroke_2.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_2.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_2.ink",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_2.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.ready",
+        "delay_ms": 8750
+      }
+    },
+    "forget.stroke_2.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_2.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_2.ink",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_2.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.ready",
+        "delay_ms": 12150
+      }
+    },
+    "forget.stroke_2.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_2.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_2.ink",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_2.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.ready",
+        "delay_ms": 15550
+      }
+    },
+    "forget.stroke_2.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_2.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_2.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_2"
+      }
+    },
+    "forget.stroke_2.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_2",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_2"
+      }
+    },
+    "forget.stroke_2.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_2",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_2.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_1.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_2.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_2.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_2"
+      }
+    },
+    "forget.stroke_3.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_3.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_3.ink",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_3.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.ready",
+        "delay_ms": 1800
+      }
+    },
+    "forget.stroke_3.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_3.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_3.ink",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_3.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.ready",
+        "delay_ms": 5200
+      }
+    },
+    "forget.stroke_3.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_3.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_3.ink",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_3.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.ready",
+        "delay_ms": 8600
+      }
+    },
+    "forget.stroke_3.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_3.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_3.ink",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_3.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.ready",
+        "delay_ms": 12000
+      }
+    },
+    "forget.stroke_3.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_3.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_3.ink",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_3.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.ready",
+        "delay_ms": 15400
+      }
+    },
+    "forget.stroke_3.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_3.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_3.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_3"
+      }
+    },
+    "forget.stroke_3.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_3",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_3"
+      }
+    },
+    "forget.stroke_3.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_3",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_3.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_2.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_3.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_3.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_3"
+      }
+    },
+    "forget.stroke_4.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_4.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_4.ink",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_4.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.ready",
+        "delay_ms": 1600
+      }
+    },
+    "forget.stroke_4.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_4.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_4.ink",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_4.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.ready",
+        "delay_ms": 5000
+      }
+    },
+    "forget.stroke_4.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_4.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_4.ink",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_4.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.ready",
+        "delay_ms": 8400
+      }
+    },
+    "forget.stroke_4.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_4.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_4.ink",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_4.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.ready",
+        "delay_ms": 11800
+      }
+    },
+    "forget.stroke_4.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_4.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_4.ink",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_4.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.ready",
+        "delay_ms": 15200
+      }
+    },
+    "forget.stroke_4.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_4.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_4.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_4"
+      }
+    },
+    "forget.stroke_4.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_4",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_4"
+      }
+    },
+    "forget.stroke_4.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_4",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_4.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_3.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_4.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_4",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_4.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_4"
+      }
+    },
+    "forget.stroke_5.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_5.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_5.ink",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_5.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.ready",
+        "delay_ms": 1450
+      }
+    },
+    "forget.stroke_5.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_5.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_5.ink",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_5.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.ready",
+        "delay_ms": 4850
+      }
+    },
+    "forget.stroke_5.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_5.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_5.ink",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_5.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.ready",
+        "delay_ms": 8250
+      }
+    },
+    "forget.stroke_5.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_5.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_5.ink",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_5.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.ready",
+        "delay_ms": 11650
+      }
+    },
+    "forget.stroke_5.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_5.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_5.ink",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_5.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.ready",
+        "delay_ms": 15050
+      }
+    },
+    "forget.stroke_5.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_5.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_5.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_5"
+      }
+    },
+    "forget.stroke_5.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_5",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_5"
+      }
+    },
+    "forget.stroke_5.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_5",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_5.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_4.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_5.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_5",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_5.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_5"
+      }
+    },
+    "forget.stroke_6.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_6.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_6.ink",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_6.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.ready",
+        "delay_ms": 1300
+      }
+    },
+    "forget.stroke_6.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_6.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_6.ink",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_6.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.ready",
+        "delay_ms": 4700
+      }
+    },
+    "forget.stroke_6.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_6.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_6.ink",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_6.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.ready",
+        "delay_ms": 8100
+      }
+    },
+    "forget.stroke_6.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_6.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_6.ink",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_6.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.ready",
+        "delay_ms": 11500
+      }
+    },
+    "forget.stroke_6.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_6.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_6.ink",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_6.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.ready",
+        "delay_ms": 14900
+      }
+    },
+    "forget.stroke_6.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_6.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_6.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_6"
+      }
+    },
+    "forget.stroke_6.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_6",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_6"
+      }
+    },
+    "forget.stroke_6.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_6",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_6.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_5.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_6.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_6",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_6.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_6"
+      }
+    },
+    "forget.stroke_7.attack_1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_1.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_7.attack_1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_7.ink",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_7.attack_1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.ready",
+        "delay_ms": 1150
+      }
+    },
+    "forget.stroke_7.attack_2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_2.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_7.attack_2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_7.ink",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_7.attack_2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.ready",
+        "delay_ms": 4550
+      }
+    },
+    "forget.stroke_7.attack_3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_3.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_7.attack_3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_7.ink",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_7.attack_3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.ready",
+        "delay_ms": 7950
+      }
+    },
+    "forget.stroke_7.attack_4.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_4.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_7.attack_4.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_7.ink",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_4.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_7.attack_4.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.ready",
+        "delay_ms": 11350
+      }
+    },
+    "forget.stroke_7.attack_5.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_5.release",
+        "delay_ms": 550
+      }
+    },
+    "forget.stroke_7.attack_5.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "forget.stroke_7.ink",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.attack_5.warning",
+        "delay_ms": 1250
+      }
+    },
+    "forget.stroke_7.attack_5.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_7.ready",
+        "delay_ms": 14750
+      }
+    },
+    "forget.stroke_7.clear": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_7.outline",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "forget.stroke_7.residue",
+          "op": "spawn"
+        },
+        "a2": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a3": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:forget.stroke_7"
+      }
+    },
+    "forget.stroke_7.graze": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_7",
+          "field": "health",
+          "op": "set",
+          "value": 4
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7.outline",
+          "field": "active",
+          "value": false
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "health",
+          "value": 5
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_7"
+      }
+    },
+    "forget.stroke_7.ready": {
+      "actions": {
+        "a0": {
+          "entity": "forget.stroke_7",
+          "kind": "weak",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "forget.stroke_7.outline",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "forget.stroke_6.clear",
+        "delay_ms": 0
+      }
+    },
+    "forget.stroke_7.wrong": {
+      "actions": {
+        "a0": {
+          "effect": "forget.wrong",
+          "entity": "forget.stroke_7",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7",
+          "field": "active",
+          "value": true
+        },
+        {
+          "compare": "eq",
+          "entity": "forget.stroke_7.outline",
+          "field": "active",
+          "value": false
+        }
+      ],
+      "max_firings": 100,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.blocked:forget.stroke_7"
+      }
+    },
+    "lantern_base.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "lantern_base.crow",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "lantern_base.umbrella",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "lantern_base.complete": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "ending.quote",
+        "delay_ms": 6200
+      }
+    },
+    "lantern_base.crow1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow1.release",
+        "delay_ms": 550
+      }
+    },
+    "lantern_base.crow1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "lantern_base.crow1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.start",
+        "delay_ms": 3450
+      }
+    },
+    "lantern_base.crow2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow2.release",
+        "delay_ms": 550
+      }
+    },
+    "lantern_base.crow2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "lantern_base.crow2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.start",
+        "delay_ms": 8800
+      }
+    },
+    "lantern_base.crow3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow3.release",
+        "delay_ms": 550
+      }
+    },
+    "lantern_base.crow3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.crow3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "lantern_base.crow3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "lantern_base.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.start",
+        "delay_ms": 14400
+      }
+    },
+    "lantern_base.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "lantern_base.fold": {
+      "actions": {
+        "a0": {
+          "entity": "lantern_base.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "lantern_base.fold_body",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "lantern_base.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.fold.start",
+        "delay_ms": 600
+      }
+    },
+    "lantern_base.fold.start": {
+      "actions": {
+        "a0": {
+          "entity": "lantern_base.canopy",
+          "kind": "blocker",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "lantern_base.fold_body",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "lantern_base.fold_body",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.start",
+        "delay_ms": 2400
+      }
+    },
+    "lantern_base.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "lantern_base.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "lantern_base.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.lamp.open",
+        "delay_ms": 6000
+      }
+    },
+    "lantern_base.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "lantern_base.light",
+          "op": "spawn"
+        },
+        "a1": {
+          "effect": "light_fx",
+          "entity": "lantern_base.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:lantern_base.lamp"
+      }
+    },
+    "lantern_base.score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 2,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "lantern_base.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "lantern_base"
+        },
+        "a1": {
+          "entity": "lantern_base.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "lantern_base.lamp_ink",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "lantern_base.crow",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "lantern_base.canopy",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "lantern_base.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "lantern_base.umbrella1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.umbrella1.release",
+        "delay_ms": 550
+      }
+    },
+    "lantern_base.umbrella1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.umbrella1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "lantern_base.umbrella1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.fold",
+        "delay_ms": 3500
+      }
+    },
+    "lantern_base.umbrella2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.umbrella2.release",
+        "delay_ms": 550
+      }
+    },
+    "lantern_base.umbrella2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.umbrella2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "lantern_base.umbrella2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "lantern_base.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "lantern_base.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.fold",
+        "delay_ms": 9300
+      }
+    },
+    "pullback.prepare": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "lantern_base.clear",
+        "delay_ms": 550
+      }
+    },
+    "pullback.settle": {
+      "actions": {
+        "a0": {
+          "entity": "pullback.interior",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "pullback.exterior",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "pullback.start",
+        "delay_ms": 2530
+      }
+    },
+    "pullback.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "pullback"
+        },
+        "a1": {
+          "entity": "pullback.interior",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "pullback.exterior",
+          "op": "spawn"
+        },
+        "a3": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "pullback.prepare",
+        "delay_ms": 0
+      }
+    },
+    "workbench.enter": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "workbench"
+        },
+        "a1": {
+          "entity": "lantern_base.lamp",
+          "op": "remove"
+        },
+        "a10": {
+          "entity": "forget.stroke_7",
+          "op": "spawn"
+        },
+        "a11": {
+          "entity": "forget.stroke_1",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a12": {
+          "entity": "forget.stroke_2",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a13": {
+          "entity": "forget.stroke_3",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a14": {
+          "entity": "forget.stroke_4",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a15": {
+          "entity": "forget.stroke_5",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a16": {
+          "entity": "forget.stroke_6",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a17": {
+          "entity": "forget.stroke_7",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a2": {
+          "entity": "lantern_base.lamp_ink",
+          "op": "remove"
+        },
+        "a3": {
+          "entity": "lantern_base.light",
+          "op": "remove"
+        },
+        "a4": {
+          "entity": "forget.stroke_1",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "forget.stroke_2",
+          "op": "spawn"
+        },
+        "a6": {
+          "entity": "forget.stroke_3",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "forget.stroke_4",
+          "op": "spawn"
+        },
+        "a8": {
+          "entity": "forget.stroke_5",
+          "op": "spawn"
+        },
+        "a9": {
+          "entity": "forget.stroke_6",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10",
+        "a11",
+        "a12",
+        "a13",
+        "a14",
+        "a15",
+        "a16",
+        "a17"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "workbench.prepare",
+        "delay_ms": 0
+      }
+    },
+    "workbench.prepare": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "pullback.start",
+        "delay_ms": 900
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.workbench_epilogue",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "bottom_wipes": {
+      "lantern_base.lamp_ink": "lantern_base.light"
+    },
+    "camera": {
+      "amplitude_x": 38,
+      "amplitude_y": 15
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {
+      "lantern_base.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "lantern_base.crow": {
+        "invalid": "硬化 · 射站灯",
+        "primary": "软化 · 射击"
+      },
+      "lantern_base.fold_body": {
+        "invalid": "收伞中"
+      },
+      "lantern_base.umbrella": {
+        "invalid": "硬化 · 射站灯",
+        "primary": "软化 · 射击"
+      }
+    },
+    "entity_tints": {
+      "lantern_base.crow": {
+        "invalid": "#657198"
+      },
+      "lantern_base.umbrella": {
+        "invalid": "#657198"
+      }
+    },
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "射亮中央站灯 · 拦截右侧墨鸦 · 等左侧墨伞收伞",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "灯座陷入黑暗",
+      "result_success": "灯城重新亮了",
+      "section_unit": "站"
+    },
+    "layers": {
+      "ending_city.ending_quote.ending.halo": {
+        "height": 523,
+        "parallax": 0.18,
+        "resource": "image_049",
+        "section": "ending_city",
+        "width": 523,
+        "x": 20,
+        "y": 425,
+        "z": 24
+      },
+      "ending_city.ending_quote.ending.paper": {
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_050",
+        "section": "ending_city",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 25
+      },
+      "ending_city.ending_quote.workbench.brushes_and_box": {
+        "blocker": false,
+        "height": 281,
+        "parallax": 0.18,
+        "resource": "image_024",
+        "section": "ending_city",
+        "width": 470,
+        "x": 1378,
+        "y": 527,
+        "z": 4
+      },
+      "ending_city.ending_quote.workbench.desk": {
+        "blocker": false,
+        "height": 202,
+        "parallax": 0.18,
+        "resource": "image_021",
+        "section": "ending_city",
+        "width": 1920,
+        "x": -72,
+        "y": 776,
+        "z": 1
+      },
+      "ending_city.ending_quote.workbench.inkstone": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.18,
+        "resource": "image_023",
+        "section": "ending_city",
+        "width": 310,
+        "x": 734,
+        "y": 785,
+        "z": 3
+      },
+      "ending_city.ending_quote.workbench.paper_lantern": {
+        "blocker": false,
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_022",
+        "section": "ending_city",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 2
+      },
+      "ending_city.ending_quote.workbench.rolled_paper": {
+        "blocker": false,
+        "height": 120,
+        "parallax": 0.18,
+        "resource": "image_025",
+        "section": "ending_city",
+        "width": 334,
+        "x": 1514,
+        "y": 733,
+        "z": 5
+      },
+      "ending_city.ending_quote.workbench.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_020",
+        "section": "ending_city",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "ending_light.workbench.brushes_and_box": {
+        "blocker": false,
+        "height": 281,
+        "parallax": 0.18,
+        "resource": "image_024",
+        "section": "ending_light",
+        "width": 470,
+        "x": 1378,
+        "y": 527,
+        "z": 4
+      },
+      "ending_light.workbench.desk": {
+        "blocker": false,
+        "height": 202,
+        "parallax": 0.18,
+        "resource": "image_021",
+        "section": "ending_light",
+        "width": 1920,
+        "x": -72,
+        "y": 776,
+        "z": 1
+      },
+      "ending_light.workbench.inkstone": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.18,
+        "resource": "image_023",
+        "section": "ending_light",
+        "width": 310,
+        "x": 734,
+        "y": 785,
+        "z": 3
+      },
+      "ending_light.workbench.paper_lantern": {
+        "blocker": false,
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_022",
+        "section": "ending_light",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 2
+      },
+      "ending_light.workbench.rolled_paper": {
+        "blocker": false,
+        "height": 120,
+        "parallax": 0.18,
+        "resource": "image_025",
+        "section": "ending_light",
+        "width": 334,
+        "x": 1514,
+        "y": 733,
+        "z": 5
+      },
+      "ending_light.workbench.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_020",
+        "section": "ending_light",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "ending_quote.ending.halo": {
+        "height": 523,
+        "parallax": 0.18,
+        "resource": "image_049",
+        "section": "ending_quote",
+        "width": 523,
+        "x": 20,
+        "y": 425,
+        "z": 24
+      },
+      "ending_quote.ending.paper": {
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_050",
+        "section": "ending_quote",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 25
+      },
+      "ending_quote.workbench.brushes_and_box": {
+        "blocker": false,
+        "height": 281,
+        "parallax": 0.18,
+        "resource": "image_024",
+        "section": "ending_quote",
+        "width": 470,
+        "x": 1378,
+        "y": 527,
+        "z": 4
+      },
+      "ending_quote.workbench.desk": {
+        "blocker": false,
+        "height": 202,
+        "parallax": 0.18,
+        "resource": "image_021",
+        "section": "ending_quote",
+        "width": 1920,
+        "x": -72,
+        "y": 776,
+        "z": 1
+      },
+      "ending_quote.workbench.inkstone": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.18,
+        "resource": "image_023",
+        "section": "ending_quote",
+        "width": 310,
+        "x": 734,
+        "y": 785,
+        "z": 3
+      },
+      "ending_quote.workbench.paper_lantern": {
+        "blocker": false,
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_022",
+        "section": "ending_quote",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 2
+      },
+      "ending_quote.workbench.rolled_paper": {
+        "blocker": false,
+        "height": 120,
+        "parallax": 0.18,
+        "resource": "image_025",
+        "section": "ending_quote",
+        "width": 334,
+        "x": 1514,
+        "y": 733,
+        "z": 5
+      },
+      "ending_quote.workbench.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_020",
+        "section": "ending_quote",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "lantern_base.base_rim": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.31,
+        "resource": "image_005",
+        "section": "lantern_base",
+        "width": 493,
+        "x": 641,
+        "y": 721,
+        "z": 6
+      },
+      "lantern_base.floor": {
+        "blocker": false,
+        "height": 210,
+        "parallax": 0.1,
+        "resource": "image_004",
+        "section": "lantern_base",
+        "width": 1920,
+        "x": -72,
+        "y": 768,
+        "z": 4
+      },
+      "lantern_base.lantern_paper": {
+        "blocker": false,
+        "height": 633,
+        "parallax": 0.1,
+        "resource": "image_001",
+        "section": "lantern_base",
+        "width": 1920,
+        "x": -72,
+        "y": 127,
+        "z": 1
+      },
+      "lantern_base.near_left_brace": {
+        "blocker": true,
+        "height": 95,
+        "parallax": 0.52,
+        "resource": "image_006",
+        "section": "lantern_base",
+        "width": 216,
+        "x": -72,
+        "y": 712,
+        "z": 73
+      },
+      "lantern_base.near_right_brace": {
+        "blocker": true,
+        "height": 94,
+        "parallax": 0.52,
+        "resource": "image_007",
+        "section": "lantern_base",
+        "width": 215,
+        "x": 1633,
+        "y": 712,
+        "z": 74
+      },
+      "lantern_base.ring_braces": {
+        "blocker": false,
+        "height": 657,
+        "parallax": 0.1,
+        "resource": "image_003",
+        "section": "lantern_base",
+        "width": 1920,
+        "x": -72,
+        "y": 111,
+        "z": 3
+      },
+      "lantern_base.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_000",
+        "section": "lantern_base",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "lantern_base.vertical_ribs": {
+        "blocker": false,
+        "height": 790,
+        "parallax": 0.1,
+        "resource": "image_002",
+        "section": "lantern_base",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 2
+      },
+      "pullback.lantern_base.base_rim": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.31,
+        "resource": "image_005",
+        "section": "pullback",
+        "width": 493,
+        "x": 641,
+        "y": 721,
+        "z": 6
+      },
+      "pullback.lantern_base.floor": {
+        "blocker": false,
+        "height": 210,
+        "parallax": 0.1,
+        "resource": "image_004",
+        "section": "pullback",
+        "width": 1920,
+        "x": -72,
+        "y": 768,
+        "z": 4
+      },
+      "pullback.lantern_base.lantern_paper": {
+        "blocker": false,
+        "height": 633,
+        "parallax": 0.1,
+        "resource": "image_001",
+        "section": "pullback",
+        "width": 1920,
+        "x": -72,
+        "y": 127,
+        "z": 1
+      },
+      "pullback.lantern_base.near_left_brace": {
+        "blocker": true,
+        "height": 95,
+        "parallax": 0.52,
+        "resource": "image_006",
+        "section": "pullback",
+        "width": 216,
+        "x": -72,
+        "y": 712,
+        "z": 73
+      },
+      "pullback.lantern_base.near_right_brace": {
+        "blocker": true,
+        "height": 94,
+        "parallax": 0.52,
+        "resource": "image_007",
+        "section": "pullback",
+        "width": 215,
+        "x": 1633,
+        "y": 712,
+        "z": 74
+      },
+      "pullback.lantern_base.ring_braces": {
+        "blocker": false,
+        "height": 657,
+        "parallax": 0.1,
+        "resource": "image_003",
+        "section": "pullback",
+        "width": 1920,
+        "x": -72,
+        "y": 111,
+        "z": 3
+      },
+      "pullback.lantern_base.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_000",
+        "section": "pullback",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "pullback.lantern_base.vertical_ribs": {
+        "blocker": false,
+        "height": 790,
+        "parallax": 0.1,
+        "resource": "image_002",
+        "section": "pullback",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 2
+      },
+      "workbench.brushes_and_box": {
+        "blocker": false,
+        "height": 281,
+        "parallax": 0.18,
+        "resource": "image_024",
+        "section": "workbench",
+        "width": 470,
+        "x": 1378,
+        "y": 527,
+        "z": 4
+      },
+      "workbench.desk": {
+        "blocker": false,
+        "height": 202,
+        "parallax": 0.18,
+        "resource": "image_021",
+        "section": "workbench",
+        "width": 1920,
+        "x": -72,
+        "y": 776,
+        "z": 1
+      },
+      "workbench.inkstone": {
+        "blocker": false,
+        "height": 77,
+        "parallax": 0.18,
+        "resource": "image_023",
+        "section": "workbench",
+        "width": 310,
+        "x": 734,
+        "y": 785,
+        "z": 3
+      },
+      "workbench.paper_lantern": {
+        "blocker": false,
+        "height": 323,
+        "parallax": 0.18,
+        "resource": "image_022",
+        "section": "workbench",
+        "width": 323,
+        "x": 120,
+        "y": 525,
+        "z": 2
+      },
+      "workbench.rolled_paper": {
+        "blocker": false,
+        "height": 120,
+        "parallax": 0.18,
+        "resource": "image_025",
+        "section": "workbench",
+        "width": 334,
+        "x": 1514,
+        "y": 733,
+        "z": 5
+      },
+      "workbench.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_020",
+        "section": "workbench",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      }
+    },
+    "puppets": {},
+    "sound_bindings": {
+      "attack.launched": "attack",
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第三关 · 纸灯与工作台",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "audio_052": {
+      "kind": "audio",
+      "path": "gunforge/games/g01/assets/cutscenes/epilogue/ending_tape.wav",
+      "sha256": "31a741504ec5618c11dbfb01183e139a583fa6141042c3b3d58be7c85be96266"
+    },
+    "image_000": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/sky.png",
+      "sha256": "3e962ed2b751baf950c97ab8b284703f4e08fa0f6472d0cc8d09b8b072e2ca4e"
+    },
+    "image_001": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/lantern_paper.png",
+      "sha256": "692d47710507fc245778ba39c25d8f1401fc2691c8944844155bc34509e0c5d8"
+    },
+    "image_002": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/vertical_ribs.png",
+      "sha256": "e589780c10258c1b26ce4703f891d6acbff6455ae098fe3d1df25aa22099d544"
+    },
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/ring_braces.png",
+      "sha256": "7dee440d5220e9683fd9339767c6fff97b2e7bfc87ad1f931bc9423a1c16c1ee"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/floor.png",
+      "sha256": "630a71f56b08aef784a470d6cb78a80c40bce3c683ee6c958c2a07e53546715c"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/base_rim.png",
+      "sha256": "22179b6a75cc0068d7a9b9d80e49a492bfd2d7052aed949ea754a9e7a2a828dc"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/near_left_brace.png",
+      "sha256": "ec010b3afbf6b36faf680d4fb793f655a27f0dbde916df019a63b2855a7fab7b"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/near_right_brace.png",
+      "sha256": "7d5a2789a45d994318e2d576cb2fdd9c6a19b3327dd17560a636d77d2af78fbf"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/lamp.png",
+      "sha256": "a66b0febd6ad2692f2f1950c8ec10ed01bc701eb2eaa4de1fdcccd93137a8dfe"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/lantern_base_lamp_hit.png",
+      "sha256": "5eaed77d0367ee71096ddc87bb3c08ffd4744861bbf5f950b69d80b8460a1c30"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/lantern_base_light_add.png",
+      "sha256": "fa12ebce9f4379b96acded1ba3fb2f10879943f94000a5fa540301e1d178d951"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/lantern_base_lamp_ink.png",
+      "sha256": "746674018e0c4785b3bd3dd6a9c7c0520564d9045cd6a5636502c2fbe2a4a8d2"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/lantern_base_light_influence.png",
+      "sha256": "8782f43efa8261f9896d6509b1f0d952419702a9747115ce080e48d5458a553f"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/body.png",
+      "sha256": "16c91f1f8a3e47071e1f44422525fd4d3d0ebdc1d0798205d6683a8efcd6bab3"
+    },
+    "image_014": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/core.png",
+      "sha256": "f5a343c49980c0c17a75e1ce0b5aad19097fff815f429a129fb14178c9ed367f"
+    },
+    "image_015": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/body.png",
+      "sha256": "9abe0f7e704bf58a7cb222427be64b07611769ac8f8e55ceb9d3883110f78489"
+    },
+    "image_016": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/ink_umbrella_hit.png",
+      "sha256": "a2b518433bd5ae3b4d249f11ee817f745b636f4661e0531c87479a59fde5f60f"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/weak.png",
+      "sha256": "50fb77326e9c42904ca556eb7ff39d8388ec7ed67bb450268b0501b890dae881"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/open.png",
+      "sha256": "6b05fba3bc4861a59b42300706a0993649401847bddfd48e0b3deccc1eb763b0"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/umbrella_open_hit.png",
+      "sha256": "1cd76b2509e382ea020f948c096d4d987c738574b0d25c378c040e2f03753b06"
+    },
+    "image_020": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/sky.png",
+      "sha256": "26df02fe40875be33762f757d7ec71e766447644cd029833452bb475e843f90d"
+    },
+    "image_021": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/desk.png",
+      "sha256": "d0487946e31c2b9057ae5bf23b8c7c1830a38f6de25c422e48cbe71e058a65bf"
+    },
+    "image_022": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/paper_lantern.png",
+      "sha256": "15cb6dc7c6bd41e37ff03c4eeb0802b57bb9ba8ff5512eaa8eca0cc083f8f58c"
+    },
+    "image_023": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/inkstone.png",
+      "sha256": "f2394556299d80e19fd3f00762d8282bef21e5d7012be9a8dfa2af39f01142cc"
+    },
+    "image_024": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/brushes_and_box.png",
+      "sha256": "ab28a5d59483b728586e22afb169e6c9ac9d21f864348f065e03633c218dd419"
+    },
+    "image_025": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/rolled_paper.png",
+      "sha256": "6b217bebe1511d93dff6e6dc1f3382a73dca2f91f95b7e0f83ec745b44e6a767"
+    },
+    "image_026": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/lantern_base/render_source.png",
+      "sha256": "04ca0aad23eb7853e6ca5c8773b1f08a6619cff24eaac3484222144bcc4995f2"
+    },
+    "image_027": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/parallax/workbench/render_source.png",
+      "sha256": "a6723b8cc7db5587434d6e8f0a9ab6ec3cf5653e5e506b8263b02751832fbcb5"
+    },
+    "image_028": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_01_ink.png",
+      "sha256": "ba7e1e8c4c687fb06d97be2e56594969a91d56ea23df013824c0184eb0cba8ee"
+    },
+    "image_029": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_01_outline.png",
+      "sha256": "7c8b2849a67f269625d92ae01205aa7fd66892ae5a63e0527a92c01decf5ad48"
+    },
+    "image_030": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_01_residue.png",
+      "sha256": "b699d21183e8a85a63698811917c905d5ba64ae5dba68224cd8c9734cb787e40"
+    },
+    "image_031": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_02_ink.png",
+      "sha256": "bdb4dab9b360aea1b35b2d7a5eaac903500112ec536579e881cbdcb8732c45f4"
+    },
+    "image_032": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_02_outline.png",
+      "sha256": "87042b066dc921c9bc43824aee93fa5d8250a163dd4a5d92ce011bf9d497ec8c"
+    },
+    "image_033": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_02_residue.png",
+      "sha256": "f7c7fd24ed01c0a53cd9a91e984491181426a3b7bbd0a68dcd04a6dbe165e4f3"
+    },
+    "image_034": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_03_ink.png",
+      "sha256": "913e84032802e3a2de40caebe5b9d483b715dcf9982f1c14b3ca9bef76aca904"
+    },
+    "image_035": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_03_outline.png",
+      "sha256": "7d50d16a70ff484e4c64a38e3b890660c25c32ab4fc6c3a4fbe891abae8944a8"
+    },
+    "image_036": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_03_residue.png",
+      "sha256": "e5f8e79b6b7e6166bb9b455c53fbd8e77d606d5bff2a75db37bca7bd2e19666e"
+    },
+    "image_037": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_04_ink.png",
+      "sha256": "012930cbbb743766d23c0d2ebac6764c4b8124c8be10af7d997d097eb9ee74bd"
+    },
+    "image_038": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_04_outline.png",
+      "sha256": "8ca36aca75e81cc6b97c58a2201f7b279d8fc167ee13a2db22b1479334da1252"
+    },
+    "image_039": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_04_residue.png",
+      "sha256": "fac960da0226feb82a73394103240d1c36dcf09098fd2d4dcc601ef44807f288"
+    },
+    "image_040": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_05_ink.png",
+      "sha256": "cbb6f6565252a1816c6fb73e3687df84a73fef3f6c539ddec79a1be40e20c327"
+    },
+    "image_041": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_05_outline.png",
+      "sha256": "295515345f24b96020147b98870806eda7e4f1a72423d954daf3826c1027c42e"
+    },
+    "image_042": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_05_residue.png",
+      "sha256": "f9613c7fe65c8412a328329161d4e14bc412caa685bc64a16373e3fbc9351cfc"
+    },
+    "image_043": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_06_ink.png",
+      "sha256": "6dfa968e00c0eb7bcefbfc26044446c1a8ab35ac4ad312575f7d87d09a88f348"
+    },
+    "image_044": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_06_outline.png",
+      "sha256": "10a4ffafe83e29c19417c652f3c2978b9443d722c701f6170f088079a5eb81bf"
+    },
+    "image_045": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_06_residue.png",
+      "sha256": "ce50cf4b2cbd542bf7003e1c34720f6c4c9736b8f742dc0f674402150d5f1b8f"
+    },
+    "image_046": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_07_ink.png",
+      "sha256": "7acfca1f45713ee29548102852b51f9b1d5aaf218a21d9777d7148ce0de71f3c"
+    },
+    "image_047": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_07_outline.png",
+      "sha256": "843f99695e7c232ff9d4ab011e7bd6b300bd8078cce6e30fbda014f291c585b7"
+    },
+    "image_048": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/stroke_07_residue.png",
+      "sha256": "9af320eab833a0ae30babb49357a80bb8a884cd2050e7e8654efb2660e134ce4"
+    },
+    "image_049": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/ending_lantern_halo.png",
+      "sha256": "8c929bc89a341fc750765680b458ba8249329e3db806af23b3515b09f81a3e8e"
+    },
+    "image_050": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/workbench_boss/ending_lit_paper.png",
+      "sha256": "d2b541204ab1859d2372dd66051d4041dee1ee766aa4c57cbbfe0e2a3d2fa61b"
+    },
+    "image_051": {
+      "kind": "image",
+      "path": "gunforge/games/g01/cinematics/opening_original/keyframes/city.png",
+      "sha256": "3750880e2719418c1928b147975051dc88fb10e293d0ceceb37daf3241b12c84"
+    },
+    "sound_attack": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_attack.wav",
+      "sha256": "cbf21f7119d51f05047fac0d2bff41a993fb777680e60d04493b5fff214f62d6"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "ending_city": {
+      "hint": "夜市的灯，又亮了起来。",
+      "index": 5,
+      "skippable": true,
+      "targets": [],
+      "title": "夜市的灯"
+    },
+    "ending_light": {
+      "index": 4,
+      "skippable": true,
+      "targets": [],
+      "title": "爷爷的工作台"
+    },
+    "ending_quote": {
+      "hint": "灯亮着，就还在。",
+      "index": 6,
+      "skippable": true,
+      "targets": [],
+      "title": "爷爷的工作台"
+    },
+    "lantern_base": {
+      "hint": "中央站灯能软化两侧墨怪。等墨鸦进光、墨伞收伞，再净化。",
+      "index": 1,
+      "targets": [
+        "lantern_base.crow",
+        "lantern_base.umbrella"
+      ],
+      "title": "灯座"
+    },
+    "pullback": {
+      "index": 2,
+      "targets": [],
+      "title": "纸灯内部"
+    },
+    "workbench": {
+      "hint": "跟着朱砂描边和落笔光点，逐笔净化。",
+      "index": 3,
+      "targets": [
+        "forget.stroke_1",
+        "forget.stroke_2",
+        "forget.stroke_3",
+        "forget.stroke_4",
+        "forget.stroke_5",
+        "forget.stroke_6",
+        "forget.stroke_7"
+      ],
+      "title": "爷爷的工作台"
+    }
+  },
+  "seed": 433,
+  "tick_hz": 60
+}

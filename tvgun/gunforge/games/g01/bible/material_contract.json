@@ -1,0 +1,17 @@
+{
+  "version": "g01-crow-hardened-eyes-1",
+  "approved_date": "2026-11-05",
+  "applies_to": [
+    "g01_ink_crow"
+  ],
+  "state": "hardened",
+  "eye_tint_rgb": [
+    217,
+    160,
+    102
+  ],
+  "alpha": "original eye attachment alpha preserved",
+  "normal_and_hit_feedback": "unchanged",
+  "engine_validation": "pending",
+  "source": "D:\\tvgun\\gunforge\\games\\g01\\reports\\art\\T07\\revisions\\A2f\\user_feedback.yaml"
+}

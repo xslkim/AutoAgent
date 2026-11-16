@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "sha256": "fd1ff497cdf93e547b3efd44c75eb27496696e2e042c30c9f797724b53fcac67",
+  "directory": "D:\\gunforge_cache\\level_design\\baseline-v1",
+  "runs": 2,
+  "samples_per_run": 1043,
+  "states": [
+    "hard",
+    "soft",
+    "rescue_0",
+    "rescue_10ticks",
+    "rescue_13ticks",
+    "pickup"
+  ],
+  "algorithm": "old resolver, visible alpha row edges +/-1/14/16px plus fixed 144px grid; query only, no shot"
+}

@@ -1,0 +1,28 @@
+{
+  "package": "paper.lantern_city_cast",
+  "source": "D:\\tvgun\\gunforge\\level_design\\packages\\paper.lantern_city_cast\\revisions\\bf6ee67f80fed701fb861cd3ca34968a1fedd8bc6741754613f807b8be0d6f9e\\level.json",
+  "source_revision": "bf6ee67f80fed701fb861cd3ca34968a1fedd8bc6741754613f807b8be0d6f9e",
+  "build_id": "79b38ada06898061b638888466ae1e361d3dc5690b7df6adb278907f842e3f1a",
+  "compiled": "D:\\gunforge_cache\\level_design\\builds\\79b38ada06898061b638888466ae1e361d3dc5690b7df6adb278907f842e3f1a\\level.json",
+  "state": "candidate_not_adopted",
+  "base_build_id": "1ca059b468c9268ab77b22e9fb4cb2706cb37b21ec0d6efd3ad0296ab52bbccc",
+  "base_source_revision": "3ee1e018cc218e74c121b295d64926019f80e7b0d26586a303e8463c6e1e9e19",
+  "resource_id": "lantern_base.image_052",
+  "original_image": {
+    "kind": "image",
+    "path": "gunforge/level_design/generated/lantern_city_cast/rgba8/27653203ce08901511f83e9b705b87b3e931f3ae0ef0632b9d79e723fe720f25/city_wide_v1.png",
+    "sha256": "732f8190ca9fb4a35fa9be811962a2156fae1015367ecdc64718c2812115accb"
+  },
+  "candidate_image": {
+    "kind": "image",
+    "path": "gunforge/level_design/generated/lantern_city_ending_palette/4a20b231798697e38fffb8223f13652fc29f26b01800638296bc13c99fc6647c/city_wide_v1.png",
+    "sha256": "3ba58187243a516343795b095fa1291667d3b519badb6644be945d352a1ee281"
+  },
+  "grade_operation": "epilogue_left_stalls_warm_apricot_v1",
+  "bounds_xyxy_normalized": [
+    0.054,
+    0.448,
+    0.385,
+    0.765
+  ]
+}

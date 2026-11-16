@@ -1,0 +1,72 @@
+game: g01
+usd_cny: 7.0
+exchange_rate_basis: fixed planning rate, not a live market quotation
+cache: D:/gunforge_cache/g01
+task_caps_cny:
+  T00: 0
+  T01: 5
+  T02: 60
+  T03: 20
+  T04: 60
+  T05: 60
+  T06: 50
+  T07: 0
+  T08: 60
+  T09: 100
+  T10: 150
+  T11: 60
+  T12: 150
+  T13: 150
+  T14: 40
+  T15: 180
+  T16: 0
+run_cap_usd: 20
+game_cap_usd: 600
+phase_0A_cap_cny: 300
+checker_version: art-checks-0.3-initial-offline
+providers:
+  builtin_image_gen:
+    enabled: true
+    verified: true
+    verification_task: T01
+    capabilities_file: capabilities.yaml
+gates:
+  T09_requires: actual_0B_five_checks_approved
+  offline_previews_are_final_acceptance: false
+retry_limits:
+  total: 4
+  visual_or_ocr: 1
+  style_score: 2
+generation:
+  mode: builtin_image_gen
+  requires_api_key: false
+  model: null
+  model_status: not_exposed_by_tool
+  per_batch_call_cap: 10
+  phase_0A_call_cap: 120
+  cost_if_unreported: null
+  external_api_enabled: false
+task_call_caps:
+  T00: 0
+  T01: 3
+  T02: 36
+  T03: 10
+  T04: 24
+  T05: 32
+  T06: 16
+  T07: 0
+  T08: 24
+  T09: 48
+  T10: 100
+  T11: 32
+  T12: 100
+  T13: 100
+  T14: 40
+  T15: 24
+  T16: 0
+external_budget_enabled: false
+station_policy_overrides:
+  g01_st_l1_01_alley:
+    version: g01-alley-luminance-exception-1
+    policy_file: D:\tvgun\gunforge\games\g01\bible\luminance_policy.json
+checker_freeze_file: D:\tvgun\gunforge\games\g01\reports\art\T07\revisions\A2i\checker_freeze.json

@@ -1,0 +1,73 @@
+version: g01-character-occlusion-1
+status: specification_only_not_runtime_enabled
+rule_document: CHARACTER_OCCLUSION_RULES_A2j.md
+scope: two_existing_civilian_rigs_current_three_quarter_view
+bone_count: 10
+slot_count_is_not_bone_count: true
+source_side_aliases:
+  legacy_l: screen_left_anatomical_right_in_current_bind_view_only
+  legacy_r: screen_right_anatomical_left_in_current_bind_view_only
+near_far_mapping: required_per_character_view_not_inferred_from_alias
+slot_required_fields:
+  - slot_id
+  - driver_bone
+  - local_anchor
+  - view_id
+  - allowed_attachments
+  - pixel_owner
+  - mask_scope
+  - sort_group
+state_required_fields:
+  - view_id
+  - occlusion_profile
+  - complete_active_slot_order
+  - active_attachment_per_slot
+  - local_mask_assignments
+ordering:
+  direction: back_to_front
+  representation: authored_complete_slot_list_or_acyclic_constraints_with_stable_ID_tiebreak
+  floating_z_interpolation: forbidden
+  angle_or_screen_Y_sorting_inside_character: forbidden
+  duplicate_active_slots: forbidden
+  implicit_filesystem_or_input_list_tiebreak: forbidden
+  unresolved_cycle: fail_split_or_replace_art_or_restaging_required
+  animation_update: atomic_pose_profile_attachments_masks
+  state_sampling: absolute_clip_time_not_callback_history
+  interval_convention: start_inclusive_end_exclusive
+  incompatible_animation_mix: authored_transition_required
+  clip_boundary: explicit_reset_and_loop_closure
+local_constraints:
+  grip:
+    back_to_front: [hand_back, held_object, gripping_fingers_front]
+    coordinates: shared_grip_anchor_original_approved_orientation_preserved
+  wrist:
+    relation: wrist_root_below_cuff_front_visible_fingers_not_globally_clipped
+  shoulder:
+    relation: local_root_under_shoulder_rim_arm_depth_authored_per_pose
+  neck:
+    relation: neck_root_below_collar_front_head_vs_hand_authored_per_pose
+  leg:
+    relation: leg_root_under_garment_hem_crossing_depth_authored_per_pose
+  joint_decoration:
+    relation: one_pixel_owner_per_copper_pin_no_global_topmost_patch
+masks:
+  required_fields: [coordinate_space, driver_bone, target_slots, bounds_or_geometry, version]
+  unlimited_global_scope: forbidden
+  ordinary_and_rescue_drawing_list: shared
+  visible_ink: clipped_ink_alpha_times_product_of_one_minus_actual_front_occluder_alpha
+  protected_human: always
+required_before_runtime_enable:
+  - annotated_view_and_default_profile_for_each_character
+  - split_asset_or_authored_local_mask_with_pixel_ownership
+  - per_clip_profile_tracks_and_all_transitions
+  - single_drawing_list_renderer_used_by_rescue_and_debug
+  - jump_reverse_loop_and_transition_determinism
+  - pixel_reference_and_visible_ink_regressions
+  - rendered_joint_and_depth_review
+characters: {} # Intentionally empty: no invented approved depth map or mask coordinates.
+acceptance:
+  implemented: false
+  visual_approved: false
+  technical_A2_approved: false
+  T08_started: false
+  actual_0B_approved: false

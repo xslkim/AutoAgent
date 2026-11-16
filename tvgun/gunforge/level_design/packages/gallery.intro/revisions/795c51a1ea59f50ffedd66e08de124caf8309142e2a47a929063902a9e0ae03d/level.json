@@ -1,0 +1,235 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 8,
+    "magazine": 4,
+    "reload_ms": 500,
+    "shot_interval_ms": 150
+  },
+  "cues": {
+    "target_warning": {
+      "channel": "warning",
+      "duration_ms": 220,
+      "resource": "warning_tone",
+      "volume_db": -17
+    }
+  },
+  "duration_ms": 12000,
+  "entities": {
+    "protected_a": {
+      "height": 100,
+      "properties": {},
+      "template": "protected",
+      "width": 100,
+      "x": 380,
+      "y": 300
+    },
+    "target_a": {
+      "height": 100,
+      "properties": {
+        "shape": "circle"
+      },
+      "template": "target",
+      "width": 100,
+      "x": 170,
+      "y": 180
+    },
+    "target_b": {
+      "height": 90,
+      "properties": {
+        "shape": "circle",
+        "vx": 12
+      },
+      "template": "target",
+      "width": 100,
+      "x": 600,
+      "y": 200
+    }
+  },
+  "events": {
+    "a_clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "trigger": {
+        "on": "target.neutralized:target_a"
+      }
+    },
+    "b_clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "trigger": {
+        "on": "target.neutralized:target_b"
+      }
+    },
+    "next": {
+      "actions": {
+        "a0": {
+          "entity": "target_b",
+          "op": "spawn"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "trigger": {
+        "at_ms": 2000
+      }
+    },
+    "open": {
+      "actions": {
+        "a0": {
+          "entity": "target_a",
+          "op": "spawn"
+        },
+        "a1": {
+          "entity": "protected_a",
+          "op": "spawn"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "warning": {
+      "actions": {
+        "a0": {
+          "cue": "target_warning",
+          "op": "cue"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "trigger": {
+        "at_ms": 1800
+      }
+    },
+    "wrong": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "op": "fail",
+          "result": "wrong_target"
+        }
+      },
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "trigger": {
+        "on": "target.protected_hit:protected_a"
+      }
+    },
+    "zone_entry": {
+      "actions": {
+        "a0": {
+          "event": "timer.started",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "target_b",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "trigger": {
+        "compare": "gte",
+        "query": "entry_zone",
+        "value": 1
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "得分",
+      "resource": "score"
+    }
+  ],
+  "id": "gallery.intro",
+  "initial_resources": {
+    "ammo": 4,
+    "score": 0
+  },
+  "layout": {
+    "height": 540,
+    "width": 960
+  },
+  "queries": {
+    "entry_zone": {
+      "algorithm": "cpu-nearest-v1",
+      "entity": "target_b",
+      "op": "region_contains",
+      "region": [
+        665,
+        0,
+        295,
+        540
+      ],
+      "space": "content_px"
+    },
+    "target_distance": {
+      "algorithm": "cpu-nearest-v1",
+      "entity": "target_a",
+      "op": "distance",
+      "other": "target_b",
+      "space": "content_px"
+    }
+  },
+  "resources": {
+    "warning_tone": {
+      "kind": "audio",
+      "path": "gunforge/framework/runtime/audio/warning.wav",
+      "sha256": "f3a698b9c3e15b71273b901587879892eaee9acfc465841b98dad7b2697b3099"
+    }
+  },
+  "ruleset": "gallery@1",
+  "schema_version": 1,
+  "seed": 421,
+  "tick_hz": 60
+}

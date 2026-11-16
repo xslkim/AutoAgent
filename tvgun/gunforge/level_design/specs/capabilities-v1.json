@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "templates": [
+    "target",
+    "protected",
+    "activation_source",
+    "projectile",
+    "decoration"
+  ],
+  "queries": [
+    "region_contains",
+    "mask_sample",
+    "distance",
+    "entity_age_ms"
+  ],
+  "algorithms": [
+    "cpu-nearest-v1",
+    "entity-clock60-v1"
+  ],
+  "entity_properties": {
+    "active": "boolean",
+    "visible": "boolean",
+    "vx": "number",
+    "vy": "number",
+    "shape": [
+      "rect",
+      "circle"
+    ],
+    "z": "integer",
+    "hits": "positive_integer",
+    "value": "number",
+    "weak_damage": "positive_integer",
+    "hitstop_ms": "integer",
+    "activation_cooldown_ms": "integer",
+    "virtual": "boolean",
+    "label": "string"
+  },
+  "rulesets": {
+    "gallery@1": {
+      "description": "score and target-recognition tasks; no compulsory lives or ammo"
+    },
+    "protection@1": {
+      "description": "protection and intercept tasks composed from the same primitives"
+    },
+    "g01.paper_lantern@1": {
+      "description": "First-station rules and paper-puppet renderer, explicit native migration bridge",
+      "parameters_schema": "gunforge/level_design/rulesets/paper_lantern-v1.schema.json",
+      "adapter_source": "gunforge/framework/core/legacy_level_adapter.gd",
+      "native_rules": "gunforge/level_design/rulesets/paper_lantern_rules.gd",
+      "native_scene": "gunforge/games/g01/scripts/alley_scene.gd",
+      "module_files": [
+        "gunforge/framework/core/legacy_level_adapter.gd",
+        "gunforge/games/g01/scripts/alley_rules.gd",
+        "gunforge/games/g01/scripts/alley_scene.gd",
+        "gunforge/games/g01/scripts/alley_pose.gd",
+        "gunforge/level_design/rulesets/paper_lantern_rules.gd",
+        "gunforge/level_design/rulesets/paper_lantern_expand.py"
+      ],
+      "bridge_status": "Native presentation facade retained; spawn, warning, expiry and wave flow use the shared scheduler. Legacy second-clock domain is explicit.",
+      "resources_map": {
+        "ammo": "ammo",
+        "lives": "lives",
+        "score": "score"
+      },
+      "view_clock_field": "total",
+      "target_roles": {
+        "lamp": "activation_source",
+        "pickup": "collectible"
+      },
+      "compiler_plugin": "gunforge/level_design/rulesets/paper_lantern_expand.py",
+      "query_exports": [
+        "local_clock",
+        "state_clock",
+        "wave",
+        "playing",
+        "gap",
+        "transition",
+        "continue",
+        "reload_due",
+        "enemy_waiting",
+        "enemy_alive",
+        "enemy_unwarned"
+      ],
+      "query_algorithms": [
+        "legacy-float60-v1"
+      ],
+      "effects": {
+        "reload_done": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "enemy_spawn": {
+          "type": "object",
+          "properties": {
+            "enemy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "enemy"
+          ],
+          "additionalProperties": false
+        },
+        "enemy_warning": {
+          "type": "object",
+          "properties": {
+            "enemy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "enemy"
+          ],
+          "additionalProperties": false
+        },
+        "enemy_expire": {
+          "type": "object",
+          "properties": {
+            "enemy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "enemy"
+          ],
+          "additionalProperties": false
+        },
+        "wave_end": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "next_wave": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "level_complete": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "return_title": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "layout_constraint": {
+        "width": 1776,
+        "height": 936
+      },
+      "supported_ops": [
+        "registered"
+      ],
+      "supported_query_ops": [
+        "registered_value"
+      ],
+      "supported_sections": [
+        "schema_version",
+        "id",
+        "ruleset",
+        "seed",
+        "tick_hz",
+        "duration_ms",
+        "layout",
+        "entities",
+        "events",
+        "queries",
+        "resources",
+        "cues",
+        "initial_resources",
+        "ruleset_data",
+        "controls",
+        "hud"
+      ]
+    },
+    "directed_action@1": {
+      "description": "Data-driven trajectories, composite targets, interruptible attacks and layered 2D presentation",
+      "adapter_source": "gunforge/framework/core/art_level_adapter.gd",
+      "module_files": [
+        "gunforge/framework/core/art_level_adapter.gd",
+        "gunforge/framework/core/art_level_scene.gd"
+      ],
+      "layered_2d": true,
+      "encounter_authoring": true
+    }
+  },
+  "runtime_source": "gunforge/framework/core/level_runtime.gd",
+  "status": "Executable software acceptance is indexed in reviews/software_acceptance.json; hardware, listening and user adoption remain separate."
+}

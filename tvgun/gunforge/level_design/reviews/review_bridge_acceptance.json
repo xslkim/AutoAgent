@@ -1,0 +1,24 @@
+{
+  "status": "accepted",
+  "selected_reviewer": "native_godot",
+  "user_selected_on": "2026-11-09",
+  "proposal": "agent_proposals/proposal-1794220453914520000.json",
+  "bridge": {
+    "path": "D:/gunforge_cache/level_design/runs/review-bridge-1794220653363142100/comparison.json",
+    "sha256": "14896292d9fc306c061bd1ee6deaccb30897749066be0db6d7cbb8aa0c1ebb2b"
+  },
+  "browser": {
+    "engine": "Edge",
+    "screenshot": "D:/gunforge_cache/level_design/runs/station-lamp-selfreview/browser-bridge.png",
+    "checks": [
+      "seek",
+      "source_properties",
+      "isolated_note",
+      "same_tick_version_switch"
+    ]
+  },
+  "replay": {
+    "path": "D:/gunforge_cache/level_design/runs/station-lamp-selfreview/candidate-replay.json",
+    "sha256": "ea3760773e353425e7a0fd7e9117647b7d6ab6d1ad073cfd21097676cedd3fbd"
+  }
+}

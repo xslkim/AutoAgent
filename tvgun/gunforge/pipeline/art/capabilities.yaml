@@ -1,0 +1,37 @@
+mode: builtin_image_gen
+tested_on: '2026-11-04'
+api_key_required: false
+model: null
+model_status: not_exposed_by_tool
+calls_used: 3
+cost:
+  amount: null
+  status: not_reported
+capabilities:
+  generate:
+    status: verified
+    evidence: games/g01/reports/art/T01/attempts.json
+  transparent_background:
+    status: verified_with_edge_review_required
+    format: RGBA PNG
+    evidence: games/g01/reports/art/T01/metrics.json
+  local_image_edit:
+    status: verified_with_texture_drift
+    preserves_exact_pixels: false
+    alpha_visible_iou: 0.9805794050850274
+  reference_variant:
+    status: verified_by_executor_visual_review
+  exact_size:
+    status: not_guaranteed
+    observed_sizes: [[1024, 1536], [2172, 724]]
+  structured_layer_decomposition:
+    status: not_assumed
+    route: generate_or_extract_layers_individually_then_annotate
+  automatic_chinese_ocr:
+    status: pending
+  final_asset_acceptance:
+    status: not_applicable_to_capability_samples
+limitations:
+  - Lit sample exceeds final luminance acceptance; do not promote it as approved art.
+  - Image edits may change texture outside the requested region.
+  - Preserve original alpha and inspect composites on multiple backgrounds.

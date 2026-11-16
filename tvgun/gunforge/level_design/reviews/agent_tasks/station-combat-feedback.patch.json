@@ -1,0 +1,2084 @@
+{
+  "base_revision": "d7558219c0450883dc017f103d1a268149a41d7fbb918dea4a378fed7e590051",
+  "summary": "墨鸦与灯罩分层，延长攻击反应时间，点灯定身 2.4 秒，更新枪声并加入夜市循环配乐。",
+  "changes": [
+    {
+      "path": "/entities/lamp/properties/z",
+      "expected": 80,
+      "value": 73
+    },
+    {
+      "path": "/entities/lamp_cover/properties/z",
+      "expected": 81,
+      "value": 74
+    },
+    {
+      "path": "/encounter/supports/support/duration_ms",
+      "expected": 1500,
+      "value": 2400
+    },
+    {
+      "path": "/effects/support_link/duration_ms",
+      "expected": 700,
+      "value": 1050
+    },
+    {
+      "op": "add",
+      "path": "/effects/support_link/label",
+      "value": "定住 2.4 秒"
+    },
+    {
+      "path": "/effects/support_pulse/label",
+      "expected": "灯火震墨",
+      "value": "灯火定身"
+    },
+    {
+      "path": "/presentation/support/label",
+      "expected": "射击点灯 · 震墨",
+      "value": "射击巷灯 · 定身"
+    },
+    {
+      "path": "/presentation/labels/stunned",
+      "expected": "震退",
+      "value": "已定住"
+    },
+    {
+      "path": "/sections/lamp_lesson/hint",
+      "expected": "先找到圈出的巷灯。等墨鸦飞进巷口，再射灯使它停顿。",
+      "value": "等墨鸦进巷后射击巷灯，可定住附近的墨鸦 2.4 秒。"
+    },
+    {
+      "path": "/encounter/waves/wave_1/hint",
+      "expected": "红圈蓄满就会出手。直接击破墨鸦，或射亮巷灯打断蓄力。",
+      "value": "红圈是攻击预警。点灯可定住墨鸦，击破可取消扑击。"
+    },
+    {
+      "path": "/encounter/waves/wave_5/hint",
+      "expected": "灯火震退墨鸦，飞出的墨弹仍要拦截。",
+      "value": "点灯可定住墨鸦，飞出的墨弹仍要拦截。"
+    },
+    {
+      "op": "add",
+      "path": "/effects/body_stagger",
+      "value": {
+        "kind": "spark",
+        "color": "#f2cd92",
+        "duration_ms": 550,
+        "radius": 86,
+        "label": "攻击停顿"
+      }
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_1/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_1/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w1_crow_1/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_2/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_2/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w1_crow_2/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/entities/w1_crow_2/y",
+      "expected": 230,
+      "value": 155
+    },
+    {
+      "path": "/entities/w1_crow_2/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 230
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 230
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 245
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 190
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 760,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 760,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 150
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 155
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 760,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 760,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 150
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_3/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w1_crow_3/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w1_crow_3/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_1/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_1/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w2_crow_1/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/entities/w2_crow_1/y",
+      "expected": 230,
+      "value": 155
+    },
+    {
+      "path": "/entities/w2_crow_1/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 230
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 230
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 245
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 190
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 620,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 620,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 150
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 155
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 620,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 620,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 150
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_2/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_2/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w2_crow_2/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_3/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_3/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/entities/w2_crow_3/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w2_crow_3/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 265
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_4/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_4/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w2_crow_4/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w2_crow_4/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_1/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_1/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w3_crow_1/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_2/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_2/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/entities/w3_crow_2/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w3_crow_2/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 265
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_3/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_3/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w3_crow_3/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_4/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_4/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_4/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w3_crow_4/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_5/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_5/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w3_crow_5/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_1/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_1/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/entities/w4_crow_1/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w4_crow_1/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 265
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 295
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "op": "add",
+      "path": "/events/w4_crow_1.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w4_crow_1"
+        },
+        "guards": [
+          {
+            "entity": "w4_crow_1",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w4_crow_1.age",
+            "compare": "gte",
+            "value": 1300
+          },
+          {
+            "query": "w4_crow_1.age",
+            "compare": "lt",
+            "value": 3300
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w4_crow_1",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w4_crow_1",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_2/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_2/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w4_crow_2/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_3/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_3/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w4_crow_3/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_4/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_4/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_4/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "op": "add",
+      "path": "/events/w4_crow_4.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w4_crow_4"
+        },
+        "guards": [
+          {
+            "entity": "w4_crow_4",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w4_crow_4.age",
+            "compare": "gte",
+            "value": 1520
+          },
+          {
+            "query": "w4_crow_4.age",
+            "compare": "lt",
+            "value": 3520
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w4_crow_4",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w4_crow_4",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_5/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_5/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w4_crow_5/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w4_crow_5/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/entities/w4_crow_5/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w4_crow_5/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 255
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 760,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 760,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 155
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 760,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 760,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -420,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_1/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_1/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w5_crow_1/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "op": "add",
+      "path": "/events/w5_crow_1.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w5_crow_1"
+        },
+        "guards": [
+          {
+            "entity": "w5_crow_1",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w5_crow_1.age",
+            "compare": "gte",
+            "value": 1300
+          },
+          {
+            "query": "w5_crow_1.age",
+            "compare": "lt",
+            "value": 3300
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w5_crow_1",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w5_crow_1",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_2/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_2/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w5_crow_2/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_3/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_3/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_4/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_4/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_4/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w5_crow_4/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/entities/w5_crow_4/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w5_crow_4/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 255
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 620,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 620,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 155
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 620,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 620,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "op": "add",
+      "path": "/events/w5_crow_4.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w5_crow_4"
+        },
+        "guards": [
+          {
+            "entity": "w5_crow_4",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w5_crow_4.age",
+            "compare": "gte",
+            "value": 1520
+          },
+          {
+            "query": "w5_crow_4.age",
+            "compare": "lt",
+            "value": 3520
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w5_crow_4",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w5_crow_4",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_5/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_5/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_5/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w5_crow_5/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_6/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_6/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w5_crow_6/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/entities/w5_crow_6/y",
+      "expected": 230,
+      "value": 155
+    },
+    {
+      "path": "/entities/w5_crow_6/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 230
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 230
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 245
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 200
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 230
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 150
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 150
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_1/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_1/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_1/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w6_crow_1/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "op": "add",
+      "path": "/events/w6_crow_1.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w6_crow_1"
+        },
+        "guards": [
+          {
+            "entity": "w6_crow_1",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w6_crow_1.age",
+            "compare": "gte",
+            "value": 1300
+          },
+          {
+            "query": "w6_crow_1.age",
+            "compare": "lt",
+            "value": 3300
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w6_crow_1",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w6_crow_1",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_2/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_2/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_2/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_3/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_3/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_3/release_ms",
+      "expected": 3020,
+      "value": 2450
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w6_crow_3/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/entities/w6_crow_3/y",
+      "expected": 295,
+      "value": 155
+    },
+    {
+      "path": "/entities/w6_crow_3/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 295
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 295
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 310
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 255
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 900,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 900,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 215
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1040,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 1.13,
+          "x": 1000,
+          "y": 155
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 0,
+          "rotation_rad": -0.19,
+          "scale": 2.55,
+          "x": 900,
+          "y": 650
+        },
+        {
+          "attack_time": "contact",
+          "offset_ms": 100,
+          "rotation_rad": -0.23,
+          "scale": 2.66,
+          "x": 900,
+          "y": 685
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 155
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_4/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_4/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_4/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w6_crow_4/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "op": "add",
+      "path": "/events/w6_crow_4.stagger",
+      "value": {
+        "trigger": {
+          "on": "target.hit:w6_crow_4"
+        },
+        "guards": [
+          {
+            "entity": "w6_crow_4",
+            "field": "active",
+            "compare": "eq",
+            "value": true
+          },
+          {
+            "query": "w6_crow_4.age",
+            "compare": "gte",
+            "value": 1520
+          },
+          {
+            "query": "w6_crow_4.age",
+            "compare": "lt",
+            "value": 3520
+          }
+        ],
+        "max_firings": 1,
+        "priority": 1,
+        "actions": {
+          "stagger": {
+            "op": "stun",
+            "entity": "w6_crow_4",
+            "duration_ms": 700
+          },
+          "show": {
+            "op": "vfx",
+            "entity": "w6_crow_4",
+            "effect": "body_stagger"
+          }
+        },
+        "order": [
+          "stagger",
+          "show"
+        ]
+      }
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_5/windup/at_ms",
+      "expected": 2300,
+      "value": 1300
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_5/windup/label",
+      "expected": "危险 · 吐墨蓄力",
+      "value": "吐墨预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_5/projectile/flight_ms",
+      "expected": 1250,
+      "value": 1450
+    },
+    {
+      "path": "/entities/w6_crow_5/y",
+      "expected": 230,
+      "value": 155
+    },
+    {
+      "path": "/entities/w6_crow_5/motion/frames",
+      "expected": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 230
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 230
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 245
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 200
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 230
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 150
+        }
+      ],
+      "value": [
+        {
+          "at_ms": 0,
+          "rotation_rad": 0.16,
+          "scale": 0.72,
+          "x": 1776,
+          "y": 155
+        },
+        {
+          "at_ms": 850,
+          "rotation_rad": 0.03,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "windup",
+          "offset_ms": 0,
+          "rotation_rad": -0.08,
+          "scale": 1,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": -170,
+          "rotation_rad": -0.12,
+          "scale": 1.12,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "release",
+          "offset_ms": 0,
+          "rotation_rad": 0.08,
+          "scale": 1.17,
+          "x": 1230,
+          "y": 155
+        },
+        {
+          "attack_time": "retire",
+          "offset_ms": 0,
+          "rotation_rad": 0,
+          "scale": 0.82,
+          "x": -435,
+          "y": 150
+        }
+      ]
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_6/windup/at_ms",
+      "expected": 2520,
+      "value": 1520
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_6/windup/label",
+      "expected": "危险 · 即将扑击",
+      "value": "扑击预警 · 可打断"
+    },
+    {
+      "path": "/encounter/attacks/w6_crow_6/release_ms",
+      "expected": 3240,
+      "value": 2670
+    },
+    {
+      "op": "remove",
+      "path": "/encounter/attacks/w6_crow_6/release_effect",
+      "expected": "lunge_release"
+    },
+    {
+      "path": "/duration_ms",
+      "expected": 95000,
+      "value": 97500
+    },
+    {
+      "path": "/events/ending.safe_exit/trigger/at_ms",
+      "expected": 90000,
+      "value": 92500
+    },
+    {
+      "path": "/events/ending.missed_rescue/trigger/at_ms",
+      "expected": 90000,
+      "value": 92500
+    },
+    {
+      "path": "/events/level.clear/trigger/at_ms",
+      "expected": 93000,
+      "value": 95500
+    },
+    {
+      "op": "add",
+      "path": "/resources/sound_light_shot",
+      "value": {
+        "path": "gunforge/level_design/generated/audio/station_light_shot.wav",
+        "sha256": "a0e07bacec61e9536ca8021b176e6be0464046c222e5500f83570b9b58181f4e",
+        "kind": "audio"
+      }
+    },
+    {
+      "op": "add",
+      "path": "/cues/light_shot",
+      "value": {
+        "resource": "sound_light_shot",
+        "channel": "weapon",
+        "volume_db": -5,
+        "duration_ms": 150,
+        "loop": false
+      }
+    },
+    {
+      "op": "add",
+      "path": "/resources/sound_night_market",
+      "value": {
+        "path": "gunforge/level_design/generated/audio/station_night_market.wav",
+        "sha256": "0007b06b562b5a95d95a13d6248d626fbbbded6533910ab57658a65344240860",
+        "kind": "audio"
+      }
+    },
+    {
+      "op": "add",
+      "path": "/cues/night_market",
+      "value": {
+        "resource": "sound_night_market",
+        "channel": "music",
+        "volume_db": -16,
+        "duration_ms": 20000,
+        "loop": true
+      }
+    },
+    {
+      "path": "/presentation/sound_bindings/weapon.fired",
+      "expected": "shot",
+      "value": "light_shot"
+    },
+    {
+      "op": "add",
+      "path": "/events/open/actions/music",
+      "value": {
+        "op": "cue",
+        "cue": "night_market"
+      }
+    },
+    {
+      "path": "/events/open/order",
+      "expected": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "value": [
+        "a0",
+        "a1",
+        "a2",
+        "music"
+      ]
+    }
+  ]
+}

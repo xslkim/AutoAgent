@@ -1,0 +1,209 @@
+{
+  "tasks": {
+    "LD00": {
+      "status": "verified",
+      "evidence": "implementation_decisions.json"
+    },
+    "LD01": {
+      "status": "verified",
+      "evidence": "baseline_source.json"
+    },
+    "LD02": {
+      "status": "verified",
+      "evidence": "baseline_cases.json",
+      "note": "controlled desktop entry injection; no global OS keystrokes"
+    },
+    "LD03": {
+      "status": "verified",
+      "evidence": [
+        "baseline_cases.json",
+        "baseline_visuals.json"
+      ],
+      "note": "GPU visuals reviewed; audio listening not yet performed, not claimed"
+    },
+    "LD04": {
+      "status": "verified",
+      "evidence": [
+        "a1a_checks.json",
+        "current_engine_checks.json"
+      ],
+      "source_archive": "D:\\gunforge_cache\\level_design\\a1a-verified"
+    },
+    "LD05": {
+      "status": "verified",
+      "evidence": [
+        "a1a_checks.json",
+        "current_engine_checks.json"
+      ],
+      "source_archive": "D:\\gunforge_cache\\level_design\\a1a-verified"
+    },
+    "LD06": {
+      "status": "verified",
+      "evidence": [
+        "a1a_checks.json",
+        "current_engine_checks.json"
+      ],
+      "source_archive": "D:\\gunforge_cache\\level_design\\a1a-verified"
+    },
+    "LD07": {
+      "status": "verified",
+      "evidence": [
+        "D02_D08_changes.json",
+        "current_engine_checks.json"
+      ],
+      "note": "Both bugs reproduced before fixes; 14886 public-state checks pass with only enumerated D02/D08 expectation transformations."
+    },
+    "LD08": {
+      "status": "verified",
+      "evidence": "migration_decisions.json",
+      "source_archive": "D:\\gunforge_cache\\level_design\\a1b-verified",
+      "verification": "a1b_checks.json"
+    },
+    "LD09": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Strict schema/source maps, immutable manifests and four packages compiled and executed."
+    },
+    "LD10": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Shared data-driven runtime, actions/queries, local clocks, composite geometry, projectiles/effects."
+    },
+    "LD11": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Shared session/player shell, pause ownership, bound pose inputs, HTTP/UDP and configurable HUD."
+    },
+    "LD12": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Native g01 uses shared event scheduler; 14886 state comparisons preserve registered legacy policies and D02/D08 fixes."
+    },
+    "LD13": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Gallery is an actual distinct playable package with independent layout/resources and branches."
+    },
+    "LD14": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Immutable source versions, ID patches, atomic adoption/CAS/recovery tested; real user adoption not performed."
+    },
+    "LD15": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Actual GPU readonly reviewer, exact alpha geometry, anchored screenshots/input evidence and notes."
+    },
+    "LD16": {
+      "status": "accepted",
+      "evidence": [
+        "agent_example_runs.json",
+        "comments/user-gameplay-2026-11-08.json",
+        "comments/user-gallery-2026-11-09.json",
+        "comments/user-gallery-timing-2026-11-09.json",
+        "comments/user-station-combat-2026-11-09.json",
+        "comment_events/84c202d794c44f9db94fc85d99dda824.json",
+        "comment_events/00d2aba4ff6e494c99422613d8648814.json",
+        "comment_events/84f83ad9e58c4293b1738c616fee9632.json",
+        "comment_events/2afeef75f5914a75a66fc94d126d6d8d.json",
+        "adoptions/3f17157d9d1140888ecf35214606a9e6.json",
+        "combat_r1_acceptance.json",
+        "agent_proposals/proposal-1794207657317714900.json",
+        "agent_proposals/proposal-1794208802414694900.json",
+        "agent_proposals/proposal-1794220453914520000.json",
+        "agent_proposals/proposal-1794231862601292700.json",
+        "agent_proposals/proposal-1794237379343236500.json"
+      ],
+      "note": "User verified desktop R2, adopted the 2.8s gallery revision, and confirmed the revised first-station mouse playtest after feedback on lamp occlusion, reaction time and audio."
+    },
+    "LD17": {
+      "status": "accepted",
+      "evidence": [
+        "../../../docs/LEVEL_DESIGN_ENGINE_QUICKSTART.md",
+        "software_acceptance.json",
+        "review_bridge_acceptance.json"
+      ],
+      "note": "Edge and the loopback harness verified same-tick seek, read-only event/source lookup, isolated annotation and version switching through the native Godot process. The user formally selected the native Godot reviewer on 2026-11-09."
+    },
+    "LD18": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Snapshots/replay/seek verified, including 90s CPU fixture and 12 real-combat state/geometry seek points; subjective sound experience pending."
+    },
+    "LD19": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "The user verified the redesigned native UI with frontal, side and top views. The GPU reviewer regression checks event inspection and source pointers for representative spawn, launch, cue, effect and section actions across packages."
+    },
+    "LD20": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Visible-alpha diagnostic bot and explicit uncalibrated visibility/difficulty warnings; no human success-rate claim."
+    },
+    "LD21": {
+      "status": "software_verified",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json"
+      ],
+      "note": "Orbital convoy covers shield and escort branches. Orbital siege compiles data-only waves, synchronized attacks, support and finite ammo through the same encounter contract as Paper Lantern R2."
+    },
+    "LD22": {
+      "status": "software_verified_phone_lightgun_user_pass",
+      "evidence": [
+        "software_acceptance.json",
+        "delivery_acceptance.json",
+        "combat_r1_acceptance.json",
+        "user_acceptance_2026-11-10.json"
+      ],
+      "remaining": [
+        "archive available calibration and tracking measurements for G4; the user reported passes on both the monitor and TV",
+        "formal adoption of game policies and candidates"
+      ]
+    },
+    "LD23": {
+      "status": "software_delivered",
+      "evidence": [
+        "delivery_acceptance.json",
+        "combat_r1_acceptance.json"
+      ],
+      "note": "The first-station launch, replay and review paths are software delivered. The user reported physical phone lightgun passes on both the monitor and TV. Formal adoption and detailed measurement records remain pending for G4."
+    }
+  },
+  "next": "T10 first-chapter offline art candidates are assembled for A5 review. Review the four station compositions, transitions, and 20 asset candidates before proceeding to T11. G4 retains its separate detailed measurement and adoption requirements.",
+  "active_candidate": "paper.station",
+  "next_station_prototype": "paper.stall",
+  "software_acceptance": "software_acceptance.json",
+  "delivery_acceptance": "delivery_acceptance.json",
+  "overall_complete": false
+}

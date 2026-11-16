@@ -1,0 +1,40 @@
+{
+  "D01": {
+    "decision": "retain 8 seconds for migration",
+    "approval": "implementation default, not a new user-design approval"
+  },
+  "D03": {
+    "decision": "retain repeat scoring/refresh as explicit legacy; no generic engine default",
+    "formal_game_release": "requires design adoption"
+  },
+  "D04": {
+    "decision": "runtime placement retained; offline candidate not promoted",
+    "evidence": [
+      "prototype_slot_schedule.json describes offline_candidate_not_runtime_enforced",
+      "offline compositor uses content coordinates and alpha-fit enemy size 200",
+      "runtime uses full 1024 texture scaled to 264 plus an independent center; difference is not resolved by subtracting white-frame origin"
+    ],
+    "risk": "offline slot proofs cannot certify runtime geometry; runtime alpha tests retained, new package must declare its own slots and check overlap"
+  },
+  "D05": {
+    "decision": "apply approved warning contract 17..26 content pixels; 1.5Hz unchanged",
+    "impact": "non-hit visual cue only"
+  },
+  "D06": {
+    "decision": "use clip duration metadata 2.2 instead of code 2.3; parity-based pickup and lamp-cover are retained until explicit content migration",
+    "impact": "post-rescue thank pose begins 0.1s earlier; actor already non-targetable"
+  },
+  "D07": {
+    "decision": "retain score reset and current-wave restart for migration",
+    "approval": "legacy default, not new user approval"
+  },
+  "D08": {
+    "decision": "fixed, see D02_D08_changes.json"
+  },
+  "D09": {
+    "decision": "78 is target simulated duration; actual legacy completion approximately 78.1 due to thresholds"
+  },
+  "D10": {
+    "decision": "pure CPU rules query and pose composition; geometry points match original before intentional fixes"
+  }
+}

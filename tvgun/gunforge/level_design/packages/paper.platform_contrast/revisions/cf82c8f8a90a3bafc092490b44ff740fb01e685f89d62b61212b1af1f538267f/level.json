@@ -1,0 +1,1668 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "attack": {
+      "channel": "impact",
+      "duration_ms": 320,
+      "resource": "sound_attack",
+      "volume_db": -10
+    },
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 75000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "crow_release": {
+      "anchor_uv": [
+        0.31,
+        0.98
+      ],
+      "color": "#e5726e",
+      "duration_ms": 560,
+      "kind": "attack_release",
+      "radius": 84
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "信号亮",
+      "radius": 108
+    },
+    "umbrella_release": {
+      "anchor_uv": [
+        0.72,
+        0.98
+      ],
+      "color": "#a786c5",
+      "duration_ms": 510,
+      "kind": "attack_release",
+      "radius": 76
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "platform.canopy": {
+      "height": 194,
+      "hit_resource": "image_022",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1200,
+            "y": 312
+          },
+          {
+            "at_ms": 2400,
+            "x": 1200,
+            "y": 312
+          },
+          {
+            "at_ms": 2560,
+            "rotation_rad": 0.12,
+            "scale_x": 0.76,
+            "scale_y": 0.98,
+            "x": 1210.35,
+            "y": 315
+          },
+          {
+            "at_ms": 2785,
+            "rotation_rad": 0.27,
+            "scale_x": 0.34,
+            "scale_y": 0.82,
+            "x": 1241.4,
+            "y": 307
+          },
+          {
+            "at_ms": 3000,
+            "opacity": 0,
+            "rotation_rad": 0.38,
+            "scale_x": 0.09,
+            "scale_y": 0.61,
+            "x": 1266.7,
+            "y": 305
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 30
+      },
+      "resource": "image_021",
+      "template": "target",
+      "width": 230,
+      "x": 1200,
+      "y": 312
+    },
+    "platform.crow": {
+      "height": 250,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.08,
+            "x": 367,
+            "y": 310
+          },
+          {
+            "at_ms": 1150,
+            "rotation_rad": 0.06,
+            "x": 432,
+            "y": 286
+          },
+          {
+            "at_ms": 3400,
+            "rotation_rad": -0.08,
+            "x": 411,
+            "y": 292
+          },
+          {
+            "at_ms": 4700,
+            "rotation_rad": 0.14,
+            "x": 437,
+            "y": 312
+          },
+          {
+            "at_ms": 6200,
+            "rotation_rad": -0.05,
+            "x": 366,
+            "y": 301
+          },
+          {
+            "at_ms": 8100,
+            "rotation_rad": 0.04,
+            "x": 412,
+            "y": 288
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "image_016",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "image_017",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "z": 32
+      },
+      "template": "target",
+      "width": 250,
+      "x": 397,
+      "y": 310
+    },
+    "platform.fold_body": {
+      "height": 251,
+      "hit_resource": "image_019",
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 1200,
+            "y": 296
+          },
+          {
+            "at_ms": 125,
+            "opacity": 0,
+            "x": 1200,
+            "y": 296
+          },
+          {
+            "at_ms": 365,
+            "opacity": 0.92,
+            "x": 1200,
+            "y": 289
+          },
+          {
+            "at_ms": 600,
+            "x": 1200,
+            "y": 284
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "properties": {
+        "z": 29
+      },
+      "resource": "image_018",
+      "template": "target",
+      "width": 230,
+      "x": 1200,
+      "y": 284
+    },
+    "platform.lamp": {
+      "height": 133,
+      "hit_resource": "image_012",
+      "parallax": 0.26,
+      "properties": {
+        "activation_cooldown_ms": 6000,
+        "z": 10
+      },
+      "resource": "image_011",
+      "template": "activation_source",
+      "width": 61,
+      "x": 1496,
+      "y": 188
+    },
+    "platform.lamp_ink": {
+      "height": 129,
+      "parallax": 0.26,
+      "properties": {
+        "z": 12
+      },
+      "resource": "image_014",
+      "template": "decoration",
+      "width": 55,
+      "x": 1498,
+      "y": 190
+    },
+    "platform.light": {
+      "height": 544,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 300,
+            "opacity": 1,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 4700,
+            "opacity": 1,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 4850,
+            "opacity": 0.68,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 5050,
+            "opacity": 1,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 5200,
+            "opacity": 1,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 5400,
+            "opacity": 0.42,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 5700,
+            "opacity": 1,
+            "x": 1149,
+            "y": 0
+          },
+          {
+            "at_ms": 6000,
+            "opacity": 0,
+            "x": 1149,
+            "y": 0
+          }
+        ]
+      },
+      "parallax": 0.26,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_013",
+      "template": "decoration",
+      "width": 627,
+      "x": 1149,
+      "y": 0
+    },
+    "platform.rescue": {
+      "height": 92,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 25
+      },
+      "template": "target",
+      "width": 100,
+      "x": 835.5,
+      "y": 545.84
+    },
+    "platform.resident": {
+      "height": 319,
+      "parallax": 0.41,
+      "properties": {
+        "z": 24
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "ticket_clerk",
+        "success": "rescued",
+        "target": "platform.rescue",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 243,
+      "x": 764,
+      "y": 431
+    },
+    "platform.umbrella": {
+      "height": 251,
+      "mask_permission": {
+        "resource": "image_015",
+        "source": "platform.light",
+        "threshold": 0.13
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1200,
+            "y": 284
+          },
+          {
+            "at_ms": 1500,
+            "x": 1219,
+            "y": 284
+          },
+          {
+            "at_ms": 3800,
+            "x": 1181,
+            "y": 284
+          },
+          {
+            "at_ms": 6000,
+            "x": 1200,
+            "y": 284
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_019",
+          "resource": "image_018",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_020",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "resource": "image_018",
+      "template": "target",
+      "width": 230,
+      "x": 1200,
+      "y": 284
+    }
+  },
+  "events": {
+    "platform.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "platform.crow",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "platform.umbrella",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "platform.rescue",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "platform.complete": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.clear",
+        "delay_ms": 1500
+      }
+    },
+    "platform.crow1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow1.release",
+        "delay_ms": 550
+      }
+    },
+    "platform.crow1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "platform.crow1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.start",
+        "delay_ms": 3000
+      }
+    },
+    "platform.crow2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow2.release",
+        "delay_ms": 550
+      }
+    },
+    "platform.crow2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "platform.crow2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.start",
+        "delay_ms": 8300
+      }
+    },
+    "platform.crow3.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow3.release",
+        "delay_ms": 550
+      }
+    },
+    "platform.crow3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "crow_release",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.crow3.warning",
+        "delay_ms": 1250
+      }
+    },
+    "platform.crow3.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "platform.crow",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.crow",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.start",
+        "delay_ms": 14100
+      }
+    },
+    "platform.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "platform.fold": {
+      "actions": {
+        "a0": {
+          "entity": "platform.canopy",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "platform.fold_body",
+          "op": "remove"
+        },
+        "a2": {
+          "entity": "platform.umbrella",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.fold.start",
+        "delay_ms": 600
+      }
+    },
+    "platform.fold.start": {
+      "actions": {
+        "a0": {
+          "entity": "platform.canopy",
+          "kind": "blocker",
+          "op": "permission"
+        },
+        "a1": {
+          "entity": "platform.fold_body",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "platform.fold_body",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.start",
+        "delay_ms": 2400
+      }
+    },
+    "platform.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "platform.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "platform.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.lamp.open",
+        "delay_ms": 6000
+      }
+    },
+    "platform.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "platform.light",
+          "op": "spawn"
+        },
+        "a1": {
+          "effect": "light_fx",
+          "entity": "platform.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 12,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:platform.lamp"
+      }
+    },
+    "platform.rescue.clean": {
+      "actions": {
+        "a0": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:platform.rescue"
+      }
+    },
+    "platform.resident.protected": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 30,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:platform.resident"
+      }
+    },
+    "platform.score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 3,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "platform.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "platform"
+        },
+        "a1": {
+          "entity": "platform.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "platform.lamp_ink",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "platform.crow",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "platform.canopy",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "platform.resident",
+          "op": "spawn"
+        },
+        "a6": {
+          "entity": "platform.rescue",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "platform.canopy",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "platform.umbrella1.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.umbrella1.release",
+        "delay_ms": 550
+      }
+    },
+    "platform.umbrella1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.umbrella1.warning",
+        "delay_ms": 1250
+      }
+    },
+    "platform.umbrella1.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.fold",
+        "delay_ms": 3800
+      }
+    },
+    "platform.umbrella2.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.umbrella2.release",
+        "delay_ms": 550
+      }
+    },
+    "platform.umbrella2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "umbrella_release",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.umbrella2.warning",
+        "delay_ms": 1250
+      }
+    },
+    "platform.umbrella2.warning": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "platform.umbrella",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "platform.umbrella",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "platform.fold",
+        "delay_ms": 9500
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "获救",
+      "resource": "rescued"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.platform_contrast",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "rescued": 0,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "bottom_wipes": {
+      "platform.lamp_ink": "platform.light"
+    },
+    "camera": {
+      "amplitude_x": 38,
+      "amplitude_y": 15
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {
+      "platform.canopy": {
+        "invalid": "撑伞 · 等收伞"
+      },
+      "platform.fold_body": {
+        "invalid": "收伞中"
+      },
+      "platform.umbrella": {
+        "invalid": "硬化 · 射信号灯",
+        "primary": "软化 · 射击"
+      }
+    },
+    "entity_tints": {
+      "platform.umbrella": {
+        "invalid": "#657198"
+      }
+    },
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "拦截左侧墨鸦 · 射亮信号灯 · 救出检票员",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "站台陷入黑暗",
+      "result_success": "站台安全了",
+      "section_unit": "站"
+    },
+    "layers": {
+      "platform.canopy_and_posts": {
+        "blocker": false,
+        "height": 505,
+        "parallax": 0.26,
+        "resource": "image_007",
+        "section": "platform",
+        "width": 1920,
+        "x": -72,
+        "y": 39,
+        "z": 4
+      },
+      "platform.carriage": {
+        "blocker": false,
+        "height": 252,
+        "parallax": 0.26,
+        "resource": "image_005",
+        "section": "platform",
+        "width": 1920,
+        "x": -72,
+        "y": 273,
+        "z": 2
+      },
+      "platform.clock": {
+        "blocker": false,
+        "height": 168,
+        "parallax": 0.26,
+        "resource": "image_008",
+        "section": "platform",
+        "width": 166,
+        "x": 208,
+        "y": 147,
+        "z": 5
+      },
+      "platform.distant_hills": {
+        "blocker": false,
+        "height": 167,
+        "parallax": 0.14,
+        "resource": "image_004",
+        "section": "platform",
+        "width": 1920,
+        "x": -72,
+        "y": 174,
+        "z": 1
+      },
+      "platform.near_left_luggage": {
+        "blocker": true,
+        "height": 185,
+        "parallax": 0.55,
+        "resource": "image_009",
+        "section": "platform",
+        "width": 342,
+        "x": -72,
+        "y": 793,
+        "z": 73
+      },
+      "platform.near_right_luggage": {
+        "blocker": true,
+        "height": 161,
+        "parallax": 0.55,
+        "resource": "image_010",
+        "section": "platform",
+        "width": 288,
+        "x": 1560,
+        "y": 817,
+        "z": 74
+      },
+      "platform.platform_floor": {
+        "blocker": false,
+        "height": 456,
+        "parallax": 0.26,
+        "resource": "image_006",
+        "section": "platform",
+        "width": 1920,
+        "x": -72,
+        "y": 522,
+        "z": 3
+      },
+      "platform.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_003",
+        "section": "platform",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      }
+    },
+    "puppets": {
+      "ticket_clerk": {
+        "atlas": "image_024",
+        "character": "metadata_023",
+        "clips": {
+          "rescued": "metadata_001",
+          "struggle": "metadata_000",
+          "thank": "metadata_002"
+        }
+      }
+    },
+    "sound_bindings": {
+      "attack.launched": "attack",
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第三关 · 站台",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/sky.png",
+      "sha256": "ea7678698594a8b4409f7ab5c6a49797d97a5af260873d53944c9495c568c257"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/distant_hills.png",
+      "sha256": "0f154ad32a60fd132b734cb95fb483fb3bdde60ea9e6ef90e82479f955778a1f"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/carriage.png",
+      "sha256": "6de61e70d62a6f464170f82028fcb879fee8da2ee19256ab3ea1166d7d4664d8"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/platform_floor.png",
+      "sha256": "33ed0c3a812ff609927e266b3c36b29f22efcca261ecde5cda98df74ea644c2d"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/canopy_and_posts.png",
+      "sha256": "ffb78b376fe6e7b0a7a4b6f080457d158c7e051a32106d9661943a540d65badb"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/clock.png",
+      "sha256": "51e9c7f590bbeb74ce24c202a625ba99ae7b88b8bc6cf17547a68e3009a3f801"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/near_left_luggage.png",
+      "sha256": "6265e36ff38b5dafeb536dc104cad216c19f83026048533bf1d32b733cd4a699"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/near_right_luggage.png",
+      "sha256": "684ed5127a2c15bd662eecb8a1efb4c59ed225047901864c84b126d3756dcc06"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T13/variants/platform_contrast/parallax/platform/lamp.png",
+      "sha256": "94b6cd87c6e008ee22798e5ed01d928ae6ebd27911da9375327c1d609766d6bd"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/platform_lamp_hit.png",
+      "sha256": "5bf6a9c8541bbfdc109f8e1c7fc2625b3287ba689fe94905c509b6b782f523c5"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/platform_light_add.png",
+      "sha256": "f7370b4f5e1dbcf4fc42386022e0fae7b99d1a12a81ec44b7976e7f2db334672"
+    },
+    "image_014": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/platform_lamp_ink.png",
+      "sha256": "f9c260ca075f88a7566c9ff453dd99ad1a3b87d4d44e8e4c2de42b189a40430b"
+    },
+    "image_015": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/platform_light_influence.png",
+      "sha256": "ce63197643f231e60e12a0a6ef71ec96d2ad365358a30f2c2ac558f0f9385c8a"
+    },
+    "image_016": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/body.png",
+      "sha256": "16c91f1f8a3e47071e1f44422525fd4d3d0ebdc1d0798205d6683a8efcd6bab3"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/crow/core.png",
+      "sha256": "f5a343c49980c0c17a75e1ce0b5aad19097fff815f429a129fb14178c9ed367f"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/body.png",
+      "sha256": "9abe0f7e704bf58a7cb222427be64b07611769ac8f8e55ceb9d3883110f78489"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/ink_umbrella_hit.png",
+      "sha256": "a2b518433bd5ae3b4d249f11ee817f745b636f4661e0531c87479a59fde5f60f"
+    },
+    "image_020": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/weak.png",
+      "sha256": "50fb77326e9c42904ca556eb7ff39d8388ec7ed67bb450268b0501b890dae881"
+    },
+    "image_021": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T12/actors/ink_umbrella/open.png",
+      "sha256": "6b05fba3bc4861a59b42300706a0993649401847bddfd48e0b3deccc1eb763b0"
+    },
+    "image_022": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/umbrella_open_hit.png",
+      "sha256": "1cd76b2509e382ea020f948c096d4d987c738574b0d25c378c040e2f03753b06"
+    },
+    "image_024": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/platform_contrast/ticket_clerk_rig.png",
+      "sha256": "498d932388f0dcef1109b4288c33358dbdf64ff3162dc495cc7e8a007f5246e8"
+    },
+    "metadata_000": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/platform_contrast/resident_struggle.json",
+      "sha256": "81fa5b755616f2e01c1ffa73e1eaf63bc37a521ff31ea23528ead01df7217de5"
+    },
+    "metadata_001": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/platform_contrast/resident_rescued.json",
+      "sha256": "f8c041e8aea558e294a3274d9d55ed7cb3f525570e8972c0bfde04f380a64945"
+    },
+    "metadata_002": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/platform_contrast/resident_thank.json",
+      "sha256": "275c259556ad641cda4facf728aa0be898e201092b90c487136f7885371d7ada"
+    },
+    "metadata_023": {
+      "kind": "metadata",
+      "path": "gunforge/level_design/generated/platform_contrast/ticket_clerk_rig.json",
+      "sha256": "5abefe2872ff98ca8183337b7c929e313f33d4ef24a73d22e3662f1f8603e9d6"
+    },
+    "sound_attack": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_attack.wav",
+      "sha256": "cbf21f7119d51f05047fac0d2bff41a993fb777680e60d04493b5fff214f62d6"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "platform": {
+      "hint": "左侧墨鸦可直接打。点亮信号灯，等右侧墨伞收伞；只打检票员胸口的墨团。",
+      "index": 1,
+      "targets": [
+        "platform.crow",
+        "platform.umbrella",
+        "platform.rescue"
+      ],
+      "title": "站台"
+    }
+  },
+  "seed": 431,
+  "tick_hz": 60
+}

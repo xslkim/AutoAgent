@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "status": "captured_runtime_parameters_not_new_art_approval",
+  "camera": {
+    "amplitude": [
+      35,
+      18
+    ],
+    "rate": [
+      0.58,
+      0.81
+    ]
+  },
+  "breath": {
+    "amplitude": [
+      7,
+      3
+    ],
+    "rate": [
+      1.27,
+      1.71
+    ]
+  },
+  "actor_parallax": 0.45,
+  "light_parallax": 0.6,
+  "soft_exposure": 0.3,
+  "resident_origin": [
+    735,
+    830
+  ],
+  "crow": {
+    "origin": [
+      1320,
+      550
+    ],
+    "amplitude": [
+      7,
+      7
+    ],
+    "rate": [
+      2,
+      2.7
+    ],
+    "canvas_size": 1024,
+    "draw_size": 264,
+    "recoil": 20,
+    "recoil_decay": 8,
+    "dissolve_seconds": 0.75
+  },
+  "lamp": {
+    "hit_rect": [
+      497,
+      253,
+      200,
+      120
+    ],
+    "aim": [
+      596,
+      309
+    ],
+    "cover_origin": [
+      521,
+      269
+    ],
+    "cover_size": [
+      151,
+      94
+    ],
+    "cover_order": [
+      0,
+      1,
+      2
+    ]
+  },
+  "pickup": {
+    "origin": [
+      1055,
+      690
+    ],
+    "size": 112,
+    "amplitude_y": 5,
+    "rate": 4,
+    "types": [
+      "light",
+      "wick",
+      "light"
+    ]
+  },
+  "warning": {
+    "radius": [
+      17,
+      26
+    ],
+    "pulse_hz": 1.5
+  },
+  "hud": {
+    "life_origin": [
+      24,
+      848
+    ],
+    "life_stride": 44,
+    "life_size": [
+      36,
+      64
+    ],
+    "ammo_origin": [
+      1530,
+      864
+    ],
+    "ammo_stride": 38,
+    "ammo_size": [
+      32,
+      48
+    ],
+    "score_rect": [
+      1640,
+      24,
+      112,
+      112
+    ]
+  },
+  "scores": {
+    "lamp": 25,
+    "rescue": 300,
+    "weak": 150,
+    "primary": 100,
+    "pickup": 25,
+    "protected": 100
+  },
+  "cue_bindings": {
+    "shot": "shot",
+    "hit": "hit",
+    "lamp": "lamp",
+    "rescue": "rescue",
+    "reload": "reload",
+    "hurt": "hurt",
+    "warning": "warning"
+  }
+}

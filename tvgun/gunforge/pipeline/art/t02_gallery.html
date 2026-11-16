@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>纸灯城 · 选一下你喜欢的方向</title>
+  <style>
+    :root{color-scheme:light;--paper:#f5f3ee;--ink:#27332f;--muted:#63716a;--line:#d7ddd5;--green:#285e4a;--pale:#e9f2e9;--warm:#fff2da}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 "Microsoft YaHei",system-ui,sans-serif}button,textarea{font:inherit}button,a,summary{touch-action:manipulation}button{cursor:pointer}button:focus-visible,a:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #cf913b;outline-offset:3px}button{border:1px solid var(--line);background:white;color:var(--ink);padding:10px 18px;border-radius:10px}button:hover{border-color:var(--green)}button:disabled{cursor:default;opacity:.5}.primary{background:var(--green);color:white;border-color:var(--green);font-weight:700}.quiet{background:transparent}.text-button{border:0;background:transparent;padding:5px 0;color:var(--green);text-decoration:underline;text-underline-offset:4px}a{color:var(--green)}[hidden]{display:none!important}.shell{max-width:1280px;margin:auto;padding:28px 32px 120px}header{max-width:920px}.eyebrow{font-size:13px;color:var(--muted);letter-spacing:2px}h1{font-size:32px;line-height:1.35;margin:8px 0 12px}h2{font-size:24px;line-height:1.4;margin:0 0 8px}h3{font-size:17px;line-height:1.5;margin:0}p{margin:8px 0 16px}.muted,small{color:var(--muted)}small{font-size:13px}.steps{display:flex;gap:12px;margin:24px 0 30px}.step{display:flex;align-items:center;gap:9px;background:transparent;border:0;padding:8px 4px;color:var(--muted)}.step span{border:1px solid var(--line);background:white;border-radius:50%;height:29px;width:29px;display:grid;place-items:center}.step.active{font-weight:700;color:var(--green)}.step.active span{background:var(--green);color:white;border-color:var(--green)}.step.done span{background:var(--pale);color:var(--green)}.help{padding:15px 20px;background:#eaf0e8;border-radius:12px;margin-bottom:22px}.help strong{color:var(--green)}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.tab{flex:1;min-width:150px;text-align:left;padding:12px 16px}.tab b{display:block}.tab small{font-size:12px}.tab.active{border:2px solid var(--green);padding:11px 15px;background:var(--pale)}.section-head{display:flex;align-items:start;gap:24px;justify-content:space-between;margin-bottom:20px}.section-head p{margin:5px 0 0}.count{white-space:nowrap;border-radius:20px;padding:6px 13px;background:white;border:1px solid var(--line);font-size:14px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.card{background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative}.card.selected{border:2px solid var(--green);box-shadow:0 0 0 3px #285e4a12}.card.selected .image-button{height:239px}.image-button{border:0;border-radius:0;background:#767c89;padding:0;width:100%;height:240px;display:block;position:relative}.image-button img{display:block;width:100%;height:100%;object-fit:contain}.zoom-hint{position:absolute;bottom:9px;right:10px;background:#ffffffed;padding:2px 8px;border-radius:5px;font-size:11px;color:#34443d}.badge{position:absolute;top:10px;left:10px;background:var(--green);color:white;padding:2px 10px;border-radius:12px;font-size:12px;pointer-events:none}.card-body{padding:17px}.number{font-size:13px;color:var(--muted);font-weight:400;margin-right:7px}.pick-label{font-size:13px;color:var(--muted);margin:12px 0 7px}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{padding:6px 11px;font-size:14px;border-radius:8px}.chip[aria-pressed=true]{color:var(--green);background:var(--pale);border-color:var(--green);font-weight:700}.card details{margin-top:13px;font-size:13px;color:var(--muted)}summary{cursor:pointer}textarea{display:block;width:100%;padding:12px;border:1px solid #b5c3b8;border-radius:9px;color:var(--ink);background:white;line-height:1.65;resize:vertical}.card textarea{margin-top:8px;min-height:72px;font-size:14px}.card .technical{font-size:12px;border-top:1px solid #eee;padding-top:10px}.technical p{margin:7px 0}.technical ul{padding-left:19px}.group-end{margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:16px}.notice{color:#7b4a16;background:var(--warm);padding:12px 18px;border-radius:9px;margin:14px 0;white-space:pre-line}.sticky{position:fixed;bottom:0;left:0;right:0;background:#fbfaf6f5;backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:10}.sticky-inner{max-width:1280px;margin:auto;padding:13px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px}.sticky-inner p{margin:0;font-size:14px}.actions{display:flex;gap:10px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:24px 0 16px}.ink-option{background:white;border:2px solid var(--line);border-radius:14px;overflow:hidden}.ink-option.selected{border-color:var(--green);box-shadow:0 0 0 3px #285e4a12}.ink-option .image-button{height:auto;aspect-ratio:1.897}.ink-option .ink-pick{width:100%;border:0;border-radius:0;text-align:left;padding:18px}.ink-pick strong{display:block}.ink-pick small{display:block;margin-top:4px}.ink-option.selected .ink-pick{background:var(--pale)}.revise-choice[aria-pressed=true]{background:var(--pale);border-color:var(--green)}.notes-area{max-width:860px;margin-top:35px}.notes-area textarea{min-height:130px}.notes-area label{font-weight:700;display:block;margin-bottom:9px}.finish{max-width:900px}.finish .help{font-size:18px}.summary-grid{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.thumb{width:106px;font-size:12px}.thumb img{display:block;width:106px;height:70px;object-fit:contain;border-radius:6px;background:#767c89}.feedback{min-height:250px;margin:18px 0;font-size:15px}.copy-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.copied{font-weight:700;color:var(--green)}.finish h3{margin-top:25px}.footer-info{margin-top:44px;font-size:13px;color:var(--muted)}.footer-info details{margin:10px 0}.legacy{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.legacy img{width:100%;height:120px;object-fit:contain;background:#767c89}dialog{border:0;border-radius:14px;padding:16px;max-width:95vw;max-height:94vh}dialog::backdrop{background:#15251ed1}dialog img{display:block;max-width:88vw;max-height:78vh;margin-top:10px}#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#243c30;color:white;padding:12px 20px;border-radius:10px;z-index:30;max-width:92vw;box-shadow:0 5px 20px #0002}
+    @media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{padding:24px 22px 125px}.tab{min-width:120px}.sticky-inner{padding:12px 22px}}
+    @media(max-width:600px){.shell{padding:20px 16px 155px}h1{font-size:25px}h2{font-size:21px}.steps{gap:8px;margin:19px 0 23px}.step{font-size:13px;gap:5px}.step span{height:24px;width:24px}.tabs{gap:8px}.tab{flex-basis:45%;padding:9px 12px}.tab.active{padding:8px 11px}.grid,.pair{grid-template-columns:1fr}.section-head{display:block}.count{display:inline-block;margin-top:12px}.sticky-inner{padding:10px 16px;display:block}.sticky-inner .actions{justify-content:flex-end;margin-top:8px}.group-end{display:block}.group-end button{margin-top:8px}.pair{gap:15px}.legacy{grid-template-columns:repeat(2,1fr)}.help{padding:12px 15px}.thumb{width:88px}.thumb img{width:88px;height:60px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div class="eyebrow">纸灯城 · 美术方向确认</div>
+    <h1>选出你希望游戏延续的感觉</h1>
+    <p class="muted">看图挑喜欢的地方就行。全部选好后，页面会整理成一段话，复制发到聊天里给我。</p>
+  </header>
+  <nav class="steps" aria-label="反馈步骤">
+    <button class="step" id="step-tab-1" onclick="goStep(1)"><span>1</span>挑参考图</button>
+    <button class="step" id="step-tab-2" onclick="goStep(2)"><span>2</span>选墨的感觉</button>
+    <button class="step" id="step-tab-3" onclick="goStep(3)"><span>3</span>复制反馈</button>
+  </nav>
+
+  <section id="step-1">
+    <div class="help"><strong>怎么选：</strong>喜欢一张图的什么，就点图下面的对应按钮，比如「布局」或「纸感」。<br>点过就选中了，可多选特点；再次点可取消。总共选 <strong>6–12 张</strong>，下面四类各至少 1 张。</div>
+    <div id="group-tabs" class="tabs" role="tablist" aria-label="图片分类"></div>
+    <div class="section-head"><div><h2 id="group-title"></h2><p id="group-help" class="muted"></p></div><div class="count" id="group-count"></div></div>
+    <div id="pick-error" class="notice" role="alert" hidden></div>
+    <div id="cards" class="grid" role="tabpanel"></div>
+    <div class="group-end"><small>只认可局部也可以。已知亮度、色板等问题由我后续修正。</small><button class="text-button" onclick="requestRevision()">这一批都不合适，我想先提修改意见</button></div>
+  </section>
+
+  <section id="step-2" hidden>
+    <div id="revision-help" class="help" hidden>你选择了「这一批都不合适」。请在下面写明想怎么改；这次只反馈修改方向，不需要凑够选图数量。</div>
+    <h2>墨怪更接近哪一种感觉？</h2>
+    <p class="muted">点击图片可放大；点击图片下面的文字区域来选择。</p>
+    <div class="pair">
+      <article class="ink-option" id="ink-A"><button class="image-button" onclick="zoom('comparison_A.png','A · 亮面墨与圆形红核')" aria-label="放大墨材质 A"><img src="comparison_A.png" alt="A：墨鸦有明显反光，身体里是一颗圆形红核"><span class="zoom-hint">放大看</span></button><button class="ink-pick" aria-pressed="false" onclick="pickInk('A')"><strong>A · 亮面墨 + 圆形红核</strong><small>反光更明显，红色部分像一颗球。</small></button></article>
+      <article class="ink-option" id="ink-B"><button class="image-button" onclick="zoom('comparison_B.png','B · 少反光与平面红印')" aria-label="放大墨材质 B"><img src="comparison_B.png" alt="B：墨鸦只有少量反光，身体里是一块平面红印"><span class="zoom-hint">放大看</span></button><button class="ink-pick" aria-pressed="false" onclick="pickInk('B')"><strong>B · 少反光 + 平面红印</strong><small>墨感更沉，红色部分像盖上的印泥。</small></button></article>
+    </div>
+    <button class="revise-choice" id="ink-revise" aria-pressed="false" onclick="pickInk('revise')">两种都要改，我在下面说明</button>
+    <div class="notes-area"><label for="styleNotes" id="notes-label">还有什么想调整？（选填）</label><p class="muted">例如：场景再暗一点、人物薄一点、不要金属关节、墨怪再简洁一点。没有其他意见就留空。</p><textarea id="styleNotes" placeholder="用自己的话说就可以……" oninput="setNotes(this.value)"></textarea></div>
+    <div id="ink-error" class="notice" role="alert" hidden></div>
+  </section>
+
+  <section id="step-3" class="finish" hidden>
+    <h2>最后一步：把这段反馈发给我</h2>
+    <div class="help">① 点击「复制反馈」 → ② 回到 Codex 聊天 → ③ 粘贴并发送</div>
+    <p>页面上的选择只保存在当前浏览器，<strong>还没有发送给我</strong>。发送下面这段话后，我才能根据你的选择继续。</p>
+    <div id="selection-summary"></div>
+    <label for="feedbackText"><strong>将要发送的内容</strong></label>
+    <textarea id="feedbackText" class="feedback" readonly></textarea>
+    <div class="copy-actions"><button class="primary" id="copy-button" onclick="copyFeedback()">复制反馈</button><button onclick="goStep(1)">返回修改</button><span id="copy-status" class="copied" role="status"></span></div>
+    <details class="footer-info"><summary>需要保存一份文件？</summary><p>也可以下载审核表留存。下载不会自动发给我；最方便的反馈方式仍是复制上面的文字到聊天里。</p><button onclick="downloadReview()">下载审核表 review.yaml</button></details>
+  </section>
+
+  <footer class="footer-info">
+    <p id="save-status" role="status">选择会自动保存在当前浏览器，刷新后可继续。</p>
+    <details><summary>关于这次审核与已有问题</summary><p>这次确认的是风格参考。选中的特点会成为后续出图依据；现有数值失败仍保留，正式素材会继续修正和验收。暂时不需要做真机测试。</p><p><a href="../report.md" target="_blank">查看任务报告</a> · <a href="../../../../bible/style.md" target="_blank">风格词草案</a> · <a href="../checks.json" target="_blank">完整检查记录</a> · <a href="../manifest.json" target="_blank">生成记录</a></p></details>
+    <details><summary>查看已替换的 5 张 UI 首稿</summary><div id="legacy" class="legacy"></div></details>
+  </footer>
+</div>
+<div class="sticky" id="bottom-bar"><div class="sticky-inner"><p id="progress" aria-live="polite"></p><div class="actions"><button id="back-button" onclick="back()">上一步</button><button class="primary" id="next-button" onclick="next()"></button></div></div></div>
+<div id="toast" role="status" hidden></div>
+<dialog id="zoom-dialog" aria-labelledby="zoom-title"><div style="display:flex;justify-content:space-between;gap:25px;align-items:center"><strong id="zoom-title"></strong><button onclick="document.getElementById('zoom-dialog').close()">关闭</button></div><img id="zoom-image" alt=""></dialog>
+<script>
+const cards=__CARDS__;
+const legacy=__LEGACY__;
+const groups=[
+  {id:'stations',label:'场景',title:'场景：环境更喜欢哪几张？',help:'建议选 2–4 张。比如喜欢街巷布局，就点「布局」。',tags:[['构图','布局'],['光感','灯光'],['配色','配色'],['纸纹','纸感'],['年代物件','年代物件']]},
+  {id:'residents',label:'纸居民',title:'纸居民：人物更喜欢哪几张？',help:'建议选 1–3 张。可以只参考纸感、配色或穿着。',tags:[['纸纹','纸感'],['配色','配色'],['年代物件','年代穿着']]},
+  {id:'ink',label:'墨怪',title:'墨怪：哪些图的墨感更合适？',help:'建议选 1–3 张。高光和红核的统一做法，下一步单独选择。',tags:[['墨质','墨的质感'],['光感','反光感觉'],['配色','配色']]},
+  {id:'ui',label:'界面元素',title:'界面元素：哪些值得沿用？',help:'建议选 1–3 张。只确认视觉参考，实际尺寸和清晰度由我继续检查。',tags:[['纸纹','纸感'],['配色','配色'],['构图','排布']]}
+];
+const tagNames={'构图':'布局 / 排布','光感':'灯光 / 反光','纸纹':'纸感','配色':'配色','年代物件':'年代物件 / 穿着','墨质':'墨的质感'};
+const checkNames={C03:'亮度',C04:'色板',C05:'文字检查',C14:'风格对照'};
+const checkStatus={pass:'通过',fail:'需修正',pending:'待检查',na:'不适用'};
+const key='paper-lantern-A1-T02-v2',oldKey='paper-lantern-A1-T02-v1';
+let state={items:{},ink:null,notes:'',step:1,group:0,mode:'select'};
+let restored=false;
+try{let saved=localStorage.getItem(key)||localStorage.getItem(oldKey);if(saved){Object.assign(state,JSON.parse(saved));restored=true}}catch(e){}
+state.items=state.items&&typeof state.items==='object'?state.items:{};
+state.step=[1,2,3].includes(state.step)?state.step:1;
+state.group=Number.isInteger(state.group)&&groups[state.group]?state.group:0;
+state.mode=state.mode==='revise'?'revise':'select';
+state.ink=['A','B','revise'].includes(state.ink)?state.ink:null;
+state.notes=typeof state.notes==='string'?state.notes:'';
+for(const c of cards){let s=state.items[c.id]||{};state.items[c.id]={selected:s.selected===true,tags:Array.isArray(s.tags)?s.tags.filter(t=>Object.hasOwn(tagNames,t)):[],note:typeof s.note==='string'?s.note:''}}
+const el=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const current=id=>state.items[id];
+const selected=()=>cards.filter(c=>current(c.id).selected);
+const number=c=>String(cards.indexOf(c)+1).padStart(2,'0');
+function persist(){try{localStorage.setItem(key,JSON.stringify(state))}catch(e){el('save-status').textContent='当前浏览器无法自动保存。请在离开页面前复制反馈，避免丢失。'}}
+function toast(message){el('toast').textContent=message;el('toast').hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>el('toast').hidden=true,3600)}
+function selectionIssues(){let items=selected(),issues=[];if(items.length<6)issues.push('再选 '+(6-items.length)+' 张，至少选 6 张');if(items.length>12)issues.push('目前超过 12 张，请取消几张');for(const g of groups){if(!items.some(c=>c.group===g.id))issues.push(g.label+'还没有选，请至少选 1 张')}if(items.some(c=>!current(c.id).tags.length))issues.push('已选图片中还有未点选「喜欢的地方」的图片');return issues}
+function feedbackIssues(){let issues=state.mode==='revise'?[]:selectionIssues();if(state.mode==='select'&&!state.ink)issues.push('请选择 A、B，或「两种都要改」');if((state.mode==='revise'||state.ink==='revise')&&!state.notes.trim())issues.push('请写一句你希望怎么修改');return issues}
+function renderCards(){
+  const group=groups[state.group];
+  const visible=cards.filter(c=>c.group===group.id).sort((a,b)=>Number(Object.values(b.checks).some(v=>v.status==='fail'))-Number(Object.values(a.checks).some(v=>v.status==='fail')));
+  el('cards').innerHTML=visible.map(c=>{let s=current(c.id);return `<article class="card ${s.selected?'selected':''}" id="card-${c.id}">
+    <button class="image-button" onclick="zoom('${c.original}','${number(c)} · ${esc(c.title)}')" aria-label="放大 ${number(c)} ${esc(c.title)}"><img src="${c.preview}" alt="${esc(c.title)}"><span class="zoom-hint">放大看</span></button>
+    ${s.selected?'<span class="badge">✓ 已选</span>':''}<div class="card-body"><h3><span class="number">${number(c)}</span>${esc(c.title)}</h3><div class="pick-label">喜欢它的什么？点一下就选中</div><div class="chips">${group.tags.map(([tag,label])=>`<button class="chip" aria-pressed="${s.selected&&s.tags.includes(tag)}" onclick="toggleTag('${c.id}','${tag}')">${s.selected&&s.tags.includes(tag)?'✓ ':''}${label}</button>`).join('')}</div>
+    ${s.selected?`<details><summary>补充一句（选填）</summary><textarea aria-label="${number(c)} 补充意见" placeholder="例如：只参考布局，颜色要更暗" oninput="current('${c.id}').note=this.value;persist()">${esc(s.note)}</textarea><button class="text-button" onclick="unselect('${c.id}')">取消这张</button></details>`:''}
+    <details class="technical"><summary>已有问题与原图（可跳过）</summary><p>${esc(c.note)}</p><ul>${Object.entries(c.checks).map(([k,v])=>`<li>${checkNames[k]||k}：${checkStatus[v.status]||v.status}</li>`).join('')}</ul><a href="${c.original}" target="_blank">查看原始 PNG</a></details></div></article>`}).join('');
+}
+function renderProgress(){let count=selected().length;el('group-tabs').innerHTML=groups.map((g,i)=>{let n=selected().filter(c=>c.group===g.id).length;return `<button class="tab ${i===state.group?'active':''}" role="tab" aria-selected="${i===state.group}" onclick="pickGroup(${i})"><b>${i+1}. ${g.label}</b><small>${n?'已选 '+n+' 张':'至少选 1 张'}</small></button>`}).join('');el('group-title').textContent=groups[state.group].title;el('group-help').textContent=groups[state.group].help;el('group-count').textContent='这一类已选 '+selected().filter(c=>c.group===groups[state.group].id).length+' 张';el('progress').textContent=state.mode==='revise'&&state.step>1?'本次提交修改意见，不批准当前图片':`共选 ${count} 张 · 目标 6–12 张 · 四类都要有`;
+  el('back-button').hidden=state.step===1&&state.group===0;el('next-button').textContent=state.step===1?(state.group<3?'下一类：'+groups[state.group+1].label:'下一步：选墨的感觉'):'下一步：整理反馈';}
+function render(){for(let i=1;i<=3;i++){el('step-'+i).hidden=state.step!==i;el('step-tab-'+i).className='step'+(state.step===i?' active':state.step>i?' done':'')}el('bottom-bar').hidden=state.step===3;renderCards();renderProgress();for(const choice of ['A','B']){el('ink-'+choice).classList.toggle('selected',state.ink===choice);el('ink-'+choice).querySelector('.ink-pick').setAttribute('aria-pressed',String(state.ink===choice))}el('ink-revise').setAttribute('aria-pressed',String(state.ink==='revise'));el('revision-help').hidden=state.mode!=='revise';el('notes-label').textContent=state.mode==='revise'||state.ink==='revise'?'请告诉我希望怎么改（必填）':'还有什么想调整？（选填）';el('styleNotes').value=state.notes;if(state.step===3)renderFeedback();persist()}
+function toggleTag(id,tag){let s=current(id);if(!s.selected&&selected().length>=12){toast('最多选 12 张。先取消一张，再选新的。');return}s.tags=s.selected&&s.tags.includes(tag)?s.tags.filter(t=>t!==tag):[...new Set([...s.tags,tag])];s.selected=s.tags.length>0;el('pick-error').hidden=true;renderCards();renderProgress();persist()}
+function unselect(id){current(id).selected=false;current(id).tags=[];renderCards();renderProgress();persist()}
+function pickGroup(index){state.group=index;state.step=1;state.mode='select';el('pick-error').hidden=true;render()}
+function showError(id,issues){el(id).textContent=issues.join('；')+'。';el(id).hidden=false;el(id).scrollIntoView({block:'center',behavior:'smooth'})}
+function goStep(step){if(step===2&&state.mode==='select'){let issues=selectionIssues();if(issues.length){state.step=1;render();showError('pick-error',issues);return}}if(step===3){let issues=feedbackIssues();if(issues.length){state.step=state.mode==='select'&&selectionIssues().length?1:2;render();showError(state.step===1?'pick-error':'ink-error',issues);return}}state.step=step;if(step===1)state.mode='select';el('pick-error').hidden=true;el('ink-error').hidden=true;render();window.scrollTo({top:0,behavior:'smooth'})}
+function next(){if(state.step===1&&state.group<3){pickGroup(state.group+1);window.scrollTo({top:0,behavior:'smooth'})}else goStep(state.step+1)}
+function back(){if(state.step===1&&state.group>0){pickGroup(state.group-1);window.scrollTo({top:0,behavior:'smooth'})}else goStep(state.step-1)}
+function requestRevision(){state.mode='revise';state.step=2;el('ink-error').hidden=true;render();window.scrollTo({top:0,behavior:'smooth'})}
+function pickInk(choice){state.ink=choice;el('ink-error').hidden=true;render();if(choice==='revise')el('styleNotes').focus()}
+function setNotes(value){state.notes=value;persist()}
+function inkText(){return {A:'A：亮面墨 + 圆形红核',B:'B：少反光 + 平面红印',revise:'两种都需修改'}[state.ink]||'未选择'}
+function feedbackText(){let lines=['纸灯城 T02 / A1 美术反馈'];if(state.mode==='revise'){lines.push('这批参考图整体需要修改，暂不确认锚点。','修改意见：'+state.notes.trim());if(state.ink)lines.push('墨材质意见：'+inkText());return lines.join('\n')}lines.push('我选择以下 '+selected().length+' 张作为风格参考，仅认可注明的特点：');for(const g of groups){lines.push(g.label+'：');for(const c of selected().filter(c=>c.group===g.id)){let s=current(c.id);lines.push(number(c)+' '+c.title+' ['+c.id+'] — 参考：'+s.tags.map(t=>tagNames[t]).join('、')+(s.note.trim()?'；补充：'+s.note.trim():''))}}lines.push('墨材质选择：'+inkText(),'整体修改意见：'+(state.notes.trim()||'无补充意见，按已选参考特点定稿风格词。'),'现有检查问题仍需修正；本次选择不代表正式生产素材或真机验收通过。');return lines.join('\n')}
+function renderFeedback(){const items=state.mode==='revise'?[]:selected();el('selection-summary').innerHTML=items.length?`<p><strong>已选 ${items.length} 张 · 墨材质：${esc(inkText())}</strong></p><div class="summary-grid">${items.map(c=>`<div class="thumb"><img src="${c.preview}" alt="${esc(c.title)}">${number(c)} · ${esc(c.title)}</div>`).join('')}</div>`:'<p><strong>本次反馈：调整方向，当前图片暂不批准。</strong></p>';el('feedbackText').value=feedbackText();el('copy-status').textContent=''}
+async function copyFeedback(){const area=el('feedbackText');try{if(!navigator.clipboard?.writeText)throw Error('clipboard unavailable');await navigator.clipboard.writeText(area.value);el('copy-status').textContent='已复制。回到聊天粘贴并发送即可。'}catch(e){area.focus();area.select();el('copy-status').textContent='文字已选中。按 Ctrl+C（手机长按复制），再到聊天粘贴发送。'}}
+function reviewYaml(){const valid=feedbackIssues().length===0;let lines=['stage: A1','status: '+(!valid?'draft':state.mode==='revise'?'changes_requested':'submitted'),'ink_choice: '+JSON.stringify(state.ink),'style_notes: '+JSON.stringify(state.notes),'items:'];for(const c of cards){let s=current(c.id),chosen=state.mode!=='revise'&&s.selected;lines.push('  - id: '+c.id,'    status: '+(valid&&chosen?'approved':'pending'),'    anchor_for: '+JSON.stringify(chosen?s.tags:[]),'    note: '+JSON.stringify(s.note))}return lines.join('\n')+'\n'}
+function downloadReview(){let issues=feedbackIssues();if(issues.length){toast('请先完成选择和修改意见。');return}let url=URL.createObjectURL(new Blob([reviewYaml()],{type:'text/yaml;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='review.yaml';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);el('copy-status').textContent='已下载。仍需把反馈文字粘贴到聊天，或把文件发给我。'}
+function zoom(src,title){el('zoom-title').textContent=title;el('zoom-image').src=src;el('zoom-image').alt=title;el('zoom-dialog').showModal()}
+el('legacy').innerHTML=legacy.map(c=>`<div><img src="${c.preview}" alt="${esc(c.id)} 已替换首稿"><small>${esc(c.id)}：过度场景化，已重出。</small></div>`).join('');
+if(state.step===3&&feedbackIssues().length)state.step=1;
+render();
+if(restored)el('save-status').textContent='已恢复上次的选择。当前结果还没有发给我，完成后请复制到聊天发送。';
+</script>
+</body>
+</html>

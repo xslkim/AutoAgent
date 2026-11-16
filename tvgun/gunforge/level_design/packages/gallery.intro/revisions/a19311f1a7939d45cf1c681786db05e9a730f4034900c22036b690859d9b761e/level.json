@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "id": "gallery.intro",
+  "ruleset": "gallery@1",
+  "seed": 421,
+  "tick_hz": 60,
+  "duration_ms": 12000,
+  "layout": {
+    "width": 960,
+    "height": 540
+  },
+  "entities": {
+    "target_a": {
+      "template": "target",
+      "x": 170,
+      "y": 180,
+      "width": 100,
+      "height": 100,
+      "properties": {
+        "shape": "circle"
+      }
+    },
+    "target_b": {
+      "template": "target",
+      "x": 600,
+      "y": 200,
+      "width": 100,
+      "height": 90,
+      "properties": {
+        "vx": 12,
+        "shape": "circle"
+      }
+    },
+    "protected_a": {
+      "template": "protected",
+      "x": 380,
+      "y": 300,
+      "width": 100,
+      "height": 100,
+      "properties": {}
+    }
+  },
+  "events": {
+    "open": {
+      "trigger": {
+        "at_ms": 0
+      },
+      "actions": {
+        "a0": {
+          "op": "spawn",
+          "entity": "target_a"
+        },
+        "a1": {
+          "op": "spawn",
+          "entity": "protected_a"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1
+    },
+    "next": {
+      "trigger": {
+        "at_ms": 2000
+      },
+      "actions": {
+        "a0": {
+          "op": "spawn",
+          "entity": "target_b"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "a_clear": {
+      "trigger": {
+        "on": "target.neutralized:target_a"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "score",
+          "amount": 100
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "b_clear": {
+      "trigger": {
+        "on": "target.neutralized:target_b"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "score",
+          "amount": 100
+        },
+        "a1": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1
+    },
+    "wrong": {
+      "trigger": {
+        "on": "target.protected_hit:protected_a"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "score",
+          "amount": -50
+        },
+        "a1": {
+          "op": "fail",
+          "result": "wrong_target"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1
+    },
+    "warning": {
+      "trigger": {
+        "at_ms": 1800
+      },
+      "actions": {
+        "a0": {
+          "op": "cue",
+          "cue": "target_warning"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    }
+  },
+  "queries": {
+    "target_distance": {
+      "op": "distance",
+      "entity": "target_a",
+      "other": "target_b",
+      "space": "content_px",
+      "algorithm": "cpu-nearest-v1"
+    }
+  },
+  "resources": {
+    "warning_tone": {
+      "path": "gunforge/framework/runtime/audio/warning.wav",
+      "sha256": "f3a698b9c3e15b71273b901587879892eaee9acfc465841b98dad7b2697b3099",
+      "kind": "audio"
+    }
+  },
+  "cues": {
+    "target_warning": {
+      "resource": "warning_tone",
+      "channel": "warning",
+      "duration_ms": 220,
+      "volume_db": -17
+    }
+  },
+  "initial_resources": {
+    "ammo": 4,
+    "score": 0
+  },
+  "controls": {
+    "ammo_resource": "ammo",
+    "magazine": 4,
+    "reload_ms": 500,
+    "shot_interval_ms": 150,
+    "assist_px": 8
+  },
+  "hud": [
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "得分",
+      "resource": "score"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "comment_id": "user-gameplay-2026-11-08",
+  "author": "user",
+  "source": "current chat: first real level feedback",
+  "base_source_revision": "b674ce3b54a5fbcd123b84ee64ee6ce14bac4da5c0d6d47fcf6d70427f71f917",
+  "base_build_id": "b8ce863a41bb203339dce85a07c9717b54597b58d78d2bc41de35a5a72f43928",
+  "status": "open",
+  "items": [
+    {
+      "id": "F01",
+      "text": "怪物应该攻击玩家，而不是现在莫名其妙的出现消失。"
+    },
+    {
+      "id": "F02",
+      "text": "去调研一下其他光枪游戏，怪物移动，攻击都很自然，有紧迫感。"
+    },
+    {
+      "id": "F03",
+      "text": "光和怪物的关系，莫名其妙，搞不懂为什么。"
+    },
+    {
+      "id": "F04",
+      "text": "攻击，被攻击需要有特效，音效。"
+    },
+    {
+      "id": "F05",
+      "text": "怪兽的数量和波次，都没有，非常单一， 完全都不知道是在玩光枪游戏。"
+    }
+  ],
+  "handling": "new gameplay candidate with intentional behavior changes; preserve the verified legacy package for comparison; never mark user acceptance automatically"
+}

@@ -1,0 +1,651 @@
+{
+  "schema_version": 1,
+  "id": "paper.alley",
+  "ruleset": "g01.paper_lantern@1",
+  "seed": 421,
+  "tick_hz": 60,
+  "duration_ms": 78000,
+  "layout": {
+    "width": 1776,
+    "height": 936
+  },
+  "entities": {},
+  "events": {},
+  "queries": {},
+  "resources": {
+    "asset_3a9df937937fddbb": {
+      "path": "gunforge/framework/runtime/audio/hit.wav",
+      "sha256": "383fc6cfae0041cd1f4622fd8bb47c5b3bb699b3ebab87d63482d8ea93a542b2",
+      "kind": "metadata"
+    },
+    "asset_86c3dcba1b0d768a": {
+      "path": "gunforge/framework/runtime/audio/hurt.wav",
+      "sha256": "231ad8fd5c9b457ea53b7b24b0fffa49057438e6e7579d7cf3707fb4593bcd6b",
+      "kind": "metadata"
+    },
+    "asset_58a8a35515b9c25e": {
+      "path": "gunforge/framework/runtime/audio/lamp.wav",
+      "sha256": "bec8b84b8b5ec27e0a801ddc27ad32f0376cc15967cf6ac7adbb3c87143329c8",
+      "kind": "metadata"
+    },
+    "asset_fe753a04888421c6": {
+      "path": "gunforge/framework/runtime/audio/reload.wav",
+      "sha256": "1fe474e02309e8f6579950b928f03a2eb43dc8920a5c1a3c232c6b3f51189221",
+      "kind": "metadata"
+    },
+    "asset_7c8fadf61acec976": {
+      "path": "gunforge/framework/runtime/audio/rescue.wav",
+      "sha256": "eb78ac1cb28f9634175a89a8b1f4ceb96da5b545e261a12585899cd1b0c80243",
+      "kind": "metadata"
+    },
+    "asset_43ea372805b6fc0c": {
+      "path": "gunforge/framework/runtime/audio/shot.wav",
+      "sha256": "ebd8f7821a27da6c456acf3d059e0a5404953a1af5431ebe6988309a86b5b3f0",
+      "kind": "metadata"
+    },
+    "asset_9155420d036da6ce": {
+      "path": "gunforge/framework/runtime/audio/warning.wav",
+      "sha256": "f3a698b9c3e15b71273b901587879892eaee9acfc465841b98dad7b2697b3099",
+      "kind": "metadata"
+    },
+    "asset_d6042107b8b04d52": {
+      "path": "gunforge/framework/runtime/build.json",
+      "sha256": "e12733447c36e0becd57e81594f3f378306ff974f3772d350f5be1393fb8614f",
+      "kind": "metadata"
+    },
+    "asset_62e24f89f9b4ac69": {
+      "path": "gunforge/framework/runtime/crow/alpha.png",
+      "sha256": "3ae62bff7ae5d5372141335293f783ad288400c779de8e34272e09786c5c7e5b",
+      "kind": "metadata"
+    },
+    "asset_d657f6ab2d6d5a6e": {
+      "path": "gunforge/framework/runtime/crow/body.png",
+      "sha256": "16c91f1f8a3e47071e1f44422525fd4d3d0ebdc1d0798205d6683a8efcd6bab3",
+      "kind": "metadata"
+    },
+    "asset_374a0c5ed69d8200": {
+      "path": "gunforge/framework/runtime/crow/core.png",
+      "sha256": "f5a343c49980c0c17a75e1ce0b5aad19097fff815f429a129fb14178c9ed367f",
+      "kind": "metadata"
+    },
+    "asset_0470f00a9f1d1efd": {
+      "path": "gunforge/framework/runtime/crow/core_hardened.png",
+      "sha256": "717db7d9221019d3819bbc386532e9204386562f410141a0f3b7b2d05626f5ab",
+      "kind": "metadata"
+    },
+    "asset_3d32771462c95336": {
+      "path": "gunforge/framework/runtime/crow/defeated.png",
+      "sha256": "ad2e195af8dfcd91781e7b3ab4f09ffd40ac609a1678c6b0fe00369d100c82d3",
+      "kind": "metadata"
+    },
+    "asset_c37d5fe26457f6d2": {
+      "path": "gunforge/framework/runtime/crow/enemy.json",
+      "sha256": "b7ac2d2fb86b8b2bc105e268e75c0eeb1c8ee0e2af3f1af66b84de74719e6ca8",
+      "kind": "metadata"
+    },
+    "asset_da705197a024aa2e": {
+      "path": "gunforge/framework/runtime/crow/sdf.png",
+      "sha256": "2d0f22e2b4b3240e7087f582249529e864e14d0b5a229f78fbb0c6e8638ea72a",
+      "kind": "metadata"
+    },
+    "asset_51bc613bbe0b8993": {
+      "path": "gunforge/framework/runtime/game_pose.gd",
+      "sha256": "c3735813db26db609d0ad0257618c938d3a87130dfddc281c1040c7155e5da0b",
+      "kind": "metadata"
+    },
+    "asset_92f0dc34fade5e3d": {
+      "path": "gunforge/framework/runtime/game_rules.gd",
+      "sha256": "98ea1d7d67c8ee009da44cf00fd50dadc8f799d93a5cf164d58c7faf458a085a",
+      "kind": "metadata"
+    },
+    "asset_193aa5ae4ad8695d": {
+      "path": "gunforge/framework/runtime/game_scene.gd",
+      "sha256": "1ff282c7e1556b50426a4487d38118c8744ea1122fdea642955943b251e125d0",
+      "kind": "metadata"
+    },
+    "asset_2d39fb5a17222773": {
+      "path": "gunforge/framework/runtime/ink_on_lamp/cover_00.png",
+      "sha256": "25342590e0b1df9fd086879135fc69dc34b29733efe8d615a7bb26e84e533617",
+      "kind": "metadata"
+    },
+    "asset_37f4747db5aefe0f": {
+      "path": "gunforge/framework/runtime/ink_on_lamp/cover_01.png",
+      "sha256": "b131d3bbea372cc9178693f44126fde5742bddb0633102d8425ccbc4efa017da",
+      "kind": "metadata"
+    },
+    "asset_c8c32d428c2bd98f": {
+      "path": "gunforge/framework/runtime/ink_on_lamp/cover_02.png",
+      "sha256": "851f7561695dd13bad65ba91d11e786c8a796657a9fe579ebd3ed0329c7c5017",
+      "kind": "metadata"
+    },
+    "asset_0050b567900665e2": {
+      "path": "gunforge/framework/runtime/level.json",
+      "sha256": "3c89212831cd2dfe8d53971aaee885f4a23d934675265d797c44e03aba2a90d3",
+      "kind": "metadata"
+    },
+    "asset_574b531398bd2a2f": {
+      "path": "gunforge/framework/runtime/pickups/pickup_light.png",
+      "sha256": "0a8e330b17c2142fad77b33ceb79bfa4fbd2f2ffe98b23318b52ca3849aab224",
+      "kind": "metadata"
+    },
+    "asset_2778b2fbfa3a05ef": {
+      "path": "gunforge/framework/runtime/pickups/pickup_wick.png",
+      "sha256": "961a0b0a17178ec8002cf0e8092346a853f388f7e807bf83b7184796c241087d",
+      "kind": "metadata"
+    },
+    "asset_c5b1584157e56071": {
+      "path": "gunforge/framework/runtime/presentation.json",
+      "sha256": "d69ddf32103385a61a973263b160c9dc2c7734196bc158b7ac3ba49bbb230def",
+      "kind": "metadata"
+    },
+    "asset_732e9e9cb21eea74": {
+      "path": "gunforge/framework/runtime/station/layers/far_base.png",
+      "sha256": "2b7fbfad385fb749a0a196002cf5170f7c1f63cae2692e4f2fb0820d0fe32e34",
+      "kind": "metadata"
+    },
+    "asset_3dc790c3ef08f691": {
+      "path": "gunforge/framework/runtime/station/layers/far_town.png",
+      "sha256": "7ac57d7c017145724d4246a78aad055869a5613a25d59938c0fafb023ea96e3b",
+      "kind": "metadata"
+    },
+    "asset_97dcec15dd9162ca": {
+      "path": "gunforge/framework/runtime/station/layers/lamp.png",
+      "sha256": "0514fd473f51cf52ba2db6bcc61501038e3b166048fc2f166ecfb89838550ad2",
+      "kind": "metadata"
+    },
+    "asset_fea5d8f1eb669627": {
+      "path": "gunforge/framework/runtime/station/layers/mid_ground.png",
+      "sha256": "5506e5254260a9d5890141cf2f4bb6e8159431278b088572a1d0f7d246f1a890",
+      "kind": "metadata"
+    },
+    "asset_ae202751f7590594": {
+      "path": "gunforge/framework/runtime/station/layers/mid_left.png",
+      "sha256": "5e47afb4d406e8a218d4f1bd6690c446008dcdda5cc5f305f318b44e1742f725",
+      "kind": "metadata"
+    },
+    "asset_147bc88c09a2b653": {
+      "path": "gunforge/framework/runtime/station/layers/mid_right.png",
+      "sha256": "829f3b76ac7ec8f79235506f3e10c9d4d95b286f3e5cee8ddacc24f8921ce9db",
+      "kind": "metadata"
+    },
+    "asset_f71a7dd0be9116cf": {
+      "path": "gunforge/framework/runtime/station/layers/near_left.png",
+      "sha256": "a8b0823d60a0b7cabcd7c694d2d93dfe5d2686f158fbb8aa8e204c9aa3c4c000",
+      "kind": "metadata"
+    },
+    "asset_d62efa9127e76977": {
+      "path": "gunforge/framework/runtime/station/layers/near_right.png",
+      "sha256": "82354c36d1f6faec8322e83271f0910d67302f9752131a9de968c8230c513a90",
+      "kind": "metadata"
+    },
+    "asset_37d61fc5827b5e1a": {
+      "path": "gunforge/framework/runtime/station/lights/streetlamp_glow.png",
+      "sha256": "35b1d7865fa9978d2432dd0bb3a19eee990d8fb084535261beb89f3435efe9a9",
+      "kind": "metadata"
+    },
+    "asset_6d1155c884c4b246": {
+      "path": "gunforge/framework/runtime/station/lights/streetlamp_spill.png",
+      "sha256": "267dcaa2594416b7a77381c3a8999a4396bb04f8048efbbeae2eeff0204c23ac",
+      "kind": "metadata"
+    },
+    "asset_a05d35adb92d8577": {
+      "path": "gunforge/framework/runtime/station/station.json",
+      "sha256": "98c11274b7b9702fd38543b2dbe24d76ce2b3d078ea257b1983e0f0488b2bc3c",
+      "kind": "metadata"
+    },
+    "asset_b7dd1367434c15bf": {
+      "path": "gunforge/framework/runtime/ui/ammo_light.png",
+      "sha256": "61740b504ab80fe5ea6eb9d16264ea4150c9dbe29d7ca390431f6ce5decad34f",
+      "kind": "metadata"
+    },
+    "asset_3ec3391b58ec3064": {
+      "path": "gunforge/framework/runtime/ui/ammo_light_empty.png",
+      "sha256": "3470364608d541a39162cb3e209d8e8fd55dbe8ec713146bb3aabf351c9d9d91",
+      "kind": "metadata"
+    },
+    "asset_6504db0df178257c": {
+      "path": "gunforge/framework/runtime/ui/continue_panel.png",
+      "sha256": "a55bb427484495aa8a6419928d3a8c9b9925efa1cc6fd4089db2769246d973ac",
+      "kind": "metadata"
+    },
+    "asset_e5699c70ad4da51d": {
+      "path": "gunforge/framework/runtime/ui/crosshair.png",
+      "sha256": "35b94ec1696f351a9140ed74698e8eb2f36e99ffd4e0925029eb02fb4babe062",
+      "kind": "metadata"
+    },
+    "asset_287629b01df30e9d": {
+      "path": "gunforge/framework/runtime/ui/hud_layout.json",
+      "sha256": "88f41256ca9c42adc84f9ad8f0ebac6f162632149e42289f55326edcc8dd213b",
+      "kind": "metadata"
+    },
+    "asset_5ae1b75ec132831a": {
+      "path": "gunforge/framework/runtime/ui/life_wick.png",
+      "sha256": "b85cfbc77aa2bf181c15b3e7985d80fb305a55798a1cfc29c7a7d0c433fa32d6",
+      "kind": "metadata"
+    },
+    "asset_098e890162eae497": {
+      "path": "gunforge/framework/runtime/ui/life_wick_empty.png",
+      "sha256": "afc1c4f5a081c589c08583c6d7b6458286109238206e4b11744c6c1100c83dad",
+      "kind": "metadata"
+    },
+    "asset_0b8ee3236ca3c604": {
+      "path": "gunforge/framework/runtime/ui/prompt_bar.png",
+      "sha256": "b2bfaae7674caa258e8eb0830cfb977d5d7d3ac08f087a36a6dcfda07f6de91a",
+      "kind": "metadata"
+    },
+    "asset_2b59696dbcefde8c": {
+      "path": "gunforge/framework/runtime/ui/score_seal.png",
+      "sha256": "1228966731fc17c810b84d086b8fa2952036c2bfd27c40aaf74b3c54876c8164",
+      "kind": "metadata"
+    },
+    "asset_b7de02decb1a72d6": {
+      "path": "gunforge/framework/runtime/ui/ui.json",
+      "sha256": "a8cdbc544f1bd79154d835126fe1b1b856a5a2546ab287443d7120811ef1f6c1",
+      "kind": "metadata"
+    },
+    "asset_ad25047e1b004306": {
+      "path": "gunforge/framework/runtime/vendor/atlas.json",
+      "sha256": "c530d24fc52ad4ba71f90f5559115d1c65c48889a696018084435ffefc44a910",
+      "kind": "metadata"
+    },
+    "asset_5a82ef33cc13e642": {
+      "path": "gunforge/framework/runtime/vendor/atlas.png",
+      "sha256": "79e6c494fd659130d4c4a6825be438747a26f5250a0bdf303fd6813d41a7a851",
+      "kind": "metadata"
+    },
+    "asset_dea708666eb4acff": {
+      "path": "gunforge/framework/runtime/vendor/character.json",
+      "sha256": "b68c5c4016f5157d7f61f8777d89c0b1b126ba3de9f55f993e0daeb2c514264e",
+      "kind": "metadata"
+    },
+    "asset_a86bd55f95cb6da9": {
+      "path": "gunforge/framework/runtime/vendor/clips/idle.json",
+      "sha256": "bd7b8dd7d1fdb54ccc5bfdc7d1f0d3d0340236ac38409528b9f17c88d794c428",
+      "kind": "metadata"
+    },
+    "asset_48fd6767f12ee7fb": {
+      "path": "gunforge/framework/runtime/vendor/clips/peek.json",
+      "sha256": "625f6b404551926cbdf21a68b2992fbe32626591a640d7f8b2cf1385fc072cf1",
+      "kind": "metadata"
+    },
+    "asset_12fd6fd3c3b5a084": {
+      "path": "gunforge/framework/runtime/vendor/clips/rescued_bounce.json",
+      "sha256": "582cc3760d66fd52fd2cbc152fe7fe5b9d01ff7c6be8742fa9fcec775c0c717b",
+      "kind": "metadata"
+    },
+    "asset_3e5792868a502066": {
+      "path": "gunforge/framework/runtime/vendor/clips/startle.json",
+      "sha256": "e27f19a94e618d6d2651afb15ad4e0f76daaaa11bba86ec9814df94ca005a61a",
+      "kind": "metadata"
+    },
+    "asset_59008876ee58a58f": {
+      "path": "gunforge/framework/runtime/vendor/clips/struggle.json",
+      "sha256": "73af0002fd0b5a211fd60452361a4b107cb2b09f6f33ae2f3805e036e4304cea",
+      "kind": "metadata"
+    },
+    "asset_f4712b3e3d9c2cb1": {
+      "path": "gunforge/framework/runtime/vendor/clips/thank.json",
+      "sha256": "887ae88db994eb8a8a86382a5253d4115a0cd5a532cdca55ba282d77414c87f2",
+      "kind": "metadata"
+    },
+    "asset_a4f341ed8c57c798": {
+      "path": "gunforge/framework/runtime/vendor/clips/walk.json",
+      "sha256": "1dcd16c30ecd822699a991e11ee3feac28be1d5f135225bef1b9bcb00e9bc104",
+      "kind": "metadata"
+    },
+    "asset_f8610ab9f847fb12": {
+      "path": "gunforge/framework/runtime/vendor/clips/wave_for_help.json",
+      "sha256": "2b60abbab446f7fd44374899534fe70fe85fa23630d6f5fb5403408c3418a51f",
+      "kind": "metadata"
+    },
+    "bible_anchors": {
+      "path": "gunforge/games/g01/bible/anchors.json",
+      "sha256": "d4551a75abc5ffcee0044335b74fcb68b3612a2e625d24fed31b84021ec9c2fa",
+      "kind": "metadata"
+    },
+    "bible_animation_contract": {
+      "path": "gunforge/games/g01/bible/animation_contract.json",
+      "sha256": "dd24b181bf8bedf32279282997db7ea25bf0770624cb48882db216e833852c4b",
+      "kind": "metadata"
+    },
+    "bible_gameplay_constraints": {
+      "path": "gunforge/games/g01/bible/gameplay_constraints.json",
+      "sha256": "5c3c2fa3628abaa72ea0aa40bc7b9e994c3080c71a8ed7bbab62616438717e9a",
+      "kind": "metadata"
+    },
+    "bible_luminance_policy": {
+      "path": "gunforge/games/g01/bible/luminance_policy.json",
+      "sha256": "469bf3b8fca71972376791938d48da49e8c67458b763745c69c1f60d94484ae3",
+      "kind": "metadata"
+    },
+    "bible_material_contract": {
+      "path": "gunforge/games/g01/bible/material_contract.json",
+      "sha256": "13e58e446269fdc2b5104bfc02ad1fd7d37686515e0d2731d7a701e550fc2fa0",
+      "kind": "metadata"
+    },
+    "bible_palette": {
+      "path": "gunforge/games/g01/bible/palette.json",
+      "sha256": "67b88f087c1f22041437953d5b2ff745d6c28b49667b03d8e74562bcc10c46ca",
+      "kind": "metadata"
+    },
+    "bible_prototype_slot_schedule": {
+      "path": "gunforge/games/g01/bible/prototype_slot_schedule.json",
+      "sha256": "2d8037c088cf661ec0189d8d7c0fc836f47acd92fa68aecda712a50d87df489c",
+      "kind": "metadata"
+    },
+    "bible_runtime_presentation": {
+      "path": "gunforge/games/g01/bible/runtime_presentation.json",
+      "sha256": "d69ddf32103385a61a973263b160c9dc2c7734196bc158b7ac3ba49bbb230def",
+      "kind": "metadata"
+    },
+    "bible_texture_candidate_status": {
+      "path": "gunforge/games/g01/bible/texture_candidate_status.json",
+      "sha256": "a630cb8baf96791288872ad3a026455df3dd4c35da053b3a736d3c521dd3a414",
+      "kind": "metadata"
+    },
+    "bible_warning_contract": {
+      "path": "gunforge/games/g01/bible/warning_contract.json",
+      "sha256": "e94e6d42bb0ba48580d08f06db63b1cdcb201ab922b59b705ea57afaa104999c",
+      "kind": "metadata"
+    },
+    "tone_shot": {
+      "path": "gunforge/framework/runtime/audio/shot.wav",
+      "sha256": "ebd8f7821a27da6c456acf3d059e0a5404953a1af5431ebe6988309a86b5b3f0",
+      "kind": "audio"
+    },
+    "tone_hit": {
+      "path": "gunforge/framework/runtime/audio/hit.wav",
+      "sha256": "383fc6cfae0041cd1f4622fd8bb47c5b3bb699b3ebab87d63482d8ea93a542b2",
+      "kind": "audio"
+    },
+    "tone_lamp": {
+      "path": "gunforge/framework/runtime/audio/lamp.wav",
+      "sha256": "bec8b84b8b5ec27e0a801ddc27ad32f0376cc15967cf6ac7adbb3c87143329c8",
+      "kind": "audio"
+    },
+    "tone_rescue": {
+      "path": "gunforge/framework/runtime/audio/rescue.wav",
+      "sha256": "eb78ac1cb28f9634175a89a8b1f4ceb96da5b545e261a12585899cd1b0c80243",
+      "kind": "audio"
+    },
+    "tone_reload": {
+      "path": "gunforge/framework/runtime/audio/reload.wav",
+      "sha256": "1fe474e02309e8f6579950b928f03a2eb43dc8920a5c1a3c232c6b3f51189221",
+      "kind": "audio"
+    },
+    "tone_hurt": {
+      "path": "gunforge/framework/runtime/audio/hurt.wav",
+      "sha256": "231ad8fd5c9b457ea53b7b24b0fffa49057438e6e7579d7cf3707fb4593bcd6b",
+      "kind": "audio"
+    },
+    "tone_warning": {
+      "path": "gunforge/framework/runtime/audio/warning.wav",
+      "sha256": "f3a698b9c3e15b71273b901587879892eaee9acfc465841b98dad7b2697b3099",
+      "kind": "audio"
+    }
+  },
+  "cues": {
+    "shot": {
+      "resource": "tone_shot",
+      "channel": "impact",
+      "duration_ms": 100
+    },
+    "hit": {
+      "resource": "tone_hit",
+      "channel": "impact",
+      "duration_ms": 220
+    },
+    "lamp": {
+      "resource": "tone_lamp",
+      "channel": "impact",
+      "duration_ms": 220
+    },
+    "rescue": {
+      "resource": "tone_rescue",
+      "channel": "impact",
+      "duration_ms": 220
+    },
+    "reload": {
+      "resource": "tone_reload",
+      "channel": "impact",
+      "duration_ms": 220
+    },
+    "hurt": {
+      "resource": "tone_hurt",
+      "channel": "impact",
+      "duration_ms": 220
+    },
+    "warning": {
+      "resource": "tone_warning",
+      "channel": "warning",
+      "duration_ms": 220
+    }
+  },
+  "initial_resources": {
+    "lives": 5,
+    "ammo": 6,
+    "score": 0
+  },
+  "ruleset_data": {
+    "native_level": {
+      "id": "g01_alley_0b",
+      "title": "纸灯城 · 夜市巷口",
+      "duration": 78,
+      "rules": {
+        "lives": 5,
+        "magazine": 6,
+        "shot_interval": 0.15,
+        "reload_seconds": 0.5,
+        "lamp_seconds": 8.0,
+        "light_fade_seconds": 0.3,
+        "warning_seconds": 1.2,
+        "wave_gap": 1.5,
+        "resume_countdown": 1.0,
+        "continue_seconds": 20
+      },
+      "waves": {
+        "wave_0": {
+          "duration": 24,
+          "resident_at": 2,
+          "pickup_at": 18,
+          "enemy_order": [
+            "crow_0",
+            "crow_1"
+          ],
+          "enemies": {
+            "crow_0": {
+              "at": 3,
+              "deadline": 11
+            },
+            "crow_1": {
+              "at": 13,
+              "deadline": 21
+            }
+          }
+        },
+        "wave_1": {
+          "duration": 24,
+          "resident_at": 7,
+          "pickup_at": 18,
+          "enemy_order": [
+            "crow_0",
+            "crow_1"
+          ],
+          "enemies": {
+            "crow_0": {
+              "at": 2,
+              "deadline": 10
+            },
+            "crow_1": {
+              "at": 12,
+              "deadline": 20
+            }
+          }
+        },
+        "wave_2": {
+          "duration": 24,
+          "resident_at": 3,
+          "pickup_at": 18,
+          "enemy_order": [
+            "crow_0",
+            "crow_1"
+          ],
+          "enemies": {
+            "crow_0": {
+              "at": 2,
+              "deadline": 10
+            },
+            "crow_1": {
+              "at": 12,
+              "deadline": 20
+            }
+          }
+        }
+      },
+      "wave_order": [
+        "wave_0",
+        "wave_1",
+        "wave_2"
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "status": "captured_runtime_parameters_not_new_art_approval",
+      "camera": {
+        "amplitude": [
+          35,
+          18
+        ],
+        "rate": [
+          0.58,
+          0.81
+        ]
+      },
+      "breath": {
+        "amplitude": [
+          7,
+          3
+        ],
+        "rate": [
+          1.27,
+          1.71
+        ]
+      },
+      "actor_parallax": 0.45,
+      "light_parallax": 0.6,
+      "soft_exposure": 0.3,
+      "resident_origin": [
+        735,
+        830
+      ],
+      "crow": {
+        "origin": [
+          1320,
+          550
+        ],
+        "amplitude": [
+          7,
+          7
+        ],
+        "rate": [
+          2,
+          2.7
+        ],
+        "canvas_size": 1024,
+        "draw_size": 264,
+        "recoil": 20,
+        "recoil_decay": 8,
+        "dissolve_seconds": 0.75
+      },
+      "lamp": {
+        "hit_rect": [
+          497,
+          253,
+          200,
+          120
+        ],
+        "aim": [
+          596,
+          309
+        ],
+        "cover_origin": [
+          521,
+          269
+        ],
+        "cover_size": [
+          151,
+          94
+        ],
+        "cover_order": [
+          0,
+          1,
+          2
+        ]
+      },
+      "pickup": {
+        "origin": [
+          1055,
+          690
+        ],
+        "size": 112,
+        "amplitude_y": 5,
+        "rate": 4,
+        "types": [
+          "light",
+          "wick",
+          "light"
+        ]
+      },
+      "warning": {
+        "radius": [
+          17,
+          26
+        ],
+        "pulse_hz": 1.5
+      },
+      "hud": {
+        "life_origin": [
+          24,
+          848
+        ],
+        "life_stride": 44,
+        "life_size": [
+          36,
+          64
+        ],
+        "ammo_origin": [
+          1530,
+          864
+        ],
+        "ammo_stride": 38,
+        "ammo_size": [
+          32,
+          48
+        ],
+        "score_rect": [
+          1640,
+          24,
+          112,
+          112
+        ]
+      },
+      "scores": {
+        "lamp": 25,
+        "rescue": 300,
+        "weak": 150,
+        "primary": 100,
+        "pickup": 25,
+        "protected": 100
+      },
+      "cue_bindings": {
+        "shot": "shot",
+        "hit": "hit",
+        "lamp": "lamp",
+        "rescue": "rescue",
+        "reload": "reload",
+        "hurt": "hurt",
+        "warning": "warning"
+      }
+    }
+  }
+}

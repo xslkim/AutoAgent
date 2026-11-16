@@ -1,0 +1,148 @@
+{
+  "stage": "A1",
+  "reviewed": "2026-11-04",
+  "source": "explicit_user_chat_feedback",
+  "anchors": [
+    {
+      "id": "st_l1_alley",
+      "file": "style_refs/st_l1_alley.png",
+      "category": "stations",
+      "anchor_for": [
+        "构图"
+      ],
+      "sha256": "01f5b143d9970ac05a4155ff7d81eeee80e1e5325c2d7a3421ffd4b7576b8b9a",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "st_l1_bridge",
+      "file": "style_refs/st_l1_bridge.png",
+      "category": "stations",
+      "anchor_for": [
+        "构图"
+      ],
+      "sha256": "be5634faa85cf2ad588c84ec659acfea141df2ebaa6e7e8f7414f151fa640bf1",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "st_l2_seats",
+      "file": "style_refs/st_l2_seats.png",
+      "category": "stations",
+      "anchor_for": [
+        "构图"
+      ],
+      "sha256": "4515c894d66904db953e1562f51f3ff32df12c20e48dcfaaba0a465b018b157f",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "st_l3_platform",
+      "file": "style_refs/st_l3_platform.png",
+      "category": "stations",
+      "anchor_for": [
+        "年代物件"
+      ],
+      "sha256": "ea9c3643ff5db72b391610133e6105ba9fffb1dacf3fcf3d6518cf021cfbd466",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "st_l3_base",
+      "file": "style_refs/st_l3_base.png",
+      "category": "stations",
+      "anchor_for": [
+        "光感",
+        "构图",
+        "配色"
+      ],
+      "sha256": "149f934cff0fc0a1cb29dbc5d1873732c0beda103d29511c469bc9a058cb6dae",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "res_vendor",
+      "file": "style_refs/res_vendor.png",
+      "category": "residents",
+      "anchor_for": [
+        "配色"
+      ],
+      "sha256": "cae0e9fda89c0707ecb0a78f4d98a5f2130d9ae73d71c8157258039706794ae6",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "res_projectionist",
+      "file": "style_refs/res_projectionist.png",
+      "category": "residents",
+      "anchor_for": [
+        "年代物件",
+        "配色"
+      ],
+      "sha256": "79b94baa79440fa24ae8a58bded0b8d4ac14fa2956b9cb574fa48c536831be01",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "res_ticket",
+      "file": "style_refs/res_ticket.png",
+      "category": "residents",
+      "anchor_for": [
+        "年代物件"
+      ],
+      "sha256": "d8ea457ed9edccba1bf6490f010294799f12b4ce3ac338b83d507338e1851623",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "res_cyclist",
+      "file": "style_refs/res_cyclist.png",
+      "category": "residents",
+      "anchor_for": [
+        "年代物件"
+      ],
+      "sha256": "a09e6d25f0de85bd3c67ef818c88188efe2b85e05d1a6e5851a080ef43812594",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "ink_rider",
+      "file": "style_refs/ink_rider.png",
+      "category": "ink",
+      "anchor_for": [
+        "墨质",
+        "光感",
+        "配色"
+      ],
+      "sha256": "be381b90c17395f5d606e34483fa67c553ed57b18bcc287c8fbc3ba5c1cc0ec1",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "ink_tape",
+      "file": "style_refs/ink_tape.png",
+      "category": "ink",
+      "anchor_for": [
+        "配色"
+      ],
+      "sha256": "cd16c33652306bd567b6a4c253117627aebe91c9a080f6abe52cc1ffc27e000a",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    },
+    {
+      "id": "ui_life",
+      "file": "style_refs/ui_life.png",
+      "category": "ui",
+      "anchor_for": [
+        "纸纹",
+        "构图",
+        "配色"
+      ],
+      "sha256": "3ac5a0855d7e52c3299fb5177a58ce7831c55a837a08b5a8c3985d5b2ea0eb72",
+      "status": "approved_reference_characteristics",
+      "production_asset_approved": false
+    }
+  ],
+  "ink_choice": "custom_moderated_gloss",
+  "unapproved_properties": "Attributes not listed are not approved; existing numerical failures remain."
+}

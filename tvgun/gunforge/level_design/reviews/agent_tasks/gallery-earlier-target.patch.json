@@ -1,0 +1,8 @@
+{
+  "base_revision": "743788ee24ed1d759665e45ee658528c62223ef3a878f39efcf68d162d03579b",
+  "summary": "右靶提前到 2.8 秒，提示音提前到 2.6 秒。",
+  "changes": [
+    {"path": "/events/next/trigger/at_ms", "expected": 4000, "value": 2800},
+    {"path": "/events/warning/trigger/at_ms", "expected": 3800, "value": 2600}
+  ]
+}

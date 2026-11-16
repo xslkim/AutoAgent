@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>纸灯城 · 全作一致性画廊</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Source Sans 3", "Microsoft YaHei", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #eee8de; background: #151825; line-height: 1.6; }
+    main { max-width: 1320px; margin: auto; padding: clamp(16px, 4vw, 48px); }
+    header { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 28px; align-items: center; }
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(30px, 4.8vw, 56px); line-height: 1.15; letter-spacing: -.025em; }
+    h2 { font-size: clamp(22px, 3vw, 32px); line-height: 1.3; }
+    p { margin-top: 10px; color: #d2c7ba; }
+    a { color: #eec78b; text-underline-offset: .18em; }
+    a:focus-visible { outline: 2px solid #ffdfaa; outline-offset: 3px; }
+    .hero img { width: 100%; height: auto; display: block; border: 1px solid #454051; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; padding-block: 12px; border-block: 1px solid #444454; }
+    section { margin-top: 36px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr)); gap: 12px; margin: 16px 0 8px; }
+    .compact { grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); }
+    figure { margin: 0; min-width: 0; border: 1px solid #3f4050; background: #222637; }
+    figure a { display: block; }
+    figure img { display: block; width: 100%; height: auto; aspect-ratio: 1776 / 936; object-fit: contain; background: #111420; }
+    .compact img { aspect-ratio: 4 / 5; }
+    figcaption { padding: 8px 12px 10px; }
+    figcaption span { display: block; font-size: .9em; color: #c8bcac; }
+    footer { margin-top: 38px; border-top: 1px solid #444454; padding-top: 18px; }
+    @media (max-width: 680px) { header { grid-template-columns: 1fr; gap: 16px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>纸灯城<br>全作一致性画廊</h1>
+      <p>按三关顺序查看 15 站、居民、墨怪、Boss 和界面。点开任一战斗局部可看完整的 Godot 画面。</p>
+      <p><a href="report.md">试玩与复跑</a> · <a href="candidate_manifest.json">交付候选清单</a> · <a href="gallery_checks.json">抓帧验证</a></p>
+    </div>
+    <a class="hero" href="{{HERO_IMAGE}}"><img src="{{HERO_IMAGE}}" alt="片尾灯城全景中的夜市、旧影院和火车站" width="1776" height="936"></a>
+  </header>
+  <nav aria-label="画廊章节">
+    <a href="#market">夜市</a><a href="#cinema">旧影院</a><a href="#railway">火车站与工作台</a>
+    <a href="#residents">纸居民</a><a href="#enemies">墨怪</a><a href="#bosses">Boss</a><a href="#ui">界面</a>
+  </nav>
+  <!-- CAPTURES -->
+  <footer>
+    <p>{{REVIEW_STATUS}}</p>
+    <p><a href="report.md">交付报告</a> · <a href="{{EPILOGUE_REPORT}}">58 秒有声片尾</a></p>
+  </footer>
+</main>
+</body>
+</html>

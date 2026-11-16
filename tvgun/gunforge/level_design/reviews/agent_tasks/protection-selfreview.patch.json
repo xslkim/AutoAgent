@@ -1,0 +1,1 @@
+{"base_revision":"c8bc62ba3d127a71ea4b38200753f415aaba978239c4b899bc3232c48ddc99fe","changes":[{"expected":6000,"path":"/events/bolt_b_launch/trigger/at_ms","value":7000},{"expected":180,"path":"/entities/bolt_b/properties/vx","value":160}]}

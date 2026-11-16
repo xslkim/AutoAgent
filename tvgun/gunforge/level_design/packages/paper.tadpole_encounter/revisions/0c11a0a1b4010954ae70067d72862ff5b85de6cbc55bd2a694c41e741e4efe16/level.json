@@ -1,0 +1,1366 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "water_warning": {
+      "channel": "warning",
+      "duration_ms": 550,
+      "resource": "audio_009",
+      "volume_db": -9
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 24000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨水溅中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "灯亮",
+      "radius": 155
+    },
+    "sweep_fx": {
+      "color": "#9c83d6",
+      "duration_ms": 900,
+      "kind": "beam_sweep",
+      "radius": 152
+    },
+    "warn_fx": {
+      "color": "#d8ad90",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "radius": 86
+    }
+  },
+  "entities": {
+    "puddle.tadpole1": {
+      "bob": {
+        "amplitude_x": 7,
+        "amplitude_y": 4,
+        "period_ms": 1130,
+        "phase_rad": -0.8
+      },
+      "height": 240,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "scale": 0.95,
+            "x": 500.0,
+            "y": 522.0
+          },
+          {
+            "at_ms": 1600,
+            "scale": 1.06,
+            "x": 488.0,
+            "y": 546.0
+          },
+          {
+            "at_ms": 4000,
+            "scale": 1.25,
+            "x": 466.0,
+            "y": 628.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_011",
+          "resource": "image_010",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_012",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "z": 28
+      },
+      "template": "target",
+      "width": 240,
+      "x": 500.0,
+      "y": 522.0
+    },
+    "puddle.tadpole2": {
+      "bob": {
+        "amplitude_x": 7,
+        "amplitude_y": 4,
+        "period_ms": 1410,
+        "phase_rad": 0.0
+      },
+      "height": 240,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "scale": 0.95,
+            "x": 746.0,
+            "y": 498.0
+          },
+          {
+            "at_ms": 1880,
+            "scale": 1.06,
+            "x": 746.0,
+            "y": 522.0
+          },
+          {
+            "at_ms": 4280,
+            "scale": 1.25,
+            "x": 746.0,
+            "y": 604.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_011",
+          "resource": "image_010",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_012",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "z": 28
+      },
+      "template": "target",
+      "width": 240,
+      "x": 746.0,
+      "y": 498.0
+    },
+    "puddle.tadpole3": {
+      "bob": {
+        "amplitude_x": 7,
+        "amplitude_y": 4,
+        "period_ms": 1690,
+        "phase_rad": 0.8
+      },
+      "height": 240,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "scale": 0.95,
+            "x": 992.0,
+            "y": 526.0
+          },
+          {
+            "at_ms": 2160,
+            "scale": 1.06,
+            "x": 1004.0,
+            "y": 550.0
+          },
+          {
+            "at_ms": 4560,
+            "scale": 1.25,
+            "x": 1026.0,
+            "y": 632.0
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "seal"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_011",
+          "resource": "image_010",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "seal": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_012",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "z": 28
+      },
+      "template": "target",
+      "width": 240,
+      "x": 992.0,
+      "y": 526.0
+    }
+  },
+  "events": {
+    "puddle.bonus": {
+      "actions": {
+        "a0": {
+          "amount": 25,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 3,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.weak_hit"
+      }
+    },
+    "puddle.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "puddle.tadpole1",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "puddle.tadpole2",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "puddle.tadpole3",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "puddle.complete": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.clear",
+        "delay_ms": 700
+      }
+    },
+    "puddle.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "puddle.score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 3,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "puddle.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "puddle"
+        },
+        "a1": {
+          "entity": "puddle.tadpole1",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "puddle.tadpole2",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "puddle.tadpole3",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "puddle.tadpole1.contact1": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole1.warn1",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole1.contact2": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole1.warn2",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole1.contact3": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole1.warn3",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole1.warn1": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 2750
+      }
+    },
+    "puddle.tadpole1.warn2": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 6750
+      }
+    },
+    "puddle.tadpole1.warn3": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole1",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole1",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 10750
+      }
+    },
+    "puddle.tadpole2.contact1": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole2.warn1",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole2.contact2": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole2.warn2",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole2.contact3": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole2.warn3",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole2.warn1": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 3030
+      }
+    },
+    "puddle.tadpole2.warn2": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 7030
+      }
+    },
+    "puddle.tadpole2.warn3": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole2",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole2",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 11030
+      }
+    },
+    "puddle.tadpole3.contact1": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole3.warn1",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole3.contact2": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole3.warn2",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole3.contact3": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.tadpole3.warn3",
+        "delay_ms": 1250
+      }
+    },
+    "puddle.tadpole3.warn1": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 3310
+      }
+    },
+    "puddle.tadpole3.warn2": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 7310
+      }
+    },
+    "puddle.tadpole3.warn3": {
+      "actions": {
+        "a0": {
+          "cue": "water_warning",
+          "op": "cue"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "puddle.tadpole3",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "puddle.tadpole3",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "puddle.start",
+        "delay_ms": 11310
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.tadpole_encounter",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "bottom_wipes": {},
+    "camera": {
+      "amplitude_x": 0,
+      "amplitude_y": 0
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {},
+    "entity_tints": {},
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "瞄准头部墨团 · 听水声抢先开火",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "灯芯耗尽",
+      "result_success": "水洼恢复平静",
+      "section_unit": "站"
+    },
+    "layers": {
+      "puddle.far_base": {
+        "blocker": false,
+        "height": 1036,
+        "parallax": 0.1,
+        "resource": "image_000",
+        "section": "puddle",
+        "width": 1936,
+        "x": -80,
+        "y": -50,
+        "z": -30
+      },
+      "puddle.far_town": {
+        "blocker": false,
+        "height": 814,
+        "parallax": 0.25,
+        "resource": "image_001",
+        "section": "puddle",
+        "width": 1751,
+        "x": 65,
+        "y": 29,
+        "z": -20
+      },
+      "puddle.lamp": {
+        "blocker": false,
+        "height": 801,
+        "parallax": 0.6,
+        "resource": "image_007",
+        "section": "puddle",
+        "width": 1023,
+        "x": 755,
+        "y": 136,
+        "z": 15
+      },
+      "puddle.mid_ground": {
+        "blocker": false,
+        "height": 875,
+        "parallax": 0.45,
+        "resource": "image_002",
+        "section": "puddle",
+        "width": 1936,
+        "x": -80,
+        "y": 111,
+        "z": -10
+      },
+      "puddle.mid_left": {
+        "blocker": false,
+        "height": 933,
+        "parallax": 0.55,
+        "resource": "image_003",
+        "section": "puddle",
+        "width": 1914,
+        "x": -80,
+        "y": -25,
+        "z": 0
+      },
+      "puddle.mid_right": {
+        "blocker": false,
+        "height": 904,
+        "parallax": 0.6,
+        "resource": "image_004",
+        "section": "puddle",
+        "width": 1764,
+        "x": 92,
+        "y": 19,
+        "z": 10
+      },
+      "puddle.near_left": {
+        "blocker": true,
+        "height": 1036,
+        "parallax": 0.9,
+        "resource": "image_005",
+        "section": "puddle",
+        "width": 1454,
+        "x": -80,
+        "y": -50,
+        "z": 110
+      },
+      "puddle.near_right": {
+        "blocker": true,
+        "height": 1036,
+        "parallax": 1.0,
+        "resource": "image_006",
+        "section": "puddle",
+        "width": 1547,
+        "x": 309,
+        "y": -50,
+        "z": 120
+      },
+      "puddle.puddle_surface": {
+        "blocker": false,
+        "height": 156,
+        "parallax": 0.41,
+        "resource": "image_008",
+        "section": "puddle",
+        "width": 780,
+        "x": 490,
+        "y": 701,
+        "z": 26
+      }
+    },
+    "puppets": {},
+    "sound_bindings": {
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "夜市巷口 · 墨蝌蚪",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "audio_009": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/tadpole_encounter/water_warning.wav",
+      "sha256": "103fedf31515a8307e7e0fe0fa7e5da7f1b9af13f980b83d9e015423ce38029b"
+    },
+    "image_000": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/far_base.png",
+      "sha256": "4cc72d09a41438c157f8dbe191d242a227ad5899e2704b3a0512257d899ecbd1"
+    },
+    "image_001": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/far_town.png",
+      "sha256": "c39f2889978cd4ac5a0a7f6104d0ee3cd13051f00eb27cf00e9f448a5e87c6a2"
+    },
+    "image_002": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/mid_ground.png",
+      "sha256": "28309aa86a77ec7b9aae3352567d815ffbb0478a481925679f16f75e588e52f0"
+    },
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/mid_left.png",
+      "sha256": "4e0229adfaa06f321b00cd64ee0dc6f7a64adeb32f88dc9cd27b2296e8cc891d"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/mid_right.png",
+      "sha256": "8bf460a1a8fd0210db98a8290d55f551f11330ac818430b1de7641835fe6eb04"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/near_left.png",
+      "sha256": "15c8ec3c5481aef819e43f13a765c9a46b984f3de6fec8ba34b2fe01c7695a97"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/near_right.png",
+      "sha256": "b2059f584a1dfc64e04f4b546f6f5c23d446af150d9641e080e800cbb656f722"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/assets/stations/g01_st_l1_01_alley/station/layers/lamp.png",
+      "sha256": "0514fd473f51cf52ba2db6bcc61501038e3b166048fc2f166ecfb89838550ad2"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/tadpole_encounter/puddle_surface.png",
+      "sha256": "620fad46fc97bd4531908d57c6a8275c54e70738a57e9eb1f35d901a86aed2c6"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/tadpole_encounter/tadpole_body.png",
+      "sha256": "4fd661f46aa73abba906b986cf054e0a7b13946ad0f84430ea22311935f2b713"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/tadpole_encounter/tadpole_head.png",
+      "sha256": "94d0329908ab56bc649583a24f8d636601e9fffcba6b52afa32ad59dddcf8969"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/tadpole_encounter/tadpole_seal.png",
+      "sha256": "446e7a147147039ee77a4cebd83991d2960392275ac223d5aab44aed2be971af"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "puddle": {
+      "hint": "瞄准头部墨团。朱印可加分，甩尾时别追着尾巴打。",
+      "index": 1,
+      "targets": [
+        "puddle.tadpole1",
+        "puddle.tadpole2",
+        "puddle.tadpole3"
+      ],
+      "title": "巷口水洼"
+    }
+  },
+  "seed": 436,
+  "tick_hz": 60
+}

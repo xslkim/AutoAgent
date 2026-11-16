@@ -1,0 +1,24 @@
+{
+  "source": "explicit user T03 A1b feedback 2026-11-04",
+  "human_roles": [
+    "hostage",
+    "npc"
+  ],
+  "humans_are_enemies": false,
+  "human_body_attackable": false,
+  "human_has_enemy_hp": false,
+  "human_attacks_player": false,
+  "human_attack_animations": [],
+  "paper_body": "protected; wrong shots score penalty only, no bodily damage or death",
+  "attached_ink": "separate purifiable target; human never becomes enemy",
+  "approved_human_actions": [
+    "peek",
+    "walk",
+    "startle",
+    "wave_for_help",
+    "struggle",
+    "rescued_bounce",
+    "thank"
+  ],
+  "implementation_scope": "metadata and art only; no framework or tracker changes"
+}

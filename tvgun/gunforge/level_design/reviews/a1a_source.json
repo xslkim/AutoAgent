@@ -1,0 +1,5 @@
+{
+  "directory": "D:\\gunforge_cache\\level_design\\a1a-verified",
+  "manifest_sha256": "917a823b1742808111c263146a8f68f1a6f6b32f29df2c20a6ef78f23ca14bfd",
+  "purpose": "Verified pre-fix checkpoint. Old-baseline comparison must use this source; later intentional fixes are not expected to match old bug paths."
+}

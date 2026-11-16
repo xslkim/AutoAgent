@@ -1,0 +1,15 @@
+{
+  "source": "D:\\tvgun\\gunforge\\level_design\\packages\\paper.lantern_city\\revisions\\9240ef2fba14e57ccee844426ef79585c5f8546117abc6e548d1441b41d6966c\\level.json",
+  "source_revision": "9240ef2fba14e57ccee844426ef79585c5f8546117abc6e548d1441b41d6966c",
+  "build_id": "205022979ed41635bda14a758507c5c48130df8b461a9d4caf22a94a40ba1286",
+  "compiled": "D:\\gunforge_cache\\level_design\\builds\\205022979ed41635bda14a758507c5c48130df8b461a9d4caf22a94a40ba1286\\level.json",
+  "state": "candidate_not_adopted",
+  "component_revisions": {
+    "paper.station": "055dd952d843113f2eee65393abbc1fc8a19e9a510201dc296b2984f7971c839",
+    "paper.stall": "0c8e4379272a1bcfed2a0697b3c9038b34fc315ad1d4cfa42a0a25ca652ea398",
+    "paper.video_shop": "cd65aeb8cbee2db4da27b87975d5839c92b62f1bd91447a6d20081f88ad9f326",
+    "paper.footbridge": "6a2c79d454d25cf0567f47cf94eed3c5a168a408608026f1a2b0de5d0a436231",
+    "paper.plaza": "b1239ee9cd97362ea047b2e292cdd8ae315cb29d9fc553cf57b8b5b5b3b9c2ee",
+    "paper.cinema": "8b184329331d9159b9e3784c7c880f5dca1d036e0d8f8fc68e601d0b23319df4"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "before": "baseline_cases.json",
+  "after": "D:/gunforge_cache/level_design/current/fixed_replay_comparison.json",
+  "cases": {
+    "D02": {
+      "reproduced": true,
+      "changes": [
+        "remaining ink and rescued paper not targetable",
+        "stale primary ink hit spends a shot but cannot increment hits/reward or restart animation"
+      ],
+      "expected_difference": "second rescue becomes miss; -300 score and -1 hit compared with old bug path"
+    },
+    "D08": {
+      "reproduced": true,
+      "changes": [
+        "paper penalty changes score only; independent threats still damage lives"
+      ],
+      "expected_difference": "protected feedback event replaces hurt; life no longer decreases"
+    }
+  },
+  "other_cases": "strict original replay comparison; no tolerance",
+  "manual_phone": "not tested"
+}

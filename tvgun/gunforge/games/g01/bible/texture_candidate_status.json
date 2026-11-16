@@ -1,0 +1,20 @@
+{
+  "station_id": "g01_st_l1_01_alley",
+  "GPU_approved_candidate": null,
+  "current_CPU_reference_candidate": "g01-alley-hybrid-2b",
+  "not_engine_import_ready": true,
+  "rejected_for_independent_mipmap_use": [
+    {
+      "version": "g01-alley-sparse-1",
+      "reason": "measured CPU downscale sampling mismatch; native-size reconstruction alone insufficient",
+      "evidence": "D:\\tvgun\\gunforge\\games\\g01\\reports\\art\\T07\\revisions\\A2h\\mip_sampling_checks.json"
+    }
+  ],
+  "engine_validation_required": [
+    "consistent sRGB/linear and premultiplication",
+    "8bit quantization/upload of global mip levels",
+    "trilinear LOD crossfade",
+    "GPU seam checks and draw calls",
+    "peak memory including transient upload"
+  ]
+}

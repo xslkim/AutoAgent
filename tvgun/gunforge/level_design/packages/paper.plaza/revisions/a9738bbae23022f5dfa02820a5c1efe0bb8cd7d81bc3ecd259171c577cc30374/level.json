@@ -1,0 +1,1840 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 120000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "dragon_breath": {
+      "color": "#ac8dc1",
+      "duration_ms": 620,
+      "kind": "attack_release",
+      "radius": 108
+    },
+    "dragon_windup": {
+      "color": "#db8c6e",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "摆头 · 即将喷墨",
+      "radius": 108
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "body_01": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_02": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_03": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_04": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_05": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_06": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_07": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "body_08": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "dragon.anchor": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "decoration",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "dragon.mouth": {
+      "height": 1,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 1,
+      "x": 0,
+      "y": 0
+    },
+    "square.ink": {
+      "height": 220,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1060,
+            "y": 378
+          },
+          {
+            "at_ms": 1600,
+            "x": 1086,
+            "y": 392
+          },
+          {
+            "at_ms": 3400,
+            "x": 1040,
+            "y": 378
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_004",
+          "resource": "image_003",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "stamp": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_005",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "template": "target",
+      "width": 315,
+      "x": 1060,
+      "y": 378
+    },
+    "square.sign": {
+      "height": 183,
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 400,
+            "y": 300
+          },
+          {
+            "at_ms": 1600,
+            "x": 426,
+            "y": 314
+          },
+          {
+            "at_ms": 3400,
+            "x": 380,
+            "y": 300
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_001",
+          "resource": "image_000",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "stamp": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_002",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "template": "target",
+      "width": 430,
+      "x": 400,
+      "y": 300
+    }
+  },
+  "events": {
+    "body_02.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_01",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_02"
+      }
+    },
+    "body_03.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_02",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_03"
+      }
+    },
+    "body_04.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_03",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_04"
+      }
+    },
+    "body_05.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_04",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_05"
+      }
+    },
+    "body_06.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_05",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_06"
+      }
+    },
+    "body_07.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_06",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_07"
+      }
+    },
+    "body_08.clean": {
+      "actions": {
+        "a0": {
+          "entity": "body_07",
+          "kind": "primary",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_08"
+      }
+    },
+    "dragon.breath1.release": {
+      "actions": {
+        "a0": {
+          "effect": "dragon_breath",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath1.warn",
+        "delay_ms": 1250
+      }
+    },
+    "dragon.breath1.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath1.release",
+        "delay_ms": 420
+      }
+    },
+    "dragon.breath1.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "dragon_windup",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_open",
+        "delay_ms": 2500
+      }
+    },
+    "dragon.breath2.release": {
+      "actions": {
+        "a0": {
+          "effect": "dragon_breath",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath2.warn",
+        "delay_ms": 1250
+      }
+    },
+    "dragon.breath2.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath2.release",
+        "delay_ms": 420
+      }
+    },
+    "dragon.breath2.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "dragon_windup",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_open",
+        "delay_ms": 6800
+      }
+    },
+    "dragon.breath3.release": {
+      "actions": {
+        "a0": {
+          "effect": "dragon_breath",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath3.warn",
+        "delay_ms": 1250
+      }
+    },
+    "dragon.breath3.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath3.release",
+        "delay_ms": 420
+      }
+    },
+    "dragon.breath3.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "dragon_windup",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_open",
+        "delay_ms": 11100
+      }
+    },
+    "dragon.breath4.release": {
+      "actions": {
+        "a0": {
+          "effect": "dragon_breath",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath4.warn",
+        "delay_ms": 1250
+      }
+    },
+    "dragon.breath4.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath4.release",
+        "delay_ms": 420
+      }
+    },
+    "dragon.breath4.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "dragon_windup",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_open",
+        "delay_ms": 15400
+      }
+    },
+    "dragon.breath5.release": {
+      "actions": {
+        "a0": {
+          "effect": "dragon_breath",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath5.warn",
+        "delay_ms": 1250
+      }
+    },
+    "dragon.breath5.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.breath5.release",
+        "delay_ms": 420
+      }
+    },
+    "dragon.breath5.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "dragon_windup",
+          "entity": "dragon.mouth",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "dragon.mouth",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_open",
+        "delay_ms": 19700
+      }
+    },
+    "dragon.clear": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "dragon.mouth_clean",
+        "delay_ms": 650
+      }
+    },
+    "dragon.mouth_clean": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:dragon.mouth"
+      }
+    },
+    "dragon.mouth_open": {
+      "actions": {
+        "a0": {
+          "entity": "dragon.mouth",
+          "op": "spawn"
+        },
+        "a1": {
+          "entity": "dragon.mouth",
+          "kind": "weak",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:body_01"
+      }
+    },
+    "dragon.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "ink_dragon"
+        },
+        "a1": {
+          "entity": "dragon.anchor",
+          "op": "spawn"
+        },
+        "a10": {
+          "entity": "body_04",
+          "op": "spawn"
+        },
+        "a11": {
+          "entity": "body_04",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a12": {
+          "entity": "body_03",
+          "op": "spawn"
+        },
+        "a13": {
+          "entity": "body_03",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a14": {
+          "entity": "body_02",
+          "op": "spawn"
+        },
+        "a15": {
+          "entity": "body_02",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a16": {
+          "entity": "body_01",
+          "op": "spawn"
+        },
+        "a17": {
+          "entity": "body_01",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a18": {
+          "entity": "body_08",
+          "kind": "primary",
+          "op": "permission"
+        },
+        "a19": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a2": {
+          "entity": "body_08",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "body_08",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a4": {
+          "entity": "body_07",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "body_07",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a6": {
+          "entity": "body_06",
+          "op": "spawn"
+        },
+        "a7": {
+          "entity": "body_06",
+          "kind": "invalid",
+          "op": "permission"
+        },
+        "a8": {
+          "entity": "body_05",
+          "op": "spawn"
+        },
+        "a9": {
+          "entity": "body_05",
+          "kind": "invalid",
+          "op": "permission"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10",
+        "a11",
+        "a12",
+        "a13",
+        "a14",
+        "a15",
+        "a16",
+        "a17",
+        "a18",
+        "a19"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "square.clear",
+        "delay_ms": 850
+      }
+    },
+    "score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 11,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "square.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "square.sign",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "square.ink",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "square.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "square.ink.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "square.ink",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "square.ink",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "square.ink.warn",
+        "delay_ms": 1250
+      }
+    },
+    "square.ink.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "square.ink",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "square.ink",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "square.start",
+        "delay_ms": 4500
+      }
+    },
+    "square.sign.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "square.sign",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "square.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "square.sign.warn",
+        "delay_ms": 1250
+      }
+    },
+    "square.sign.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "square.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "square.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "square.start",
+        "delay_ms": 3600
+      }
+    },
+    "square.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "square_watch"
+        },
+        "a1": {
+          "entity": "square.sign",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "square.ink",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.plaza",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "debug_shell": false,
+    "default_sound": true,
+    "dragon": {
+      "anchor": "dragon.anchor",
+      "images": {
+        "full/parts/body_01_glow.png": "image_010",
+        "full/parts/body_01_ink.png": "image_009",
+        "full/parts/body_01_locked.png": "image_008",
+        "full/parts/body_01_paper.png": "image_007",
+        "full/parts/body_01_purified.png": "image_011",
+        "full/parts/body_02_glow.png": "image_015",
+        "full/parts/body_02_ink.png": "image_014",
+        "full/parts/body_02_locked.png": "image_013",
+        "full/parts/body_02_paper.png": "image_012",
+        "full/parts/body_02_purified.png": "image_016",
+        "full/parts/body_03_glow.png": "image_020",
+        "full/parts/body_03_ink.png": "image_019",
+        "full/parts/body_03_locked.png": "image_018",
+        "full/parts/body_03_paper.png": "image_017",
+        "full/parts/body_03_purified.png": "image_021",
+        "full/parts/body_04_glow.png": "image_025",
+        "full/parts/body_04_ink.png": "image_024",
+        "full/parts/body_04_locked.png": "image_023",
+        "full/parts/body_04_paper.png": "image_022",
+        "full/parts/body_04_purified.png": "image_026",
+        "full/parts/body_05_glow.png": "image_030",
+        "full/parts/body_05_ink.png": "image_029",
+        "full/parts/body_05_locked.png": "image_028",
+        "full/parts/body_05_paper.png": "image_027",
+        "full/parts/body_05_purified.png": "image_031",
+        "full/parts/body_06_glow.png": "image_035",
+        "full/parts/body_06_ink.png": "image_034",
+        "full/parts/body_06_locked.png": "image_033",
+        "full/parts/body_06_paper.png": "image_032",
+        "full/parts/body_06_purified.png": "image_036",
+        "full/parts/body_07_glow.png": "image_040",
+        "full/parts/body_07_ink.png": "image_039",
+        "full/parts/body_07_locked.png": "image_038",
+        "full/parts/body_07_paper.png": "image_037",
+        "full/parts/body_07_purified.png": "image_041",
+        "full/parts/body_08_glow.png": "image_045",
+        "full/parts/body_08_ink.png": "image_044",
+        "full/parts/body_08_locked.png": "image_043",
+        "full/parts/body_08_paper.png": "image_042",
+        "full/parts/body_08_purified.png": "image_046",
+        "full/parts/head_lower.png": "image_048",
+        "full/parts/head_upper.png": "image_047",
+        "full/parts/mouth_core.png": "image_050",
+        "full/parts/mouth_glow.png": "image_051",
+        "full/parts/mouth_interior.png": "image_052",
+        "full/parts/tail_paper.png": "image_049"
+      },
+      "layout": "metadata_006",
+      "mouth": "dragon.mouth",
+      "warning_effect": "dragon_windup"
+    },
+    "entity_state_labels": {},
+    "entity_tints": {},
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "清开广场 · 从龙尾逐节净化 · 最后击中龙嘴朱砂核",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "广场陷入黑暗",
+      "result_success": "纸龙重归夜市",
+      "section_unit": "段"
+    },
+    "layers": {
+      "ink_dragon.square": {
+        "blocker": false,
+        "height": 936,
+        "parallax": 0,
+        "resource": "image_053",
+        "section": "ink_dragon",
+        "width": 1776,
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "square_watch.square": {
+        "blocker": false,
+        "height": 936,
+        "parallax": 0,
+        "resource": "image_053",
+        "section": "square_watch",
+        "width": 1776,
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "puppets": {},
+    "sound_bindings": {
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第一关 · 夜市广场",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "image_000": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_sign/body.png",
+      "sha256": "79f19d231a892a8ceef89dda6d67e5ef4d7bc583659f03700e3640c5bab4403a"
+    },
+    "image_001": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/plaza/ink_sign_hit.png",
+      "sha256": "2ec80e53c0f6d7a33b9d9ad57a9607fd5dbdf70b6a9efab0d4fe2be845446e51"
+    },
+    "image_002": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_sign/core.png",
+      "sha256": "c1b640f2dcf982a0bda65dcf8356b34b09aab43128b4801f3926b70af14bbb05"
+    },
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_drop/body.png",
+      "sha256": "6bc83a088c62a749693940e9a74895c1d91b0ab35c3611416621392000407872"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/plaza/ink_drop_hit.png",
+      "sha256": "ef113e0433b81968a1cb7d869d62a6937dfb5c02bc875d0e391a43d5cfc2e5e4"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_drop/core.png",
+      "sha256": "688a0f9ae364a33b735e802db3a426d70e14e9901ccf9901a38fc69c2a156603"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_01_paper.png",
+      "sha256": "a9c8e58963875dd623f8db859b61aae65671e88ce68381528673d7c3f21e4c51"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_01_locked.png",
+      "sha256": "9be4206d75b2c09a43c932cdb5fbc3180db17d17dfa78e1954f30f9f7d162941"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_01_ink.png",
+      "sha256": "50206f1d3b95ac67fd84cd92a59c4b3a3082d48ce9fdc793c5139dd5e68d7713"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_01_glow.png",
+      "sha256": "90c7c88773a4b330dc2761a3b018cfafb3ece1ff42dcc0f49c52bbf180652016"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_01_purified.png",
+      "sha256": "7da74e7a2ec9a452621902b8651a4600e16ec134133e309672d8d61362fc0310"
+    },
+    "image_012": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_02_paper.png",
+      "sha256": "b4f58125204458e83714763eec9f30762799da7a68298f7d3fa97e7b39326f2f"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_02_locked.png",
+      "sha256": "d96e235fd08dae200d2d76a91cba642a0a8fa8369580860b98f23e83d85435f1"
+    },
+    "image_014": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_02_ink.png",
+      "sha256": "70e3f99cce617c738398f25e52915e7fa74063279f64fdf62b4ea4297eea6105"
+    },
+    "image_015": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_02_glow.png",
+      "sha256": "ca407f28dc62704792c325b89dbd5ed922efcc2d0390ce82a9793d219b4a3d32"
+    },
+    "image_016": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_02_purified.png",
+      "sha256": "47a4d9ab1bb2ddfcbfd995e6f7df8af7b3b7809b20406b467e491235e2867432"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_03_paper.png",
+      "sha256": "7c7d71f24cf92dd4f3b84da95712c408792dee9fbf4a53788fa28a34e3eb7dc2"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_03_locked.png",
+      "sha256": "0b55aea8c8c10e4278666ad133cb8ada0c2827d73022932348793ebf0cc1919e"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_03_ink.png",
+      "sha256": "143571ddd4cdb8bffc50fddebedfe27066693528e36932e928d266356414a90a"
+    },
+    "image_020": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_03_glow.png",
+      "sha256": "12844b8379b3ed1fe4cb15341ef61403ca1bbd2b6e49ebaf02ac5b57e44cd613"
+    },
+    "image_021": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_03_purified.png",
+      "sha256": "e441959d6c37448d42cac40767247b23e4b9be5ba106b182626d9af89e2fe0f1"
+    },
+    "image_022": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_04_paper.png",
+      "sha256": "00ffd02950730f1aec4da597c0a61db36b98f2213b5eafe73638611e8e0cc287"
+    },
+    "image_023": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_04_locked.png",
+      "sha256": "6188611de96ae653257fef28a034a0c134a7aabd377314d0ef3f35ee6696801d"
+    },
+    "image_024": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_04_ink.png",
+      "sha256": "379659fcb43f92900787fe8a29c7438ae506139dbbef1a495be27dbf53e0cea1"
+    },
+    "image_025": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_04_glow.png",
+      "sha256": "a609beebca33d80ec44f28b4958b3a49568ef02862933b50c447d7ab8181bd67"
+    },
+    "image_026": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_04_purified.png",
+      "sha256": "6d099db120bf7a66aa97f9580e7baa8b4a6907eca375424c7958b97177742816"
+    },
+    "image_027": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_05_paper.png",
+      "sha256": "ea0b97bed7d819213f57330c82980e58ffdf73b023f1ef0cb30444628ec5b770"
+    },
+    "image_028": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_05_locked.png",
+      "sha256": "b00f0003ad0d216b4cccaaa7d125498b539cf993459b4e3d1164684b80a30c8f"
+    },
+    "image_029": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_05_ink.png",
+      "sha256": "961927d95c76cef61be5d54360643c16facfc0bd277bbb1476128950c4e79ab2"
+    },
+    "image_030": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_05_glow.png",
+      "sha256": "2129a35cfa84c68d42ce9fa87a8ebca986ab365df3321aa21502b34869e699f5"
+    },
+    "image_031": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_05_purified.png",
+      "sha256": "bc5adaae2cb39f18d3abdd65374f763182bb1b8cbdbdf79780e69444673164c2"
+    },
+    "image_032": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_06_paper.png",
+      "sha256": "ae91990f3bce260b43c619cc858df4fe857c0ee008ac169fb09746c658891ceb"
+    },
+    "image_033": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_06_locked.png",
+      "sha256": "ae4bddc701307c5b33fc023bfff471db4fe188ceb29f1a72c425111ca7b0ce1b"
+    },
+    "image_034": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_06_ink.png",
+      "sha256": "49e1ac46324de41888fea5fca7d6966e2d4b1a091bf0f3a490ec1a75cf20c7e6"
+    },
+    "image_035": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_06_glow.png",
+      "sha256": "ec401bc82ddcf23ecd2aea58a56b2fc153927233a010d73c9c1eca1b77d817c6"
+    },
+    "image_036": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_06_purified.png",
+      "sha256": "d9a4fbddf4a8eef5a07b8d8afa2af16e1f9a9dab4bcfe353bb73896c8f440d34"
+    },
+    "image_037": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_07_paper.png",
+      "sha256": "2aa633b9c1f78460409dfb7ba8f71b32c3f2c9effca27b2cca7a50a9e019cdb2"
+    },
+    "image_038": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_07_locked.png",
+      "sha256": "119a9ba2fb62b883abb25e8f7b25b303bfcc1ffb57a5ef8ca2b8481a63f6a75f"
+    },
+    "image_039": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_07_ink.png",
+      "sha256": "3bf58b255d8f85c8829966604cff0996d09048b2f37933e2fb77316dce66a5d6"
+    },
+    "image_040": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_07_glow.png",
+      "sha256": "990f0d4367a37809ec08c6da417f2b5e4f3ecc188a022657d8b9836c49a72b57"
+    },
+    "image_041": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_07_purified.png",
+      "sha256": "318d4d45875078d6427492d1797c87c07e5e7c594463da15c6945c7ae78ab892"
+    },
+    "image_042": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_08_paper.png",
+      "sha256": "8094826d9d67745b282de17360b5990667f2317ea3b9cd27847e591488a14a4c"
+    },
+    "image_043": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_08_locked.png",
+      "sha256": "97e73fe98f94e983ae2a9830d328dd6bd1fb936bd61c6401659e16b3c9d94085"
+    },
+    "image_044": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_08_ink.png",
+      "sha256": "0ed1d5dee48b6739e0acc75823829ef4a0ded5cfbf32e5724a17173659e15589"
+    },
+    "image_045": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_08_glow.png",
+      "sha256": "1b7d9f7edafd2ee9dbd657a56ccabceadd9b65afbbc451fe09f2b052fa714eb3"
+    },
+    "image_046": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/body_08_purified.png",
+      "sha256": "8eb715c6f67e5536b172c7ebf7c7b3a57c83df5f1a6b36c1a7750b729e6a8d79"
+    },
+    "image_047": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/head_upper.png",
+      "sha256": "b33f59e81340331606695b999c725e435a0852be32ec85c9bb21cf875b347449"
+    },
+    "image_048": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/head_lower.png",
+      "sha256": "36c855570aff0f334949ad8d4e2778b6e144d81ea2210d57b1d6f9e6a19b22ea"
+    },
+    "image_049": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/tail_paper.png",
+      "sha256": "c3325dfb3d55613805365ab67e31136cb684f317c9a09a2047b4744fac3119b4"
+    },
+    "image_050": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/mouth_core.png",
+      "sha256": "892fb140c67a9f042d962d136106f41c72a5813889591840c30e910cc962198c"
+    },
+    "image_051": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/mouth_glow.png",
+      "sha256": "bd3bd9607df7d68def3e8c01e88c34afee056dec1b5c10448239f87dc32b20a8"
+    },
+    "image_052": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T11/full/parts/mouth_interior.png",
+      "sha256": "74518ee97398f39aadb52b5378f0a1b5b7ef54d2e19f716ed8283d00c7a6a73c"
+    },
+    "image_053": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/compositions/square_02.png",
+      "sha256": "2c74822e6eb73f855d00b50408084f29c014a99109bdddaacb6c13dbc34797b0"
+    },
+    "metadata_006": {
+      "kind": "metadata",
+      "path": "gunforge/games/g01/reports/art/T11/boss.json",
+      "sha256": "266bcf18ec69f14b30c32a097dd6dd98a98a436e0a408caee40a5185d4eaf7e1"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "ink_dragon": {
+      "hint": "从尾到头逐节清墨。龙嘴亮起朱砂后，赶在喷墨前击破。",
+      "index": 2,
+      "targets": [
+        "body_08",
+        "body_07",
+        "body_06",
+        "body_05",
+        "body_04",
+        "body_03",
+        "body_02",
+        "body_01",
+        "dragon.mouth"
+      ],
+      "title": "广场 · 墨舞龙"
+    },
+    "square_watch": {
+      "hint": "清除广场里的两个墨怪。红圈出现时，优先打断蓄力。",
+      "index": 1,
+      "targets": [
+        "square.sign",
+        "square.ink"
+      ],
+      "title": "清开广场"
+    }
+  },
+  "seed": 425,
+  "tick_hz": 60
+}

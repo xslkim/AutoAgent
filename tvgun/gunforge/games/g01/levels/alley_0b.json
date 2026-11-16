@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "g01_alley_0b",
+  "title": "纸灯城 · 夜市巷口",
+  "duration": 78,
+  "seed": 421,
+  "waves": [
+    {"duration": 24, "enemies": [{"at": 3, "deadline": 11}, {"at": 13, "deadline": 21}], "resident_at": 2, "pickup_at": 18},
+    {"duration": 24, "enemies": [{"at": 2, "deadline": 10}, {"at": 12, "deadline": 20}], "resident_at": 7, "pickup_at": 18},
+    {"duration": 24, "enemies": [{"at": 2, "deadline": 10}, {"at": 12, "deadline": 20}], "resident_at": 3, "pickup_at": 18}
+  ],
+  "rules": {
+    "lives": 5, "magazine": 6, "shot_interval": 0.15, "reload_seconds": 0.5,
+    "lamp_seconds": 8.0, "light_fade_seconds": 0.3, "warning_seconds": 1.2,
+    "wave_gap": 1.5, "resume_countdown": 1.0, "continue_seconds": 20
+  }
+}

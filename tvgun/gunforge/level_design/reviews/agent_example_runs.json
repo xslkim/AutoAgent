@@ -1,0 +1,243 @@
+{
+  "run": "D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800",
+  "state": "software_checked_candidates_not_adopted",
+  "examples": {
+    "gallery": {
+      "id": "proposal-1794147515072431400",
+      "task": "D:\\tvgun\\gunforge\\level_design\\reviews\\agent_tasks\\gallery-selfreview.json",
+      "task_sha256": "cdd9b0c3d9e1f2dc6be5861dd96624885aba634f3b65d4c869d87b260516a9b5",
+      "patch_sha256": "29a7eb1ca3a9806513ee91d448e710d5ed09d3d67fbdc73248b4d236d388292b",
+      "base_revision": "795c51a1ea59f50ffedd66e08de124caf8309142e2a47a929063902a9e0ae03d",
+      "source_revision": "743788ee24ed1d759665e45ee658528c62223ef3a878f39efcf68d162d03579b",
+      "build_id": "64f06a58ff574c36e35cf1a625294ededaba661685e39bdc3f3933fc2db1f6bb",
+      "source": "D:\\tvgun\\gunforge\\level_design\\packages\\gallery.intro\\revisions\\743788ee24ed1d759665e45ee658528c62223ef3a878f39efcf68d162d03579b\\level.json",
+      "compiled": "D:\\gunforge_cache\\level_design\\builds\\64f06a58ff574c36e35cf1a625294ededaba661685e39bdc3f3933fc2db1f6bb\\level.json",
+      "author": "agent",
+      "state": "candidate_not_adopted",
+      "checks": {
+        "source_revision": "743788ee24ed1d759665e45ee658528c62223ef3a878f39efcf68d162d03579b",
+        "build_id": "64f06a58ff574c36e35cf1a625294ededaba661685e39bdc3f3933fc2db1f6bb",
+        "hard_errors": [],
+        "warnings": [
+          {
+            "code": "DISPLAY_PROFILE_UNTESTED",
+            "message": "Content aspect differs from the old demo; verify letterboxing and actual device calibration."
+          },
+          {
+            "code": "HUMAN_DIFFICULTY_UNCALIBRATED",
+            "message": "Diagnostic bots and sampled alpha metrics do not predict human difficulty."
+          }
+        ],
+        "warning_state": "open",
+        "preview_allowed": true,
+        "human_validation": "pending"
+      },
+      "preserved": [
+        "/entities/target_a",
+        "/entities/protected_a",
+        "/initial_resources",
+        "/controls",
+        "/events/a_clear",
+        "/events/b_clear"
+      ],
+      "user_feedback": "not inferred; see actual comments separately",
+      "original_proposal_build_id": "c930b2382c3ac798cc78edb6bfa380678a576756c01fc45cb8bee560eac793f4",
+      "runtime_rebuild_reason": "Same immutable design rebuilt against current locked software; original proposal receipts preserved.",
+      "response_record": "ba387082e76c46a9a3663dcb9dad3f07",
+      "prior_runtime_builds": [
+        {
+          "build_id": "221aeac4fbbdd188ce7a6564f0c57f41c59d1ef325530b749be4900c3313783c",
+          "compiled": "D:\\gunforge_cache\\level_design\\builds\\221aeac4fbbdd188ce7a6564f0c57f41c59d1ef325530b749be4900c3313783c\\level.json"
+        }
+      ]
+    },
+    "protection": {
+      "id": "proposal-1794147515168950500",
+      "task": "D:\\tvgun\\gunforge\\level_design\\reviews\\agent_tasks\\protection-selfreview.json",
+      "task_sha256": "1cedd65f8b7f48f248110b9136b86e41dc4a4b600c9438bfa4a1811b8c40f995",
+      "patch_sha256": "edc8a8a77ac7295e267214d50dc1872907a4ec30e91fb3ece1f63bb9b902c611",
+      "base_revision": "c8bc62ba3d127a71ea4b38200753f415aaba978239c4b899bc3232c48ddc99fe",
+      "source_revision": "8e8ce10b161b6bdfa60f75d1e6d2bff0076fb9a410500b7c263006b301285065",
+      "build_id": "1308d11c2445119762d74af5aebf94c0de32f447d2f28742e3df42fb05f25a96",
+      "source": "D:\\tvgun\\gunforge\\level_design\\packages\\orbital.convoy\\revisions\\8e8ce10b161b6bdfa60f75d1e6d2bff0076fb9a410500b7c263006b301285065\\level.json",
+      "compiled": "D:\\gunforge_cache\\level_design\\builds\\1308d11c2445119762d74af5aebf94c0de32f447d2f28742e3df42fb05f25a96\\level.json",
+      "author": "agent",
+      "state": "candidate_not_adopted",
+      "checks": {
+        "source_revision": "8e8ce10b161b6bdfa60f75d1e6d2bff0076fb9a410500b7c263006b301285065",
+        "build_id": "1308d11c2445119762d74af5aebf94c0de32f447d2f28742e3df42fb05f25a96",
+        "hard_errors": [],
+        "warnings": [
+          {
+            "code": "DISPLAY_PROFILE_UNTESTED",
+            "message": "Content aspect differs from the old demo; verify letterboxing and actual device calibration."
+          },
+          {
+            "code": "HUMAN_DIFFICULTY_UNCALIBRATED",
+            "message": "Diagnostic bots and sampled alpha metrics do not predict human difficulty."
+          }
+        ],
+        "warning_state": "open",
+        "preview_allowed": true,
+        "human_validation": "pending"
+      },
+      "preserved": [
+        "/entities/convoy",
+        "/entities/drone",
+        "/initial_resources",
+        "/events/bolt_a_launch",
+        "/events/objective_saved",
+        "/queries"
+      ],
+      "user_feedback": "not inferred; see actual comments separately",
+      "original_proposal_build_id": "9e1e175655e43628c7b662c992617f35607034647a0bf7adaeba436c73dce878",
+      "runtime_rebuild_reason": "Same immutable design rebuilt against current locked software; original proposal receipts preserved.",
+      "response_record": "be1dfd74aac74dddba649fb7b616ca45",
+      "prior_runtime_builds": [
+        {
+          "build_id": "a6e383bb52680b3b01dcbba1dabd50cfe480662699d0c22de8c203296e417565",
+          "compiled": "D:\\gunforge_cache\\level_design\\builds\\a6e383bb52680b3b01dcbba1dabd50cfe480662699d0c22de8c203296e417565\\level.json"
+        }
+      ]
+    }
+  },
+  "user_feedback": "not supplied or simulated; self-review examples do not pass the human G2 gate",
+  "results": [
+    {
+      "label": "gallery-candidate-bot",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/functional_bot.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\221aeac4fbbdd188ce7a6564f0c57f41c59d1ef325530b749be4900c3313783c\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\gallery-candidate-bot.json"
+      ],
+      "exit_code": 0,
+      "log_sha256": "b98b3e75911c4ee582513bd70791fc545655602f0eb6d9e7c43e785974171c32"
+    },
+    {
+      "label": "gallery-candidate-idle",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/functional_bot.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\221aeac4fbbdd188ce7a6564f0c57f41c59d1ef325530b749be4900c3313783c\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\gallery-candidate-idle.json",
+        "--idle",
+        "--expected=timeout"
+      ],
+      "exit_code": 0,
+      "log_sha256": "8e18d3039fe9cdd0c17abc9bc4e53a7713002184ce1f03522025e3183558d538"
+    },
+    {
+      "label": "gallery-after",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tools/level_review.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\221aeac4fbbdd188ce7a6564f0c57f41c59d1ef325530b749be4900c3313783c\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\gallery-after.json",
+        "--capture=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\gallery-after.png",
+        "--capture-tick=270",
+        "--quit-after-capture"
+      ],
+      "exit_code": 0,
+      "log_sha256": "c084fe63004acab70b88e312290d492f2dbf7cabb7782433b64f10ddf7da2db1"
+    },
+    {
+      "label": "protection-candidate-bot",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/functional_bot.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\a6e383bb52680b3b01dcbba1dabd50cfe480662699d0c22de8c203296e417565\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\protection-candidate-bot.json"
+      ],
+      "exit_code": 0,
+      "log_sha256": "4114d09e38421b5fe851a7c5f6b51d978b94a2de4174d2548b8bc6dec1bdbadc"
+    },
+    {
+      "label": "protection-candidate-idle",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/functional_bot.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\a6e383bb52680b3b01dcbba1dabd50cfe480662699d0c22de8c203296e417565\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\protection-candidate-idle.json",
+        "--idle",
+        "--expected=convoy_lost"
+      ],
+      "exit_code": 0,
+      "log_sha256": "47269d97152805db7475182fe8e5145f9b1f208aca484825e8d5f56e13b8a1da"
+    },
+    {
+      "label": "protection-after",
+      "command": [
+        "D:\\gunforge_cache\\tools\\godot-4.6.3\\Godot_v4.6.3-stable_win64_console.exe",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tools/level_review.gd",
+        "--",
+        "--build=D:\\gunforge_cache\\level_design\\builds\\a6e383bb52680b3b01dcbba1dabd50cfe480662699d0c22de8c203296e417565\\level.json",
+        "--assets=D:\\tvgun",
+        "--report=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\protection-after.json",
+        "--capture=D:\\gunforge_cache\\level_design\\runs\\agent-selfreview-1794147453429496800\\protection-after.png",
+        "--capture-tick=450",
+        "--quit-after-capture"
+      ],
+      "exit_code": 0,
+      "log_sha256": "299b71cb4a4732d66efc6a4dbacf21f76d795f59db6c6bbb9e13e82aea705068"
+    }
+  ],
+  "files": {
+    "gallery-after.log": "c084fe63004acab70b88e312290d492f2dbf7cabb7782433b64f10ddf7da2db1",
+    "gallery-after.png": "2bb76102b20d8ebec93e793f36e86110fe70aa722eb66814e6aa2f1e82579dca",
+    "gallery-before.log": "799521d07e403f09f34a0eb67f5164e15dbce3ab1a8ba389c6fce77445753e36",
+    "gallery-before.png": "cc30bedfd7c679927a27263e3219ef665a87c9c87b7f7a2e7911f29987ac9c6d",
+    "gallery-candidate-bot.json": "120ebca5188b2b8b07bcfe851d1d942cda01a563132cc806d8d95a117dc3cfb7",
+    "gallery-candidate-bot.json.input.bin": "75e54eb091d46f931a8310d69ae62aa0262ae6281f628cb5bc3893ec02e2ac0e",
+    "gallery-candidate-bot.log": "b98b3e75911c4ee582513bd70791fc545655602f0eb6d9e7c43e785974171c32",
+    "gallery-candidate-idle.json": "793df2001c280e3a47ee31078c510d1743fa180ffbc39480a984377bed6aa550",
+    "gallery-candidate-idle.json.input.bin": "1c70340cf7afbb1c25978b1d9911175a33026dc6c6b93970f9fa4926fae53040",
+    "gallery-candidate-idle.log": "8e18d3039fe9cdd0c17abc9bc4e53a7713002184ce1f03522025e3183558d538",
+    "protection-after.log": "299b71cb4a4732d66efc6a4dbacf21f76d795f59db6c6bbb9e13e82aea705068",
+    "protection-after.png": "6052fb3e5124b72f4f99f908d3081f09a5c6aed7b19ab33a299206798ba5544b",
+    "protection-before.log": "5af679e453004ed38a7cd9f0d83202c5c2ce3fd869091cd6787a263e29d8cc57",
+    "protection-before.png": "2947b6e54814436eae2c029fc1f91c6db45d05106c2b2a46da57e9d437db8dc9",
+    "protection-candidate-bot.json": "02d24b8b819775a1c8c226807945815a8ced82e3a72fab4ec8e10fb40a7c653d",
+    "protection-candidate-bot.json.input.bin": "90579174b1b3b1e48b6dee0f73f219136d45cd70811a754cd34cea5fd322b073",
+    "protection-candidate-bot.log": "4114d09e38421b5fe851a7c5f6b51d978b94a2de4174d2548b8bc6dec1bdbadc",
+    "protection-candidate-idle.json": "0cc588284d9d8a5a5bc1a049fbc86236cde20c6c7df50ffec5dd5bf17c146469",
+    "protection-candidate-idle.json.input.bin": "49a1f1c5129a32c243e721869884505d2b8fed4e639c8aa708e917fa3caca5ae",
+    "protection-candidate-idle.log": "47269d97152805db7475182fe8e5145f9b1f208aca484825e8d5f56e13b8a1da"
+  },
+  "current_runtime_verification": {
+    "run": "D:\\gunforge_cache\\level_design\\runs\\examples-1794153107088186800",
+    "passed": true
+  }
+}

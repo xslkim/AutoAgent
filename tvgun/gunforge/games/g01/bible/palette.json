@@ -1,0 +1,102 @@
+{
+  "source": "GAME01 §4.3 / ART_PLAN §2.4",
+  "colors": [
+    {
+      "role": "夜底",
+      "name": "靛青",
+      "hex": "#141A33"
+    },
+    {
+      "role": "夜底",
+      "name": "深紫",
+      "hex": "#2A1E3D"
+    },
+    {
+      "role": "纸光",
+      "name": "暖杏",
+      "hex": "#D9A066"
+    },
+    {
+      "role": "纸光",
+      "name": "桃粉",
+      "hex": "#C97B84"
+    },
+    {
+      "role": "纸光",
+      "name": "青绿",
+      "hex": "#4E9A92"
+    },
+    {
+      "role": "纸光（全画面最亮色）",
+      "name": "月白",
+      "hex": "#B8C4D6"
+    },
+    {
+      "role": "霓虹点缀",
+      "name": "品红",
+      "hex": "#B04A9A"
+    },
+    {
+      "role": "霓虹点缀",
+      "name": "冰蓝",
+      "hex": "#4A90B8"
+    },
+    {
+      "role": "墨",
+      "name": "墨黑",
+      "hex": "#0B0B0E"
+    },
+    {
+      "role": "弱点、印章",
+      "name": "朱砂",
+      "hex": "#C8322C"
+    }
+  ],
+  "level_ratios": {
+    "night": 0.6,
+    "main": 0.3,
+    "accent": 0.1
+  },
+  "level_colors": {
+    "l1": {
+      "night": [
+        "#141A33",
+        "#2A1E3D"
+      ],
+      "main": [
+        "#D9A066",
+        "#C97B84"
+      ],
+      "accent": [
+        "#B04A9A",
+        "#4E9A92"
+      ]
+    },
+    "l2": {
+      "night": [
+        "#2A1E3D",
+        "#141A33"
+      ],
+      "main": [
+        "#B04A9A",
+        "#4A90B8"
+      ],
+      "accent": [
+        "#D9A066"
+      ]
+    },
+    "l3": {
+      "night": [
+        "#141A33"
+      ],
+      "main": [
+        "#4E9A92",
+        "#B8C4D6"
+      ],
+      "accent": [
+        "#D9A066"
+      ]
+    }
+  },
+  "cinnabar_max_fraction": 0.01
+}

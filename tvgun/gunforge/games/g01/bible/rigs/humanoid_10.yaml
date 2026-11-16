@@ -1,0 +1,14 @@
+template: humanoid_10
+parts:
+  - { id: torso,       name: 躯干,   parent: null }
+  - { id: head,        name: 头,     parent: torso }
+  - { id: upper_arm_l, name: 左上臂, parent: torso }
+  - { id: upper_arm_r, name: 右上臂, parent: torso }
+  - { id: forearm_l,   name: 左前臂（含手）, parent: upper_arm_l }
+  - { id: forearm_r,   name: 右前臂（含手）, parent: upper_arm_r }
+  - { id: thigh_l,     name: 左大腿, parent: torso }
+  - { id: thigh_r,     name: 右大腿, parent: torso }
+  - { id: shin_l,      name: 左小腿（含脚）, parent: thigh_l }
+  - { id: shin_r,      name: 右小腿（含脚）, parent: thigh_r }
+optional:
+  - { id: prop,      name: 手持道具, parent: forearm_r }

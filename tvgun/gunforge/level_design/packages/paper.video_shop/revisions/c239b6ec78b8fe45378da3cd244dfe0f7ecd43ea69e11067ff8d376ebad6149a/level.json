@@ -1,0 +1,1358 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 0,
+    "magazine": 12,
+    "reload_ms": 480,
+    "shot_interval_ms": 145
+  },
+  "cues": {
+    "attack": {
+      "channel": "impact",
+      "duration_ms": 320,
+      "resource": "sound_attack",
+      "volume_db": -10
+    },
+    "empty": {
+      "channel": "impact",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -10
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "reload": {
+      "channel": "impact",
+      "duration_ms": 450,
+      "resource": "sound_reload",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -10
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "impact",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -10
+    }
+  },
+  "duration_ms": 75000,
+  "effects": {
+    "clear_fx": {
+      "color": "#eac993",
+      "duration_ms": 470,
+      "kind": "burst",
+      "radius": 80
+    },
+    "hit": {
+      "color": "#ead6aa",
+      "duration_ms": 220,
+      "kind": "spark",
+      "radius": 48
+    },
+    "hurt_fx": {
+      "color": "#ce6864",
+      "duration_ms": 520,
+      "kind": "player_hit",
+      "label": "墨潮击中"
+    },
+    "light_fx": {
+      "color": "#e9c480",
+      "duration_ms": 530,
+      "kind": "pulse",
+      "label": "灯亮",
+      "radius": 155
+    },
+    "sign_spit": {
+      "color": "#a786c5",
+      "duration_ms": 560,
+      "kind": "attack_release",
+      "radius": 70
+    },
+    "warn_fx": {
+      "color": "#d77672",
+      "duration_ms": 1250,
+      "kind": "warning",
+      "label": "蓄力",
+      "radius": 104
+    }
+  },
+  "entities": {
+    "shop.drop": {
+      "height": 199,
+      "motion": {
+        "easing": "linear",
+        "frames": [
+          {
+            "at_ms": 0,
+            "scale": 0.95,
+            "x": 311,
+            "y": 123
+          },
+          {
+            "at_ms": 650,
+            "scale": 1,
+            "x": 315,
+            "y": 133
+          },
+          {
+            "at_ms": 1900,
+            "scale": 1,
+            "x": 319,
+            "y": 143
+          },
+          {
+            "at_ms": 2820,
+            "scale": 1.08,
+            "x": 349,
+            "y": 495
+          },
+          {
+            "at_ms": 4200,
+            "scale": 1.02,
+            "x": 325,
+            "y": 440
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_018",
+          "resource": "image_017",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "stamp": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_019",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "template": "target",
+      "width": 286,
+      "x": 311,
+      "y": 123
+    },
+    "shop.owner": {
+      "height": 326,
+      "parallax": 0.41,
+      "properties": {
+        "z": 24
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "owner",
+        "success": "rescued_bounce",
+        "target": "shop.rescue",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 245,
+      "x": 635,
+      "y": 420
+    },
+    "shop.rescue": {
+      "height": 92,
+      "parallax": 0.41,
+      "properties": {
+        "virtual": true,
+        "z": 28
+      },
+      "template": "target",
+      "width": 100,
+      "x": 707.5,
+      "y": 537.36
+    },
+    "shop.sign": {
+      "bob": {
+        "amplitude_x": -90,
+        "amplitude_y": 0,
+        "period_ms": 4500,
+        "phase_rad": -1.5707963267948966
+      },
+      "height": 183,
+      "mask_permission": {
+        "resource": "image_011",
+        "source": "video_shop.light",
+        "threshold": 0.3
+      },
+      "motion": {
+        "frames": [
+          {
+            "at_ms": 0,
+            "x": 1160.0,
+            "y": 123.5
+          },
+          {
+            "at_ms": 500,
+            "x": 1160.0,
+            "y": 153.5
+          }
+        ]
+      },
+      "parallax": 0.41,
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "hit_resource": "image_021",
+          "resource": "image_020",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        },
+        "stamp": {
+          "height": 1,
+          "kind": "weak",
+          "resource": "image_022",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "z": 28
+      },
+      "template": "target",
+      "width": 430,
+      "x": 1160.0,
+      "y": 123.5
+    },
+    "video_shop.lamp": {
+      "height": 109,
+      "hit_resource": "image_008",
+      "parallax": 0.52,
+      "properties": {
+        "activation_cooldown_ms": 7500,
+        "z": 10
+      },
+      "resource": "image_007",
+      "template": "activation_source",
+      "width": 316,
+      "x": 1121,
+      "y": 115
+    },
+    "video_shop.lamp_ink": {
+      "height": 91,
+      "parallax": 0.52,
+      "properties": {
+        "z": 12
+      },
+      "resource": "image_010",
+      "template": "decoration",
+      "width": 301,
+      "x": 1127,
+      "y": 123
+    },
+    "video_shop.light": {
+      "height": 249,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "opacity": 0,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 300,
+            "opacity": 1,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 6200,
+            "opacity": 1,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 6350,
+            "opacity": 0.68,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 6550,
+            "opacity": 1,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 6700,
+            "opacity": 1,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 6900,
+            "opacity": 0.42,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 7200,
+            "opacity": 1,
+            "x": 1041,
+            "y": 46
+          },
+          {
+            "at_ms": 7500,
+            "opacity": 0,
+            "x": 1041,
+            "y": 46
+          }
+        ]
+      },
+      "parallax": 0.52,
+      "properties": {
+        "z": 11
+      },
+      "resource": "image_009",
+      "template": "decoration",
+      "width": 485,
+      "x": 1041,
+      "y": 46
+    }
+  },
+  "events": {
+    "shop.clear": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "entity": "shop.drop",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "shop.sign",
+          "field": "health",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "entity": "shop.rescue",
+          "field": "health",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "shop.complete": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.clear",
+        "delay_ms": 3100
+      }
+    },
+    "shop.drop.damage": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "shop.drop",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.drop",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.drop.warn",
+        "delay_ms": 2170
+      }
+    },
+    "shop.drop.fall": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.drop",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.drop.warn",
+        "delay_ms": 1250
+      }
+    },
+    "shop.drop.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "shop.drop",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.drop",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.start",
+        "delay_ms": 650
+      }
+    },
+    "shop.fail": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "shop.owner.protected": {
+      "actions": {
+        "a0": {
+          "amount": -50,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 30,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:shop.owner"
+      }
+    },
+    "shop.rescued": {
+      "actions": {
+        "a0": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:shop.rescue"
+      }
+    },
+    "shop.score": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 3,
+      "order": [
+        "a0"
+      ],
+      "priority": 30,
+      "trigger": {
+        "on": "target.neutralized"
+      }
+    },
+    "shop.spit1.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "sign_spit",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit1.warn",
+        "delay_ms": 1250
+      }
+    },
+    "shop.spit1.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit1.release",
+        "delay_ms": 420
+      }
+    },
+    "shop.spit1.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.start",
+        "delay_ms": 4500
+      }
+    },
+    "shop.spit2.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "sign_spit",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit2.warn",
+        "delay_ms": 1250
+      }
+    },
+    "shop.spit2.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit2.release",
+        "delay_ms": 420
+      }
+    },
+    "shop.spit2.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.start",
+        "delay_ms": 10500
+      }
+    },
+    "shop.spit3.release": {
+      "actions": {
+        "a0": {
+          "event": "attack.launched",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "sign_spit",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit3.warn",
+        "delay_ms": 1250
+      }
+    },
+    "shop.spit3.release.hit": {
+      "actions": {
+        "a0": {
+          "amount": -1,
+          "op": "resource_add",
+          "resource": "lives"
+        },
+        "a1": {
+          "effect": "hurt_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        },
+        "a2": {
+          "event": "player.damaged",
+          "op": "emit"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.spit3.release",
+        "delay_ms": 420
+      }
+    },
+    "shop.spit3.warn": {
+      "actions": {
+        "a0": {
+          "event": "attack.warning",
+          "op": "emit"
+        },
+        "a1": {
+          "effect": "warn_fx",
+          "entity": "shop.sign",
+          "op": "vfx"
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "shop.sign",
+          "field": "active",
+          "value": true
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "shop.start",
+        "delay_ms": 16500
+      }
+    },
+    "shop.start": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "video_shop"
+        },
+        "a1": {
+          "entity": "video_shop.lamp",
+          "op": "spawn"
+        },
+        "a2": {
+          "entity": "video_shop.lamp_ink",
+          "op": "spawn"
+        },
+        "a3": {
+          "entity": "shop.owner",
+          "op": "spawn"
+        },
+        "a4": {
+          "entity": "shop.rescue",
+          "op": "spawn"
+        },
+        "a5": {
+          "entity": "shop.drop",
+          "op": "spawn"
+        },
+        "a6": {
+          "entity": "shop.sign",
+          "op": "spawn"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "video_shop.lamp.expire": {
+      "actions": {
+        "a0": {
+          "entity": "video_shop.light",
+          "op": "remove"
+        },
+        "a1": {
+          "entity": "video_shop.lamp",
+          "field": "value",
+          "op": "set",
+          "value": 0
+        }
+      },
+      "guards": [
+        {
+          "compare": "eq",
+          "entity": "video_shop.lamp",
+          "field": "value",
+          "value": 1
+        }
+      ],
+      "max_firings": 10,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "video_shop.lamp.open",
+        "delay_ms": 7500
+      }
+    },
+    "video_shop.lamp.open": {
+      "actions": {
+        "a0": {
+          "entity": "video_shop.light",
+          "op": "spawn"
+        },
+        "a1": {
+          "effect": "light_fx",
+          "entity": "video_shop.lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 10,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 10,
+      "trigger": {
+        "on": "interaction.activated:video_shop.lamp"
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "获救",
+      "resource": "rescued"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.video_shop",
+  "initial_resources": {
+    "ammo": 12,
+    "lives": 5,
+    "rescued": 0,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "additive_z": 11,
+    "bottom_wipes": {
+      "video_shop.lamp_ink": "video_shop.light"
+    },
+    "camera": {
+      "amplitude_x": 38,
+      "amplitude_y": 15
+    },
+    "debug_shell": false,
+    "default_sound": true,
+    "entity_state_labels": {
+      "shop.sign": {
+        "invalid": "硬化",
+        "primary": "软化 · 射击"
+      }
+    },
+    "entity_tints": {
+      "shop.sign": {
+        "invalid": "#68758e"
+      }
+    },
+    "feedback": {
+      "hit": "hit",
+      "neutralized": "clear_fx",
+      "weak": "hit"
+    },
+    "instructions": "拦住滴墨 · 射亮霓虹招牌 · 净化老板胸口的墨团",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "录像厅陷入黑暗",
+      "result_success": "录像厅保住了",
+      "section_unit": "站"
+    },
+    "layers": {
+      "video_shop.leaves": {
+        "blocker": false,
+        "height": 226,
+        "parallax": 0.76,
+        "resource": "image_006",
+        "section": "video_shop",
+        "width": 912,
+        "x": -72,
+        "y": -42,
+        "z": 7
+      },
+      "video_shop.left_shutter": {
+        "blocker": false,
+        "height": 467,
+        "parallax": 0.48,
+        "resource": "image_002",
+        "section": "video_shop",
+        "width": 644,
+        "x": -72,
+        "y": 123,
+        "z": 2
+      },
+      "video_shop.left_wall": {
+        "blocker": true,
+        "height": 377,
+        "parallax": 0.93,
+        "resource": "image_004",
+        "section": "video_shop",
+        "width": 432,
+        "x": -72,
+        "y": 528,
+        "z": 71
+      },
+      "video_shop.right_shop": {
+        "blocker": false,
+        "height": 633,
+        "parallax": 0.5,
+        "resource": "image_003",
+        "section": "video_shop",
+        "width": 827,
+        "x": 1021,
+        "y": -42,
+        "z": 3
+      },
+      "video_shop.right_wall": {
+        "blocker": true,
+        "height": 357,
+        "parallax": 1.0,
+        "resource": "image_005",
+        "section": "video_shop",
+        "width": 442,
+        "x": 1406,
+        "y": 541,
+        "z": 72
+      },
+      "video_shop.sky": {
+        "blocker": false,
+        "height": 1020,
+        "parallax": 0.1,
+        "resource": "image_000",
+        "section": "video_shop",
+        "width": 1920,
+        "x": -72,
+        "y": -42,
+        "z": 0
+      },
+      "video_shop.street": {
+        "blocker": false,
+        "height": 766,
+        "parallax": 0.24,
+        "resource": "image_001",
+        "section": "video_shop",
+        "width": 1920,
+        "x": -72,
+        "y": 212,
+        "z": 1
+      }
+    },
+    "puppets": {
+      "owner": {
+        "atlas": "image_013",
+        "character": "metadata_012",
+        "clips": {
+          "rescued_bounce": "metadata_015",
+          "struggle": "metadata_014",
+          "thank": "metadata_016"
+        }
+      }
+    },
+    "sound_bindings": {
+      "attack.launched": "attack",
+      "attack.warning": "windup",
+      "interaction.activated": "lamp",
+      "player.damaged": "hurt",
+      "target.blocked": "empty",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.fired": "shot",
+      "weapon.reloaded": "reload"
+    },
+    "subtitle": "第一关 · 录像厅门口",
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 12,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "image_000": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/sky.png",
+      "sha256": "6e124285929ec34f034bc3b65bb17399d8417593bdd17e97fe14b11687b44e21"
+    },
+    "image_001": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/street.png",
+      "sha256": "b354169f45cd46bd8a490fa5029d3aacdc8e0ad7e24de3e246af0ba47a5237a8"
+    },
+    "image_002": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/left_shutter.png",
+      "sha256": "1a13156c957d118cbb65268c7e783a6f9a40565942fa196343a4497efa35a997"
+    },
+    "image_003": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/right_shop.png",
+      "sha256": "50e9979cf7d9cb56cf9318a3c96e85df529dd4c14719e76cb79599144e894465"
+    },
+    "image_004": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/left_wall.png",
+      "sha256": "7eff869f880ecb08b853254d2173c54ffa95b31640900ed401f58be94edc641c"
+    },
+    "image_005": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/right_wall.png",
+      "sha256": "894feae94de384034ebafd66efcb2ee0784068dadcab01e21e0d3b0191a57de9"
+    },
+    "image_006": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/leaves.png",
+      "sha256": "fdb4c5657939812462c7b6f67bc3d98c0d745478acd0e061207503754a38d150"
+    },
+    "image_007": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/parallax/video_shop/lamp.png",
+      "sha256": "50721ef939d92ce10f569eb59e0049e33e27e91650edc84a24a337784e228312"
+    },
+    "image_008": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/video_shop_lamp_hit.png",
+      "sha256": "0d01b130823c905db8b718da12826545d80c992d1f6342510e4204b32166c1cd"
+    },
+    "image_009": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/video_shop_light_add.png",
+      "sha256": "a8bcbf32a1cf7beaf06c1a1a0b311caded0f176a1858042f7b8576259a864709"
+    },
+    "image_010": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/video_shop_lamp_ink.png",
+      "sha256": "635acd3fb267e7bb38c698a1406a5a6b1f92f5d3734e5b1552de38919ef3f51e"
+    },
+    "image_011": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/video_shop_light_influence.png",
+      "sha256": "3174521f7c305d5e28ce899844bd2f3153a4b68993715714696d4878ab9a25a8"
+    },
+    "image_013": {
+      "kind": "image",
+      "path": "art2d/assets/paper_lantern_video/export/atlas.png",
+      "sha256": "b982ff49bbc6d18c8ba215b4af1f0fcdf9734b01798199d02f99f74b5278f5e5"
+    },
+    "image_017": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_drop/body.png",
+      "sha256": "6bc83a088c62a749693940e9a74895c1d91b0ab35c3611416621392000407872"
+    },
+    "image_018": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/ink_drop_hit.png",
+      "sha256": "ef113e0433b81968a1cb7d869d62a6937dfb5c02bc875d0e391a43d5cfc2e5e4"
+    },
+    "image_019": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_drop/core.png",
+      "sha256": "688a0f9ae364a33b735e802db3a426d70e14e9901ccf9901a38fc69c2a156603"
+    },
+    "image_020": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_sign/body.png",
+      "sha256": "79f19d231a892a8ceef89dda6d67e5ef4d7bc583659f03700e3640c5bab4403a"
+    },
+    "image_021": {
+      "kind": "image",
+      "path": "gunforge/level_design/generated/video_shop/ink_sign_hit.png",
+      "sha256": "2ec80e53c0f6d7a33b9d9ad57a9607fd5dbdf70b6a9efab0d4fe2be845446e51"
+    },
+    "image_022": {
+      "kind": "image",
+      "path": "gunforge/games/g01/reports/art/T10/assets/ink_sign/core.png",
+      "sha256": "c1b640f2dcf982a0bda65dcf8356b34b09aab43128b4801f3926b70af14bbb05"
+    },
+    "metadata_012": {
+      "kind": "metadata",
+      "path": "art2d/assets/paper_lantern_video/export/character.json",
+      "sha256": "d325fc687fccc3c17074cc89edc9fb3741516f908a68f3409347520b3ac8fcbc"
+    },
+    "metadata_014": {
+      "kind": "metadata",
+      "path": "art2d/assets/paper_lantern_video/export/clips/struggle.json",
+      "sha256": "466bc928baab088d7c7ff23dd9f980f2fd082adb48ba6e81f4cb6824fc251303"
+    },
+    "metadata_015": {
+      "kind": "metadata",
+      "path": "art2d/assets/paper_lantern_video/export/clips/rescued_bounce.json",
+      "sha256": "c6b5cb410ac82c065863af3789de03434335c69387a4a7a7c30cbc8c88f27839"
+    },
+    "metadata_016": {
+      "kind": "metadata",
+      "path": "art2d/assets/paper_lantern_video/export/clips/thank.json",
+      "sha256": "e567205a3dbbae45b137ec86397943f7dc45962698a56767c0f2f24112b76cc9"
+    },
+    "sound_attack": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_attack.wav",
+      "sha256": "cbf21f7119d51f05047fac0d2bff41a993fb777680e60d04493b5fff214f62d6"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_reload": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_reload.wav",
+      "sha256": "bf4500e59498d7122ff40e2f9c171241de55c836e38071ab34870266a12be47a"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "video_shop": {
+      "hint": "拦住屋檐滴墨。射亮右上霓虹，等墨招牌入光。只射老板胸口墨团。",
+      "index": 1,
+      "targets": [
+        "shop.drop",
+        "shop.sign",
+        "shop.rescue"
+      ],
+      "title": "录像厅门口"
+    }
+  },
+  "seed": 426,
+  "tick_hz": 60
+}

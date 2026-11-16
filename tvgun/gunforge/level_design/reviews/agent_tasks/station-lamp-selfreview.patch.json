@@ -1,0 +1,10 @@
+{
+  "base_revision": "055dd952d843113f2eee65393abbc1fc8a19e9a510201dc296b2984f7971c839",
+  "summary": "开场先认识巷灯，首波提示在墨鸦入场后用灯打断蓄力。",
+  "changes": [
+    {"path": "/sections/lamp_lesson/title", "expected": "试射巷灯", "value": "找到巷灯"},
+    {"path": "/sections/lamp_lesson/hint", "expected": "射击巷灯会让附近墨鸦停顿。墨鸦也可以直接射击。", "value": "先找到圈出的巷灯。等墨鸦飞进巷口，再射灯使它停顿。"},
+    {"path": "/effects/lesson_ring/label", "expected": "试射巷灯", "value": "巷灯"},
+    {"path": "/encounter/waves/wave_1/hint", "expected": "红圈蓄满就会出手，优先击破正在蓄力的墨鸦。", "value": "红圈蓄满就会出手。直接击破墨鸦，或射亮巷灯打断蓄力。"}
+  ]
+}

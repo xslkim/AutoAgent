@@ -1,0 +1,5568 @@
+{
+  "controls": {
+    "ammo_resource": "ammo",
+    "assist_px": 12,
+    "shot_interval_ms": 150
+  },
+  "cues": {
+    "attack": {
+      "channel": "warning",
+      "duration_ms": 320,
+      "resource": "sound_attack",
+      "volume_db": -3
+    },
+    "empty": {
+      "channel": "weapon",
+      "duration_ms": 90,
+      "resource": "sound_empty",
+      "volume_db": -10
+    },
+    "hit": {
+      "channel": "impact",
+      "duration_ms": 150,
+      "resource": "sound_hit",
+      "volume_db": -10
+    },
+    "hurt": {
+      "channel": "impact",
+      "duration_ms": 420,
+      "resource": "sound_hurt",
+      "volume_db": -2
+    },
+    "intercept": {
+      "channel": "impact",
+      "duration_ms": 250,
+      "resource": "sound_intercept",
+      "volume_db": -10
+    },
+    "lamp": {
+      "channel": "impact",
+      "duration_ms": 720,
+      "resource": "sound_lamp",
+      "volume_db": -8
+    },
+    "purify": {
+      "channel": "impact",
+      "duration_ms": 380,
+      "resource": "sound_purify",
+      "volume_db": -10
+    },
+    "shot": {
+      "channel": "weapon",
+      "duration_ms": 100,
+      "resource": "sound_shot",
+      "volume_db": -3
+    },
+    "weak": {
+      "channel": "impact",
+      "duration_ms": 220,
+      "resource": "sound_weak",
+      "volume_db": -10
+    },
+    "windup": {
+      "channel": "warning",
+      "duration_ms": 650,
+      "resource": "sound_windup",
+      "volume_db": -4
+    }
+  },
+  "duration_ms": 95000,
+  "effects": {
+    "empty_feedback": {
+      "color": "#ffe5a6",
+      "duration_ms": 550,
+      "kind": "spark",
+      "label": "光弹已耗尽",
+      "radius": 0
+    },
+    "hit_spark": {
+      "color": "#ffe5a6",
+      "duration_ms": 230,
+      "kind": "spark",
+      "radius": 82
+    },
+    "ink_release": {
+      "color": "#ff9460",
+      "duration_ms": 240,
+      "kind": "attack_release",
+      "radius": 60
+    },
+    "lesson_ring": {
+      "color": "#e4be73",
+      "duration_ms": 1900,
+      "kind": "warning",
+      "label": "试射巷灯",
+      "radius": 105
+    },
+    "lunge_release": {
+      "color": "#ff655a",
+      "duration_ms": 520,
+      "kind": "attack_release",
+      "radius": 90
+    },
+    "player_hurt": {
+      "color": "#ff493e",
+      "duration_ms": 720,
+      "kind": "player_hit",
+      "label": "受到攻击 · 灯芯 -1",
+      "radius": 100
+    },
+    "purify_burst": {
+      "color": "#ffe5aa",
+      "duration_ms": 490,
+      "kind": "burst",
+      "label": "净化",
+      "radius": 130
+    },
+    "rescue_light": {
+      "color": "#ffe6a0",
+      "duration_ms": 800,
+      "kind": "burst",
+      "label": "摊主获救",
+      "radius": 128
+    },
+    "shot_spark": {
+      "color": "#ffcf73",
+      "duration_ms": 160,
+      "kind": "shot_trace",
+      "radius": 34
+    },
+    "support_link": {
+      "color": "#d4b674",
+      "duration_ms": 700,
+      "kind": "link",
+      "radius": 100
+    },
+    "support_pulse": {
+      "color": "#d8ba72",
+      "duration_ms": 850,
+      "kind": "pulse",
+      "label": "灯火震墨",
+      "radius": 1800
+    },
+    "weak_spark": {
+      "color": "#ff9379",
+      "duration_ms": 300,
+      "kind": "spark",
+      "label": "朱印命中",
+      "radius": 95
+    }
+  },
+  "encounter": {
+    "attacks": {
+      "w1_crow_1": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w1_crow_2": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w1_crow_3": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w2_crow_1": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w2_crow_2": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w2_crow_3": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w2_crow_3.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4230,
+        "retire_ms": 4780,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w2_crow_4": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w3_crow_1": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w3_crow_2": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w3_crow_2.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4450,
+        "retire_ms": 5000,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w3_crow_3": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w3_crow_4": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w3_crow_5": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w3_crow_5.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4230,
+        "retire_ms": 4780,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w4_crow_1": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w4_crow_1.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4230,
+        "retire_ms": 4780,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w4_crow_2": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w4_crow_3": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w4_crow_4": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w4_crow_4.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4450,
+        "retire_ms": 5000,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w4_crow_5": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w5_crow_1": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w5_crow_2": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w5_crow_3": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w5_crow_3.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4230,
+        "retire_ms": 4780,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w5_crow_4": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w5_crow_5": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w5_crow_6": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w5_crow_6.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4450,
+        "retire_ms": 5000,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w6_crow_1": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w6_crow_2": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w6_crow_2.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4450,
+        "retire_ms": 5000,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w6_crow_3": {
+        "contact_ms": 4470,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 3950,
+        "retire_ms": 5020,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w6_crow_4": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      },
+      "w6_crow_5": {
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "projectile": {
+          "color": "#ff9460",
+          "entity": "w6_crow_5.ink",
+          "flight_ms": 1250,
+          "label": "拦截墨弹",
+          "on_intercept": [
+            {
+              "amount": 25,
+              "op": "resource_add",
+              "resource": "score"
+            },
+            {
+              "cue": "intercept",
+              "op": "cue"
+            }
+          ],
+          "x": 900,
+          "y": 800
+        },
+        "release_effect": "ink_release",
+        "release_ms": 4230,
+        "retire_ms": 4780,
+        "windup": {
+          "at_ms": 2300,
+          "color": "#ff7764",
+          "label": "危险 · 吐墨蓄力"
+        }
+      },
+      "w6_crow_6": {
+        "contact_ms": 4690,
+        "damage": {
+          "amount": 1,
+          "effect": "player_hurt",
+          "resource": "lives",
+          "topic": "player.damaged"
+        },
+        "release_effect": "lunge_release",
+        "release_ms": 4170,
+        "retire_ms": 5240,
+        "windup": {
+          "at_ms": 2520,
+          "color": "#ff7764",
+          "label": "危险 · 即将扑击"
+        }
+      }
+    },
+    "supports": {
+      "support": {
+        "duration_ms": 1500,
+        "effect": "support_link",
+        "max_firings": 16,
+        "range_px": 1800,
+        "region": [
+          0,
+          80,
+          1776,
+          820
+        ],
+        "source": "lamp",
+        "targets": [
+          "w1_crow_1",
+          "w1_crow_2",
+          "w1_crow_3",
+          "w2_crow_1",
+          "w2_crow_2",
+          "w2_crow_3",
+          "w2_crow_4",
+          "w3_crow_1",
+          "w3_crow_2",
+          "w3_crow_3",
+          "w3_crow_4",
+          "w3_crow_5",
+          "w4_crow_1",
+          "w4_crow_2",
+          "w4_crow_3",
+          "w4_crow_4",
+          "w4_crow_5",
+          "w5_crow_1",
+          "w5_crow_2",
+          "w5_crow_3",
+          "w5_crow_4",
+          "w5_crow_5",
+          "w5_crow_6",
+          "w6_crow_1",
+          "w6_crow_2",
+          "w6_crow_3",
+          "w6_crow_4",
+          "w6_crow_5",
+          "w6_crow_6"
+        ]
+      }
+    },
+    "waves": {
+      "wave_1": {
+        "at_ms": 7000,
+        "hint": "红圈蓄满就会出手，优先击破正在蓄力的墨鸦。",
+        "index": 1,
+        "spawns": {
+          "w1_crow_1": 800,
+          "w1_crow_2": 3600,
+          "w1_crow_3": 6400
+        },
+        "title": "屋檐初袭"
+      },
+      "wave_2": {
+        "at_ms": 20000,
+        "hint": "怪物会扑向你，蓄力时优先净化。",
+        "index": 2,
+        "spawns": {
+          "w2_crow_1": 800,
+          "w2_crow_2": 2450,
+          "w2_crow_3": 4100,
+          "w2_crow_4": 5750
+        },
+        "title": "左右夹击"
+      },
+      "wave_3": {
+        "at_ms": 33000,
+        "hint": "飞来的墨弹也能击破。",
+        "index": 3,
+        "spawns": {
+          "w3_crow_1": 800,
+          "w3_crow_2": 2450,
+          "w3_crow_3": 4100,
+          "w3_crow_4": 5750,
+          "w3_crow_5": 7400
+        },
+        "title": "截住墨弹"
+      },
+      "wave_4": {
+        "at_ms": 49000,
+        "hint": "只打居民胸口的墨，点灯可争取时间。",
+        "index": 4,
+        "spawns": {
+          "w4_crow_1": 800,
+          "w4_crow_2": 2450,
+          "w4_crow_3": 4100,
+          "w4_crow_4": 5750,
+          "w4_crow_5": 7400
+        },
+        "title": "护住摊主"
+      },
+      "wave_5": {
+        "at_ms": 62000,
+        "hint": "灯火震退墨鸦，飞出的墨弹仍要拦截。",
+        "index": 5,
+        "spawns": {
+          "w5_crow_1": 800,
+          "w5_crow_2": 2450,
+          "w5_crow_3": 4100,
+          "w5_crow_4": 5750,
+          "w5_crow_5": 7400,
+          "w5_crow_6": 9050
+        },
+        "title": "近远交织"
+      },
+      "wave_6": {
+        "at_ms": 75000,
+        "hint": "守住最后一波！优先打断近身威胁。",
+        "index": 6,
+        "spawns": {
+          "w6_crow_1": 800,
+          "w6_crow_2": 2450,
+          "w6_crow_3": 4100,
+          "w6_crow_4": 5750,
+          "w6_crow_5": 7400,
+          "w6_crow_6": 9050
+        },
+        "title": "巷口合围"
+      }
+    }
+  },
+  "entities": {
+    "lamp": {
+      "height": 120,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "scene_lamp",
+          "source": [
+            497,
+            253,
+            200,
+            120
+          ],
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "activation_cooldown_ms": 6000,
+        "label": "灯火支援",
+        "z": 73
+      },
+      "template": "activation_source",
+      "width": 200,
+      "x": 1252,
+      "y": 389
+    },
+    "lamp_cover": {
+      "height": 94,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "lamp_ink",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "active": true,
+        "z": 74
+      },
+      "template": "decoration",
+      "width": 151,
+      "x": 1276,
+      "y": 405
+    },
+    "resident": {
+      "height": 480,
+      "properties": {
+        "z": 72
+      },
+      "puppet": {
+        "idle": "struggle",
+        "rest": "thank",
+        "rig": "vendor",
+        "success": "rescued_bounce",
+        "target": "resident_ink",
+        "target_part": "rescue_ink"
+      },
+      "template": "protected",
+      "width": 350,
+      "x": 560,
+      "y": 350
+    },
+    "resident_ink": {
+      "height": 65,
+      "properties": {
+        "virtual": true,
+        "z": 73
+      },
+      "template": "target",
+      "width": 65,
+      "x": 700,
+      "y": 560
+    },
+    "w1_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 230,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 230,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 270,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 170
+    },
+    "w1_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1040,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1040,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 1000,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 230
+    },
+    "w1_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 580,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 580,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 620,
+            "y": 65
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 900,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 900,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 105
+    },
+    "w2_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1040,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1040,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 1000,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 230
+    },
+    "w2_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 580,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 580,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 620,
+            "y": 65
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 105
+    },
+    "w2_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1230,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 1230,
+            "y": 265
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 295
+    },
+    "w2_crow_3.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w2_crow_4": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1320,
+        "phase_rad": 2.0999999999999996
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 400,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 400,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 440,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 170
+    },
+    "w3_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 580,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 580,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 620,
+            "y": 65
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 105
+    },
+    "w3_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1230,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 1230,
+            "y": 265
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 295
+    },
+    "w3_crow_2.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w3_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 400,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 400,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 440,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 900,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 900,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 170
+    },
+    "w3_crow_4": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1320,
+        "phase_rad": 2.0999999999999996
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 860,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 860,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 820,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 230
+    },
+    "w3_crow_5": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1410,
+        "phase_rad": 2.8
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 230,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 230,
+            "y": 75
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 105
+    },
+    "w3_crow_5.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w4_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1230,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 1230,
+            "y": 265
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 1230,
+            "y": 295
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 295
+    },
+    "w4_crow_1.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w4_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 400,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 400,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 440,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 170
+    },
+    "w4_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 860,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 860,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 820,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 900,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 900,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 230
+    },
+    "w4_crow_4": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1320,
+        "phase_rad": 2.0999999999999996
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -270,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 230,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 230,
+            "y": 75
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": -270,
+      "y": 105
+    },
+    "w4_crow_4.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w4_crow_5": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1410,
+        "phase_rad": 2.8
+      },
+      "height": 270,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1040,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1040,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 1000,
+            "y": 255
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -420,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 270,
+      "x": 1776,
+      "y": 295
+    },
+    "w5_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 400,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 400,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 440,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 170
+    },
+    "w5_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 860,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 860,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 820,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 230
+    },
+    "w5_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 230,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 230,
+            "y": 75
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 105
+    },
+    "w5_crow_3.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w5_crow_4": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1320,
+        "phase_rad": 2.0999999999999996
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1040,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1040,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 1000,
+            "y": 255
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 295
+    },
+    "w5_crow_5": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1410,
+        "phase_rad": 2.8
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 580,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 580,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 620,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 760,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 760,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 170
+    },
+    "w5_crow_6": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1500,
+        "phase_rad": 3.5
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1230,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1230,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 1230,
+            "y": 200
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 1230,
+            "y": 230
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 230
+    },
+    "w5_crow_6.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w6_crow_1": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1050,
+        "phase_rad": 0.0
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 860,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 860,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 820,
+            "y": 190
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 230
+    },
+    "w6_crow_2": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1140,
+        "phase_rad": 0.7
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 230,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 230,
+            "y": 75
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 230,
+            "y": 105
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 105
+    },
+    "w6_crow_2.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w6_crow_3": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1230,
+        "phase_rad": 1.4
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 295
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1040,
+            "y": 295
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1040,
+            "y": 310
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 1000,
+            "y": 255
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 2.55,
+            "x": 900,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": -0.23,
+            "scale": 2.66,
+            "x": 900,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 215
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 295
+    },
+    "w6_crow_4": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1320,
+        "phase_rad": 2.0999999999999996
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 170
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 580,
+            "y": 170
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 580,
+            "y": 185
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 620,
+            "y": 130
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 620,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 620,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 90
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 2,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 170
+    },
+    "w6_crow_5": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1410,
+        "phase_rad": 2.8
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": 0.16,
+            "scale": 0.72,
+            "x": 1776,
+            "y": 230
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 1230,
+            "y": 230
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 1230,
+            "y": 245
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": -170,
+            "rotation_rad": -0.12,
+            "scale": 1.12,
+            "x": 1230,
+            "y": 200
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": 0.08,
+            "scale": 1.17,
+            "x": 1230,
+            "y": 230
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": -435,
+            "y": 150
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "吐墨鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": 1776,
+      "y": 230
+    },
+    "w6_crow_5.ink": {
+      "height": 84,
+      "part_order": [
+        "body"
+      ],
+      "parts": {
+        "body": {
+          "height": 1,
+          "resource": "crow_body",
+          "width": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "properties": {
+        "label": "可拦截墨弹",
+        "z": 83
+      },
+      "template": "projectile",
+      "width": 84,
+      "x": 0,
+      "y": 0
+    },
+    "w6_crow_6": {
+      "bob": {
+        "amplitude_x": 6,
+        "amplitude_y": 8,
+        "period_ms": 1500,
+        "phase_rad": 3.5
+      },
+      "height": 285,
+      "motion": {
+        "easing": "smoothstep",
+        "frames": [
+          {
+            "at_ms": 0,
+            "rotation_rad": -0.16,
+            "scale": 0.72,
+            "x": -285,
+            "y": 105
+          },
+          {
+            "at_ms": 850,
+            "rotation_rad": 0.03,
+            "scale": 1,
+            "x": 400,
+            "y": 105
+          },
+          {
+            "attack_time": "windup",
+            "offset_ms": 0,
+            "rotation_rad": -0.08,
+            "scale": 1,
+            "x": 400,
+            "y": 120
+          },
+          {
+            "attack_time": "release",
+            "offset_ms": 0,
+            "rotation_rad": -0.19,
+            "scale": 1.13,
+            "x": 440,
+            "y": 65
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 0,
+            "rotation_rad": 0.19,
+            "scale": 2.55,
+            "x": 900,
+            "y": 650
+          },
+          {
+            "attack_time": "contact",
+            "offset_ms": 100,
+            "rotation_rad": 0.23,
+            "scale": 2.66,
+            "x": 900,
+            "y": 685
+          },
+          {
+            "attack_time": "retire",
+            "offset_ms": 0,
+            "rotation_rad": 0,
+            "scale": 0.82,
+            "x": 1900,
+            "y": 25
+          }
+        ]
+      },
+      "part_order": [
+        "body",
+        "stamp"
+      ],
+      "parts": {
+        "body": {
+          "height": 0.7353515625,
+          "resource": "crow_body",
+          "width": 0.8955078125,
+          "x": 0.060546875,
+          "y": 0.150390625
+        },
+        "stamp": {
+          "height": 0.12890625,
+          "kind": "weak",
+          "resource": "crow_stamp",
+          "source": [
+            417,
+            202,
+            132,
+            132
+          ],
+          "width": 0.12890625,
+          "x": 0.5205078125,
+          "y": 0.390625
+        }
+      },
+      "properties": {
+        "hits": 1,
+        "hitstop_ms": 80,
+        "label": "扑击鸦",
+        "weak_damage": 2,
+        "z": 75
+      },
+      "template": "target",
+      "width": 285,
+      "x": -285,
+      "y": 105
+    }
+  },
+  "events": {
+    "ending.missed_rescue": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "missed_rescue"
+        },
+        "a1": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "gt",
+          "resource": "lives",
+          "value": 0
+        },
+        {
+          "compare": "lte",
+          "resource": "rescued",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 90000
+      }
+    },
+    "ending.safe_exit": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "safe_exit"
+        },
+        "a1": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "gt",
+          "resource": "lives",
+          "value": 0
+        },
+        {
+          "compare": "gt",
+          "resource": "rescued",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 90000
+      }
+    },
+    "lamp.pulse": {
+      "actions": {
+        "a0": {
+          "effect": "support_pulse",
+          "entity": "lamp",
+          "op": "vfx"
+        },
+        "a1": {
+          "entity": "lamp_cover",
+          "op": "remove"
+        }
+      },
+      "guards": [],
+      "max_firings": 16,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "interaction.activated:lamp"
+      }
+    },
+    "lesson.lamp": {
+      "actions": {
+        "a0": {
+          "op": "section",
+          "section": "lamp_lesson"
+        },
+        "a1": {
+          "enabled": true,
+          "op": "input"
+        },
+        "a2": {
+          "effect": "lesson_ring",
+          "entity": "lamp",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 2300
+      }
+    },
+    "level.clear": {
+      "actions": {
+        "a0": {
+          "op": "complete",
+          "result": "clear"
+        }
+      },
+      "guards": [
+        {
+          "compare": "gt",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 93000
+      }
+    },
+    "open": {
+      "actions": {
+        "a0": {
+          "entity": "lamp",
+          "op": "spawn"
+        },
+        "a1": {
+          "op": "section",
+          "section": "arrival"
+        },
+        "a2": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 0
+      }
+    },
+    "player.dying": {
+      "actions": {
+        "a0": {
+          "enabled": false,
+          "op": "input"
+        }
+      },
+      "guards": [
+        {
+          "compare": "lte",
+          "resource": "lives",
+          "value": 0
+        }
+      ],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "player.damaged"
+      }
+    },
+    "player.failed": {
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "overrun"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "after": "player.dying",
+        "delay_ms": 720
+      }
+    },
+    "resident.arrives": {
+      "actions": {
+        "a0": {
+          "entity": "resident",
+          "op": "spawn"
+        },
+        "a1": {
+          "entity": "resident_ink",
+          "op": "spawn"
+        },
+        "a2": {
+          "op": "section",
+          "section": "rescue"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "at_ms": 46000
+      }
+    },
+    "resident.protected": {
+      "actions": {
+        "a0": {
+          "amount": -100,
+          "op": "resource_add",
+          "resource": "score"
+        }
+      },
+      "guards": [],
+      "max_firings": 128,
+      "order": [
+        "a0"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.protected_hit:resident"
+      }
+    },
+    "resident.rescue": {
+      "actions": {
+        "a0": {
+          "amount": 300,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "rescued"
+        },
+        "a2": {
+          "effect": "rescue_light",
+          "entity": "resident_ink",
+          "op": "vfx"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:resident_ink"
+      }
+    },
+    "w1_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w1_crow_1"
+      }
+    },
+    "w1_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w1_crow_2"
+      }
+    },
+    "w1_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w1_crow_3"
+      }
+    },
+    "w2_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w2_crow_1"
+      }
+    },
+    "w2_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w2_crow_2"
+      }
+    },
+    "w2_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w2_crow_3"
+      }
+    },
+    "w2_crow_4.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w2_crow_4"
+      }
+    },
+    "w3_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w3_crow_1"
+      }
+    },
+    "w3_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w3_crow_2"
+      }
+    },
+    "w3_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w3_crow_3"
+      }
+    },
+    "w3_crow_4.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w3_crow_4"
+      }
+    },
+    "w3_crow_5.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w3_crow_5"
+      }
+    },
+    "w4_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w4_crow_1"
+      }
+    },
+    "w4_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w4_crow_2"
+      }
+    },
+    "w4_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w4_crow_3"
+      }
+    },
+    "w4_crow_4.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w4_crow_4"
+      }
+    },
+    "w4_crow_5.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w4_crow_5"
+      }
+    },
+    "w5_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_1"
+      }
+    },
+    "w5_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_2"
+      }
+    },
+    "w5_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_3"
+      }
+    },
+    "w5_crow_4.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_4"
+      }
+    },
+    "w5_crow_5.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_5"
+      }
+    },
+    "w5_crow_6.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w5_crow_6"
+      }
+    },
+    "w6_crow_1.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_1"
+      }
+    },
+    "w6_crow_2.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_2"
+      }
+    },
+    "w6_crow_3.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_3"
+      }
+    },
+    "w6_crow_4.clear": {
+      "actions": {
+        "a0": {
+          "amount": 150,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_4"
+      }
+    },
+    "w6_crow_5.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_5"
+      }
+    },
+    "w6_crow_6.clear": {
+      "actions": {
+        "a0": {
+          "amount": 100,
+          "op": "resource_add",
+          "resource": "score"
+        },
+        "a1": {
+          "amount": 1,
+          "op": "resource_add",
+          "resource": "purified"
+        }
+      },
+      "guards": [],
+      "max_firings": 1,
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "priority": 0,
+      "trigger": {
+        "on": "target.neutralized:w6_crow_6"
+      }
+    }
+  },
+  "hud": [
+    {
+      "label": "灯芯",
+      "resource": "lives"
+    },
+    {
+      "label": "剩余光弹",
+      "resource": "ammo"
+    },
+    {
+      "label": "印记",
+      "resource": "score"
+    }
+  ],
+  "id": "paper.station",
+  "initial_resources": {
+    "ammo": 80,
+    "lives": 5,
+    "purified": 0,
+    "rescued": 0,
+    "score": 0
+  },
+  "layout": {
+    "height": 936,
+    "width": 1776
+  },
+  "presentation": {
+    "debug_shell": false,
+    "default_sound": true,
+    "feedback": {
+      "empty": "empty_feedback",
+      "hit": "hit_spark",
+      "neutralized": "purify_burst",
+      "shot": "shot_spark",
+      "weak": "weak_spark"
+    },
+    "instructions": "墨潮涌进夜市。守住巷口，救出被困摊主。",
+    "labels": {
+      "progress": "净化",
+      "result_failure": "灯芯耗尽",
+      "result_success": "巷口守住了",
+      "section_unit": "波",
+      "stunned": "震退"
+    },
+    "layers": {
+      "far_base": {
+        "blocker": false,
+        "height": 1036,
+        "resource": "scene_far_base",
+        "width": 1936,
+        "x": -80,
+        "y": -50,
+        "z": 0
+      },
+      "far_town": {
+        "blocker": false,
+        "height": 814,
+        "resource": "scene_far_town",
+        "width": 1751,
+        "x": 65,
+        "y": 29,
+        "z": 10
+      },
+      "lamp": {
+        "blocker": false,
+        "height": 801,
+        "resource": "scene_lamp",
+        "width": 1023,
+        "x": 755,
+        "y": 136,
+        "z": 45
+      },
+      "mid_ground": {
+        "blocker": false,
+        "height": 875,
+        "resource": "scene_mid_ground",
+        "width": 1936,
+        "x": -80,
+        "y": 111,
+        "z": 20
+      },
+      "mid_left": {
+        "blocker": false,
+        "height": 933,
+        "resource": "scene_mid_left",
+        "width": 1914,
+        "x": -80,
+        "y": -25,
+        "z": 30
+      },
+      "mid_right": {
+        "blocker": false,
+        "height": 904,
+        "resource": "scene_mid_right",
+        "width": 1764,
+        "x": 92,
+        "y": 19,
+        "z": 40
+      },
+      "near_left": {
+        "blocker": true,
+        "height": 1036,
+        "resource": "scene_near_left",
+        "width": 1454,
+        "x": -80,
+        "y": -50,
+        "z": 105
+      },
+      "near_right": {
+        "blocker": true,
+        "height": 1036,
+        "resource": "scene_near_right",
+        "width": 1547,
+        "x": 309,
+        "y": -50,
+        "z": 106
+      }
+    },
+    "puppets": {
+      "vendor": {
+        "atlas": "vendor_atlas",
+        "character": "vendor_rig",
+        "clips": {
+          "idle": "vendor_clip_idle",
+          "peek": "vendor_clip_peek",
+          "rescued_bounce": "vendor_clip_rescued_bounce",
+          "startle": "vendor_clip_startle",
+          "struggle": "vendor_clip_struggle",
+          "thank": "vendor_clip_thank",
+          "walk": "vendor_clip_walk",
+          "wave_for_help": "vendor_clip_wave_for_help"
+        }
+      }
+    },
+    "sound_bindings": {
+      "attack.launched": "attack",
+      "attack.warning": "windup",
+      "interaction.activated:lamp": "lamp",
+      "player.damaged": "hurt",
+      "target.hit": "hit",
+      "target.neutralized": "purify",
+      "target.weak_hit": "weak",
+      "weapon.empty": "empty",
+      "weapon.fired": "shot"
+    },
+    "subtitle": "第一站 · 夜市巷口",
+    "support": {
+      "entity": "lamp",
+      "label": "射击点灯 · 震墨"
+    },
+    "title": "纸灯城"
+  },
+  "queries": {},
+  "resource_bounds": {
+    "ammo": {
+      "max": 80,
+      "min": 0
+    },
+    "lives": {
+      "max": 5,
+      "min": 0
+    },
+    "score": {
+      "min": 0
+    }
+  },
+  "resources": {
+    "crow_body": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/crow/body.png",
+      "sha256": "16c91f1f8a3e47071e1f44422525fd4d3d0ebdc1d0798205d6683a8efcd6bab3"
+    },
+    "crow_stamp": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/crow/core.png",
+      "sha256": "f5a343c49980c0c17a75e1ce0b5aad19097fff815f429a129fb14178c9ed367f"
+    },
+    "lamp_ink": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/ink_on_lamp/cover_00.png",
+      "sha256": "25342590e0b1df9fd086879135fc69dc34b29733efe8d615a7bb26e84e533617"
+    },
+    "scene_far_base": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/far_base.png",
+      "sha256": "2b7fbfad385fb749a0a196002cf5170f7c1f63cae2692e4f2fb0820d0fe32e34"
+    },
+    "scene_far_town": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/far_town.png",
+      "sha256": "7ac57d7c017145724d4246a78aad055869a5613a25d59938c0fafb023ea96e3b"
+    },
+    "scene_lamp": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/lamp.png",
+      "sha256": "0514fd473f51cf52ba2db6bcc61501038e3b166048fc2f166ecfb89838550ad2"
+    },
+    "scene_mid_ground": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/mid_ground.png",
+      "sha256": "5506e5254260a9d5890141cf2f4bb6e8159431278b088572a1d0f7d246f1a890"
+    },
+    "scene_mid_left": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/mid_left.png",
+      "sha256": "5e47afb4d406e8a218d4f1bd6690c446008dcdda5cc5f305f318b44e1742f725"
+    },
+    "scene_mid_right": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/mid_right.png",
+      "sha256": "829f3b76ac7ec8f79235506f3e10c9d4d95b286f3e5cee8ddacc24f8921ce9db"
+    },
+    "scene_near_left": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/near_left.png",
+      "sha256": "a8b0823d60a0b7cabcd7c694d2d93dfe5d2686f158fbb8aa8e204c9aa3c4c000"
+    },
+    "scene_near_right": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/station/layers/near_right.png",
+      "sha256": "82354c36d1f6faec8322e83271f0910d67302f9752131a9de968c8230c513a90"
+    },
+    "sound_attack": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_attack.wav",
+      "sha256": "cbf21f7119d51f05047fac0d2bff41a993fb777680e60d04493b5fff214f62d6"
+    },
+    "sound_empty": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_empty.wav",
+      "sha256": "9354dc36b63e9b8c49261971daa8593d9716c3d057dcc26c9c31d16b443ffd8d"
+    },
+    "sound_hit": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hit.wav",
+      "sha256": "41986aa3848238d2d652a94dadd8455188a0a62289f0a2400a53727b0d08cc5d"
+    },
+    "sound_hurt": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_hurt.wav",
+      "sha256": "eb3af4add314a1f68e8d3c46d84df8c838027c02ed380de741ffeddb2219437d"
+    },
+    "sound_intercept": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_intercept.wav",
+      "sha256": "5afb44da21377ca8748d36908f4eae4a39216c67f6fb6354d5c77778b439281c"
+    },
+    "sound_lamp": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_lamp.wav",
+      "sha256": "8daf6391bc8d505d6f65dd4a3f227a2562ece0b500f6c32e91dd91eb2d8a345e"
+    },
+    "sound_purify": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_purify.wav",
+      "sha256": "f6629656539fdd0d287625fa6fc9cc91198202f5d73d9a936acd6f07c953db92"
+    },
+    "sound_shot": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_shot.wav",
+      "sha256": "a90eedcb8388c319841d4e9a1eade2b7849dacf5c16ee461b4d3ba829049fcca"
+    },
+    "sound_weak": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_weak.wav",
+      "sha256": "5b69806714ddd47563344b724aed4fb0c45ff49d9aa7cbab8956cc273432748d"
+    },
+    "sound_windup": {
+      "kind": "audio",
+      "path": "gunforge/level_design/generated/audio/combat_windup.wav",
+      "sha256": "5ab6572ad92b8de0efbe5dce705ac38a0f4c379ba6657c2c881366bc759927cd"
+    },
+    "vendor_atlas": {
+      "kind": "image",
+      "path": "gunforge/framework/runtime/vendor/atlas.png",
+      "sha256": "79e6c494fd659130d4c4a6825be438747a26f5250a0bdf303fd6813d41a7a851"
+    },
+    "vendor_clip_idle": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/idle.json",
+      "sha256": "bd7b8dd7d1fdb54ccc5bfdc7d1f0d3d0340236ac38409528b9f17c88d794c428"
+    },
+    "vendor_clip_peek": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/peek.json",
+      "sha256": "625f6b404551926cbdf21a68b2992fbe32626591a640d7f8b2cf1385fc072cf1"
+    },
+    "vendor_clip_rescued_bounce": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/rescued_bounce.json",
+      "sha256": "582cc3760d66fd52fd2cbc152fe7fe5b9d01ff7c6be8742fa9fcec775c0c717b"
+    },
+    "vendor_clip_startle": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/startle.json",
+      "sha256": "e27f19a94e618d6d2651afb15ad4e0f76daaaa11bba86ec9814df94ca005a61a"
+    },
+    "vendor_clip_struggle": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/struggle.json",
+      "sha256": "73af0002fd0b5a211fd60452361a4b107cb2b09f6f33ae2f3805e036e4304cea"
+    },
+    "vendor_clip_thank": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/thank.json",
+      "sha256": "887ae88db994eb8a8a86382a5253d4115a0cd5a532cdca55ba282d77414c87f2"
+    },
+    "vendor_clip_walk": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/walk.json",
+      "sha256": "1dcd16c30ecd822699a991e11ee3feac28be1d5f135225bef1b9bcb00e9bc104"
+    },
+    "vendor_clip_wave_for_help": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/clips/wave_for_help.json",
+      "sha256": "2b60abbab446f7fd44374899534fe70fe85fa23630d6f5fb5403408c3418a51f"
+    },
+    "vendor_rig": {
+      "kind": "metadata",
+      "path": "gunforge/framework/runtime/vendor/character.json",
+      "sha256": "b68c5c4016f5157d7f61f8777d89c0b1b126ba3de9f55f993e0daeb2c514264e"
+    }
+  },
+  "ruleset": "directed_action@1",
+  "schema_version": 1,
+  "sections": {
+    "arrival": {
+      "hint": "墨潮涌进夜市。守住巷口，给摊主留出逃生时间。",
+      "index": 7,
+      "targets": [],
+      "title": "夜市告急"
+    },
+    "lamp_lesson": {
+      "hint": "射击巷灯可震停墨鸦。光弹打空会自动回光，也可按 R 提前换弹。",
+      "index": 8,
+      "targets": [],
+      "title": "试射巷灯"
+    },
+    "missed_rescue": {
+      "hint": "摊主仍被墨团困住。重试时，记得净化胸口的墨团。",
+      "index": 11,
+      "targets": [],
+      "title": "巷口守住了"
+    },
+    "rescue": {
+      "hint": "瞄准摊主胸口的墨团。纸身是保护区，误射会扣印记。",
+      "index": 9,
+      "targets": [],
+      "title": "摊主被困"
+    },
+    "safe_exit": {
+      "hint": "摊主已获救。灯火照亮了通往下一站的路。",
+      "index": 10,
+      "targets": [],
+      "title": "巷口守住了"
+    }
+  },
+  "seed": 421,
+  "tick_hz": 60
+}

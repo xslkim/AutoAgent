@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "evidence": "D:\\gunforge_cache\\level_design\\runs\\engine-1794266670705487100",
+  "files": {
+    "engine_bot.json": "ec8f40f2eb83ebe7d2d0ceaa8807ea0313507436d19f9563d7ecaa11715d7694",
+    "http_tests.json": "db70c227bf45a5949c9db522d9b9f3836041a22b0e44f728b8b9363ffa437909",
+    "udp_tests.json": "d94f6eca15613838afb1a6ae3c5a405dd8fe7fe1d23e13d6f5baeb7712afe61d"
+  },
+  "note": "Live legacy demo integration: complete/continue bot, HTTP and UDP. Migration equivalence and new package checks have separate indexes."
+}

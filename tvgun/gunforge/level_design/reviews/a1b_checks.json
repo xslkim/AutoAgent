@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "command": [
+        "D:/gunforge_cache/tools/godot-4.6.3/Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/defect_tests.gd"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3599881000009191,
+      "log": "D:\\gunforge_cache\\level_design\\current\\defect_checks.log",
+      "sha256": "b9c63971ff65d71e579945c22d83aebfb849fce6393a09bf0c8c1eabadbe5881"
+    },
+    {
+      "command": [
+        "D:/gunforge_cache/tools/godot-4.6.3/Godot_v4.6.3-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tvgun\\gunforge\\framework",
+        "--script",
+        "res://tests/snapshot_tests.gd"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4514320999987831,
+      "log": "D:\\gunforge_cache\\level_design\\current\\snapshot_checks.log",
+      "sha256": "7f703aa75e404bb5869c989d9930f8e15cf0594e6d3c1a167c431c39d776fecc"
+    }
+  ],
+  "fixed_replay": "D:\\gunforge_cache\\level_design\\current\\fixed_replay_comparison.json",
+  "integration": "current_engine_checks.json",
+  "decisions": "migration_decisions.json"
+}

@@ -1,0 +1,398 @@
+{
+	"anchor": "launcher.spawn",
+	"author": "agent",
+	"build_id": "04433d69c182b1c399e8ba6a201d6b47bd1be94a7e596c54a5de133e9c5ac6b0",
+	"comment_id": "note-1794208771-465-687508",
+	"evidence": {
+		"alpha": {
+			"path": "D:/gunforge_cache/level_design/runs/review-annotation-loop-35e923e8c69c43da9aa430ad4cc65cc3/final-evidence/note-1794208771-465-687508/alpha.png",
+			"sha256": "174a7ebe2156f6a33502a65034788a042b7997d2dd3ef3448879077e17032929"
+		},
+		"player": {
+			"path": "D:/gunforge_cache/level_design/runs/review-annotation-loop-35e923e8c69c43da9aa430ad4cc65cc3/final-evidence/note-1794208771-465-687508/player.png",
+			"sha256": "d505a6b0a6b4ff0aa54f7a76532abafe7a48964d7f8110c326149c4cae2be7e0"
+		},
+		"recording": {
+			"path": "D:/gunforge_cache/level_design/runs/review-annotation-loop-35e923e8c69c43da9aa430ad4cc65cc3/final-evidence/note-1794208771-465-687508/input.bin",
+			"sha256": "298ef1b54158b6f0a15c90c6b41effd020bab64a3f8315831d87531f08f224d7"
+		}
+	},
+	"package": "orbital.siege",
+	"source_revision": "f7d04ec4244f5cc26b2ca5b9f8cfb18bee62605eaa2b5d1756a7378acfff377f",
+	"state": {
+		"active_cues": {
+
+		},
+		"active_effects": {
+			"1": {
+				"effect": "strike",
+				"entity": "rammer",
+				"position": [
+					368.0,
+					262.0
+				],
+				"start_tick": 120
+			}
+		},
+		"cue_serial": 0,
+		"current_section": "approach",
+		"effect_serial": 1,
+		"entities": {
+			"jammer": {
+				"active": true,
+				"age_ticks": 126,
+				"defeated_at": -1,
+				"generation": 1,
+				"health": 1,
+				"height": 85.0,
+				"hit_direction": 1,
+				"kind": "primary",
+				"last_hit_tick": -1000,
+				"motion_phase": "",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"properties": {
+					"activation_cooldown_ms": 2500.0,
+					"shape": "circle",
+					"z": 4.0
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "activation_source",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 85.0,
+				"x": 885.0,
+				"y": 490.0
+			},
+			"launcher": {
+				"active": true,
+				"age_ticks": 33,
+				"defeated_at": -1,
+				"generation": 1,
+				"health": 2,
+				"height": 110.0,
+				"hit_direction": 1,
+				"kind": "primary",
+				"last_hit_tick": -1000,
+				"motion": {
+					"frames": [
+						{
+							"at_ms": 0.0,
+							"x": 480.0,
+							"y": -100.0
+						},
+						{
+							"at_ms": 540.0,
+							"x": 480.0,
+							"y": 145.0
+						},
+						{
+							"at_ms": 1500.0,
+							"x": 515.0,
+							"y": 175.0
+						},
+						{
+							"at_ms": 1950.0,
+							"x": 570.0,
+							"y": -130.0
+						}
+					]
+				},
+				"motion_phase": "",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"phases": [
+					{
+						"color": "#ff9156",
+						"end_ms": 1500.0,
+						"id": "windup",
+						"label": "发射预警",
+						"start_ms": 620.0
+					}
+				],
+				"pose_rotation": 0.0,
+				"pose_scale": 1.0,
+				"properties": {
+					"hits": 2.0,
+					"shape": "circle"
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "target",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 110.0,
+				"x": 480.01131410952,
+				"y": 145.00969780816
+			},
+			"rammer": {
+				"active": true,
+				"age_ticks": 90,
+				"defeated_at": -1,
+				"generation": 1,
+				"health": 1,
+				"height": 64.0,
+				"hit_direction": 1,
+				"kind": "primary",
+				"last_hit_tick": -1000,
+				"motion": {
+					"frames": [
+						{
+							"at_ms": 0.0,
+							"x": -100.0,
+							"y": 225.0
+						},
+						{
+							"at_ms": 560.0,
+							"x": 350.0,
+							"y": 220.0
+						},
+						{
+							"at_ms": 1400.0,
+							"x": 320.0,
+							"y": 230.0
+						},
+						{
+							"at_ms": 1750.0,
+							"scale": 1.3,
+							"x": 932.0,
+							"y": 279.0
+						},
+						{
+							"at_ms": 2200.0,
+							"x": 1350.0,
+							"y": 300.0
+						}
+					]
+				},
+				"motion_phase": "windup",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"phases": [
+					{
+						"color": "#ff9156",
+						"end_ms": 1750.0,
+						"id": "windup",
+						"label": "冲撞蓄力",
+						"start_ms": 700.0
+					}
+				],
+				"pose_rotation": 0.0,
+				"pose_scale": 1.05947521865889,
+				"properties": {
+
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "target",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 96.0,
+				"x": 441.32944606414,
+				"y": 239.714285714286
+			},
+			"reactor": {
+				"active": true,
+				"age_ticks": 126,
+				"defeated_at": -1,
+				"generation": 1,
+				"health": 1,
+				"height": 100.0,
+				"hit_direction": 1,
+				"kind": "protected",
+				"last_hit_tick": -1000,
+				"motion_phase": "",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"properties": {
+					"z": 3.0
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "protected",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 120.0,
+				"x": 1020.0,
+				"y": 265.0
+			},
+			"slug": {
+				"active": false,
+				"age_ticks": 0,
+				"defeated_at": -1,
+				"generation": 0,
+				"health": 1,
+				"height": 44.0,
+				"hit_direction": 1,
+				"kind": "primary",
+				"last_hit_tick": -1000,
+				"motion_phase": "in_flight",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"phases": [
+					{
+						"color": "#ffd471",
+						"end_ms": 1150.0,
+						"id": "in_flight",
+						"label": "拦截弹体",
+						"start_ms": 0.0
+					}
+				],
+				"properties": {
+					"shape": "circle",
+					"z": 10.0
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "projectile",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 44.0,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"sweeper": {
+				"active": false,
+				"age_ticks": 0,
+				"defeated_at": -1,
+				"generation": 0,
+				"health": 1,
+				"height": 60.0,
+				"hit_direction": 1,
+				"kind": "primary",
+				"last_hit_tick": -1000,
+				"motion": {
+					"frames": [
+						{
+							"at_ms": 0.0,
+							"x": -94.0,
+							"y": 440.0
+						},
+						{
+							"at_ms": 550.0,
+							"x": 460.0,
+							"y": 400.0
+						},
+						{
+							"at_ms": 1300.0,
+							"x": 440.0,
+							"y": 410.0
+						},
+						{
+							"at_ms": 1650.0,
+							"scale": 1.4,
+							"x": 934.0,
+							"y": 305.0
+						},
+						{
+							"at_ms": 2150.0,
+							"x": 1320.0,
+							"y": 355.0
+						}
+					]
+				},
+				"motion_phase": "",
+				"next_activation": -1,
+				"pause_motion_until": -1,
+				"phases": [
+					{
+						"color": "#ff9156",
+						"end_ms": 1650.0,
+						"id": "windup",
+						"label": "冲撞蓄力",
+						"start_ms": 650.0
+					}
+				],
+				"pose_rotation": 0.0,
+				"pose_scale": 1.0,
+				"properties": {
+
+				},
+				"removed_at": -1,
+				"stun_until": -1,
+				"stunned": false,
+				"template": "target",
+				"value": 0.0,
+				"view_tick": 126,
+				"visible": true,
+				"width": 90.0,
+				"x": -94.0,
+				"y": 440.0
+			}
+		},
+		"hits": 0,
+		"input_enabled": true,
+		"next_shot": 0,
+		"pause_reasons": [],
+		"phase": "running",
+		"queries": {
+			"launcher.age": {
+				"algorithm": "entity-clock60-v1",
+				"space": "scalar",
+				"tick": 126,
+				"value": 550.0
+			},
+			"launcher.jam_range": {
+				"algorithm": "cpu-nearest-v1",
+				"space": "content_px",
+				"tick": 126,
+				"value": 514.390075683594
+			},
+			"rammer.age": {
+				"algorithm": "entity-clock60-v1",
+				"space": "scalar",
+				"tick": 126,
+				"value": 1500.0
+			},
+			"rammer.jam_range": {
+				"algorithm": "cpu-nearest-v1",
+				"space": "content_px",
+				"tick": 126,
+				"value": 509.904510498047
+			},
+			"slug.age": {
+				"algorithm": "entity-clock60-v1",
+				"space": "scalar",
+				"tick": 126,
+				"value": 0.0
+			},
+			"sweeper.age": {
+				"algorithm": "entity-clock60-v1",
+				"space": "scalar",
+				"tick": 126,
+				"value": 0.0
+			},
+			"sweeper.jam_range": {
+				"algorithm": "cpu-nearest-v1",
+				"space": "content_px",
+				"tick": 126,
+				"value": 978.498107910156
+			}
+		},
+		"reload_at": -1,
+		"resources": {
+			"cells": 12.0,
+			"credits": 0.0,
+			"reactor": 3.0
+		},
+		"result": "",
+		"shots": 0,
+		"tick": 126
+	},
+	"status": "open",
+	"submission_id": "",
+	"text": "At 2.1 seconds the launcher silhouette overlaps the rammer warning. Shift the launcher path right by 130 pixels. Preserve the rammer, spawn timings, attack rules and ammunition.",
+	"tick": 126,
+	"time_ms": 2100.0
+}

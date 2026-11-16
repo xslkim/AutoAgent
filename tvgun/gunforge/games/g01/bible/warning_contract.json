@@ -1,0 +1,30 @@
+{
+  "version": "g01-warning-1",
+  "visual_approval": "approved_A2h",
+  "applies_to": [
+    "g01_ink_crow",
+    "g01_ink_tadpole0"
+  ],
+  "pulse_hz": 1.5,
+  "stamp_alpha_range": [
+    0.35,
+    1.0
+  ],
+  "halo_color": [
+    217,
+    160,
+    102
+  ],
+  "halo_radius_content_px": [
+    17,
+    26
+  ],
+  "halo_alpha_range": [
+    70,
+    190
+  ],
+  "halo_hit_target": false,
+  "primary_target_unchanged": true,
+  "source": "D:\\tvgun\\gunforge\\games\\g01\\reports\\art\\T07\\revisions\\A2i\\user_feedback.yaml",
+  "engine_validation": "pending"
+}

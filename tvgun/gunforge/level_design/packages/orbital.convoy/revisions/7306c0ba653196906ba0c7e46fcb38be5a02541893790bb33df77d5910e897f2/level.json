@@ -1,0 +1,414 @@
+{
+  "schema_version": 1,
+  "id": "orbital.convoy",
+  "ruleset": "protection@1",
+  "seed": 902,
+  "tick_hz": 60,
+  "duration_ms": 15000,
+  "layout": {
+    "width": 1280,
+    "height": 720
+  },
+  "entities": {
+    "convoy": {
+      "template": "protected",
+      "x": 1000,
+      "y": 300,
+      "width": 150,
+      "height": 110,
+      "properties": {}
+    },
+    "shield": {
+      "template": "activation_source",
+      "x": 900,
+      "y": 500,
+      "width": 90,
+      "height": 70,
+      "properties": {}
+    },
+    "drone": {
+      "template": "target",
+      "x": 200,
+      "y": 120,
+      "width": 100,
+      "height": 90,
+      "properties": {
+        "hits": 2,
+        "shape": "circle"
+      }
+    },
+    "bolt_a": {
+      "template": "projectile",
+      "x": 260,
+      "y": 330,
+      "width": 40,
+      "height": 40,
+      "properties": {
+        "vx": 180,
+        "shape": "circle"
+      }
+    },
+    "bolt_b": {
+      "template": "projectile",
+      "x": 320,
+      "y": 350,
+      "width": 40,
+      "height": 40,
+      "properties": {
+        "vx": 180,
+        "shape": "circle"
+      }
+    }
+  },
+  "events": {
+    "open": {
+      "trigger": {
+        "at_ms": 0
+      },
+      "actions": {
+        "a0": {
+          "op": "spawn",
+          "entity": "convoy"
+        },
+        "a1": {
+          "op": "spawn",
+          "entity": "shield"
+        },
+        "a2": {
+          "op": "spawn",
+          "entity": "drone"
+        },
+        "a3": {
+          "op": "permission",
+          "entity": "drone",
+          "kind": "invalid"
+        }
+      },
+      "order": [
+        "a0",
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "max_firings": 1
+    },
+    "shield_off": {
+      "trigger": {
+        "at_ms": 2000
+      },
+      "actions": {
+        "a0": {
+          "op": "permission",
+          "entity": "drone",
+          "kind": "weak"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "shield_on": {
+      "trigger": {
+        "at_ms": 5000
+      },
+      "actions": {
+        "a0": {
+          "op": "permission",
+          "entity": "drone",
+          "kind": "invalid"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "drone_clear": {
+      "trigger": {
+        "on": "target.neutralized:drone"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "merit",
+          "amount": 200
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "bolt_a_launch": {
+      "trigger": {
+        "at_ms": 1000
+      },
+      "actions": {
+        "a0": {
+          "op": "spawn",
+          "entity": "bolt_a"
+        },
+        "a1": {
+          "op": "cue",
+          "cue": "launch_warning"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1
+    },
+    "bolt_a_impact": {
+      "trigger": {
+        "query": "bolt_a_distance",
+        "compare": "lte",
+        "value": 100
+      },
+      "actions": {
+        "a0": {
+          "op": "remove",
+          "entity": "bolt_a"
+        },
+        "a1": {
+          "op": "resource_add",
+          "resource": "hull",
+          "amount": -1
+        },
+        "a2": {
+          "op": "emit",
+          "event": "objective.damaged"
+        }
+      },
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "max_firings": 1,
+      "guards": [
+        {
+          "entity": "bolt_a",
+          "field": "active",
+          "compare": "eq",
+          "value": true
+        }
+      ]
+    },
+    "bolt_a_intercept": {
+      "trigger": {
+        "on": "target.neutralized:bolt_a"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "merit",
+          "amount": 100
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "bolt_b_launch": {
+      "trigger": {
+        "at_ms": 6000
+      },
+      "actions": {
+        "a0": {
+          "op": "spawn",
+          "entity": "bolt_b"
+        },
+        "a1": {
+          "op": "cue",
+          "cue": "launch_warning"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1
+    },
+    "bolt_b_impact": {
+      "trigger": {
+        "query": "bolt_b_distance",
+        "compare": "lte",
+        "value": 100
+      },
+      "actions": {
+        "a0": {
+          "op": "remove",
+          "entity": "bolt_b"
+        },
+        "a1": {
+          "op": "resource_add",
+          "resource": "hull",
+          "amount": -1
+        },
+        "a2": {
+          "op": "emit",
+          "event": "objective.damaged"
+        }
+      },
+      "order": [
+        "a0",
+        "a1",
+        "a2"
+      ],
+      "max_firings": 1,
+      "guards": [
+        {
+          "entity": "bolt_b",
+          "field": "active",
+          "compare": "eq",
+          "value": true
+        }
+      ]
+    },
+    "bolt_b_intercept": {
+      "trigger": {
+        "on": "target.neutralized:bolt_b"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "merit",
+          "amount": 100
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "objective_lost": {
+      "trigger": {
+        "on": "objective.damaged"
+      },
+      "actions": {
+        "a0": {
+          "op": "fail",
+          "result": "convoy_lost"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1,
+      "guards": [
+        {
+          "resource": "hull",
+          "compare": "lte",
+          "value": 0
+        }
+      ]
+    },
+    "objective_saved": {
+      "trigger": {
+        "at_ms": 12000
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "merit",
+          "amount": 500
+        },
+        "a1": {
+          "op": "complete",
+          "result": "convoy_safe"
+        }
+      },
+      "order": [
+        "a0",
+        "a1"
+      ],
+      "max_firings": 1,
+      "guards": [
+        {
+          "resource": "hull",
+          "compare": "gt",
+          "value": 0
+        }
+      ]
+    },
+    "wrong_target": {
+      "trigger": {
+        "on": "target.protected_hit:convoy"
+      },
+      "actions": {
+        "a0": {
+          "op": "resource_add",
+          "resource": "merit",
+          "amount": -100
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    },
+    "shield_switch": {
+      "trigger": {
+        "on": "interaction.activated:shield"
+      },
+      "actions": {
+        "a0": {
+          "op": "permission",
+          "entity": "drone",
+          "kind": "weak"
+        }
+      },
+      "order": [
+        "a0"
+      ],
+      "max_firings": 1
+    }
+  },
+  "queries": {
+    "bolt_a_distance": {
+      "op": "distance",
+      "entity": "bolt_a",
+      "other": "convoy",
+      "algorithm": "cpu-nearest-v1",
+      "space": "content_px"
+    },
+    "bolt_b_distance": {
+      "op": "distance",
+      "entity": "bolt_b",
+      "other": "convoy",
+      "algorithm": "cpu-nearest-v1",
+      "space": "content_px"
+    }
+  },
+  "resources": {
+    "warning_tone": {
+      "path": "gunforge/framework/runtime/audio/warning.wav",
+      "sha256": "f3a698b9c3e15b71273b901587879892eaee9acfc465841b98dad7b2697b3099",
+      "kind": "audio"
+    }
+  },
+  "cues": {
+    "launch_warning": {
+      "resource": "warning_tone",
+      "channel": "warning",
+      "duration_ms": 220
+    }
+  },
+  "initial_resources": {
+    "hull": 2,
+    "merit": 0
+  },
+  "hud": [
+    {
+      "label": "船体",
+      "resource": "hull"
+    },
+    {
+      "label": "功绩",
+      "resource": "merit"
+    }
+  ]
+}

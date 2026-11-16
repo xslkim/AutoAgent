@@ -1,0 +1,74 @@
+{
+  "version": "g01-alley-slot-schedule-1",
+  "station_id": "g01_st_l1_01_alley",
+  "source_evidence": "D:\\tvgun\\gunforge\\games\\g01\\reports\\art\\T07\\revisions\\A2f\\joint_slot_checks.json",
+  "schedule": {
+    "candidates": [
+      {
+        "centers": [
+          [
+            420,
+            350
+          ],
+          [
+            1110,
+            350
+          ]
+        ],
+        "conservative_texture_rect_overlap_px": 0,
+        "simultaneous_allowed": true
+      },
+      {
+        "centers": [
+          [
+            420,
+            350
+          ],
+          [
+            420,
+            490
+          ]
+        ],
+        "conservative_texture_rect_overlap_px": 22325,
+        "simultaneous_allowed": false
+      },
+      {
+        "centers": [
+          [
+            1110,
+            350
+          ],
+          [
+            420,
+            490
+          ]
+        ],
+        "conservative_texture_rect_overlap_px": 0,
+        "simultaneous_allowed": true
+      }
+    ],
+    "preview_selected_centers": [
+      [
+        420,
+        350
+      ],
+      [
+        1110,
+        350
+      ]
+    ],
+    "forbidden_slot_with_hostage": [
+      650,
+      350
+    ],
+    "policy": "mutually overlapping slots never scheduled together; fixed 200px enemy size; engine enforcement pending"
+  },
+  "human_origin": [
+    760,
+    500
+  ],
+  "parallax": 0.45,
+  "enemy_size_px": 200,
+  "status": "offline_candidate_not_runtime_enforced",
+  "production_approved": false
+}

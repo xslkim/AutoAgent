@@ -1,0 +1,14 @@
+{
+  "source": "D:\\tvgun\\gunforge\\level_design\\packages\\paper.night_market\\revisions\\2ead4903b278344459cfc3aa8fe44e122ee465f0e2ffd83ef35401076beafdb9\\level.json",
+  "source_revision": "2ead4903b278344459cfc3aa8fe44e122ee465f0e2ffd83ef35401076beafdb9",
+  "build_id": "56c23f2f3808436058b3fec77b5aee4d370e804a4b6498dcfaa890934d233bce",
+  "compiled": "D:\\gunforge_cache\\level_design\\builds\\56c23f2f3808436058b3fec77b5aee4d370e804a4b6498dcfaa890934d233bce\\level.json",
+  "state": "candidate_not_adopted",
+  "component_revisions": {
+    "paper.station": "055dd952d843113f2eee65393abbc1fc8a19e9a510201dc296b2984f7971c839",
+    "paper.stall": "0c8e4379272a1bcfed2a0697b3c9038b34fc315ad1d4cfa42a0a25ca652ea398",
+    "paper.video_shop": "cd65aeb8cbee2db4da27b87975d5839c92b62f1bd91447a6d20081f88ad9f326",
+    "paper.footbridge": "6a2c79d454d25cf0567f47cf94eed3c5a168a408608026f1a2b0de5d0a436231",
+    "paper.plaza": "b1239ee9cd97362ea047b2e292cdd8ae315cb29d9fc553cf57b8b5b5b3b9c2ee"
+  }
+}

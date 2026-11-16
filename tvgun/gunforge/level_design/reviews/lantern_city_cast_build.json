@@ -1,0 +1,20 @@
+{
+  "source": "D:\\tvgun\\gunforge\\level_design\\packages\\paper.lantern_city_cast\\revisions\\3cff88d87bf6f1e58f7f51f1fbb58f54dd1d7ff57817554c94f8fc05c987e899\\level.json",
+  "source_revision": "3cff88d87bf6f1e58f7f51f1fbb58f54dd1d7ff57817554c94f8fc05c987e899",
+  "build_id": "ed50339937dd3994adf58a7db62fb3bce341f90c8723a3dccf01342f8c69c5d3",
+  "compiled": "D:\\gunforge_cache\\level_design\\builds\\ed50339937dd3994adf58a7db62fb3bce341f90c8723a3dccf01342f8c69c5d3\\level.json",
+  "state": "candidate_not_adopted",
+  "component_revisions": {
+    "paper.station": "befd669058a85ac74df94aafc28e9b39f17d5a80d1c801892a483beba743b7e8",
+    "paper.tadpole_alley": "853644c5a6a8f822716860b5685ae10cf1c4338e480b1bf8cdc9c4ba8324d534",
+    "paper.stall": "0c8e4379272a1bcfed2a0697b3c9038b34fc315ad1d4cfa42a0a25ca652ea398",
+    "paper.video_shop": "c239b6ec78b8fe45378da3cd244dfe0f7ecd43ea69e11067ff8d376ebad6149a",
+    "paper.footbridge_cyclist": "ae4f27bc69dd632b2887240783a8b77073ebda4d9de94742e96700020777bba5",
+    "paper.plaza": "b1239ee9cd97362ea047b2e292cdd8ae315cb29d9fc553cf57b8b5b5b3b9c2ee",
+    "paper.cinema": "8b184329331d9159b9e3784c7c880f5dca1d036e0d8f8fc68e601d0b23319df4",
+    "paper.waiting_room_contrast": "364211d08fd2c78ddc1a8e1ae54d84ada4c1b03a6c9bb4e792a6407739510400",
+    "paper.platform_passerby": "c60724e8cf01b5f6c87a4e456deb478248b0c2a4c1318e281510e6674b4b81a5",
+    "paper.green_car_contrast": "cb5b52059c8cff9be015698446d1807e5f46503deb4cb07dc23adc0a173f606c",
+    "paper.workbench_epilogue": "aee729b1c2f840609879b59ea4b1bdf0a3e86ac4bc0f3ac81b9e6dcc472b2aa3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "source": "D:\\tvgun\\gunforge\\level_design\\packages\\paper.train_station_hardened\\revisions\\6d21723dbf89e5073d198830d4d8c4e1eb9ba086c49064fe1ea6ea6479e48919\\level.json",
+  "source_revision": "6d21723dbf89e5073d198830d4d8c4e1eb9ba086c49064fe1ea6ea6479e48919",
+  "build_id": "9e78fc1bc246611e435da8f65e5a0768a921c3d505923ebf23077b18867578dd",
+  "compiled": "D:\\gunforge_cache\\level_design\\builds\\9e78fc1bc246611e435da8f65e5a0768a921c3d505923ebf23077b18867578dd\\level.json",
+  "state": "candidate_not_adopted",
+  "component_revisions": {
+    "paper.waiting_room": "eb1e143ebed4d4e00f01e9c73cf4ed00c1bf91e967220e98e10a55e284ac402b",
+    "paper.platform": "e34d5afe0d1644a28c5bfa1f0b855f6cb5739beb526767c5ca0be3c72b581a30",
+    "paper.green_car": "3cfa8933f557dcefa275c3ebd6684902ff9ed03e86c80bdf68fd1f1b787420ad",
+    "paper.lantern_pullback": "bef54ae3844c5325587cfcd46c3b0249f940522c12b0b731ea131f681dcca710"
+  }
+}
